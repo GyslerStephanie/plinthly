@@ -1,0 +1,608 @@
+{
+  "meta": {
+    "version": "1.0",
+    "last_updated": "2026-06",
+    "sources": [
+      "Swiss Federal Tax Administration (ESTV/AFC)",
+      "Energieschweiz / Gebäudeprogramm canton pages",
+      "Minergie.ch",
+      "Swiss National Bank (SNB) mortgage guidelines",
+      "FINMA self-regulation guidelines 2023",
+      "Wüest Partner Immo-Monitoring 2025",
+      "Bundesamt für Energie (SFOE)"
+    ],
+    "notes": "All figures are indicative and should be verified against current official sources before use in production. Eigenmietwert abolished by Swiss voters September 2025 — cantonal implementation timelines vary and are flagged below. Mortgage affordability rules based on FINMA guidelines and Swiss Bankers Association self-regulation."
+  },
+
+  "mortgage_rules": {
+    "min_down_payment_pct": 20,
+    "min_liquid_savings_pct": 10,
+    "max_pillar2_pct": 10,
+    "notional_interest_rate_pct": 5.0,
+    "max_housing_cost_income_ratio": 0.333,
+    "maintenance_cost_pct_of_value": 1.0,
+    "amortization_target_pct": 65,
+    "amortization_years": 15,
+    "notes": "Housing cost = notional interest (5% of mortgage) + amortization + maintenance (1% of property value). Must not exceed 1/3 gross income. Second mortgage (above 65% LTV) must be amortized within 15 years."
+  },
+
+  "eigenmietwert": {
+    "status": "abolished_by_referendum",
+    "referendum_date": "2025-09-28",
+    "federal_abolition_effective": "TBD — cantonal implementation in progress",
+    "notes": "Swiss voters approved abolition in September 2025. Federal and cantonal implementation timelines are being finalized. Mortgage interest deductions will also be phased out under the new regime. Buyers should verify current status with a tax advisor in their canton.",
+    "transitional_guidance": "Until cantonal implementation is confirmed, the old Eigenmietwert system may still apply in some cantons. Platform should flag this uncertainty clearly."
+  },
+
+  "cantons": {
+    "ZH": {
+      "name_de": "Zürich",
+      "name_en": "Zurich",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 9000, "mid": 13000, "high": 18000 },
+        "house_chf_per_m2": { "low": 8500, "mid": 12000, "high": 17000 },
+        "new_build_premium_pct": 15,
+        "minergie_premium_pct": 12,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 13.0,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive, holding period reduces rate"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.energiezukunft.eu",
+        "key_measures": ["building envelope insulation", "window replacement", "heat pump", "solar thermal", "PV systems"],
+        "notes": "ZH has strong program. Check current budget availability — can have waiting periods."
+      },
+      "minergie_context": "High adoption canton. Minergie label increasingly expected by buyers in premium segments.",
+      "market_notes": "Highest prices in Switzerland. Strong demand, low vacancy. Winterthur offers lower entry point within canton."
+    },
+
+    "BE": {
+      "name_de": "Bern",
+      "name_en": "Bern",
+      "region": "German-speaking (bilingual)",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 5500, "mid": 8000, "high": 12000 },
+        "house_chf_per_m2": { "low": 5000, "mid": 7500, "high": 11000 },
+        "new_build_premium_pct": 12,
+        "minergie_premium_pct": 10,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 14.5,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive, holding period reduces rate"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.vol.be.ch/vol/de/index/energie/energie/foerderprogramme.html",
+        "key_measures": ["insulation", "heat pump", "solar thermal", "windows"],
+        "notes": "Strong cantonal program. GVB (Gebäudeversicherung Bern) is an active PropTech investor in this space."
+      },
+      "minergie_context": "Good adoption. Federal city — some heritage constraints on older buildings.",
+      "market_notes": "More affordable than Zurich. Federal employment base creates stable demand."
+    },
+
+    "VD": {
+      "name_de": "Waadt",
+      "name_en": "Vaud",
+      "region": "French-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 7000, "mid": 10000, "high": 16000 },
+        "house_chf_per_m2": { "low": 6500, "mid": 9500, "high": 15000 },
+        "new_build_premium_pct": 13,
+        "minergie_premium_pct": 11,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 15.0,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.vd.ch/themes/environnement/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "French-language program. Lausanne area has strong demand and higher prices."
+      },
+      "minergie_context": "Growing adoption. Lausanne and Nyon areas lead.",
+      "market_notes": "Lake Geneva corridor (Lausanne, Nyon, Morges) is expensive. Inland areas more accessible."
+    },
+
+    "GE": {
+      "name_de": "Genf",
+      "name_en": "Geneva",
+      "region": "French-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 10000, "mid": 15000, "high": 25000 },
+        "house_chf_per_m2": { "low": 9000, "mid": 14000, "high": 22000 },
+        "new_build_premium_pct": 15,
+        "minergie_premium_pct": 12,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 16.0,
+        "eigenmietwert_rate_pct_of_market_rent": 65,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.ge.ch/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "SIG (Services Industriels de Genève) runs additional programs. Strong subsidy ecosystem."
+      },
+      "minergie_context": "High awareness, strong adoption in new builds.",
+      "market_notes": "Second most expensive canton after Zurich. Very low vacancy. International buyer pool."
+    },
+
+    "BS": {
+      "name_de": "Basel-Stadt",
+      "name_en": "Basel-City",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 7500, "mid": 11000, "high": 16000 },
+        "house_chf_per_m2": { "low": 7000, "mid": 10000, "high": 15000 },
+        "new_build_premium_pct": 13,
+        "minergie_premium_pct": 11,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 13.5,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.aue.bs.ch",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Basel-Stadt has one of Switzerland's most ambitious cantonal energy strategies."
+      },
+      "minergie_context": "Very high adoption. Basel-Stadt mandates high energy standards for new builds.",
+      "market_notes": "Pharma/life sciences employment base. High incomes, strong demand. Consider Basel-Landschaft (BL) for lower entry price."
+    },
+
+    "BL": {
+      "name_de": "Basel-Landschaft",
+      "name_en": "Basel-Country",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 5500, "mid": 8000, "high": 11000 },
+        "house_chf_per_m2": { "low": 5000, "mid": 7500, "high": 10500 },
+        "new_build_premium_pct": 11,
+        "minergie_premium_pct": 10,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 13.0,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.baselland.ch/politik-und-behorden/direktionen/volkswirtschafts-und-gesundheitsdirektion/amt-fur-industrie-gewerbe-und-arbeit-kiga/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good program availability. Less competitive than Basel-Stadt."
+      },
+      "minergie_context": "Growing adoption, more accessible entry prices than BS.",
+      "market_notes": "Good value relative to Basel-Stadt. Strong commuter demand."
+    },
+
+    "AG": {
+      "name_de": "Aargau",
+      "name_en": "Aargau",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 4500, "mid": 6500, "high": 9500 },
+        "house_chf_per_m2": { "low": 4200, "mid": 6000, "high": 9000 },
+        "new_build_premium_pct": 10,
+        "minergie_premium_pct": 9,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 11.5,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.ag.ch/de/verwaltung/bvu/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "One of Switzerland's most affordable cantons. Strong commuter belt for both Zurich and Basel."
+      },
+      "minergie_context": "Moderate adoption. Good opportunity for buyers seeking affordability with upgrade potential.",
+      "market_notes": "Excellent value. Baden area popular with Zurich commuters. Low tax rates."
+    },
+
+    "SG": {
+      "name_de": "St. Gallen",
+      "name_en": "St. Gallen",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 4000, "mid": 6000, "high": 9000 },
+        "house_chf_per_m2": { "low": 3800, "mid": 5500, "high": 8500 },
+        "new_build_premium_pct": 10,
+        "minergie_premium_pct": 9,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 12.5,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.sg.ch/umwelt-natur/energie.html",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good program. More affordable market means renovation budgets stretch further."
+      },
+      "minergie_context": "Moderate adoption. Good scope for buyers to add value through sustainable upgrades.",
+      "market_notes": "Among the most affordable German-speaking cantons. Rheintal and city of St. Gallen are main centres."
+    },
+
+    "LU": {
+      "name_de": "Luzern",
+      "name_en": "Lucerne",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 5500, "mid": 8000, "high": 12000 },
+        "house_chf_per_m2": { "low": 5000, "mid": 7500, "high": 11000 },
+        "new_build_premium_pct": 11,
+        "minergie_premium_pct": 10,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 11.0,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.lu.ch/verwaltung/BUD/uwe/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good program. Lucerne city popular with families seeking quality of life outside Zurich."
+      },
+      "minergie_context": "Good adoption, particularly in newer builds.",
+      "market_notes": "Good value relative to Zurich. Low cantonal taxes. Strong quality of life draw."
+    },
+
+    "TI": {
+      "name_de": "Tessin",
+      "name_en": "Ticino",
+      "region": "Italian-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 4500, "mid": 7000, "high": 12000 },
+        "house_chf_per_m2": { "low": 4000, "mid": 6500, "high": 11000 },
+        "new_build_premium_pct": 12,
+        "minergie_premium_pct": 10,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 14.0,
+        "eigenmietwert_rate_pct_of_market_rent": 65,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www4.ti.ch/dfe/de/uacer/uffici/ure/temi/energia/",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Italian-language program. Lugano area significantly more expensive than rest of canton."
+      },
+      "minergie_context": "Growing adoption. Italian building traditions create interesting renovation opportunities.",
+      "market_notes": "Unique market — Mediterranean climate, Italian culture, Swiss legal system. Lugano is expensive; other areas more accessible."
+    },
+
+    "GR": {
+      "name_de": "Graubünden",
+      "name_en": "Grisons",
+      "region": "Multilingual (DE/RM/IT)",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 4000, "mid": 7000, "high": 20000 },
+        "house_chf_per_m2": { "low": 3800, "mid": 6500, "high": 18000 },
+        "new_build_premium_pct": 12,
+        "minergie_premium_pct": 10,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative — wide range due to resort vs. valley market split"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 11.5,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.gr.ch/DE/institutionen/verwaltung/dvs/awt/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Wide price range: Chur (affordable) vs. Davos/St. Moritz (premium resort market). Lex Koller restrictions apply to non-residents for second homes."
+      },
+      "minergie_context": "Important in alpine climate context — energy efficiency directly impacts heating costs.",
+      "market_notes": "Lex Koller restricts non-EU/EFTA residents from buying second homes. Resort markets have very high prices and separate dynamics."
+    },
+
+    "VS": {
+      "name_de": "Wallis",
+      "name_en": "Valais",
+      "region": "Bilingual (DE/FR)",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 3500, "mid": 6000, "high": 15000 },
+        "house_chf_per_m2": { "low": 3200, "mid": 5500, "high": 14000 },
+        "new_build_premium_pct": 11,
+        "minergie_premium_pct": 10,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative — wide range due to resort vs. valley split"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 13.0,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.vs.ch/web/sde/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good solar potential (highest sunshine hours in Switzerland). Lex Koller applies for resort areas."
+      },
+      "minergie_context": "Growing. Solar potential is a genuine financial asset in this canton.",
+      "market_notes": "Sion and Brig are affordable. Zermatt and Verbier are international luxury markets with Lex Koller restrictions."
+    },
+
+    "FR": {
+      "name_de": "Freiburg",
+      "name_en": "Fribourg",
+      "region": "Bilingual (DE/FR)",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 4500, "mid": 7000, "high": 10000 },
+        "house_chf_per_m2": { "low": 4200, "mid": 6500, "high": 9500 },
+        "new_build_premium_pct": 11,
+        "minergie_premium_pct": 10,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 14.0,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.fr.ch/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good program. Fribourg city is affordable relative to Lausanne and Bern."
+      },
+      "minergie_context": "Moderate adoption. Good opportunity for value-add through upgrades.",
+      "market_notes": "Underrated canton. University city, bilingual, between Bern and Lausanne. Affordable entry prices."
+    },
+
+    "NE": {
+      "name_de": "Neuenburg",
+      "name_en": "Neuchâtel",
+      "region": "French-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 3800, "mid": 5500, "high": 8500 },
+        "house_chf_per_m2": { "low": 3500, "mid": 5000, "high": 8000 },
+        "new_build_premium_pct": 10,
+        "minergie_premium_pct": 9,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 15.5,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.ne.ch/autorites/DDTE/SENE/energie",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good program. One of the most affordable French-speaking cantons."
+      },
+      "minergie_context": "Moderate adoption.",
+      "market_notes": "Most affordable French-speaking canton. Watch canyon: higher tax rate offsets lower property prices."
+    },
+
+    "SO": {
+      "name_de": "Solothurn",
+      "name_en": "Solothurn",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 4200, "mid": 6000, "high": 9000 },
+        "house_chf_per_m2": { "low": 4000, "mid": 5700, "high": 8500 },
+        "new_build_premium_pct": 10,
+        "minergie_premium_pct": 9,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 13.0,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://so.ch/verwaltung/bau-und-justizdepartement/amt-fuer-umwelt/energie/",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good value. Commuter belt for both Zurich and Basel."
+      },
+      "minergie_context": "Moderate adoption.",
+      "market_notes": "Affordable and underrated. Good rail connections to Zurich and Basel."
+    },
+
+    "TG": {
+      "name_de": "Thurgau",
+      "name_en": "Thurgau",
+      "region": "German-speaking",
+      "property_price_ranges": {
+        "apartment_chf_per_m2": { "low": 4000, "mid": 5800, "high": 8500 },
+        "house_chf_per_m2": { "low": 3800, "mid": 5500, "high": 8000 },
+        "new_build_premium_pct": 10,
+        "minergie_premium_pct": 9,
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative"
+      },
+      "tax": {
+        "cantonal_income_tax_rate_approx_pct": 11.5,
+        "eigenmietwert_rate_pct_of_market_rent": 70,
+        "eigenmietwert_status": "abolition pending cantonal implementation",
+        "property_gains_tax": "progressive"
+      },
+      "gebaeueprogramm": {
+        "available": true,
+        "url": "https://www.tg.ch/verwaltung/departemente/departement-fuer-inneres-und-volkswirtschaft/amt-fuer-energie.html/6430",
+        "key_measures": ["insulation", "heat pump", "solar", "windows"],
+        "notes": "Good value canton. Lake Constance area popular with families."
+      },
+      "minergie_context": "Moderate adoption.",
+      "market_notes": "Affordable. Low taxes. Good for families seeking space outside Zurich."
+    }
+  },
+
+  "energy_classes": {
+    "description": "Swiss GEAK (Gebäudeenergieausweis der Kantone) energy rating scale A to G",
+    "classes": {
+      "A": {
+        "label": "A",
+        "description": "Highest efficiency — Minergie-A / Plusenergie standard",
+        "typical_heating_cost_chf_per_m2_per_year": 5,
+        "co2_kg_per_m2_per_year": 2,
+        "notes": "Net zero or energy positive. Very rare in existing stock."
+      },
+      "B": {
+        "label": "B",
+        "description": "Excellent — Minergie-P standard",
+        "typical_heating_cost_chf_per_m2_per_year": 12,
+        "co2_kg_per_m2_per_year": 6,
+        "notes": "Passive house standard. Increasingly common in new builds post-2015."
+      },
+      "C": {
+        "label": "C",
+        "description": "Good — Minergie standard",
+        "typical_heating_cost_chf_per_m2_per_year": 22,
+        "co2_kg_per_m2_per_year": 12,
+        "notes": "Standard Minergie label. Common in new builds and well-renovated existing buildings."
+      },
+      "D": {
+        "label": "D",
+        "description": "Average — SIA 380/1 2009 compliant",
+        "typical_heating_cost_chf_per_m2_per_year": 38,
+        "co2_kg_per_m2_per_year": 22,
+        "notes": "Meets current minimum standards. Typical of buildings renovated in the 2000s."
+      },
+      "E": {
+        "label": "E",
+        "description": "Below average — partial renovation or older stock",
+        "typical_heating_cost_chf_per_m2_per_year": 58,
+        "co2_kg_per_m2_per_year": 35,
+        "notes": "Common in 1980s-1990s buildings. Renovation subsidy eligible."
+      },
+      "F": {
+        "label": "F",
+        "description": "Poor — minimal or no renovation",
+        "typical_heating_cost_chf_per_m2_per_year": 80,
+        "co2_kg_per_m2_per_year": 50,
+        "notes": "Typical of unrenovated 1960s-1970s buildings. Strong renovation case."
+      },
+      "G": {
+        "label": "G",
+        "description": "Very poor — pre-1960 unrenovated or oil/gas heating dominant",
+        "typical_heating_cost_chf_per_m2_per_year": 110,
+        "co2_kg_per_m2_per_year": 70,
+        "notes": "Significant energy cost and regulatory risk. Heating replacement likely mandatory within 10 years under cantonal energy laws."
+      }
+    }
+  },
+
+  "minergie": {
+    "standards": {
+      "MINERGIE": {
+        "label": "Minergie",
+        "description": "Standard energy efficiency label for new and renovated buildings",
+        "construction_cost_premium_pct": 10,
+        "renovation_cost_premium_pct": 15,
+        "annual_energy_saving_pct_vs_unrenovated": 60,
+        "resale_premium_pct": 5,
+        "url": "https://www.minergie.ch"
+      },
+      "MINERGIE_P": {
+        "label": "Minergie-P",
+        "description": "Passive house standard — very low energy demand",
+        "construction_cost_premium_pct": 15,
+        "renovation_cost_premium_pct": 25,
+        "annual_energy_saving_pct_vs_unrenovated": 80,
+        "resale_premium_pct": 8,
+        "url": "https://www.minergie.ch"
+      },
+      "MINERGIE_A": {
+        "label": "Minergie-A",
+        "description": "Net zero energy — building produces as much as it consumes",
+        "construction_cost_premium_pct": 20,
+        "renovation_cost_premium_pct": 35,
+        "annual_energy_saving_pct_vs_unrenovated": 95,
+        "resale_premium_pct": 12,
+        "url": "https://www.minergie.ch"
+      }
+    }
+  },
+
+  "renovation_cost_benchmarks": {
+    "currency": "CHF",
+    "basis": "per m2 of treated floor area, indicative ranges",
+    "source": "SIA cost tables, Bauen in der Schweiz, Wüest Partner, indicative 2025",
+    "measures": {
+      "roof_insulation": { "low": 80, "mid": 150, "high": 250, "unit": "CHF/m2 roof area" },
+      "facade_insulation": { "low": 120, "mid": 200, "high": 350, "unit": "CHF/m2 facade area" },
+      "window_replacement": { "low": 800, "mid": 1200, "high": 2000, "unit": "CHF per window" },
+      "heat_pump_air_water": { "low": 15000, "mid": 25000, "high": 40000, "unit": "CHF total system" },
+      "heat_pump_ground_source": { "low": 25000, "mid": 40000, "high": 60000, "unit": "CHF total system" },
+      "solar_pv": { "low": 8000, "mid": 15000, "high": 30000, "unit": "CHF total system (6-20 kWp)" },
+      "solar_thermal": { "low": 8000, "mid": 14000, "high": 22000, "unit": "CHF total system" },
+      "full_minergie_retrofit_apartment": { "low": 500, "mid": 900, "high": 1400, "unit": "CHF/m2 living area" },
+      "full_minergie_retrofit_house": { "low": 600, "mid": 1100, "high": 1800, "unit": "CHF/m2 living area" }
+    },
+    "notes": "Costs vary significantly by building type, access, existing condition, and contractor. Always obtain 3 quotes. Gebäudeprogramm subsidies can reduce net cost by 20-40% depending on measure and canton."
+  },
+
+  "gebaeueprogramm_federal": {
+    "description": "Federal co-funding program for building envelope and heating upgrades",
+    "url": "https://www.energieschweiz.ch/gebäudeprogramm",
+    "co2_levy_funded": true,
+    "typical_subsidy_ranges": {
+      "insulation_chf_per_m2": { "low": 20, "high": 60 },
+      "heat_pump_replacement_chf": { "low": 2000, "high": 8000 },
+      "solar_thermal_chf": { "low": 1000, "high": 3500 },
+      "notes": "Federal baseline topped up by cantonal programs. Total subsidy varies by canton and current program budget. Some cantons have waiting periods."
+    },
+    "eligibility": "Owner-occupied and rental residential buildings. Must be existing building (not new build). Minimum energy improvement required."
+  },
+
+  "build_cost_benchmarks": {
+    "currency": "CHF",
+    "basis": "per m2 gross floor area (BGF/SIA 416), indicative ranges",
+    "source": "SIA cost tables, indicative 2025",
+    "standards": {
+      "standard_build": { "low": 2800, "mid": 3800, "high": 5000, "unit": "CHF/m2 BGF" },
+      "minergie": { "low": 3200, "mid": 4400, "high": 5800, "unit": "CHF/m2 BGF" },
+      "minergie_p": { "low": 3600, "mid": 5000, "high": 6500, "unit": "CHF/m2 BGF" },
+      "minergie_a": { "low": 4000, "mid": 5500, "high": 7500, "unit": "CHF/m2 BGF" }
+    },
+    "additional_costs": {
+      "land_not_included": true,
+      "architect_fees_pct_of_build_cost": { "low": 12, "high": 18 },
+      "engineer_fees_pct_of_build_cost": { "low": 5, "high": 10 },
+      "permits_and_fees_pct": { "low": 2, "high": 5 },
+      "contingency_pct": { "low": 10, "high": 15 }
+    },
+    "notes": "Build costs vary significantly by site conditions, access, specification level, and market conditions. These are indicative ranges only."
+  }
+}
