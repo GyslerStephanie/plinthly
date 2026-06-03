@@ -1,5 +1,5 @@
 /**
- * Designify translations — English, German, French, Italian.
+ * Plinthly translations — English, German, French, Italian.
  *
  * Markup conventions inside strings:
  *   {name}     interpolation placeholder

@@ -1,4 +1,4 @@
-# Designify — Swiss Sustainable Real Estate Explorer
+# Plinthly — Swiss Sustainable Real Estate Explorer
 
 MVP of a guided platform that gives people in Switzerland an honest picture of
 what they can buy, build, or renovate — sustainably and affordably — before

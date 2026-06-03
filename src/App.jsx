@@ -166,11 +166,11 @@ export default function App() {
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4">
           <div className="flex items-center gap-2.5">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-sm font-bold text-white">
-              D
+              P
             </span>
             <div>
               <p className="text-sm font-semibold leading-tight text-slate-900">
-                Designify
+                Plinthly
               </p>
               <p className="text-xs leading-tight text-slate-500">
                 {t('header.tagline')}

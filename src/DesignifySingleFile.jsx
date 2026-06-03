@@ -1,5 +1,5 @@
 /**
- * Designify — Swiss Sustainable Real Estate Explorer (single-file build)
+ * Plinthly — Swiss Sustainable Real Estate Explorer (single-file build)
  * --------------------------------------------------------------------------
  * Self-contained version of the full primary track (Phases 1–4), consolidated
  * into ONE file for paste-style design tools. No local imports, data inlined,
@@ -2305,9 +2305,9 @@ export default function App() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-sm font-bold text-white">D</span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-sm font-bold text-white">P</span>
             <div>
-              <p className="text-sm font-semibold leading-tight text-slate-900">Designify</p>
+              <p className="text-sm font-semibold leading-tight text-slate-900">Plinthly</p>
               <p className="text-xs leading-tight text-slate-500">Swiss Sustainable Real Estate Explorer</p>
             </div>
           </div>

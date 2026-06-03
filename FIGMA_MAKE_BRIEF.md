@@ -1,4 +1,4 @@
-# Designify — Figma Make build brief
+# Plinthly — Figma Make build brief
 
 A complete, precise specification to recreate the app in Figma Make (React + Tailwind).
 Hand the **§0 prompt** to Figma Make first, then use the appendices to refine each phase.
@@ -7,7 +7,7 @@ Hand the **§0 prompt** to Figma Make first, then use the appendices to refine e
 
 ## §0 — Paste-this-first prompt
 
-> Build a client-side React + Tailwind web app called **Designify**, a Swiss
+> Build a client-side React + Tailwind web app called **Plinthly**, a Swiss
 > sustainable real-estate explorer for first-time buyers. It's a **single-page,
 > 4-phase guided flow** (no backend; all logic runs in the browser against a
 > static JSON dataset). Phases: **1 Can I buy? → 2 What to look for → 3 My real
@@ -33,7 +33,7 @@ Hand the **§0 prompt** to Figma Make first, then use the appendices to refine e
 
 ## §1 — Global shell
 
-- **Header**: square teal "D" logo + "Designify" + tagline "Swiss Sustainable
+- **Header**: square teal "D" logo + "Plinthly" + tagline "Swiss Sustainable
   Real Estate Explorer". Right side: trust badge "No selling · No sign-up · Just
   honest numbers" (hidden on small screens) + **language switcher** (select:
   EN/DE/FR/IT).
