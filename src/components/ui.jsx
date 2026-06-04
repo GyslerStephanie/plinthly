@@ -10,7 +10,7 @@ const TONES = {
 /** Bordered content card with an optional uppercase section title. */
 export function Card({ title, children, tone = 'default', className = '' }) {
   return (
-    <section className={`rounded-2xl border p-5 shadow-sm ${TONES[tone]} ${className}`}>
+    <section className={`rounded-xl border p-5 shadow-sm ${TONES[tone]} ${className}`}>
       {title && (
         <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           {title}

@@ -104,7 +104,7 @@ function Card({ title, children, tone = 'default' }) {
     amber: 'border-amber-200 bg-amber-50/60',
   }
   return (
-    <section className={`rounded-2xl border p-5 shadow-sm ${tones[tone]}`}>
+    <section className={`rounded-xl border p-5 shadow-sm ${tones[tone]}`}>
       {title && (
         <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           {title}
@@ -242,7 +242,7 @@ function KeyTakeaways({ result, rate }) {
   )
 }
 
-export default function AffordabilityResult({ result, renovation }) {
+export default function AffordabilityResult({ result, renovation, isPreview = false }) {
   const { t } = useI18n()
   const canton = getCanton(result.inputs.canton)
   const { downPaymentBreakdown: dp, annualCosts: ac, constraints } = result
@@ -259,6 +259,12 @@ export default function AffordabilityResult({ result, renovation }) {
 
   return (
     <div className="space-y-4">
+      {isPreview && (
+        <div className="flex items-center gap-2 text-xs font-medium text-slate-500 no-print">
+          <span className="flex h-2 w-2 animate-pulse rounded-full bg-teal-500" aria-hidden />
+          {t('result.livePreview')}
+        </div>
+      )}
       {/* Headline — four states (binding-constraint based) */}
       {result.viable ? (
         <Card tone={stateMeta.tone}>

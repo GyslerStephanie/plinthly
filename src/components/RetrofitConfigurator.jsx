@@ -113,7 +113,7 @@ export default function RetrofitConfigurator({ size, price, selected, onChange }
   const minergieGrade = ['A', 'B', 'C'].includes(ledger.newClass)
 
   return (
-    <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
+    <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
       <h4 className="text-sm font-semibold text-slate-900">{t('retrofit.title')}</h4>
       <p className="mt-1 text-xs leading-relaxed text-slate-500">
         {t('retrofit.intro', { size: int(size) })}
@@ -144,7 +144,7 @@ export default function RetrofitConfigurator({ size, price, selected, onChange }
         </div>
 
         {/* Live ledger */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="mb-3 flex items-center justify-between">
             <span className="text-sm font-semibold uppercase tracking-wide text-slate-500">
               {t('retrofit.ledgerTitle')}

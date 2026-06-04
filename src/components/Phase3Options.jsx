@@ -13,7 +13,7 @@ function OptionShell({ tag, title, subtitle, chosen, onChoose, t, children }) {
   return (
     <section
       className={
-        'rounded-2xl border p-5 shadow-sm transition ' +
+        'rounded-xl border p-5 shadow-sm transition ' +
         (chosen ? 'border-teal-500 ring-2 ring-teal-200 bg-teal-50/40' : 'border-slate-200 bg-white')
       }
     >

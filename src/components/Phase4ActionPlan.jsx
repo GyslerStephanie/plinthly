@@ -87,7 +87,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
           {steps.map((step, i) => (
             <li
               key={i}
-              className={`rounded-2xl border p-5 shadow-sm ${STEP_TONES[step.tone] || STEP_TONES.default}`}
+              className={`rounded-xl border p-5 shadow-sm ${STEP_TONES[step.tone] || STEP_TONES.default}`}
             >
               <div className="flex gap-4">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">

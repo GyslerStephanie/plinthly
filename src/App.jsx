@@ -115,6 +115,16 @@ export default function App() {
 
   const runPhase1 = () => setPhase1(calc(values))
 
+  // Live preview: as soon as income + savings are present, compute a result so
+  // the right column updates in real time, before the user clicks the button.
+  // The button (runPhase1) "locks in" the result, which is what unlocks Phase 2.
+  const livePreview = (() => {
+    const inc = Number(String(values.grossIncome).replace(/[^0-9.]/g, ''))
+    const sav = Number(String(values.savings).replace(/[^0-9.]/g, ''))
+    return inc > 0 && sav > 0 ? calc(values) : null
+  })()
+  const previewResult = phase1 || livePreview
+
   const handleValuesChange = (next) => {
     setValues(next)
     if (phase1) setPhase1(calc(next)) // live recompute once shown
@@ -213,19 +223,19 @@ export default function App() {
         </div>
 
         <div className="mb-8 max-w-2xl no-print">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 lg:text-4xl">
             {t(`heading.${phase}.title`)}
           </h1>
-          <p className="mt-2 text-base leading-relaxed text-slate-600">
+          <p className="mt-2 text-base leading-relaxed text-slate-600 lg:mt-3 lg:text-lg">
             {t(`heading.${phase}.blurb`)}
           </p>
         </div>
 
-        {/* Phase 1 */}
+        {/* Phase 1 — two-column on desktop: inputs left, live output right */}
         {phase === 1 && (
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
             <div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:p-7">
                 <h2 className="mb-5 text-lg font-semibold text-slate-900">
                   {t('form.title')}
                 </h2>
@@ -236,9 +246,14 @@ export default function App() {
                 />
               </div>
             </div>
-            <div>
-              {phase1 ? (
-                <AffordabilityResult result={phase1} renovation={renovation} />
+            {/* Sticky so the live result stays in view while scrolling inputs */}
+            <div className="lg:sticky lg:top-6 lg:self-start">
+              {previewResult ? (
+                <AffordabilityResult
+                  result={previewResult}
+                  renovation={renovation}
+                  isPreview={!phase1}
+                />
               ) : (
                 <EmptyResult />
               )}
@@ -400,7 +415,7 @@ function LanguageSwitcher({ lang, setLang, languages, label }) {
 function EmptyResult() {
   const { t } = useI18n()
   return (
-    <div className="flex h-full min-h-72 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/60 p-8 text-center">
+    <div className="flex h-full min-h-72 flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white/60 p-8 text-center">
       <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-teal-50 text-teal-600">
         <svg
           width="22"
@@ -425,7 +440,7 @@ function EmptyResult() {
 
 function TrackCard({ title, desc, badge }) {
   return (
-    <div className="relative rounded-2xl border border-slate-200 bg-white p-5 opacity-90">
+    <div className="relative rounded-xl border border-slate-200 bg-white p-5 opacity-90">
       <span className="absolute right-4 top-4 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
         {badge}
       </span>
