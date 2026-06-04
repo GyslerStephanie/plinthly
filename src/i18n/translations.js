@@ -33,6 +33,14 @@ export const translations = {
       banner: 'Based on your {budget} budget in {canton}.',
       banner3: 'Based on your {budget} budget and {mortgage} mortgage in {canton}.',
     },
+    summary: {
+      title: 'Your numbers',
+      maxPrice: 'Max price',
+      downPayment: 'Down payment',
+      monthly: 'Est. monthly',
+      ready: 'Affordable',
+      notYet: 'Not yet',
+    },
     header: {
       tagline: 'Swiss Sustainable Real Estate Explorer',
       badge: 'No selling · No sign-up · Just honest numbers',
@@ -305,6 +313,14 @@ export const translations = {
     context: {
       banner: 'Basierend auf Ihrem Budget von {budget} im Kanton {canton}.',
       banner3: 'Basierend auf Ihrem Budget von {budget} und einer Hypothek von {mortgage} im Kanton {canton}.',
+    },
+    summary: {
+      title: 'Ihre Zahlen',
+      maxPrice: 'Max. Preis',
+      downPayment: 'Eigenkapital',
+      monthly: 'Mtl. ca.',
+      ready: 'Tragbar',
+      notYet: 'Noch nicht',
     },
     header: {
       tagline: 'Schweizer Explorer für nachhaltige Immobilien',
@@ -580,6 +596,14 @@ export const translations = {
       banner: 'Sur la base de votre budget de {budget} dans le canton de {canton}.',
       banner3: 'Sur la base de votre budget de {budget} et d’une hypothèque de {mortgage} dans le canton de {canton}.',
     },
+    summary: {
+      title: 'Vos chiffres',
+      maxPrice: 'Prix max.',
+      downPayment: 'Apport',
+      monthly: 'Mensuel ≈',
+      ready: 'Abordable',
+      notYet: 'Pas encore',
+    },
     header: {
       tagline: 'Explorateur immobilier durable suisse',
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
@@ -852,6 +876,14 @@ export const translations = {
     context: {
       banner: 'In base al tuo budget di {budget} nel cantone {canton}.',
       banner3: 'In base al tuo budget di {budget} e a un mutuo di {mortgage} nel cantone {canton}.',
+    },
+    summary: {
+      title: 'I tuoi numeri',
+      maxPrice: 'Prezzo max',
+      downPayment: 'Capitale proprio',
+      monthly: 'Mensile ≈',
+      ready: 'Sostenibile',
+      notYet: 'Non ancora',
     },
     header: {
       tagline: 'Explorer immobiliare sostenibile svizzero',

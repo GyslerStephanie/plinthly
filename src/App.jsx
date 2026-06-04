@@ -12,6 +12,7 @@ import { decodeState, syncHash, shareableUrl } from './lib/share'
 import { useI18n } from './i18n/I18nContext'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
+import StickySummaryBar from './components/StickySummaryBar'
 
 const PHASE_NUMBERS = [1, 2, 3, 4]
 
@@ -212,6 +213,8 @@ export default function App() {
           {mtNotice}
         </div>
       )}
+
+      <StickySummaryBar />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
         <div className="mb-8 no-print">
