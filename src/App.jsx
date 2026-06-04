@@ -49,7 +49,16 @@ export default function App() {
   const [values, setValues] = useState(DEFAULT_VALUES)
   const [phase1, setPhase1] = useState(null)
   const [explore, setExplore] = useState(DEFAULT_EXPLORE)
+  const [feedback, setFeedback] = useState(null) // session-only (Feature 6)
   const restored = useRef(false)
+
+  // Record end-of-journey feedback: log it (v1 placeholder — no backend) and
+  // keep it in state so it persists for the session.
+  const handleFeedback = (payload) => {
+    // eslint-disable-next-line no-console
+    console.log('[Plinthly feedback]', payload)
+    setFeedback(payload)
+  }
 
   // Restore from a shared URL hash on first load.
   useEffect(() => {
@@ -288,6 +297,8 @@ export default function App() {
               phase1={phase1}
               explore={explore}
               shareUrl={shareableUrl(flatState)}
+              feedback={feedback}
+              onSubmitFeedback={handleFeedback}
             />
           </>
         )}

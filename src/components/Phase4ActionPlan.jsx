@@ -7,6 +7,7 @@ import { chf, int } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { Card, Pill } from './ui'
 import BankInquiry from './BankInquiry'
+import FeedbackSection from './FeedbackSection'
 
 const OPTION_LABEL_KEYS = {
   renovate: 'phase3.aTitle',
@@ -20,7 +21,7 @@ const STEP_TONES = {
   default: 'border-slate-200 bg-white',
 }
 
-export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
+export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, onSubmitFeedback }) {
   const { t } = useI18n()
   const [copied, setCopied] = useState(false)
   const canton = getCanton(explore.canton)
@@ -148,6 +149,9 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
         </div>
         {shareUrl && <p className="mt-3 break-all text-xs text-slate-400">{shareUrl}</p>}
       </Card>
+
+      {/* Feedback — end of the journey */}
+      <FeedbackSection feedback={feedback} onSubmit={onSubmitFeedback} />
     </div>
   )
 }
