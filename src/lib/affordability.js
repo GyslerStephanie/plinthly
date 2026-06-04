@@ -15,7 +15,7 @@
  *   2. AFFORDABILITY constraint (can you carry the running costs?)
  *        - Imputed annual housing cost must not exceed 1/3 of gross income.
  *        - Housing cost = notional interest (5% of the mortgage)
- *                       + amortization (2nd mortgage down to 65% LTV over 15y)
+ *                       + amortization (2nd mortgage down to 67% LTV over 15y)
  *                       + maintenance (1% of property value).
  *
  * The achievable price is the MINIMUM of the two. The binding constraint tells
@@ -35,16 +35,16 @@ const MAX_LTV = 1 - MIN_DOWN // 0.80
 const NOTIONAL_RATE = R.notional_interest_rate_pct / 100 // 0.05
 const MAINTENANCE = R.maintenance_cost_pct_of_value / 100 // 0.01
 const COST_RATIO = R.max_housing_cost_income_ratio // 0.333
-const AMORT_TARGET_LTV = R.amortization_target_pct / 100 // 0.65
+const AMORT_TARGET_LTV = R.amortization_target_pct / 100 // 0.67 (SBA 1st-mortgage ceiling; config-driven)
 const AMORT_YEARS = R.amortization_years // 15
 
 /**
  * Annual housing cost as a fraction of purchase price.
  *
  * interest    = 5% * 80% = 0.0400 of price
- * amortization= (80% - 65%) / 15y = 0.0100 of price
+ * amortization= (80% - 67%) / 15y ≈ 0.0087 of price
  * maintenance = 1% = 0.0100 of price
- *  -> ~0.0600 of price per year for the default Swiss parameters.
+ *  -> ~0.0587 of price per year for the default Swiss parameters.
  */
 const HOUSING_COST_FRACTION =
   NOTIONAL_RATE * MAX_LTV +
@@ -326,6 +326,209 @@ export function requirementsForPrice(targetPrice, downFrac = MIN_DOWN) {
     incomeNeeded: COST_RATIO > 0 ? annualCost / COST_RATIO : 0,
   }
 }
+
+/**
+ * Monthly carrying cost at an *actual* market rate — "what you'd really pay".
+ *
+ * This is deliberately separate from the notional 5% math used to QUALIFY:
+ *   - interest scales with the user's chosen market `rate`
+ *   - amortization and maintenance do NOT depend on the interest rate
+ *
+ * Works for any price/mortgage pair, so the same helper drives both the
+ * achievable-price card and a typed "dream price". Also returns the notional
+ * (5%) figures so the UI can show stress-rate vs reality side by side.
+ *
+ * @param {number} price     Purchase price, CHF.
+ * @param {number} mortgage  Mortgage amount, CHF.
+ * @param {number} rate      Actual market interest rate as a fraction (e.g. 0.015).
+ * @param {number} [ltv]     Loan-to-value fraction; derived from price/mortgage if omitted.
+ */
+export function monthlyCostsAtRate(price, mortgage, rate, ltv) {
+  const p = num(price)
+  const m = num(mortgage)
+  const r = isFinite(rate) && rate > 0 ? rate : 0
+  const l = isFinite(ltv) && ltv >= 0 ? ltv : p > 0 ? m / p : 0
+
+  const interest = (m * r) / 12
+  const amortization = ((Math.max(0, l - AMORT_TARGET_LTV) / AMORT_YEARS) * p) / 12
+  const maintenance = (p * MAINTENANCE) / 12
+  const total = interest + amortization + maintenance
+
+  // Same components, but interest at the bank's notional stress rate.
+  const interestNotional = (m * NOTIONAL_RATE) / 12
+  const totalNotional = interestNotional + amortization + maintenance
+
+  return {
+    rate: r,
+    interest,
+    amortization,
+    maintenance,
+    total,
+    interestNotional,
+    totalNotional,
+  }
+}
+
+/**
+ * Grade a completed result into one of four headline states. The state is based
+ * on *why* the buyer is capped (the binding constraint), not just yes/no:
+ *
+ *   'not_viable'  — below the meaningful-price floor, or no liquid savings.
+ *   'tight'       — viable, but only just (achievable price near the floor).
+ *   'comfortable' — viable and capped by EQUITY: the deposit is the limit, so
+ *                   the monthly carry sits comfortably below the income ceiling.
+ *   'qualifies'   — viable and capped by INCOME: sitting right at the 1/3 rule.
+ *
+ * Priority order — first match wins.
+ */
+export function affordabilityState(result) {
+  if (!result || !result.viable) return 'not_viable'
+  if (result.maxPrice < 300000) return 'tight'
+  return result.bindingConstraint === 'equity' ? 'comfortable' : 'qualifies'
+}
+
+/**
+ * Forward calculator — "does this specific property work for me?"
+ *
+ * Runs the full three-tier calculation from the spec against a specific
+ * purchase price, using the buyer's income + savings from the reverse result.
+ *
+ * Two independent tests must both pass:
+ *   1. DOWN PAYMENT — can you cover the effective required deposit?
+ *      Includes Niederstwertprinzip (bank lends against LOWER of price vs assessed),
+ *      valuation gap (must be liquid cash), property type adjustments.
+ *   2. AFFORDABILITY (Tragbarkeit) — can you carry the notional annual cost?
+ *      Same 5% / 1/3-income test, but now with existing monthly obligations deducted.
+ *
+ * @param {object} inputs
+ *   purchase_price            {number}  CHF asking price (required)
+ *   gross_annual_income       {number}  from reverse result inputs
+ *   liquid_savings            {number}  from reverse result inputs
+ *   pillar2_available         {number}  from reverse result inputs
+ *   assessed_value            {number?} bank's valuation if different from price
+ *   property_type             {string?} 'primary' | 'holiday' | 'investment'
+ *   existing_monthly_obligations {number?} CHF: loans, leasing, alimony
+ */
+export function checkSpecificProperty(inputs) {
+  const price   = num(inputs.purchase_price)
+  if (!price) return null
+
+  const income   = num(inputs.gross_annual_income)
+  const savings  = num(inputs.liquid_savings)
+  const pillar2  = num(inputs.pillar2_available)
+  const existing = num(inputs.existing_monthly_obligations)
+
+  // --- 1. Lending value (Niederstwertprinzip) ---------------------------------
+  // Bank lends against the LOWER of purchase price and their own assessed value.
+  const assessed    = inputs.assessed_value ? num(inputs.assessed_value) : null
+  const lendingVal  = assessed ? Math.min(price, assessed) : price
+  const valuationGap = Math.max(0, price - lendingVal) // must be liquid cash, not pillar2
+
+  // --- 2. Required down payment -----------------------------------------------
+  const regMin = lendingVal * MIN_DOWN                          // 20% regulatory floor
+
+  const propTypeAdj = (() => {
+    if (inputs.property_type === 'holiday')    return lendingVal * 0.05  // → 25% min
+    if (inputs.property_type === 'investment') return lendingVal * 0.10  // → 30% min
+    return 0
+  })()
+
+  const bankBuffer = inputs.bank_required_down_pct
+    ? Math.max(0, (num(inputs.bank_required_down_pct) / 100) * lendingVal - regMin)
+    : 0
+
+  const effectiveDown    = regMin + valuationGap + propTypeAdj + bankBuffer
+  const effectiveDownPct = price > 0 ? effectiveDown / price : 0
+
+  // --- 3. Liquid savings & pillar2 split --------------------------------------
+  // Liquid requirement: 10% of lending value PLUS the full valuation gap
+  const minLiquid  = lendingVal * MIN_LIQUID + valuationGap
+  const maxPillar2 = Math.min(pillar2, lendingVal * MAX_PILLAR2)
+
+  // Savings cover the liquid floor first, pillar2 fills the rest up to its cap
+  const savingsUsed = Math.min(savings, effectiveDown)
+  const pillar2Used = Math.min(maxPillar2, Math.max(0, effectiveDown - savingsUsed))
+  const totalAvailable = savings + maxPillar2
+
+  const downShortfall   = Math.max(0, effectiveDown - totalAvailable)
+  const liquidShortfall = Math.max(0, minLiquid - savings)
+  const downQualifies   = downShortfall === 0 && liquidShortfall === 0
+
+  // --- 4. Mortgage & amortization ---------------------------------------------
+  const mortgage     = Math.max(0, lendingVal - effectiveDown)
+  const ltv          = lendingVal > 0 ? mortgage / lendingVal : 0
+  const amortBase    = lendingVal * AMORT_TARGET_LTV      // 67% threshold (1st-mortgage ceiling)
+  const secondMtg    = Math.max(0, mortgage - amortBase)
+  const monthlyAmort = (secondMtg / AMORT_YEARS) / 12
+
+  // --- 5. Affordability test (notional 5%) ------------------------------------
+  const monthlyNotionalInterest = (mortgage * NOTIONAL_RATE) / 12
+  const monthlyMaintenance      = (lendingVal * MAINTENANCE) / 12
+  const monthlyNotionalTotal    = monthlyNotionalInterest + monthlyAmort + monthlyMaintenance
+
+  const monthlyIncome          = income / 12
+  const effectiveMonthlyIncome = Math.max(0, monthlyIncome - existing)
+  const affordRatio            = effectiveMonthlyIncome > 0
+    ? monthlyNotionalTotal / effectiveMonthlyIncome
+    : Infinity
+  const affordQualifies = affordRatio <= COST_RATIO
+
+  return {
+    // Inputs reflected for display
+    purchasePrice: price,
+    lendingVal,
+    assessedProvided: !!assessed,
+    valuationGap,
+
+    // Down payment breakdown (each line matches the spec's breakdown UI)
+    regMin,
+    propTypeAdj,
+    bankBuffer,
+    effectiveDown,
+    effectiveDownPct,
+    minLiquid,
+    maxPillar2,
+    savingsUsed,
+    pillar2Used,
+    totalAvailable,
+    downShortfall,
+    liquidShortfall,
+    downQualifies,
+
+    // Mortgage
+    mortgage,
+    ltv,
+    secondMtg,
+
+    // Monthly notional (qualification)
+    monthlyAmort,
+    monthlyNotionalInterest,
+    monthlyMaintenance,
+    monthlyNotionalTotal,
+
+    // Income
+    monthlyIncome,
+    existingObligations: existing,
+    effectiveMonthlyIncome,
+    affordRatio,
+    affordQualifies,
+
+    // Overall
+    qualifies: downQualifies && affordQualifies,
+
+    // Flags — drive inline callout messages in the UI
+    flags: {
+      niederstwert:    valuationGap > 0,
+      assessedUnknown: !assessed,
+      pillar2Capped:   pillar2 > lendingVal * MAX_PILLAR2 + 1,
+      debtSkipped:     existing === 0,
+      propTypeAdj:     propTypeAdj > 0,
+    },
+  }
+}
+
+/** Default market rate for the "what you'd really pay" slider (1–6% range). */
+export const DEFAULT_MARKET_RATE = 0.015
 
 /** Exposed for display / explanation in the UI. */
 export const RULE_CONSTANTS = {

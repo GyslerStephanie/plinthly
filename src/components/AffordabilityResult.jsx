@@ -1,14 +1,63 @@
 import { useState } from 'react'
 import { chf, int, pct } from '../lib/format'
-import { buildPriceLadder, requirementsForPrice } from '../lib/affordability'
+import {
+  buildPriceLadder,
+  requirementsForPrice,
+  monthlyCostsAtRate,
+  affordabilityState,
+  checkSpecificProperty,
+  DEFAULT_MARKET_RATE,
+} from '../lib/affordability'
 import { getCanton, eigenmietwert } from '../lib/cantons'
 import { useI18n } from '../i18n/I18nContext'
-import { T } from './Trans'
+import { T, renderRich } from './Trans'
 
 const roundK = (v) => Math.round(v / 1000) * 1000
 
-// Illustrative current market rate, vs. the bank's notional 5% stress rate.
-const ILLUSTRATIVE_RATE = 0.015
+/** Badge label + card tone for each of the four affordability states. */
+const STATE_META = {
+  comfortable: { labelKey: 'result.viableComfortable', tone: 'teal' },
+  qualifies: { labelKey: 'result.viableQualifies', tone: 'teal' },
+  tight: { labelKey: 'result.viableTight', tone: 'amber' },
+}
+
+/** The actionable lead message shown under the price for each viable state. */
+const STATE_MSG = {
+  comfortable: 'result.stateMsgComfortable',
+  qualifies: 'result.stateMsgQualifies',
+  tight: 'result.stateMsgTight',
+}
+
+/** Market-rate slider — drives only "what you'd really pay", never qualification. */
+function RateSlider({ rate, onChange, t, notional }) {
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <label htmlFor="mktRate" className="text-sm font-medium text-slate-700">
+          {t('result.rateLabel')}
+        </label>
+        <span className="tabular-nums text-sm font-semibold text-teal-700">{pct(rate, 1)}</span>
+      </div>
+      <input
+        id="mktRate"
+        type="range"
+        min="1"
+        max="6"
+        step="0.1"
+        value={(rate * 100).toFixed(1)}
+        onChange={(e) => onChange(Number(e.target.value) / 100)}
+        className="mt-2 w-full accent-teal-600"
+      />
+      <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-400">
+        <span>1%</span>
+        <span>6%</span>
+      </div>
+      <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
+        {t('result.rateHint', { notional })}
+      </p>
+    </div>
+  )
+}
 
 /** A labelled horizontal bar segment used in the breakdown visualisations. */
 function Bar({ segments }) {
@@ -66,6 +115,65 @@ function Card({ title, children, tone = 'default' }) {
   )
 }
 
+/**
+ * Monthly carrying cost at the chosen market rate: a stacked cost-distribution
+ * bar, per-component line items (interest / amortization / maintenance), and a
+ * stress-rate reality note. Reused for both the affordable price and a typed
+ * dream price (via the `showing` label).
+ */
+function MonthlyCostCard({ price, mortgage, ltv, rate, onRate, notionalPct, maintenancePct, showing }) {
+  const { t } = useI18n()
+  const mc = monthlyCostsAtRate(price, mortgage, rate, ltv)
+  const share = (v) => (mc.total > 0 ? pct(v / mc.total) : '0%')
+
+  return (
+    <Card title={t('result.monthlyTitle')}>
+      <p className="-mt-1 mb-4 text-xs text-slate-500">{showing}</p>
+
+      <RateSlider rate={rate} onChange={onRate} t={t} notional={notionalPct} />
+
+      {/* Stacked cost-distribution bar (interest / amortization / maintenance) */}
+      <div className="mb-1 mt-5 text-xs font-medium text-slate-500">{t('result.monthDistLabel')}</div>
+      <Bar
+        segments={[
+          { label: t('result.monthInterest'), value: mc.interest, color: 'bg-teal-600' },
+          { label: t('result.amort'), value: mc.amortization, color: 'bg-teal-400' },
+          { label: t('result.maintenance'), value: mc.maintenance, color: 'bg-slate-300' },
+        ]}
+      />
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+        <Legend color="bg-teal-600" label={`${t('result.monthInterest')} · ${share(mc.interest)}`} />
+        <Legend color="bg-teal-400" label={`${t('result.amort')} · ${share(mc.amortization)}`} />
+        <Legend color="bg-slate-300" label={`${t('result.maintenance')} · ${share(mc.maintenance)}`} />
+      </div>
+
+      {/* Per-component monthly line items */}
+      <div className="mt-3">
+        <Row
+          label={t('result.monthInterest')}
+          value={chf(mc.interest)}
+          sub={t('result.monthInterestSub', { pct: pct(rate, 1) })}
+        />
+        <Row label={t('result.amort')} value={chf(mc.amortization)} sub={t('result.amortSub')} />
+        <Row
+          label={t('result.maintenance')}
+          value={chf(mc.maintenance)}
+          sub={t('result.maintenanceSub', { pct: maintenancePct })}
+        />
+        <div className="my-1 border-t border-slate-100" />
+        <Row label={t('result.monthTotal')} value={chf(mc.total)} strong />
+      </div>
+
+      <T
+        as="div"
+        className="mt-3 rounded-lg bg-teal-50 p-3 text-xs leading-relaxed text-teal-900"
+        k="result.monthStress"
+        vars={{ notionalPct, notionalMo: chf(mc.totalNotional) }}
+      />
+    </Card>
+  )
+}
+
 /** Localized "numbers don't work yet" / shortfall sentence from engine data. */
 function shortfallMessage(t, sf) {
   if (!sf) return ''
@@ -77,6 +185,63 @@ function shortfallMessage(t, sf) {
   return t('shortfall.income', { gap: chf(roundK(sf.incomeGap)), target })
 }
 
+/** A single bullet in the Key Takeaways summary — teal check + rich text. */
+function TakeawayItem({ children }) {
+  return (
+    <li className="flex items-start gap-2.5">
+      <span className="mt-0.5 flex h-4 w-4 flex-none items-center justify-center rounded-full bg-teal-600 text-[10px] font-bold leading-none text-white">
+        ✓
+      </span>
+      <span className="text-sm leading-relaxed text-slate-700">{children}</span>
+    </li>
+  )
+}
+
+/**
+ * Top-of-result TL;DR: the 3–4 things a buyer most needs to walk away with —
+ * the ceiling, the lever that moves it, the cash up front, and the real vs.
+ * stress-tested monthly cost. Distilled from the same engine data the detail
+ * cards below expand on. Falls back to a shortfall summary when not viable.
+ */
+function KeyTakeaways({ result, rate }) {
+  const { t } = useI18n()
+  const { downPaymentBreakdown: dp } = result
+  const notionalPct = pct(result.rules.notionalRatePct / 100)
+  const minCash = result.maxPrice * (result.rules.minLiquidPct / 100)
+
+  const items = []
+  if (result.viable) {
+    const mc = monthlyCostsAtRate(result.maxPrice, dp.mortgage, rate, dp.ltv)
+    items.push(renderRich(t('result.tkCeiling', { price: chf(result.maxPrice) })))
+    items.push(
+      t(result.bindingConstraint === 'income' ? 'result.tkLeverIncome' : 'result.tkLeverEquity'),
+    )
+    items.push(renderRich(t('result.tkUpfront', { down: chf(dp.total), cash: chf(minCash) })))
+    items.push(
+      renderRich(
+        t('result.tkMonthly', {
+          realMo: chf(mc.total),
+          stressMo: chf(mc.totalNotional),
+          notional: notionalPct,
+        }),
+      ),
+    )
+  } else {
+    items.push(renderRich(t('result.tkNotViable', { target: chf(result.shortfall?.targetPrice ?? 200000) })))
+    items.push(shortfallMessage(t, result.shortfall))
+  }
+
+  return (
+    <Card title={t('result.tkTitle')}>
+      <ul className="space-y-2.5">
+        {items.map((it, i) => (
+          <TakeawayItem key={i}>{it}</TakeawayItem>
+        ))}
+      </ul>
+    </Card>
+  )
+}
+
 export default function AffordabilityResult({ result, renovation }) {
   const { t } = useI18n()
   const canton = getCanton(result.inputs.canton)
@@ -84,24 +249,59 @@ export default function AffordabilityResult({ result, renovation }) {
   const cashPctOfPrice = result.maxPrice > 0 ? dp.fromSavings / result.maxPrice : 0
   const eigenRate = canton ? canton.tax.eigenmietwert_rate_pct_of_market_rent : 60
 
+  // User-adjustable market rate — only affects "what you'd really pay" displays.
+  const [rate, setRate] = useState(DEFAULT_MARKET_RATE)
+
+  // One of: 'not_viable' | 'tight' | 'comfortable' | 'qualifies'.
+  const state = affordabilityState(result)
+  const stateMeta = STATE_META[state]
+  const notionalPct = pct(result.rules.notionalRatePct / 100)
+
   return (
     <div className="space-y-4">
-      {/* Headline */}
+      {/* Headline — four states (binding-constraint based) */}
       {result.viable ? (
-        <Card tone="teal">
+        <Card tone={stateMeta.tone}>
           <div className="flex items-start justify-between gap-3">
-            <p className="text-sm font-medium text-teal-800">{t('result.headlineLabel')}</p>
-            <span className="rounded-full bg-teal-600 px-2.5 py-0.5 text-xs font-semibold text-white">
-              ● {t('result.viable')}
+            <p
+              className={
+                'text-sm font-medium ' +
+                (stateMeta.tone === 'amber' ? 'text-amber-800' : 'text-teal-800')
+              }
+            >
+              {t('result.headlineLabel')}
+            </p>
+            <span
+              className={
+                'rounded-full px-2.5 py-0.5 text-xs font-semibold text-white ' +
+                (stateMeta.tone === 'amber' ? 'bg-amber-500' : 'bg-teal-600')
+              }
+            >
+              ● {t(stateMeta.labelKey)}
             </span>
           </div>
-          <p className="mt-1 text-4xl font-bold tracking-tight text-teal-900 tabular-nums">
+          <p
+            className={
+              'mt-1 text-4xl font-bold tracking-tight tabular-nums ' +
+              (stateMeta.tone === 'amber' ? 'text-amber-900' : 'text-teal-900')
+            }
+          >
             {chf(result.maxPrice)}
           </p>
+          {/* Actionable, state-specific lead message */}
+          <T
+            as="p"
+            className={
+              'mt-2 text-sm font-medium leading-relaxed ' +
+              (stateMeta.tone === 'amber' ? 'text-amber-900' : 'text-teal-900')
+            }
+            k={STATE_MSG[state]}
+          />
+          {/* Deeper "why this number" explanation, paired to the binding constraint */}
           {result.bindingConstraint === 'income' ? (
             <T
               as="p"
-              className="mt-2 text-sm leading-relaxed text-teal-900/80"
+              className="mt-2 text-sm leading-relaxed text-slate-600"
               k="result.heldByIncome"
               term={t('terms.housingCosts')}
               def={t('terms.housingCostsDef')}
@@ -109,7 +309,7 @@ export default function AffordabilityResult({ result, renovation }) {
           ) : (
             <T
               as="p"
-              className="mt-2 text-sm leading-relaxed text-teal-900/80"
+              className="mt-2 text-sm leading-relaxed text-slate-600"
               k="result.heldByEquity"
               vars={{
                 down: pct(result.rules.minDownPct / 100),
@@ -126,6 +326,9 @@ export default function AffordabilityResult({ result, renovation }) {
           </p>
         </Card>
       )}
+
+      {/* Key takeaways — TL;DR summary of the detail cards below */}
+      <KeyTakeaways result={result} rate={rate} />
 
       {/* Effective budget after a modelled renovation (Phase 3 feeds this) */}
       {renovation && result.maxPrice > 0 && (
@@ -252,15 +455,29 @@ export default function AffordabilityResult({ result, renovation }) {
             className="mt-3 rounded-lg bg-teal-50 p-3 text-xs leading-relaxed text-teal-900"
             k="result.realityRate"
             vars={{
-              notionalPct: pct(result.rules.notionalRatePct / 100),
+              notionalPct,
               notional: chf(ac.interest),
-              realPct: pct(ILLUSTRATIVE_RATE, 1),
-              real: chf(dp.mortgage * ILLUSTRATIVE_RATE),
-              realMo: chf(Math.round((dp.mortgage * ILLUSTRATIVE_RATE) / 12)),
+              realPct: pct(rate, 1),
+              real: chf(dp.mortgage * rate),
+              realMo: chf(Math.round((dp.mortgage * rate) / 12)),
             }}
           />
         )}
       </Card>
+
+      {/* Monthly cost at an actual market rate — the slider-driven "real" view */}
+      {result.maxPrice > 0 && (
+        <MonthlyCostCard
+          price={result.maxPrice}
+          mortgage={dp.mortgage}
+          ltv={dp.ltv}
+          rate={rate}
+          onRate={setRate}
+          notionalPct={notionalPct}
+          maintenancePct={pct(result.rules.maintenancePct / 100)}
+          showing={t('result.monthlyForAfford', { price: chf(result.maxPrice) })}
+        />
+      )}
 
       {/* Price ladder */}
       {result.maxPrice > 0 && (
@@ -279,8 +496,8 @@ export default function AffordabilityResult({ result, renovation }) {
         </Card>
       )}
 
-      {/* Reverse calculator — aim for a dream price */}
-      <TargetPriceCalculator result={result} />
+      {/* Forward mode — check a specific property */}
+      <PropertyChecker result={result} rate={rate} />
 
       {/* What would change this (only when not viable) */}
       {!result.viable && result.shortfall && (
@@ -485,59 +702,321 @@ function Legend({ color, label }) {
   )
 }
 
-/**
- * Reverse calculator: enter a target ("dream") price and see the income and
- * equity it would take at the chosen down %, vs. what the buyer has today.
- */
-function TargetPriceCalculator({ result }) {
+/** Small pill showing the tier / source of a figure. */
+function TierBadge({ labelKey }) {
   const { t } = useI18n()
-  const [target, setTarget] = useState('')
-  const targetNum = Number(String(target).replace(/[^0-9]/g, '')) || 0
-  const req = targetNum ? requirementsForPrice(targetNum, result.rules.downPct / 100) : null
+  return (
+    <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
+      {t(labelKey)}
+    </span>
+  )
+}
 
-  let income, equity, cash, achievable
-  if (req) {
-    const haveEquity = result.inputs.savings + Math.min(result.inputs.pillar2, req.maxPillar2)
-    income = Math.max(0, req.incomeNeeded - result.inputs.grossIncome)
-    equity = Math.max(0, req.downPayment - haveEquity)
-    cash = Math.max(0, req.minCash - result.inputs.savings)
-    achievable = income === 0 && equity === 0 && cash === 0
-  }
+/** Pass / fail pill for each sub-test. */
+function TestPill({ pass, label }) {
+  return (
+    <div className={
+      'mt-1 rounded-lg px-3 py-2 text-sm font-medium ' +
+      (pass ? 'bg-teal-50 text-teal-800' : 'bg-red-50 text-red-800')
+    }>
+      {label}
+    </div>
+  )
+}
 
-  const gapChip = (gap) =>
-    gap > 0 ? `+${chf(gap)}` : t('result.targetCovered')
+/**
+ * Forward mode: "does this specific property work for me?"
+ * Runs the full spec calculation — Niederstwertprinzip, existing obligations,
+ * property type adjustments — and shows a line-by-line breakdown of both tests.
+ */
+function PropertyChecker({ result, rate }) {
+  const { t } = useI18n()
+
+  // --- form state ---
+  const [price, setPrice]           = useState('')
+  const [showAssessed, setShowAssessed] = useState(false)
+  const [assessed, setAssessed]     = useState('')
+  const [propType, setPropType]     = useState('primary')
+  const [obligations, setObligations] = useState('')
+
+  const priceNum = Number(String(price).replace(/[^0-9]/g, '')) || 0
+  const check = priceNum
+    ? checkSpecificProperty({
+        purchase_price:               priceNum,
+        gross_annual_income:          result.inputs.grossIncome,
+        liquid_savings:               result.inputs.savings,
+        pillar2_available:            result.inputs.pillar2,
+        assessed_value:               showAssessed ? (Number(String(assessed).replace(/[^0-9]/g, '')) || null) : null,
+        property_type:                propType,
+        existing_monthly_obligations: Number(String(obligations).replace(/[^0-9]/g, '')) || 0,
+      })
+    : null
+
+  const monthly = check ? monthlyCostsAtRate(check.purchasePrice, check.mortgage, rate, check.ltv) : null
 
   return (
-    <Card title={t('result.targetTitle')}>
-      <p className="mb-3 text-sm leading-relaxed text-slate-600">
-        {t('result.targetIntro', { pct: result.rules.downPct })}
-      </p>
-      <div className="flex w-full max-w-xs items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-        <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
-        <input
-          type="text"
-          inputMode="numeric"
-          value={target}
-          onChange={(e) => setTarget(e.target.value.replace(/[^0-9'.\s]/g, ''))}
-          placeholder="2'400'000"
-          className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
-        />
+    <Card title={t('check.title')}>
+      <p className="mb-4 text-sm leading-relaxed text-slate-600">{t('check.intro')}</p>
+
+      {/* ── Price input ── */}
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-700">{t('check.priceLabel')}</label>
+          <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
+            <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+            <input
+              type="text" inputMode="numeric"
+              value={price}
+              onChange={(e) => setPrice(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+              placeholder="1'200'000"
+              className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* ── Optional: assessed value ── */}
+        <div>
+          <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-600">
+            <input
+              type="checkbox"
+              checked={showAssessed}
+              onChange={(e) => setShowAssessed(e.target.checked)}
+              className="accent-teal-600"
+            />
+            {t('check.assessedToggle')}
+          </label>
+          {showAssessed && (
+            <div className="mt-2 space-y-1">
+              <div className="flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
+                <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+                <input
+                  type="text" inputMode="numeric"
+                  value={assessed}
+                  onChange={(e) => setAssessed(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+                  placeholder="1'100'000"
+                  className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
+                />
+              </div>
+              <p className="text-xs leading-relaxed text-slate-500">{t('check.assessedHint')}</p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Optional: property type ── */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700">{t('check.propTypeLabel')}</label>
+          <div className="mt-1.5 grid grid-cols-3 gap-2">
+            {[
+              { val: 'primary',    key: 'check.propTypePrimary' },
+              { val: 'holiday',    key: 'check.propTypeHoliday' },
+              { val: 'investment', key: 'check.propTypeInvestment' },
+            ].map(({ val, key }) => (
+              <button
+                key={val} type="button"
+                onClick={() => setPropType(val)}
+                className={
+                  'rounded-lg border px-2 py-2 text-xs font-medium transition ' +
+                  (propType === val
+                    ? 'border-teal-600 bg-teal-50 text-teal-800'
+                    : 'border-slate-300 bg-white text-slate-600 hover:border-slate-400')
+                }
+              >
+                {t(key)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Optional: existing obligations ── */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700">{t('check.obligationsLabel')}</label>
+          <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
+            <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+            <input
+              type="text" inputMode="numeric"
+              value={obligations}
+              onChange={(e) => setObligations(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+              placeholder="0"
+              className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
+            />
+            <span className="select-none pr-3 text-sm text-slate-400">/mo</span>
+          </div>
+          <p className="mt-1 text-xs text-slate-500">{t('check.obligationsHint')}</p>
+          {!obligations && (
+            <p className="mt-0.5 text-xs italic text-amber-700">{t('check.obligationsSkipped')}</p>
+          )}
+        </div>
       </div>
 
-      {req && (
-        <div className="mt-4">
-          <Row label={t('result.targetIncomeNeeded')} value={chf(req.incomeNeeded)} sub={gapChip(income)} />
-          <Row label={t('result.targetEquityNeeded')} value={chf(req.downPayment)} sub={gapChip(equity)} />
-          <Row label={t('result.targetCashMin')} value={chf(req.minCash)} sub={gapChip(cash)} />
-          <Row label={t('result.mortgage')} value={chf(req.mortgage)} sub={t('result.ltv', { pct: pct(req.ltv) })} />
-          <div
-            className={
-              'mt-3 rounded-lg p-3 text-sm leading-relaxed ' +
-              (achievable ? 'bg-teal-50 text-teal-800' : 'bg-amber-50 text-amber-900')
-            }
-          >
-            {achievable ? t('result.targetAchievable') : t('result.targetGapNote')}
+      {/* ── Results ── */}
+      {check && (
+        <div className="mt-6 space-y-5">
+
+          {/* Overall verdict */}
+          <div className={
+            'rounded-xl border p-4 ' +
+            (check.qualifies ? 'border-teal-300 bg-teal-50' : 'border-red-200 bg-red-50')
+          }>
+            <p className={'text-base font-semibold ' + (check.qualifies ? 'text-teal-800' : 'text-red-800')}>
+              {check.qualifies ? t('check.qualifies') : t('check.doesNotQualify')}
+            </p>
+            <p className={'mt-1 text-sm leading-relaxed ' + (check.qualifies ? 'text-teal-700' : 'text-red-700')}>
+              {check.qualifies ? t('check.qualifiesNote') : t('check.doesNotQualifyNote')}
+            </p>
+            {/* Sub-test pills */}
+            <div className="mt-3 space-y-1">
+              {check.downQualifies
+                ? <TestPill pass={true}  label={t('check.passDown')} />
+                : <>
+                    {check.downShortfall > 0   && <TestPill pass={false} label={t('check.failDown',   { amount: chf(check.downShortfall) })} />}
+                    {check.liquidShortfall > 0 && <TestPill pass={false} label={t('check.failLiquid', { short: chf(check.liquidShortfall) })} />}
+                  </>
+              }
+              {check.affordQualifies
+                ? <TestPill pass={true}  label={t('check.passAfford')} />
+                : <TestPill pass={false} label={t('check.failAfford', {
+                    ratio:   pct(check.affordRatio, 1),
+                    ceiling: pct(0.333, 1),
+                  })} />
+              }
+            </div>
           </div>
+
+          {/* ── Down payment breakdown ── */}
+          <div>
+            <h4 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+              {t('check.downTitle')}
+            </h4>
+
+            {/* Valuation basis */}
+            {check.flags.niederstwert && (
+              <div className="mb-3 rounded-lg bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                {t('check.downValGapNote')}
+              </div>
+            )}
+            {check.flags.assessedUnknown && (
+              <p className="mb-2 text-xs italic text-slate-400">
+                {t('check.assessedHint')}
+              </p>
+            )}
+
+            <div className="space-y-0.5">
+              <Row
+                label={<>{t('check.downRegMin')}<TierBadge labelKey="check.tierLocked" /></>}
+                value={chf(check.regMin)}
+              />
+              {check.valuationGap > 0 && (
+                <Row
+                  label={<>{t('check.downValGap')}<TierBadge labelKey="check.tierSituation" /></>}
+                  value={chf(check.valuationGap)}
+                />
+              )}
+              {check.propTypeAdj > 0 && (
+                <Row
+                  label={<>{t('check.downPropType', { type: propType })}<TierBadge labelKey="check.tierSituation" /></>}
+                  value={chf(check.propTypeAdj)}
+                />
+              )}
+              {check.bankBuffer > 0 && (
+                <Row
+                  label={<>{t('check.downBank')}<TierBadge labelKey="check.tierInput" /></>}
+                  value={chf(check.bankBuffer)}
+                />
+              )}
+              <div className="my-1 border-t border-slate-200" />
+              <Row
+                label={t('check.downEffective', { pct: pct(check.effectiveDownPct) })}
+                value={chf(check.effectiveDown)}
+                strong
+              />
+            </div>
+
+            {/* Funds vs requirement */}
+            <div className="mt-3 space-y-0.5">
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">{t('check.fundsTitle')}</p>
+              <Row label={t('check.fundsSavings')} value={chf(result.inputs.savings)} />
+              <Row
+                label={<>
+                  {t('check.fundsPillar2')}
+                  {check.flags.pillar2Capped &&
+                    <span className="ml-1 text-xs text-amber-700">
+                      {t('check.fundsPillar2Cap', { max: chf(check.maxPillar2) })}
+                    </span>}
+                </>}
+                value={chf(check.pillar2Used)}
+              />
+              <div className="my-1 border-t border-slate-200" />
+              <Row label={t('check.fundsTotal')} value={chf(check.totalAvailable)} strong />
+              {check.downShortfall > 0
+                ? <Row label={t('check.fundsShortfall')} value={`−${chf(check.downShortfall)}`} />
+                : <p className="py-1 text-sm text-teal-700">{t('check.fundsOk')}</p>
+              }
+            </div>
+
+            {/* Liquid requirement callout */}
+            <div className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-xs leading-relaxed text-slate-600">
+              {t('check.liquidReq', { amount: chf(check.minLiquid) })}
+              {' '}
+              {check.liquidShortfall > 0
+                ? <span className="font-medium text-red-700">{t('check.liquidShort', { short: chf(check.liquidShortfall), amount: chf(check.minLiquid) })}</span>
+                : <span className="font-medium text-teal-700">{t('check.liquidOk')}</span>
+              }
+            </div>
+          </div>
+
+          {/* ── Affordability breakdown ── */}
+          <div>
+            <h4 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+              {t('check.affordTitle')}
+            </h4>
+            <div className="space-y-0.5">
+              <Row label={t('check.affordMortgage')} value={chf(check.mortgage)} sub={t('result.ltv', { pct: pct(check.ltv) })} />
+              {check.secondMtg > 0 && (
+                <Row label={t('check.affordSecond')} value={chf(check.secondMtg)} />
+              )}
+              <div className="my-1 border-t border-slate-100" />
+              <Row label={t('check.affordInterest')} value={chf(check.monthlyNotionalInterest)} sub="/mo" />
+              <Row label={t('check.affordAmort')} value={chf(check.monthlyAmort)} sub={t('check.affordAmortSub')} />
+              <Row label={t('check.affordMaint')} value={chf(check.monthlyMaintenance)} sub="/mo" />
+              <div className="my-1 border-t border-slate-100" />
+              <Row label={t('check.affordNotionalTotal')} value={chf(check.monthlyNotionalTotal)} strong />
+              <div className="my-2 border-t border-slate-200" />
+              <Row label={t('check.affordIncome')} value={chf(check.monthlyIncome)} />
+              {check.existingObligations > 0 && (
+                <Row label={t('check.affordObligations')} value={`−${chf(check.existingObligations)}`} />
+              )}
+              <Row label={t('check.affordEffective')} value={chf(check.effectiveMonthlyIncome)} strong />
+              <div className="my-1 border-t border-slate-100" />
+              <Row
+                label={t('check.affordRatio')}
+                value={pct(check.affordRatio, 1)}
+                sub={check.affordQualifies ? '✓' : '✗'}
+              />
+              <Row label={t('check.affordCeiling')} value={pct(0.333, 1)} />
+            </div>
+          </div>
+
+          {/* ── What you'd actually pay (market rate from slider) ── */}
+          <div>
+            <h4 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+              {t('check.monthlyActual', { rate: pct(rate, 1) })}
+            </h4>
+            <Bar
+              segments={[
+                { label: t('result.monthInterest'), value: monthly.interest,     color: 'bg-teal-600' },
+                { label: t('result.amort'),          value: monthly.amortization, color: 'bg-teal-400' },
+                { label: t('result.maintenance'),    value: monthly.maintenance,  color: 'bg-slate-300' },
+              ]}
+            />
+            <div className="mt-2 space-y-0.5">
+              <Row label={t('result.monthInterest')} value={chf(monthly.interest)} sub={t('result.monthInterestSub', { pct: pct(rate, 1) })} />
+              <Row label={t('result.amort')}         value={chf(monthly.amortization)} />
+              <Row label={t('result.maintenance')}   value={chf(monthly.maintenance)} />
+              <div className="my-1 border-t border-slate-100" />
+              <Row label={t('result.monthTotal')} value={chf(monthly.total)} strong />
+            </div>
+          </div>
+
         </div>
       )}
     </Card>
