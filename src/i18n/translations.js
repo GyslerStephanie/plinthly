@@ -29,6 +29,10 @@ export const translations = {
   /* ===================================================================== EN */
   en: {
     meta: { mtNotice: '' },
+    context: {
+      banner: 'Based on your {budget} budget in {canton}.',
+      banner3: 'Based on your {budget} budget and {mortgage} mortgage in {canton}.',
+    },
     header: {
       tagline: 'Swiss Sustainable Real Estate Explorer',
       badge: 'No selling · No sign-up · Just honest numbers',
@@ -297,6 +301,10 @@ export const translations = {
   /* ===================================================================== DE */
   de: {
     meta: { mtNotice: 'Automatische Übersetzung – fachliche Prüfung empfohlen.' },
+    context: {
+      banner: 'Basierend auf Ihrem Budget von {budget} im Kanton {canton}.',
+      banner3: 'Basierend auf Ihrem Budget von {budget} und einer Hypothek von {mortgage} im Kanton {canton}.',
+    },
     header: {
       tagline: 'Schweizer Explorer für nachhaltige Immobilien',
       badge: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
@@ -566,6 +574,10 @@ export const translations = {
   /* ===================================================================== FR */
   fr: {
     meta: { mtNotice: 'Traduction automatique – relecture professionnelle recommandée.' },
+    context: {
+      banner: 'Sur la base de votre budget de {budget} dans le canton de {canton}.',
+      banner3: 'Sur la base de votre budget de {budget} et d’une hypothèque de {mortgage} dans le canton de {canton}.',
+    },
     header: {
       tagline: 'Explorateur immobilier durable suisse',
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
@@ -834,6 +846,10 @@ export const translations = {
   /* ===================================================================== IT */
   it: {
     meta: { mtNotice: 'Traduzione automatica – si consiglia una revisione professionale.' },
+    context: {
+      banner: 'In base al tuo budget di {budget} nel cantone {canton}.',
+      banner3: 'In base al tuo budget di {budget} e a un mutuo di {mortgage} nel cantone {canton}.',
+    },
     header: {
       tagline: 'Explorer immobiliare sostenibile svizzero',
       badge: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',

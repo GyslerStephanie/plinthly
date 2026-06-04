@@ -10,6 +10,8 @@ import { impliedSize } from './lib/exploration'
 import { computeLedger, selectedMeasures } from './lib/retrofit'
 import { decodeState, syncHash, shareableUrl } from './lib/share'
 import { useI18n } from './i18n/I18nContext'
+import { AppStateProvider, deriveAppState } from './state/AppStateContext'
+import PhaseContextBanner from './components/PhaseContextBanner'
 
 const PHASE_NUMBERS = [1, 2, 3, 4]
 
@@ -148,6 +150,9 @@ export default function App() {
   const canContinue = phase < 4 && (phase > 1 || !!phase1)
   const mtNotice = t('meta.mtNotice')
 
+  // Derived, read-only view of state shared with descendants via context.
+  const appState = deriveAppState({ values, phase1, explore, phase, maxVisited })
+
   // If the buyer has modelled a renovation (Phase 3, Option A), surface its net
   // cost back in Phase 1 as an "effective property budget".
   const renovation = (() => {
@@ -161,6 +166,7 @@ export default function App() {
   })()
 
   return (
+    <AppStateProvider value={appState}>
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4">
@@ -242,21 +248,30 @@ export default function App() {
 
         {/* Phase 2 */}
         {phase === 2 && (
-          <Phase2Exploration explore={explore} onChange={handleExploreChange} />
+          <>
+            <PhaseContextBanner phase={2} />
+            <Phase2Exploration explore={explore} onChange={handleExploreChange} />
+          </>
         )}
 
         {/* Phase 3 */}
         {phase === 3 && (
-          <Phase3Options explore={explore} onChange={handleExploreChange} />
+          <>
+            <PhaseContextBanner phase={3} />
+            <Phase3Options explore={explore} onChange={handleExploreChange} phase1={phase1} />
+          </>
         )}
 
         {/* Phase 4 */}
         {phase === 4 && phase1 && (
-          <Phase4ActionPlan
-            phase1={phase1}
-            explore={explore}
-            shareUrl={shareableUrl(flatState)}
-          />
+          <>
+            <PhaseContextBanner phase={4} />
+            <Phase4ActionPlan
+              phase1={phase1}
+              explore={explore}
+              shareUrl={shareableUrl(flatState)}
+            />
+          </>
         )}
 
         {/* Navigation */}
@@ -309,6 +324,7 @@ export default function App() {
         </div>
       </footer>
     </div>
+    </AppStateProvider>
   )
 }
 
