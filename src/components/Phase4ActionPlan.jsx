@@ -6,6 +6,7 @@ import { computeLedger, selectedMeasures } from '../lib/retrofit'
 import { chf, int } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { Card, Pill } from './ui'
+import BankInquiry from './BankInquiry'
 
 const OPTION_LABEL_KEYS = {
   renovate: 'phase3.aTitle',
@@ -116,6 +117,9 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
           ))}
         </ol>
       </div>
+
+      {/* Ready to talk to a bank? */}
+      <BankInquiry />
 
       {/* Share / export */}
       <Card title={t('phase4.takeWith')} className="no-print">

@@ -1,0 +1,35 @@
+{
+  "note": "Static list of major Swiss mortgage lenders. 'scope' is either \"national\" (offered Switzerland-wide) or an array of canton codes for cantonal banks. URLs point to each bank's own mortgage / appointment page. Plinthly has no affiliation with any of these banks.",
+  "banks": [
+    {
+      "name": "UBS",
+      "scope": "national",
+      "url": "https://www.ubs.com/ch/en/private/mortgages.html"
+    },
+    {
+      "name": "Raiffeisen",
+      "scope": "national",
+      "url": "https://www.raiffeisen.ch/rch/en/private-clients/mortgages.html"
+    },
+    {
+      "name": "Zürcher Kantonalbank (ZKB)",
+      "scope": ["ZH"],
+      "url": "https://www.zkb.ch/en/private/mortgages.html"
+    },
+    {
+      "name": "PostFinance",
+      "scope": "national",
+      "url": "https://www.postfinance.ch/en/private/products/property-mortgages.html"
+    },
+    {
+      "name": "Migros Bank",
+      "scope": "national",
+      "url": "https://www.migrosbank.ch/en/private-individuals/mortgages.html"
+    },
+    {
+      "name": "Hypothekarbank Lenzburg",
+      "scope": "national",
+      "url": "https://www.hbl.ch/en/private-clients/financing/mortgages/"
+    }
+  ]
+}
