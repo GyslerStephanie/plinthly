@@ -189,9 +189,9 @@ export default function App() {
     <AppStateProvider value={appState}>
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4">
+        <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-3 px-5 py-4 md:px-8 lg:px-[60px]">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-sm font-bold text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">
               P
             </span>
             <div>
@@ -225,7 +225,7 @@ export default function App() {
 
       <StickySummaryBar />
 
-      <main className="mx-auto max-w-5xl px-4 py-8">
+      <main className="mx-auto max-w-[1320px] px-5 py-10 md:px-8 lg:px-[60px] lg:py-16">
         <div className="mb-8 no-print">
           <PhaseNav
             current={phase}
@@ -318,7 +318,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => goToPhase(phase + 1)}
-              className="rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
+              className="rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
             >
               {phase === 1
                 ? t('btn.continueExplore')
@@ -348,7 +348,7 @@ export default function App() {
       </main>
 
       <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-5xl px-4 py-6 text-xs leading-relaxed text-slate-400">
+        <div className="mx-auto max-w-[1320px] px-5 py-8 md:px-8 lg:px-[60px] text-xs leading-relaxed text-slate-400">
           {t('footer.disclaimer', { date: dataMeta.last_updated })}
         </div>
       </footer>

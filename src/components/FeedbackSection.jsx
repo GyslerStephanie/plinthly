@@ -26,7 +26,7 @@ function Choice({ active, onClick, children }) {
       onClick={onClick}
       aria-pressed={active}
       className={
-        'rounded-lg border px-3 py-2 text-sm font-medium transition ' +
+        'rounded-md border px-3 py-2 text-sm font-medium transition ' +
         (active
           ? 'border-teal-600 bg-teal-50 text-teal-800'
           : 'border-slate-300 bg-white text-slate-600 hover:border-slate-400')
@@ -57,7 +57,7 @@ export default function FeedbackSection({ feedback, onSubmit }) {
     return (
       <Card tone="teal" className="no-print">
         <div className="flex items-start gap-3">
-          <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-teal-600 text-white">
+          <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-positive text-white">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M20 6 9 17l-5-5" />
             </svg>
@@ -133,7 +133,7 @@ export default function FeedbackSection({ feedback, onSubmit }) {
         type="button"
         onClick={submit}
         disabled={!canSubmit}
-        className="inline-flex items-center justify-center rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-40"
+        className="inline-flex items-center justify-center rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {t('feedback.submit')}
       </button>

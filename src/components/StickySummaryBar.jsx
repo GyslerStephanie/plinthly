@@ -9,7 +9,7 @@ function StatusBadge({ viable, label }) {
     <span
       className={
         'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ' +
-        (viable ? 'bg-teal-100 text-teal-800' : 'bg-amber-100 text-amber-800')
+        (viable ? 'bg-positive-light text-positive' : 'bg-warning-light text-amber-800')
       }
     >
       {viable ? (
@@ -56,7 +56,7 @@ export default function StickySummaryBar() {
 
   return (
     <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur no-print">
-      <div className="mx-auto max-w-5xl px-4">
+      <div className="mx-auto max-w-[1320px] px-5 md:px-8 lg:px-[60px]">
         {/* Desktop: full row */}
         <div className="hidden items-center justify-between gap-6 py-2.5 md:flex">
           <p className="shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">

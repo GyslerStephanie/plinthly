@@ -16,9 +16,9 @@ const OPTION_LABEL_KEYS = {
 }
 
 const STEP_TONES = {
-  teal: 'border-teal-200 bg-teal-50',
-  amber: 'border-amber-200 bg-amber-50',
-  default: 'border-slate-200 bg-white',
+  teal: 'border-line bg-surface',
+  amber: 'border-line bg-surface',
+  default: 'border-line bg-white',
 }
 
 export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, onSubmitFeedback }) {
@@ -129,7 +129,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, 
           <button
             type="button"
             onClick={copyLink}
-            className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-full bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
           >
             {copied ? t('phase4.linkCopied') : t('phase4.copyLink')}
           </button>
@@ -142,7 +142,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, 
                 /* print blocked in sandbox */
               }
             }}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
+            className="inline-flex items-center gap-2 rounded-full border border-ink bg-white px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-surface"
           >
             {t('phase4.printPdf')}
           </button>

@@ -28,12 +28,65 @@
   --text-4xl--line-height: 1.05; /* hero headings only */
   --text-5xl: 64px;
   --text-5xl--line-height: 1; /* landing hero only */
+
+  /* ---- Semantic palette ------------------------------------------------- */
+  /* Neutrals — monochrome base. Color is functional, never decorative. */
+  --color-ink: #0d0d0d; /* headings */
+  --color-body: #666666; /* body text */
+  --color-muted: #999999; /* captions, labels, placeholders */
+  --color-line: #ebebeb; /* card / input borders */
+  --color-surface: #f5f5f5; /* section alternation */
+
+  /* Status accents — used ONLY for state (dots, badges, thin accents). */
+  --color-positive: #34a853;
+  --color-positive-light: #e8f5e9;
+  --color-info: #4285f4;
+  --color-info-light: #e3f2fd;
+  --color-warning: #fbbc04;
+  --color-warning-light: #fff8e1;
+  --color-error: #ea4335;
+  --color-error-light: #ffebee;
+
+  /* ---- Remap the neutral scale the app already uses -> monochrome ------- */
+  --color-slate-50: #ffffff;
+  --color-slate-100: #f5f5f5;
+  --color-slate-200: #ebebeb;
+  --color-slate-300: #ebebeb;
+  --color-slate-400: #999999;
+  --color-slate-500: #999999;
+  --color-slate-600: #666666;
+  --color-slate-700: #666666;
+  --color-slate-800: #0d0d0d;
+  --color-slate-900: #0d0d0d;
+
+  /* Remap the old "brand" teal -> ink/greys. Primary is black now; positive
+     status is reintroduced explicitly via --color-positive where it belongs. */
+  --color-teal-50: #f5f5f5;
+  --color-teal-100: #ebebeb;
+  --color-teal-200: #ebebeb;
+  --color-teal-300: #d6d6d6;
+  --color-teal-400: #999999;
+  --color-teal-500: #666666;
+  --color-teal-600: #0d0d0d;
+  --color-teal-700: #0d0d0d;
+  --color-teal-800: #000000;
+  --color-teal-900: #0d0d0d;
+
+  /* Remap amber -> the system yellow (warning). */
+  --color-amber-50: #fff8e1;
+  --color-amber-100: #fff8e1;
+  --color-amber-200: #fce9a8;
+  --color-amber-500: #fbbc04;
+  --color-amber-600: #e0a800;
+  --color-amber-700: #8a6d00;
+  --color-amber-800: #6f5700;
+  --color-amber-900: #574500;
 }
 
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background: #f8fafc; /* slate-50 — avoids black overscroll / paint gaps */
+  background: #ffffff; /* page background — clean white */
 }
 
 body {

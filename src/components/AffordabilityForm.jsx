@@ -173,7 +173,7 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
                 type="button"
                 onClick={() => set('employmentType')(tp.value)}
                 className={
-                  'rounded-lg border px-3 py-2.5 text-sm font-medium transition ' +
+                  'rounded-md border px-3 py-2.5 text-sm font-medium transition ' +
                   (active
                     ? 'border-teal-600 bg-teal-50 text-teal-800'
                     : 'border-slate-300 bg-white text-slate-600 hover:border-slate-400')
@@ -191,7 +191,7 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
 
       <button
         type="submit"
-        className="w-full rounded-lg bg-teal-700 py-3 text-base font-bold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2"
+        className="w-full rounded-full bg-teal-700 py-3 text-base font-bold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2"
       >
         {t('btn.showAfford')}
       </button>

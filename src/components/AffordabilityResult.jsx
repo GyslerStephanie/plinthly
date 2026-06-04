@@ -99,9 +99,9 @@ function Row({ label, value, sub, strong }) {
 
 function Card({ title, children, tone = 'default' }) {
   const tones = {
-    default: 'border-slate-200 bg-white',
-    teal: 'border-teal-200 bg-teal-50/60',
-    amber: 'border-amber-200 bg-amber-50/60',
+    default: 'border-line bg-white',
+    teal: 'border-line bg-white',
+    amber: 'border-line bg-white',
   }
   return (
     <section className={`rounded-xl border p-5 shadow-sm ${tones[tone]}`}>
@@ -189,7 +189,7 @@ function shortfallMessage(t, sf) {
 function TakeawayItem({ children }) {
   return (
     <li className="flex items-start gap-2.5">
-      <span className="mt-0.5 flex h-4 w-4 flex-none items-center justify-center rounded-full bg-teal-600 text-[10px] font-bold leading-none text-white">
+      <span className="mt-0.5 flex h-4 w-4 flex-none items-center justify-center rounded-full bg-positive text-[10px] font-bold leading-none text-white">
         ✓
       </span>
       <span className="text-sm leading-relaxed text-slate-700">{children}</span>
@@ -279,8 +279,10 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             </p>
             <span
               className={
-                'rounded-full px-2.5 py-0.5 text-xs font-semibold text-white ' +
-                (stateMeta.tone === 'amber' ? 'bg-amber-500' : 'bg-teal-600')
+                'rounded-full px-2.5 py-0.5 text-xs font-semibold ' +
+                (stateMeta.tone === 'amber'
+                  ? 'bg-warning-light text-amber-800'
+                  : 'bg-positive-light text-positive')
               }
             >
               ● {t(stateMeta.labelKey)}
@@ -288,8 +290,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           </div>
           <p
             className={
-              'mt-1 font-display text-3xl font-black tracking-tight tabular-nums ' +
-              (stateMeta.tone === 'amber' ? 'text-amber-900' : 'text-teal-900')
+              'mt-1 font-display text-3xl font-black tracking-tight tabular-nums text-ink'
             }
           >
             {chf(result.maxPrice)}

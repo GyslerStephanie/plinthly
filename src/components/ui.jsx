@@ -1,10 +1,13 @@
 import { chf } from '../lib/format'
 
+// Cards are white on white; status is carried by dots/badges, never a fill
+// (design system: "no colored backgrounds larger than a badge"). The `slate`
+// tone uses the grey surface for section alternation.
 const TONES = {
-  default: 'border-slate-200 bg-white',
-  teal: 'border-teal-200 bg-teal-50/60',
-  amber: 'border-amber-200 bg-amber-50/60',
-  slate: 'border-slate-200 bg-slate-50',
+  default: 'border-line bg-white',
+  teal: 'border-line bg-white',
+  amber: 'border-line bg-white',
+  slate: 'border-line bg-surface',
 }
 
 /** Bordered content card with an optional uppercase section title. */
@@ -62,9 +65,13 @@ export function RangeValue({ band, suffix = '' }) {
 /** A small pill label. */
 export function Pill({ children, tone = 'slate' }) {
   const map = {
-    slate: 'bg-slate-100 text-slate-600',
-    teal: 'bg-teal-100 text-teal-700',
-    amber: 'bg-amber-100 text-amber-700',
+    slate: 'bg-surface text-body',
+    teal: 'bg-surface text-ink',
+    amber: 'bg-warning-light text-amber-800',
+    positive: 'bg-positive-light text-positive',
+    info: 'bg-info-light text-info',
+    warning: 'bg-warning-light text-amber-800',
+    error: 'bg-error-light text-error',
   }
   return (
     <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${map[tone]}`}>

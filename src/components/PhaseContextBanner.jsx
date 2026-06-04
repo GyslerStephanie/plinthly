@@ -19,7 +19,7 @@ export default function PhaseContextBanner({ phase }) {
   const key = phase === 3 ? 'context.banner3' : 'context.banner'
 
   return (
-    <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-teal-100 bg-teal-50/70 px-4 py-2.5 text-sm text-teal-900 no-print">
+    <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-body no-print">
       <svg
         width="16"
         height="16"
@@ -29,7 +29,7 @@ export default function PhaseContextBanner({ phase }) {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="flex-none text-teal-600"
+        className="flex-none text-info"
         aria-hidden
       >
         <circle cx="12" cy="12" r="10" />
