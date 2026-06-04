@@ -6,6 +6,8 @@ import { computeLedger, selectedMeasures } from '../lib/retrofit'
 import { chf, int } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { Card, Pill } from './ui'
+import BankInquiry from './BankInquiry'
+import FeedbackSection from './FeedbackSection'
 
 const OPTION_LABEL_KEYS = {
   renovate: 'phase3.aTitle',
@@ -14,12 +16,12 @@ const OPTION_LABEL_KEYS = {
 }
 
 const STEP_TONES = {
-  teal: 'border-teal-200 bg-teal-50',
-  amber: 'border-amber-200 bg-amber-50',
-  default: 'border-slate-200 bg-white',
+  teal: 'border-line bg-surface',
+  amber: 'border-line bg-surface',
+  default: 'border-line bg-white',
 }
 
-export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
+export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, onSubmitFeedback }) {
   const { t } = useI18n()
   const [copied, setCopied] = useState(false)
   const canton = getCanton(explore.canton)
@@ -87,7 +89,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
           {steps.map((step, i) => (
             <li
               key={i}
-              className={`rounded-2xl border p-5 shadow-sm ${STEP_TONES[step.tone] || STEP_TONES.default}`}
+              className={`rounded-xl border p-5 shadow-sm ${STEP_TONES[step.tone] || STEP_TONES.default}`}
             >
               <div className="flex gap-4">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">
@@ -117,6 +119,9 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
         </ol>
       </div>
 
+      {/* Ready to talk to a bank? */}
+      <BankInquiry />
+
       {/* Share / export */}
       <Card title={t('phase4.takeWith')} className="no-print">
         <p className="text-sm leading-relaxed text-slate-600">{t('phase4.takeWithText')}</p>
@@ -124,7 +129,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
           <button
             type="button"
             onClick={copyLink}
-            className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-full bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
           >
             {copied ? t('phase4.linkCopied') : t('phase4.copyLink')}
           </button>
@@ -137,13 +142,16 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl }) {
                 /* print blocked in sandbox */
               }
             }}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400"
+            className="inline-flex items-center gap-2 rounded-full border border-ink bg-white px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-surface"
           >
             {t('phase4.printPdf')}
           </button>
         </div>
         {shareUrl && <p className="mt-3 break-all text-xs text-slate-400">{shareUrl}</p>}
       </Card>
+
+      {/* Feedback — end of the journey */}
+      <FeedbackSection feedback={feedback} onSubmit={onSubmitFeedback} />
     </div>
   )
 }

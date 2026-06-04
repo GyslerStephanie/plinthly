@@ -25,7 +25,7 @@ function Segmented({ options, value, onChange, name }) {
             type="button"
             onClick={() => onChange(o.value)}
             className={
-              'rounded-lg border px-3 py-2 text-sm font-medium transition ' +
+              'rounded-md border px-3 py-2 text-sm font-medium transition ' +
               (active
                 ? 'border-teal-600 bg-teal-50 text-teal-800'
                 : 'border-slate-300 bg-white text-slate-600 hover:border-slate-400')

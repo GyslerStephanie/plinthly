@@ -1,0 +1,42 @@
+{
+  "eigenmietwert": {
+    "term": "Eigenmietwert",
+    "definition": "A notional 'rent' the Swiss tax system adds to your taxable income for living in your own home. You pay income tax on it, but can deduct mortgage interest and maintenance costs. Swiss voters approved abolishing it in 2025, though the timing still varies by canton."
+  },
+  "tragbarkeit": {
+    "term": "Tragbarkeit",
+    "definition": "The Swiss affordability test a bank applies before lending. Your modelled annual housing costs — interest at a notional 5% rate, amortisation and about 1% maintenance — must stay under one third of your gross income."
+  },
+  "belehnungswert": {
+    "term": "Belehnungswert",
+    "definition": "The value a bank actually lends against, which can be lower than the price you pay. Banks use the lower of the purchase price and their own valuation, so any gap between them must be covered with your own cash."
+  },
+  "minergie": {
+    "term": "Minergie",
+    "definition": "A Swiss sustainability standard for low-energy buildings. Minergie-certified homes cost more to build but use far less energy and tend to hold their resale value better; some banks offer more favourable mortgage terms for them."
+  },
+  "gebaeudeprogramm": {
+    "term": "Gebäudeprogramm",
+    "definition": "A joint federal and cantonal subsidy programme that pays toward energy renovations such as insulation, heat pumps and solar. The amounts and rules vary by canton, and you usually have to apply before starting the work."
+  },
+  "pillar2": {
+    "term": "Pillar 2 (BVG/LPP)",
+    "definition": "Your occupational pension fund. You can withdraw or pledge part of it toward buying a home, but it counts as 'soft' equity — at least 10% of the price must still come from genuine cash savings."
+  },
+  "amortisation": {
+    "term": "Amortisation",
+    "definition": "Gradually paying down your mortgage. Swiss rules require the portion above roughly 67% of the property's value (the 'second mortgage') to be repaid within 15 years, or by the time you reach retirement."
+  },
+  "niederstwertprinzip": {
+    "term": "Niederstwertprinzip",
+    "definition": "The 'lowest-value principle': a bank lends against the lower of the purchase price and its own valuation. If you pay more than the bank's assessed value, you have to fund the difference yourself in cash."
+  },
+  "geak": {
+    "term": "GEAK",
+    "definition": "The Gebäudeenergieausweis der Kantone rates a building's energy performance from A (best) to G (worst). The class directly predicts your heating costs and signals whether an energy renovation is worth it."
+  },
+  "solidarschuldnerschaft": {
+    "term": "Solidarschuldnerschaft",
+    "definition": "Joint and several liability. When two people take a mortgage together, each is fully liable for the entire debt — not just their half. If one cannot pay, the bank can pursue the other for the full amount."
+  }
+}
