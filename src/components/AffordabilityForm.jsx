@@ -191,7 +191,7 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
 
       <button
         type="submit"
-        className="w-full rounded-lg bg-teal-700 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2"
+        className="w-full rounded-lg bg-teal-700 py-3 text-base font-bold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2"
       >
         {t('btn.showAfford')}
       </button>

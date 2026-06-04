@@ -114,7 +114,7 @@ export default function BankInquiry() {
           <p className="mt-1 flex-1 text-sm leading-relaxed text-slate-600">{t('bank.optionADesc')}</p>
           <a
             href={mailto}
-            className="mt-3 inline-flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+            className="mt-3 inline-flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800"
           >
             {t('bank.emailBtn')}
           </a>

@@ -288,7 +288,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           </div>
           <p
             className={
-              'mt-1 text-4xl font-bold tracking-tight tabular-nums ' +
+              'mt-1 font-display text-3xl font-black tracking-tight tabular-nums ' +
               (stateMeta.tone === 'amber' ? 'text-amber-900' : 'text-teal-900')
             }
           >

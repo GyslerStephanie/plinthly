@@ -235,7 +235,7 @@ export default function App() {
         </div>
 
         <div className="mb-8 max-w-2xl no-print">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 lg:text-4xl">
+          <h1 className="text-2xl font-black tracking-tight text-slate-900">
             {t(`heading.${phase}.title`)}
           </h1>
           <p className="mt-2 text-base leading-relaxed text-slate-600 lg:mt-3 lg:text-lg">
@@ -248,7 +248,7 @@ export default function App() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
             <div>
               <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:p-7">
-                <h2 className="mb-5 text-lg font-semibold text-slate-900">
+                <h2 className="mb-5 text-lg font-bold text-slate-900">
                   {t('form.title')}
                 </h2>
                 <AffordabilityForm
@@ -318,7 +318,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => goToPhase(phase + 1)}
-              className="rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800"
+              className="rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
             >
               {phase === 1
                 ? t('btn.continueExplore')

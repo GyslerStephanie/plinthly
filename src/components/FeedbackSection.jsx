@@ -133,7 +133,7 @@ export default function FeedbackSection({ feedback, onSubmit }) {
         type="button"
         onClick={submit}
         disabled={!canSubmit}
-        className="inline-flex items-center justify-center rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-40"
+        className="inline-flex items-center justify-center rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-40"
       >
         {t('feedback.submit')}
       </button>
