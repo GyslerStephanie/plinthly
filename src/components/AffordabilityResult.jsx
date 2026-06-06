@@ -530,6 +530,16 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         </Card>
       )}
 
+      {/* Not viable → a path to get there + independent guide */}
+      {!result.viable && result.shortfall && (
+        <PathForward
+          targetPrice={result.shortfall.targetPrice}
+          equityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
+          incomeGapAnnual={result.shortfall.type === 'income' ? result.shortfall.incomeGap : 0}
+          context="not_viable"
+        />
+      )}
+
       {/* Eigenmietwert overview */}
       <Card title={t('result.taxTitle')}>
         <T
@@ -736,6 +746,105 @@ function TestPill({ pass, label }) {
  * Runs the full spec calculation — Niederstwertprinzip, existing obligations,
  * property type adjustments — and shows a line-by-line breakdown of both tests.
  */
+/**
+ * "A path to get there" + a concept CTA for an independent (non-bank) AI guide.
+ * Rendered under any "you can't afford this yet" state. The savings timeline is
+ * interactive (slider). The advisor CTA is a v1 concept that captures NO data —
+ * clicking logs interest as a demand signal and shows an inline acknowledgement,
+ * preserving the no-sign-up promise.
+ *
+ * @param {number} targetPrice      The price the buyer is reaching for.
+ * @param {number} equityGap        CHF of extra equity needed (0 if none).
+ * @param {number} incomeGapAnnual  CHF of extra gross annual income needed (0 if none).
+ * @param {string} context          Label for the demand-signal log.
+ */
+function PathForward({ targetPrice, equityGap = 0, incomeGapAnnual = 0, context = 'reverse' }) {
+  const { t } = useI18n()
+  const [monthly, setMonthly] = useState(2000)
+  const [noted, setNoted] = useState(false)
+
+  const months = equityGap > 0 && monthly > 0 ? Math.ceil(equityGap / monthly) : 0
+  const duration =
+    months >= 24
+      ? t('path.durYears', { n: (months / 12).toFixed(1) })
+      : t('path.durMonths', { n: months })
+
+  const registerInterest = () => {
+    // eslint-disable-next-line no-console
+    console.log('[Plinthly advisor interest]', { context, targetPrice, equityGap, incomeGapAnnual })
+    setNoted(true)
+  }
+
+  return (
+    <div className="rounded-xl border border-line bg-surface p-4">
+      <h4 className="font-display text-base font-bold text-ink">
+        {t('path.title', { target: chf(targetPrice) })}
+      </h4>
+      <p className="mt-1 text-sm leading-relaxed text-body">{t('path.intro')}</p>
+
+      <ul className="mt-3 space-y-3">
+        {equityGap > 0 && (
+          <li>
+            <p className="text-sm text-body">
+              {renderRich(t('path.saveGap', { gap: chf(roundK(equityGap)) }))}
+            </p>
+            <div className="mt-2 flex items-center gap-3">
+              <span className="shrink-0 text-xs text-muted">{t('path.saveLabel')}</span>
+              <input
+                type="range"
+                min="500"
+                max="6000"
+                step="250"
+                value={monthly}
+                onChange={(e) => setMonthly(Number(e.target.value))}
+                className="flex-1 accent-ink"
+                aria-label={t('path.saveLabel')}
+              />
+              <span className="w-24 shrink-0 text-right text-sm font-semibold tabular-nums text-ink">
+                {chf(monthly)}/mo
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-body">
+              {renderRich(t('path.saveTimeline', { time: duration }))}
+            </p>
+          </li>
+        )}
+        {incomeGapAnnual > 0 && (
+          <li>
+            <p className="text-sm text-body">
+              {renderRich(t('path.incomeGap', { gap: chf(roundK(incomeGapAnnual)) }))}
+            </p>
+          </li>
+        )}
+      </ul>
+
+      {/* Independent advisor — concept CTA, captures nothing */}
+      <div className="mt-4 border-t border-line pt-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-sm font-semibold text-ink">{t('path.advisorTitle')}</p>
+          <span className="rounded-full bg-info-light px-2.5 py-0.5 text-xs font-medium text-info">
+            {t('path.advisorSoon')}
+          </span>
+        </div>
+        <p className="mt-1 text-sm leading-relaxed text-body">{t('path.advisorBody')}</p>
+        {noted ? (
+          <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-positive">
+            ✓ {t('path.advisorThanks')}
+          </p>
+        ) : (
+          <button
+            type="button"
+            onClick={registerInterest}
+            className="mt-3 inline-flex items-center justify-center rounded-full border border-ink bg-white px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-surface"
+          >
+            {t('path.advisorCta')}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function PropertyChecker({ result, rate }) {
   const { t } = useI18n()
 
@@ -1023,6 +1132,20 @@ function PropertyChecker({ result, rate }) {
               <Row label={t('result.monthTotal')} value={chf(monthly.total)} strong />
             </div>
           </div>
+
+          {/* ── Can't afford it yet → a path to get there + independent guide ── */}
+          {!check.qualifies && (
+            <PathForward
+              targetPrice={check.purchasePrice}
+              equityGap={Math.max(check.downShortfall, check.liquidShortfall)}
+              incomeGapAnnual={
+                check.affordQualifies
+                  ? 0
+                  : Math.max(0, check.monthlyNotionalTotal / 0.333 - check.effectiveMonthlyIncome) * 12
+              }
+              context="dream_price"
+            />
+          )}
 
         </div>
       )}
