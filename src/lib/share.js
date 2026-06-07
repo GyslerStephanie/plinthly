@@ -10,6 +10,7 @@
 const KEYS = [
   ['gi', 'grossIncome'],
   ['sv', 'savings'],
+  ['p3', 'pillar3a'],
   ['p2', 'pillar2'],
   ['dn', 'downPct'],
   ['ct', 'canton'],

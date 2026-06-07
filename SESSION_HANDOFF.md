@@ -18,14 +18,31 @@
 - **Build:** `npm run build` (passes clean).
 
 ## Git state RIGHT NOW
-- On branch **`feature/path-to-affordability`** (branched off `main`).
-- `main` already has the big merged PR #1 (mortgage engine + 6 UX features + design
-  system overhaul).
-- **2 commits on this branch are NOT pushed:**
-  - `d45462d` — "path to get there" + independent-advisor CTA on can't-afford states;
-    rename sticky label "Your numbers" -> "What you could buy".
-  - `0c4cc82` — add `PRODUCT_BRIEF.md`.
-- Working tree clean. **Decision pending: push this branch + open a PR, or keep local.**
+- On **`main`**, working tree clean. **PR #1 and PR #2 are both merged.**
+  - PR #1: mortgage engine + 6 UX features + design-system overhaul.
+  - PR #2: "path to get there" + independent-advisor CTA; "What you could buy" rename;
+    `PRODUCT_BRIEF.md`.
+
+## CURRENT FOCUS — "Can I buy?" / dream-price redesign (v2)
+- We are mid-design on a progressive-disclosure redesign of the result + dream-price
+  flow. **The full plan is `DREAM_REQUIREMENTS_SPEC_V2.md` (read it).** Nothing built
+  yet for v2.
+- Locked: no triage screen; collapse detail (closed by default); 2 option cards
+  (sustainable RE, renovations & tax) + separate "get independent advice" advisor
+  link; "See options" reveals cards inline; "A path" = slider + 3 scenarios + progress
+  bar; "Your levers" section; edit/return + persistence; monochrome line icons; red
+  fail state (per mockup).
+- **Workstream B is now UNBLOCKED** (decisions verified vs UBS/moneyland/key4):
+  Pillar 3a counts toward the 10% hard-equity floor; Pillar 2 does NOT (soft only,
+  20%). Equity = 3 buckets: hardCash + pillar3a (hard) + pillar2 (soft, optional,
+  kept). See spec §3/§7. Still needs the conformance test before merge.
+- **Build order (recommended):** do **B's engine/form 3a change first** (A's "Your
+  levers" and the path scenarios reference 3a), with the conformance test, then
+  build A's UI (Collapsible, dream-price layout, PathToGoal, Levers, NextSteps/
+  OptionCard, edit/return) on top.
+- Task list (TaskList): #7 = B (3a model), #8-#11 = A.
+- Out of scope this round: "My saved results" save feature; Frame-1 price-ladder /
+  "Explore more" relabel.
 
 ## What was built this session (all on `main` via PR #1 unless noted)
 1. **Affordability engine + result UX:** 4-state headline grading, monthly-cost

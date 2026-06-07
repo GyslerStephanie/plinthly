@@ -71,6 +71,23 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
 
       <div>
         <MoneyField
+          id="pillar3a"
+          label={t('form.pillar3aLabel')}
+          value={values.pillar3a}
+          onChange={set('pillar3a')}
+          placeholder="40'000"
+        />
+        <T
+          as="p"
+          className="mt-1 text-xs text-slate-500"
+          k="form.pillar3aHint"
+          term={t('terms.pillar3a')}
+          def={t('terms.pillar3aDef')}
+        />
+      </div>
+
+      <div>
+        <MoneyField
           id="pillar2"
           label={t('form.pillar2Label')}
           value={values.pillar2}
@@ -87,13 +104,20 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
       </div>
 
       {/* Combined equity readout — what you bring to the table */}
-      <div className="flex items-center justify-between rounded-lg border-l-4 border-teal-500 bg-teal-50/60 px-4 py-3">
-        <span className="text-sm font-medium text-slate-700">
-          {t('form.combinedEquity')}
-        </span>
-        <span className="tabular-nums text-base font-semibold text-slate-900">
-          {chf(toNum(values.savings) + toNum(values.pillar2))}
-        </span>
+      <div className="rounded-lg border-l-4 border-teal-500 bg-teal-50/60 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-slate-700">
+            {t('form.combinedEquity')}
+          </span>
+          <span className="tabular-nums text-base font-semibold text-slate-900">
+            {chf(toNum(values.savings) + toNum(values.pillar3a) + toNum(values.pillar2))}
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-slate-500">
+          {t('form.hardEquityNote', {
+            hard: chf(toNum(values.savings) + toNum(values.pillar3a)),
+          })}
+        </p>
       </div>
 
       {/* Down-payment % — 20% floor, raise it to shrink the mortgage */}

@@ -151,11 +151,14 @@ export const translations = {
       title: 'Your situation',
       incomeLabel: 'Gross household income (per year)',
       incomeHint: 'Combined annual gross income before tax and deductions.',
-      savingsLabel: 'Liquid savings / equity',
-      savingsHint: 'Cash and easily-sold assets. Excludes your pension fund.',
+      savingsLabel: 'Hard cash (savings, gifts — not pension)',
+      savingsHint: 'Cash and easily-sold assets. Counts toward the 10% hard-equity minimum.',
+      pillar3aLabel: 'Pillar 3a',
+      pillar3aHint: 'Your [[term]] also counts as hard equity, same as cash.',
       pillar2Label: '2nd pillar (pension fund) you could use — optional',
-      pillar2Hint: "Your [[term]]. Leave blank if you don't want to use it.",
+      pillar2Hint: "Your [[term]]. Soft equity — leave blank if you don't want to use it.",
       combinedEquity: 'Combined equity',
+      hardEquityNote: 'Of which {hard} is hard equity (cash + Pillar 3a) — at least 10% of the price must come from here.',
       cantonLabel: 'Canton of interest',
       cantonHint: 'Apartments ≈ {price}/m² · cantonal tax ≈ {tax}%',
       householdLabel: 'Household size',
@@ -174,7 +177,10 @@ export const translations = {
     terms: {
       pillar2: '2nd pillar (BVG/LPP)',
       pillar2Def:
-        'Occupational pension savings. In Switzerland you may pledge some of it towards a home, but it can only cover up to half of the minimum down payment — at least 10% of the price must be real cash savings. Using it reduces your future pension.',
+        'Occupational pension savings. In Switzerland you may pledge some of it towards a home, but it can only cover up to half of the minimum down payment — at least 10% of the price must be hard equity (cash or Pillar 3a). Using it reduces your future pension.',
+      pillar3a: 'Pillar 3a',
+      pillar3aDef:
+        'Tax-privileged private retirement savings. It counts toward the 10% hard-equity minimum, exactly like cash — only the 2nd pillar is excluded. The 2026 annual maximum is CHF 7\'258 for employees with a pension fund, and contributions are deductible from taxable income.',
       housingCosts: 'housing costs',
       housingCostsDef:
         'Imputed annual housing costs — interest at a notional 5%, plus amortization and maintenance — must stay under one third of your gross income, even though real interest rates are lower today.',
@@ -488,11 +494,14 @@ export const translations = {
       title: 'Ihre Situation',
       incomeLabel: 'Brutto-Haushaltseinkommen (pro Jahr)',
       incomeHint: 'Gesamtes jährliches Bruttoeinkommen vor Steuern und Abzügen.',
-      savingsLabel: 'Liquide Ersparnisse / Eigenkapital',
-      savingsHint: 'Bargeld und leicht verkäufliche Vermögenswerte. Ohne Ihre Pensionskasse.',
+      savingsLabel: 'Hartes Eigenkapital (Ersparnisse, Schenkungen – keine Pensionskasse)',
+      savingsHint: 'Bargeld und leicht verkäufliche Vermögenswerte. Zählt an das Minimum von 10% hartem Eigenkapital.',
+      pillar3aLabel: 'Säule 3a',
+      pillar3aHint: 'Ihre [[term]] zählt ebenfalls als hartes Eigenkapital, genau wie Bargeld.',
       pillar2Label: '2. Säule (Pensionskasse), die Sie einsetzen könnten – optional',
-      pillar2Hint: 'Ihre [[term]]. Leer lassen, wenn Sie sie nicht einsetzen möchten.',
+      pillar2Hint: 'Ihre [[term]]. Weiches Eigenkapital – leer lassen, wenn Sie sie nicht einsetzen möchten.',
       combinedEquity: 'Gesamtes Eigenkapital',
+      hardEquityNote: 'Davon {hard} hartes Eigenkapital (Bargeld + Säule 3a) – mindestens 10% des Preises müssen daraus stammen.',
       cantonLabel: 'Kanton von Interesse',
       cantonHint: 'Wohnungen ≈ {price}/m² · Kantonssteuer ≈ {tax}%',
       householdLabel: 'Haushaltsgrösse',
@@ -511,7 +520,10 @@ export const translations = {
     terms: {
       pillar2: '2. Säule (BVG)',
       pillar2Def:
-        'Berufliche Vorsorge. In der Schweiz dürfen Sie einen Teil davon für Wohneigentum einsetzen, aber höchstens die Hälfte des minimalen Eigenkapitals – mindestens 10% des Preises müssen echte Barersparnisse sein. Der Einsatz schmälert Ihre spätere Rente.',
+        'Berufliche Vorsorge. In der Schweiz dürfen Sie einen Teil davon für Wohneigentum einsetzen, aber höchstens die Hälfte des minimalen Eigenkapitals – mindestens 10% des Preises müssen hartes Eigenkapital sein (Bargeld oder Säule 3a). Der Einsatz schmälert Ihre spätere Rente.',
+      pillar3a: 'Säule 3a',
+      pillar3aDef:
+        'Steuerbegünstigte private Vorsorge. Sie zählt – genau wie Bargeld – an das Minimum von 10% hartem Eigenkapital; nur die 2. Säule ist ausgeschlossen. Der jährliche Höchstbetrag 2026 liegt bei CHF 7\'258 für Angestellte mit Pensionskasse, und die Einzahlungen sind vom steuerbaren Einkommen abziehbar.',
       housingCosts: 'Wohnkosten',
       housingCostsDef:
         'Kalkulatorische jährliche Wohnkosten – Zins zu einem kalkulatorischen Satz von 5% plus Amortisation und Unterhalt – müssen unter einem Drittel Ihres Bruttoeinkommens bleiben, auch wenn die realen Zinsen heute tiefer sind.',
@@ -824,11 +836,14 @@ export const translations = {
       title: 'Votre situation',
       incomeLabel: 'Revenu brut du ménage (par an)',
       incomeHint: 'Revenu brut annuel combiné avant impôts et déductions.',
-      savingsLabel: 'Épargne liquide / fonds propres',
-      savingsHint: 'Liquidités et actifs facilement vendables. Hors caisse de pension.',
+      savingsLabel: 'Fonds propres durs (épargne, donations — hors prévoyance)',
+      savingsHint: 'Liquidités et actifs facilement vendables. Comptent dans le minimum de 10% de fonds propres durs.',
+      pillar3aLabel: 'Pilier 3a',
+      pillar3aHint: 'Votre [[term]] compte aussi comme fonds propres durs, au même titre que les liquidités.',
       pillar2Label: '2e pilier (caisse de pension) mobilisable — optionnel',
-      pillar2Hint: 'Votre [[term]]. Laissez vide si vous ne souhaitez pas l’utiliser.',
+      pillar2Hint: 'Votre [[term]]. Fonds propres « mous » — laissez vide si vous ne souhaitez pas l’utiliser.',
       combinedEquity: 'Fonds propres totaux',
+      hardEquityNote: 'Dont {hard} de fonds propres durs (liquidités + pilier 3a) — au moins 10% du prix doit en provenir.',
       cantonLabel: "Canton d'intérêt",
       cantonHint: 'Appartements ≈ {price}/m² · impôt cantonal ≈ {tax}%',
       householdLabel: 'Taille du ménage',
@@ -847,7 +862,10 @@ export const translations = {
     terms: {
       pillar2: '2e pilier (LPP)',
       pillar2Def:
-        "Prévoyance professionnelle. En Suisse, vous pouvez en affecter une partie à un logement, mais au plus la moitié de l'apport minimal — au moins 10% du prix doit être de l'épargne réelle. L'utiliser réduit votre future rente.",
+        "Prévoyance professionnelle. En Suisse, vous pouvez en affecter une partie à un logement, mais au plus la moitié de l'apport minimal — au moins 10% du prix doit être des fonds propres durs (liquidités ou pilier 3a). L'utiliser réduit votre future rente.",
+      pillar3a: 'Pilier 3a',
+      pillar3aDef:
+        "Prévoyance privée fiscalement avantagée. Elle compte dans le minimum de 10% de fonds propres durs, exactement comme les liquidités ; seul le 2e pilier est exclu. Le maximum annuel 2026 est de CHF 7'258 pour les salariés affiliés à une caisse de pension, et les versements sont déductibles du revenu imposable.",
       housingCosts: 'charges de logement',
       housingCostsDef:
         "Les charges annuelles théoriques — intérêts à un taux théorique de 5%, plus amortissement et entretien — doivent rester sous un tiers de votre revenu brut, même si les taux réels sont plus bas aujourd'hui.",
@@ -1160,11 +1178,14 @@ export const translations = {
       title: 'La tua situazione',
       incomeLabel: 'Reddito lordo del nucleo (all’anno)',
       incomeHint: 'Reddito lordo annuo complessivo al lordo di imposte e deduzioni.',
-      savingsLabel: 'Risparmi liquidi / capitale proprio',
-      savingsHint: 'Liquidità e attivi facilmente vendibili. Esclusa la cassa pensione.',
+      savingsLabel: 'Capitale proprio « duro » (risparmi, donazioni — non previdenza)',
+      savingsHint: 'Liquidità e attivi facilmente vendibili. Contano per il minimo del 10% di capitale proprio duro.',
+      pillar3aLabel: 'Pilastro 3a',
+      pillar3aHint: 'Il tuo [[term]] conta anch’esso come capitale proprio duro, esattamente come la liquidità.',
       pillar2Label: '2° pilastro (cassa pensione) utilizzabile — opzionale',
-      pillar2Hint: 'Il tuo [[term]]. Lascia vuoto se non vuoi utilizzarlo.',
+      pillar2Hint: 'Il tuo [[term]]. Capitale proprio « morbido » — lascia vuoto se non vuoi utilizzarlo.',
       combinedEquity: 'Capitale proprio totale',
+      hardEquityNote: 'Di cui {hard} di capitale proprio duro (liquidità + pilastro 3a) — almeno il 10% del prezzo deve provenire da qui.',
       cantonLabel: 'Cantone di interesse',
       cantonHint: 'Appartamenti ≈ {price}/m² · imposta cantonale ≈ {tax}%',
       householdLabel: 'Dimensione del nucleo',
@@ -1183,7 +1204,10 @@ export const translations = {
     terms: {
       pillar2: '2° pilastro (LPP)',
       pillar2Def:
-        "Previdenza professionale. In Svizzera puoi destinarne una parte all'abitazione, ma al massimo metà del capitale minimo — almeno il 10% del prezzo deve essere risparmio reale. Usarlo riduce la tua futura rendita.",
+        "Previdenza professionale. In Svizzera puoi destinarne una parte all'abitazione, ma al massimo metà del capitale minimo — almeno il 10% del prezzo deve essere capitale proprio duro (liquidità o pilastro 3a). Usarlo riduce la tua futura rendita.",
+      pillar3a: 'Pilastro 3a',
+      pillar3aDef:
+        "Previdenza privata con vantaggi fiscali. Conta per il minimo del 10% di capitale proprio duro, esattamente come la liquidità; solo il 2° pilastro è escluso. Il massimo annuo 2026 è di CHF 7'258 per i dipendenti con cassa pensione, e i versamenti sono deducibili dal reddito imponibile.",
       housingCosts: 'costi abitativi',
       housingCostsDef:
         'I costi abitativi annui teorici — interessi a un tasso teorico del 5%, più ammortamento e manutenzione — devono restare sotto un terzo del reddito lordo, anche se i tassi reali oggi sono più bassi.',

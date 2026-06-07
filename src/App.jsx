@@ -19,6 +19,7 @@ const PHASE_NUMBERS = [1, 2, 3, 4]
 const DEFAULT_VALUES = {
   grossIncome: '',
   savings: '',
+  pillar3a: '',
   pillar2: '',
   downPct: '20',
   canton: 'ZH',
@@ -70,6 +71,7 @@ export default function App() {
     const nextValues = {
       grossIncome: s.grossIncome ?? '',
       savings: s.savings ?? '',
+      pillar3a: s.pillar3a ?? '',
       pillar2: s.pillar2 ?? '',
       downPct: s.downPct ?? DEFAULT_VALUES.downPct,
       canton: s.canton ?? DEFAULT_VALUES.canton,

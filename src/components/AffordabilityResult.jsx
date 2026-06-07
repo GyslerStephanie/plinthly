@@ -861,6 +861,7 @@ function PropertyChecker({ result, rate }) {
         purchase_price:               priceNum,
         gross_annual_income:          result.inputs.grossIncome,
         liquid_savings:               result.inputs.savings,
+        pillar3a_available:           result.inputs.pillar3a,
         pillar2_available:            result.inputs.pillar2,
         assessed_value:               showAssessed ? (Number(String(assessed).replace(/[^0-9]/g, '')) || null) : null,
         property_type:                propType,
