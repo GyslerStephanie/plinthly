@@ -3,12 +3,6 @@ import { chf } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 
-const EMPLOYMENT_TYPES = [
-  { value: 'employed', key: 'form.employed' },
-  { value: 'self_employed', key: 'form.selfEmployed' },
-  { value: 'mixed', key: 'form.mixed' },
-]
-
 /** Parse a CHF-ish string into a number. */
 function toNum(v) {
   const n = parseFloat(String(v).replace(/[^0-9.]/g, ''))
@@ -39,26 +33,23 @@ function MoneyField({ id, label, value, onChange, placeholder, hint }) {
   )
 }
 
-export default function AffordabilityForm({ values, onChange, onSubmit }) {
+export default function AffordabilityForm({ values, onChange }) {
   const { t } = useI18n()
   const set = (key) => (val) => onChange({ ...values, [key]: val })
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit()
-      }}
-      className="space-y-5"
-    >
-      <MoneyField
-        id="grossIncome"
-        label={t('form.incomeLabel')}
-        value={values.grossIncome}
-        onChange={set('grossIncome')}
-        placeholder="120'000"
-        hint={t('form.incomeHint')}
-      />
+    <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
+      <div>
+        <MoneyField
+          id="grossIncome"
+          label={t('form.incomeLabel')}
+          value={values.grossIncome}
+          onChange={set('grossIncome')}
+          placeholder="120'000"
+          hint={t('form.incomeHint')}
+        />
+        <p className="mt-1 text-xs italic text-amber-700">{t('form.selfNote')}</p>
+      </div>
 
       <MoneyField
         id="savings"
@@ -68,6 +59,23 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
         placeholder="150'000"
         hint={t('form.savingsHint')}
       />
+
+      <div>
+        <MoneyField
+          id="pillar3a"
+          label={t('form.pillar3aLabel')}
+          value={values.pillar3a}
+          onChange={set('pillar3a')}
+          placeholder="40'000"
+        />
+        <T
+          as="p"
+          className="mt-1 text-xs text-slate-500"
+          k="form.pillar3aHint"
+          term={t('terms.pillar3a')}
+          def={t('terms.pillar3aDef')}
+        />
+      </div>
 
       <div>
         <MoneyField
@@ -87,13 +95,20 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
       </div>
 
       {/* Combined equity readout — what you bring to the table */}
-      <div className="flex items-center justify-between rounded-lg border-l-4 border-teal-500 bg-teal-50/60 px-4 py-3">
-        <span className="text-sm font-medium text-slate-700">
-          {t('form.combinedEquity')}
-        </span>
-        <span className="tabular-nums text-base font-semibold text-slate-900">
-          {chf(toNum(values.savings) + toNum(values.pillar2))}
-        </span>
+      <div className="rounded-lg border-l-4 border-teal-500 bg-teal-50/60 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-slate-700">
+            {t('form.combinedEquity')}
+          </span>
+          <span className="tabular-nums text-base font-semibold text-slate-900">
+            {chf(toNum(values.savings) + toNum(values.pillar3a) + toNum(values.pillar2))}
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-slate-500">
+          {t('form.hardEquityNote', {
+            hard: chf(toNum(values.savings) + toNum(values.pillar3a)),
+          })}
+        </p>
       </div>
 
       {/* Down-payment % — 20% floor, raise it to shrink the mortgage */}
@@ -160,41 +175,7 @@ export default function AffordabilityForm({ values, onChange, onSubmit }) {
         </div>
       </div>
 
-      <div>
-        <span className="block text-sm font-medium text-slate-700">
-          {t('form.employmentLabel')}
-        </span>
-        <div className="mt-1.5 grid grid-cols-3 gap-2">
-          {EMPLOYMENT_TYPES.map((tp) => {
-            const active = values.employmentType === tp.value
-            return (
-              <button
-                key={tp.value}
-                type="button"
-                onClick={() => set('employmentType')(tp.value)}
-                className={
-                  'rounded-md border px-3 py-2.5 text-sm font-medium transition ' +
-                  (active
-                    ? 'border-teal-600 bg-teal-50 text-teal-800'
-                    : 'border-slate-300 bg-white text-slate-600 hover:border-slate-400')
-                }
-              >
-                {t(tp.key)}
-              </button>
-            )
-          })}
-        </div>
-        {values.employmentType === 'self_employed' && (
-          <p className="mt-2 text-xs text-amber-700">{t('form.selfWarning')}</p>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        className="w-full rounded-full bg-teal-700 py-3 text-base font-bold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2"
-      >
-        {t('btn.showAfford')}
-      </button>
+      <p className="text-xs text-slate-400">{t('form.liveNote')}</p>
     </form>
   )
 }

@@ -16,7 +16,7 @@ export default function PhaseContextBanner({ phase }) {
 
   if (!hasResult || !budget) return null
 
-  const key = phase === 3 ? 'context.banner3' : 'context.banner'
+  const key = phase === 4 ? 'context.banner3' : 'context.banner'
 
   return (
     <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-body no-print">

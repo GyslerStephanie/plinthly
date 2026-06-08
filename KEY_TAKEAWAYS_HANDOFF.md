@@ -2,7 +2,7 @@
 
 ## Goal
 Add a computed TL;DR summary card to the top of the affordability results in the
-**designify** app (Vite + React + Tailwind). It distills the 7 detail cards into
+**plinthly** app (Vite + React + Tailwind). It distills the 7 detail cards into
 3–4 one-line takeaways, placed **right after the headline card, before all detail
 cards**.
 
@@ -104,8 +104,8 @@ tkNotViable:  'A {target} home doesn’t add up yet — see what would change it
 ```
 
 ## Verification
-- Dev server: `npm run dev --prefix /Users/stephaniegysler/designify`
-  (the project's `.claude/launch.json` has a `designify` preset on port 5180).
+- Dev server: `npm run dev --prefix /Users/stephaniegysler/plinthly`
+  (the project's `.claude/launch.json` has a `plinthly` preset on port 5180).
 - Fill income/savings/pillar, submit, confirm the "Key takeaways" card appears at
   result index 1 (right after the headline), 4 bullets, bold amounts rendered,
   no console errors.

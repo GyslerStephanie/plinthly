@@ -14,7 +14,8 @@ export function I18nProvider({ children }) {
       const fromHash = new URLSearchParams(
         window.location.hash.replace(/^#/, ''),
       ).get('lng')
-      const stored = localStorage.getItem('designify.lang')
+      const stored =
+        localStorage.getItem('plinthly.lang') || localStorage.getItem('designify.lang')
       const cand = fromHash || stored
       if (cand && translations[cand]) return cand
     } catch {
@@ -27,7 +28,7 @@ export function I18nProvider({ children }) {
     if (!translations[l]) return
     setLangState(l)
     try {
-      localStorage.setItem('designify.lang', l)
+      localStorage.setItem('plinthly.lang', l)
     } catch {
       /* ignore */
     }

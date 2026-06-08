@@ -132,7 +132,7 @@ The app is a guided 4-phase flow; state carries forward across all phases.
   **color used only functionally for status** (green=positive, blue=info,
   yellow=warning, red=error) via badges/dots — no decorative fills. 1320px max width,
   pill buttons, 12px cards.
-- **Repo:** `GyslerStephanie/designify` (private GitHub), merged to `main`.
+- **Repo:** `GyslerStephanie/plinthly` (private GitHub), merged to `main`.
 
 ## 7. Product principles / differentiators (the "why it's trustworthy")
 - **Honesty over conversion** — it will tell you "not yet" and show the shortfall,

@@ -8,9 +8,10 @@
  *
  *   1. EQUITY constraint (do you have enough down payment?)
  *        - Minimum 20% of price must be equity.
- *        - At least 10% of price must be "hard" equity from liquid savings
- *          (NOT from the 2nd pillar / pension fund).
- *        - The 2nd pillar may cover up to a further 10% of price.
+ *        - At least 10% of price must be "hard" equity. Hard equity = liquid
+ *          cash + Pillar 3a (both count toward the 10%); the 2nd pillar / BVG
+ *          does NOT (verified vs UBS, moneyland.ch, key4).
+ *        - The 2nd pillar may cover up to a further 10% of price ("soft").
  *
  *   2. AFFORDABILITY constraint (can you carry the running costs?)
  *        - Imputed annual housing cost must not exceed 1/3 of gross income.
@@ -37,6 +38,7 @@ const MAINTENANCE = R.maintenance_cost_pct_of_value / 100 // 0.01
 const COST_RATIO = R.max_housing_cost_income_ratio // 0.333
 const AMORT_TARGET_LTV = R.amortization_target_pct / 100 // 0.67 (SBA 1st-mortgage ceiling; config-driven)
 const AMORT_YEARS = R.amortization_years // 15
+const PILLAR3A_MAX = R.pillar3a_max_contribution_chf // 7258 (2026, employee w/ pension fund)
 
 /**
  * Annual housing cost as a fraction of purchase price.
@@ -80,8 +82,12 @@ function floorTo(value, step) {
 /**
  * @typedef {Object} AffordabilityInput
  * @property {number} grossIncome    Annual gross household income, CHF.
- * @property {number} savings        Liquid savings / equity, CHF.
- * @property {number} pillar2        2nd pillar (pension) available to pledge, CHF.
+ * @property {number} savings        Hard cash (savings/gifts, not pension), CHF.
+ *                                   Counts toward both the 10% and the 20%.
+ * @property {number} pillar3a       Pillar 3a, CHF. Hard equity: counts toward
+ *                                   the 10% and the 20%, same as cash.
+ * @property {number} pillar2        2nd pillar (BVG) available to pledge, CHF.
+ *                                   Soft equity: counts toward the 20% only.
  * @property {string} canton         Canton code (e.g. "ZH").
  * @property {number} householdSize  Number of people in the household.
  * @property {string} employmentType "employed" | "self_employed" | "mixed".
@@ -93,8 +99,12 @@ function floorTo(value, step) {
  */
 export function calculateAffordability(input) {
   const grossIncome = num(input.grossIncome)
-  const savings = num(input.savings)
+  // Three equity buckets. Hard equity (counts toward the 10% floor) = cash +
+  // Pillar 3a. Pillar 2 is soft (20% only). `savings` is the hard-cash field.
+  const hardCash = num(input.savings)
+  const pillar3a = num(input.pillar3a)
   const pillar2 = num(input.pillar2)
+  const hardEquity = hardCash + pillar3a
 
   // Down-payment fraction: the 20% minimum by default, or a higher figure the
   // user chooses. Drives both ceilings (in opposite directions).
@@ -103,11 +113,11 @@ export function calculateAffordability(input) {
   const hcf = housingCostFraction(downFrac)
 
   // --- Constraint 1: equity-limited maximum price ----------------------------
-  // Hard-equity rule: liquid savings must cover >= 10% of price.
-  const priceFromLiquid = savings / MIN_LIQUID
+  // Hard-equity rule: cash + Pillar 3a must cover >= 10% of price.
+  const priceFromLiquid = hardEquity / MIN_LIQUID
 
-  // Total-equity rule: savings + usable pillar2 must cover the chosen down %.
-  const priceFromTotalEquity = (savings + pillar2) / downFrac
+  // Total-equity rule: hard equity + usable pillar2 must cover the chosen down %.
+  const priceFromTotalEquity = (hardEquity + pillar2) / downFrac
 
   const equityMaxPrice = Math.min(priceFromLiquid, priceFromTotalEquity)
 
@@ -126,9 +136,12 @@ export function calculateAffordability(input) {
   // --- Breakdown of the down payment at the achievable price -----------------
   const downPayment = maxPrice * downFrac
   const mortgage = maxPrice * ltv
-  // Use as much pillar2 as allowed (cap 10% of price), remainder from savings.
+  // Use as much pillar2 as allowed (cap 10% of price), remainder from hard equity
+  // (cash first, then Pillar 3a).
   const pillar2Used = Math.min(pillar2, maxPrice * MAX_PILLAR2, downPayment)
-  const savingsUsed = Math.max(0, downPayment - pillar2Used)
+  const hardEquityUsed = Math.max(0, downPayment - pillar2Used)
+  const cashUsed = Math.min(hardCash, hardEquityUsed)
+  const pillar3aUsed = Math.max(0, hardEquityUsed - cashUsed)
 
   // --- Annual cost breakdown at the achievable price -------------------------
   const annualInterest = mortgage * NOTIONAL_RATE
@@ -143,13 +156,13 @@ export function calculateAffordability(input) {
   // "Can't buy yet" if the achievable price is too low to be meaningful, OR if
   // the user has literally no liquid savings (hard rule cannot be met).
   const MEANINGFUL_PRICE = 200000
-  const viable = maxPrice >= MEANINGFUL_PRICE && savings > 0
+  const viable = maxPrice >= MEANINGFUL_PRICE && hardEquity > 0
 
   // What's missing to reach a meaningful purchase, if not viable.
   const shortfall = computeShortfall({
     viable,
     bindingConstraint,
-    savings,
+    savings: hardEquity,
     pillar2,
     grossIncome,
     maxPrice,
@@ -157,12 +170,23 @@ export function calculateAffordability(input) {
     hcf,
   })
 
+  // 3a-optimisation lever data (gap to the annual max + approximate tax saving).
+  const pillar3aLever = pillar3aOptimisation(pillar3a, input.marginalTaxRatePct)
+
   return {
-    inputs: { grossIncome, savings, pillar2, canton: input.canton },
+    inputs: {
+      grossIncome,
+      savings: hardCash, // hard-cash bucket (field name kept for compatibility)
+      pillar3a,
+      pillar2,
+      hardEquity,
+      canton: input.canton,
+    },
     maxPrice,
     bindingConstraint,
     viable,
     shortfall,
+    pillar3aLever,
     constraints: {
       equityMaxPrice: floorTo(equityMaxPrice, 10000),
       affordabilityMaxPrice: floorTo(affordabilityMaxPrice, 10000),
@@ -171,7 +195,9 @@ export function calculateAffordability(input) {
     },
     downPaymentBreakdown: {
       total: downPayment,
-      fromSavings: savingsUsed,
+      fromSavings: hardEquityUsed, // hard equity used (cash + 3a)
+      fromCash: cashUsed,
+      fromPillar3a: pillar3aUsed,
       fromPillar2: pillar2Used,
       mortgage,
       ltv,
@@ -250,6 +276,34 @@ function computeShortfall({
       `At your current income, the affordability rule caps you below the ` +
       `CHF 200,000 level. Roughly ${formatGap(incomeGap)} more in annual ` +
       `gross household income would change that.`,
+  }
+}
+
+/**
+ * Pillar 3a optimisation lever — how far the buyer is from the annual 3a maximum
+ * and the approximate income-tax saving from closing that gap. 3a contributions
+ * are fully deductible from taxable income, so the saving ≈ gap × marginal rate.
+ *
+ * @param {number} pillar3a            Current annual 3a contribution, CHF.
+ * @param {number} [marginalTaxRatePct] Approx. marginal income-tax rate, % (default 25).
+ * @returns {{contribution:number, max:number, gap:number, atMax:boolean,
+ *            marginalRatePct:number, taxSaving:number}}
+ */
+export function pillar3aOptimisation(pillar3a, marginalTaxRatePct) {
+  const contribution = num(pillar3a)
+  const max = PILLAR3A_MAX
+  const gap = Math.max(0, max - contribution)
+  const marginalRatePct =
+    isFinite(marginalTaxRatePct) && marginalTaxRatePct > 0
+      ? marginalTaxRatePct
+      : 25
+  return {
+    contribution,
+    max,
+    gap,
+    atMax: gap <= 0,
+    marginalRatePct,
+    taxSaving: gap * (marginalRatePct / 100),
   }
 }
 
@@ -414,7 +468,9 @@ export function checkSpecificProperty(inputs) {
   if (!price) return null
 
   const income   = num(inputs.gross_annual_income)
-  const savings  = num(inputs.liquid_savings)
+  const cash     = num(inputs.liquid_savings)
+  const pillar3a = num(inputs.pillar3a_available)
+  const hardEquity = cash + pillar3a // cash + 3a both count toward the 10% floor
   const pillar2  = num(inputs.pillar2_available)
   const existing = num(inputs.existing_monthly_obligations)
 
@@ -445,13 +501,14 @@ export function checkSpecificProperty(inputs) {
   const minLiquid  = lendingVal * MIN_LIQUID + valuationGap
   const maxPillar2 = Math.min(pillar2, lendingVal * MAX_PILLAR2)
 
-  // Savings cover the liquid floor first, pillar2 fills the rest up to its cap
-  const savingsUsed = Math.min(savings, effectiveDown)
+  // Hard equity (cash + 3a) covers the liquid floor first, pillar2 fills the
+  // rest up to its cap.
+  const savingsUsed = Math.min(hardEquity, effectiveDown)
   const pillar2Used = Math.min(maxPillar2, Math.max(0, effectiveDown - savingsUsed))
-  const totalAvailable = savings + maxPillar2
+  const totalAvailable = hardEquity + maxPillar2
 
   const downShortfall   = Math.max(0, effectiveDown - totalAvailable)
-  const liquidShortfall = Math.max(0, minLiquid - savings)
+  const liquidShortfall = Math.max(0, minLiquid - hardEquity)
   const downQualifies   = downShortfall === 0 && liquidShortfall === 0
 
   // --- 4. Mortgage & amortization ---------------------------------------------
@@ -488,6 +545,9 @@ export function checkSpecificProperty(inputs) {
     effectiveDownPct,
     minLiquid,
     maxPillar2,
+    cash,
+    pillar3a,
+    hardEquity,
     savingsUsed,
     pillar2Used,
     totalAvailable,
@@ -540,4 +600,5 @@ export const RULE_CONSTANTS = {
   NOTIONAL_RATE,
   MAINTENANCE,
   COST_RATIO,
+  PILLAR3A_MAX,
 }

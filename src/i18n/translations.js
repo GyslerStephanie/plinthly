@@ -95,13 +95,65 @@ export const translations = {
       advisorBody: 'Talk it through with an independent AI guide — not a bank, no sales, no sign-up.',
       advisorCta: 'Get independent guidance',
       advisorThanks: 'Noted — this is on our roadmap. Thanks for the nudge.',
+      current: 'Current max: {value}',
+      goal: 'Goal: {value}',
+      scenariosTitle: 'Three ways to close the gap',
+      scen: {
+        steady: 'Steady',
+        more: 'Save more',
+        max3a: 'Max 3a + push',
+        max3aNote: 'Includes maxing Pillar 3a — counts as hard equity and cuts your tax.',
+      },
+    },
+    next: {
+      title: 'Choose your next step',
+      intro: 'Two ways to move forward — or get a second opinion.',
+      seeOptions: 'See options',
+      cardSustainTitle: 'Explore sustainable real estate',
+      cardSustainDesc: 'What to look for — energy class, retrofit economics, cantonal subsidies.',
+      cardRenovTitle: 'Explore renovations & tax',
+      cardRenovDesc: 'Model a retrofit and its tax effects, including Eigenmietwert.',
+      adviceLink: 'or: get independent advice',
+    },
+    levers: {
+      title: 'Your levers',
+      l3aTitle: 'Maximise Pillar 3a',
+      l3aBody: 'You’re {gap} below the {max} annual max. Contributing the rest counts as hard equity and could save about {saving}/year in tax.',
+      hardTitle: 'Close the hard-equity gap',
+      hardBody: 'You’re about {gap} short of the 10% that must be hard equity (cash or Pillar 3a).',
+      debtTitle: 'Reduce existing debts',
+      debtBody: '{amount}/month of obligations lower what you can carry. Clearing them lifts your affordability.',
+    },
+    dream: {
+      contextTitle: 'Your situation today',
+      currentMax: 'Your max purchase price today',
+      yourEquity: 'Hard equity you have',
+      hardEquitySub: 'cash + Pillar 3a',
+      yourIncome: 'Gross household income',
+      gapTitle: 'Where you are vs your goal',
+      gapIntro: 'How close you are to a {price} property, on both price and equity.',
+      gapPriceLabel: 'Purchase price',
+      gapEquityLabel: 'Equity (down payment)',
+      ofGoal: 'of goal',
+      gapNote: 'To reach it you’d need about {priceGap} more in buying power and {eqGap} more equity.',
+      trajTitle: 'Your path over time',
+      trajIntro: 'How your equity grows toward the down payment needed, at three savings paces.',
+      trajGoal: 'Goal: {value}',
+      trajBeyond: '> 30y',
+      milestoneTitle: 'Year-by-year milestones',
+      milestoneIntro: 'Projected equity if you save {perMonth}/month, plus the tax you’d save maxing Pillar 3a.',
+      colYear: 'Year',
+      colEquity: 'Projected equity',
+      colPct: '% of goal',
+      col3aTax: '3a tax saved',
+      milestoneNote: 'Illustrative — assumes a steady savings pace and a ~25% marginal tax rate. Not a forecast.',
     },
     header: {
       tagline: 'Swiss Sustainable Real Estate Explorer',
       badge: 'No selling · No sign-up · Just honest numbers',
     },
     lang: { label: 'Language' },
-    nav: { 1: 'Can I buy?', 2: 'What to look for', 3: 'My real options', 4: 'Action plan' },
+    nav: { 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan' },
     heading: {
       1: {
         title: 'Can I buy?',
@@ -109,27 +161,33 @@ export const translations = {
           'Get an honest picture of your buying power under Swiss mortgage rules — before you talk to a bank, broker, or builder. No account needed, nothing saved, nothing sold to you.',
       },
       2: {
+        title: 'Calculate your dream price',
+        blurb:
+          'Check a specific property against your situation, and see — with charts and a timeline — exactly what it would take to get there.',
+      },
+      3: {
         title: 'What should I look for?',
         blurb:
           'See what your budget buys in your target canton, what an energy rating really costs over 10 years, and which subsidies apply.',
       },
-      3: {
+      4: {
         title: 'What are my real options?',
         blurb:
           'Three realistic routes — renovate, buy new, or build — with indicative costs, subsidies, and long-term running-cost comparisons.',
       },
-      4: {
+      5: {
         title: 'What do I do next?',
         blurb: 'A personalized action plan based on everything above, ready to download or share.',
       },
     },
     btn: {
       showAfford: 'Show what I can afford',
+      continueDream: 'Calculate a dream price →',
       continueExplore: 'Continue to exploration →',
       seeOptions: 'See my real options →',
       buildPlan: 'Build my action plan →',
       back: '← Back',
-      runToContinue: 'Run the calculator to continue →',
+      runToContinue: 'Enter income and savings to continue →',
     },
     empty: {
       title: 'Your results will appear here',
@@ -149,13 +207,18 @@ export const translations = {
     },
     form: {
       title: 'Your situation',
+      liveNote: 'Your result updates automatically as you type — no button to press.',
+      selfNote: 'Self-employed? Banks usually assess income more conservatively (e.g. a 2–3 year average) — treat this as optimistic.',
       incomeLabel: 'Gross household income (per year)',
       incomeHint: 'Combined annual gross income before tax and deductions.',
-      savingsLabel: 'Liquid savings / equity',
-      savingsHint: 'Cash and easily-sold assets. Excludes your pension fund.',
+      savingsLabel: 'Hard cash (savings, gifts — not pension)',
+      savingsHint: 'Cash and easily-sold assets. Counts toward the 10% hard-equity minimum.',
+      pillar3aLabel: 'Pillar 3a',
+      pillar3aHint: 'Your [[term]] also counts as hard equity, same as cash.',
       pillar2Label: '2nd pillar (pension fund) you could use — optional',
-      pillar2Hint: "Your [[term]]. Leave blank if you don't want to use it.",
+      pillar2Hint: "Your [[term]]. Soft equity — leave blank if you don't want to use it.",
       combinedEquity: 'Combined equity',
+      hardEquityNote: 'Of which {hard} is hard equity (cash + Pillar 3a) — at least 10% of the price must come from here.',
       cantonLabel: 'Canton of interest',
       cantonHint: 'Apartments ≈ {price}/m² · cantonal tax ≈ {tax}%',
       householdLabel: 'Household size',
@@ -174,7 +237,10 @@ export const translations = {
     terms: {
       pillar2: '2nd pillar (BVG/LPP)',
       pillar2Def:
-        'Occupational pension savings. In Switzerland you may pledge some of it towards a home, but it can only cover up to half of the minimum down payment — at least 10% of the price must be real cash savings. Using it reduces your future pension.',
+        'Occupational pension savings. In Switzerland you may pledge some of it towards a home, but it can only cover up to half of the minimum down payment — at least 10% of the price must be hard equity (cash or Pillar 3a). Using it reduces your future pension.',
+      pillar3a: 'Pillar 3a',
+      pillar3aDef:
+        'Tax-privileged private retirement savings. It counts toward the 10% hard-equity minimum, exactly like cash — only the 2nd pillar is excluded. The 2026 annual maximum is CHF 7\'258 for employees with a pension fund, and contributions are deductible from taxable income.',
       housingCosts: 'housing costs',
       housingCostsDef:
         'Imputed annual housing costs — interest at a notional 5%, plus amortization and maintenance — must stay under one third of your gross income, even though real interest rates are lower today.',
@@ -184,6 +250,8 @@ export const translations = {
     },
     result: {
       headlineLabel: 'Your estimated maximum purchase price',
+      editNumbers: '✎ Edit your numbers',
+      savePdf: 'Save snapshot (PDF)',
       viable: 'Viable',
       heldByIncome:
         "Held by your **income ceiling**. Swiss banks cap your [[term]] at one third of income. More equity alone won't lift this — higher income would.",
@@ -357,7 +425,9 @@ export const translations = {
       qualifies: '✓ This property works for you',
       qualifiesNote: 'Both down payment and affordability tests pass at the regulatory 5% stress rate.',
       doesNotQualify: '✗ This property does not qualify',
-      doesNotQualifyNote: 'One or more tests fail. See the breakdown above for exactly what would need to change.',
+      doesNotQualifyNote: 'One or more tests fail. Here’s what you’d need to close.',
+      gapLine: 'Gap: {equity} equity · {income}/yr income.',
+      calcTitle: 'Required calculations',
       monthlyActual: 'What you would actually pay · {rate}',
     },
   },
@@ -431,13 +501,65 @@ export const translations = {
       advisorBody: 'Besprechen Sie es mit einem unabhängigen KI-Berater — keine Bank, kein Verkauf, keine Anmeldung.',
       advisorCta: 'Unabhängige Beratung erhalten',
       advisorThanks: 'Notiert — das steht auf unserer Roadmap. Danke für den Hinweis.',
+      current: 'Aktuelles Maximum: {value}',
+      goal: 'Ziel: {value}',
+      scenariosTitle: 'Drei Wege, die Lücke zu schliessen',
+      scen: {
+        steady: 'Stetig',
+        more: 'Mehr sparen',
+        max3a: 'Säule 3a max + mehr',
+        max3aNote: 'Inkl. maximaler Säule 3a — zählt als hartes Eigenkapital und senkt die Steuer.',
+      },
+    },
+    next: {
+      title: 'Wählen Sie Ihren nächsten Schritt',
+      intro: 'Zwei Wege nach vorne — oder eine zweite Meinung.',
+      seeOptions: 'Optionen anzeigen',
+      cardSustainTitle: 'Nachhaltige Immobilien erkunden',
+      cardSustainDesc: 'Worauf zu achten ist — Energieklasse, Sanierungsrechnung, kantonale Förderungen.',
+      cardRenovTitle: 'Sanierungen & Steuern erkunden',
+      cardRenovDesc: 'Eine Sanierung und ihre Steuerwirkung modellieren, inkl. Eigenmietwert.',
+      adviceLink: 'oder: unabhängige Beratung erhalten',
+    },
+    levers: {
+      title: 'Ihre Hebel',
+      l3aTitle: 'Säule 3a maximieren',
+      l3aBody: 'Sie liegen {gap} unter dem Maximum von {max}. Der Rest zählt als hartes Eigenkapital und könnte rund {saving}/Jahr Steuern sparen.',
+      hardTitle: 'Lücke beim harten Eigenkapital schliessen',
+      hardBody: 'Ihnen fehlen rund {gap} an den 10%, die hartes Eigenkapital sein müssen (Bargeld oder Säule 3a).',
+      debtTitle: 'Bestehende Schulden reduzieren',
+      debtBody: '{amount}/Monat an Verpflichtungen senken Ihre Tragbarkeit. Ein Abbau erhöht Ihren Spielraum.',
+    },
+    dream: {
+      contextTitle: 'Ihre Situation heute',
+      currentMax: 'Ihr maximaler Kaufpreis heute',
+      yourEquity: 'Vorhandenes hartes Eigenkapital',
+      hardEquitySub: 'Bargeld + Säule 3a',
+      yourIncome: 'Brutto-Haushaltseinkommen',
+      gapTitle: 'Wo Sie stehen vs. Ihr Ziel',
+      gapIntro: 'Wie nah Sie einer Immobilie für {price} sind – bei Preis und Eigenkapital.',
+      gapPriceLabel: 'Kaufpreis',
+      gapEquityLabel: 'Eigenkapital (Anzahlung)',
+      ofGoal: 'des Ziels',
+      gapNote: 'Um dorthin zu gelangen, bräuchten Sie rund {priceGap} mehr Kaufkraft und {eqGap} mehr Eigenkapital.',
+      trajTitle: 'Ihr Weg über die Zeit',
+      trajIntro: 'Wie Ihr Eigenkapital in Richtung der nötigen Anzahlung wächst, bei drei Spartempi.',
+      trajGoal: 'Ziel: {value}',
+      trajBeyond: '> 30 J',
+      milestoneTitle: 'Meilensteine Jahr für Jahr',
+      milestoneIntro: 'Voraussichtliches Eigenkapital bei {perMonth}/Monat Sparen, plus die Steuerersparnis durch maximale Säule 3a.',
+      colYear: 'Jahr',
+      colEquity: 'Eigenkapital (Prognose)',
+      colPct: '% des Ziels',
+      col3aTax: '3a-Steuer gespart',
+      milestoneNote: 'Illustrativ – nimmt ein stetiges Spartempo und einen Grenzsteuersatz von ~25% an. Keine Prognose.',
     },
     header: {
       tagline: 'Schweizer Explorer für nachhaltige Immobilien',
       badge: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
     },
     lang: { label: 'Sprache' },
-    nav: { 1: 'Kann ich kaufen?', 2: 'Worauf achten', 3: 'Meine echten Optionen', 4: 'Aktionsplan' },
+    nav: { 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan' },
     heading: {
       1: {
         title: 'Kann ich kaufen?',
@@ -445,16 +567,21 @@ export const translations = {
           'Verschaffen Sie sich ein ehrliches Bild Ihrer Kaufkraft nach Schweizer Hypothekarregeln – bevor Sie mit Bank, Makler oder Bauunternehmen sprechen. Kein Konto nötig, nichts wird gespeichert, nichts wird Ihnen verkauft.',
       },
       2: {
+        title: 'Ihren Wunschpreis berechnen',
+        blurb:
+          'Prüfen Sie eine konkrete Immobilie gegen Ihre Situation und sehen Sie – mit Diagrammen und einer Zeitleiste – genau, was es bräuchte, um dorthin zu gelangen.',
+      },
+      3: {
         title: 'Worauf sollte ich achten?',
         blurb:
           'Sehen Sie, was Ihr Budget im Wunschkanton kauft, was eine Energieklasse über 10 Jahre wirklich kostet und welche Förderungen gelten.',
       },
-      3: {
+      4: {
         title: 'Was sind meine echten Optionen?',
         blurb:
           'Drei realistische Wege – sanieren, neu kaufen oder bauen – mit Richtkosten, Förderungen und langfristigen Betriebskostenvergleichen.',
       },
-      4: {
+      5: {
         title: 'Was mache ich als Nächstes?',
         blurb:
           'Ein persönlicher Aktionsplan auf Basis von allem oben – bereit zum Herunterladen oder Teilen.',
@@ -462,6 +589,7 @@ export const translations = {
     },
     btn: {
       showAfford: 'Zeigen, was ich mir leisten kann',
+      continueDream: 'Wunschpreis berechnen →',
       continueExplore: 'Weiter zur Erkundung →',
       seeOptions: 'Meine echten Optionen ansehen →',
       buildPlan: 'Meinen Aktionsplan erstellen →',
@@ -486,13 +614,18 @@ export const translations = {
     },
     form: {
       title: 'Ihre Situation',
+      liveNote: 'Ihr Ergebnis aktualisiert sich automatisch beim Tippen – kein Knopfdruck nötig.',
+      selfNote: 'Selbstständig? Banken beurteilen das Einkommen meist vorsichtiger (z. B. Durchschnitt über 2–3 Jahre) – betrachten Sie dies als optimistisch.',
       incomeLabel: 'Brutto-Haushaltseinkommen (pro Jahr)',
       incomeHint: 'Gesamtes jährliches Bruttoeinkommen vor Steuern und Abzügen.',
-      savingsLabel: 'Liquide Ersparnisse / Eigenkapital',
-      savingsHint: 'Bargeld und leicht verkäufliche Vermögenswerte. Ohne Ihre Pensionskasse.',
+      savingsLabel: 'Hartes Eigenkapital (Ersparnisse, Schenkungen – keine Pensionskasse)',
+      savingsHint: 'Bargeld und leicht verkäufliche Vermögenswerte. Zählt an das Minimum von 10% hartem Eigenkapital.',
+      pillar3aLabel: 'Säule 3a',
+      pillar3aHint: 'Ihre [[term]] zählt ebenfalls als hartes Eigenkapital, genau wie Bargeld.',
       pillar2Label: '2. Säule (Pensionskasse), die Sie einsetzen könnten – optional',
-      pillar2Hint: 'Ihre [[term]]. Leer lassen, wenn Sie sie nicht einsetzen möchten.',
+      pillar2Hint: 'Ihre [[term]]. Weiches Eigenkapital – leer lassen, wenn Sie sie nicht einsetzen möchten.',
       combinedEquity: 'Gesamtes Eigenkapital',
+      hardEquityNote: 'Davon {hard} hartes Eigenkapital (Bargeld + Säule 3a) – mindestens 10% des Preises müssen daraus stammen.',
       cantonLabel: 'Kanton von Interesse',
       cantonHint: 'Wohnungen ≈ {price}/m² · Kantonssteuer ≈ {tax}%',
       householdLabel: 'Haushaltsgrösse',
@@ -511,7 +644,10 @@ export const translations = {
     terms: {
       pillar2: '2. Säule (BVG)',
       pillar2Def:
-        'Berufliche Vorsorge. In der Schweiz dürfen Sie einen Teil davon für Wohneigentum einsetzen, aber höchstens die Hälfte des minimalen Eigenkapitals – mindestens 10% des Preises müssen echte Barersparnisse sein. Der Einsatz schmälert Ihre spätere Rente.',
+        'Berufliche Vorsorge. In der Schweiz dürfen Sie einen Teil davon für Wohneigentum einsetzen, aber höchstens die Hälfte des minimalen Eigenkapitals – mindestens 10% des Preises müssen hartes Eigenkapital sein (Bargeld oder Säule 3a). Der Einsatz schmälert Ihre spätere Rente.',
+      pillar3a: 'Säule 3a',
+      pillar3aDef:
+        'Steuerbegünstigte private Vorsorge. Sie zählt – genau wie Bargeld – an das Minimum von 10% hartem Eigenkapital; nur die 2. Säule ist ausgeschlossen. Der jährliche Höchstbetrag 2026 liegt bei CHF 7\'258 für Angestellte mit Pensionskasse, und die Einzahlungen sind vom steuerbaren Einkommen abziehbar.',
       housingCosts: 'Wohnkosten',
       housingCostsDef:
         'Kalkulatorische jährliche Wohnkosten – Zins zu einem kalkulatorischen Satz von 5% plus Amortisation und Unterhalt – müssen unter einem Drittel Ihres Bruttoeinkommens bleiben, auch wenn die realen Zinsen heute tiefer sind.',
@@ -521,6 +657,8 @@ export const translations = {
     },
     result: {
       headlineLabel: 'Ihr geschätzter maximaler Kaufpreis',
+      editNumbers: '✎ Zahlen bearbeiten',
+      savePdf: 'Snapshot speichern (PDF)',
       viable: 'Tragbar',
       heldByIncome:
         'Begrenzt durch Ihre **Einkommensgrenze**. Schweizer Banken begrenzen Ihre [[term]] auf ein Drittel des Einkommens. Mehr Eigenkapital allein hebt das nicht an – höheres Einkommen schon.',
@@ -694,7 +832,9 @@ export const translations = {
       qualifies: '✓ Diese Immobilie ist für Sie tragbar',
       qualifiesNote: 'Beide Tests (Eigenkapital und Tragbarkeit) bestehen zum regulatorischen Zinssatz von 5%.',
       doesNotQualify: '✗ Diese Immobilie erfüllt die Voraussetzungen nicht',
-      doesNotQualifyNote: 'Ein oder mehrere Tests schlagen fehl. Die Aufschlüsselung oben zeigt genau, was sich ändern müsste.',
+      doesNotQualifyNote: 'Ein oder mehrere Tests schlagen fehl. Das müssten Sie schliessen.',
+      gapLine: 'Lücke: {equity} Eigenkapital · {income}/Jahr Einkommen.',
+      calcTitle: 'Erforderliche Berechnungen',
       monthlyActual: 'Was Sie tatsächlich zahlen würden · {rate}',
     },
   },
@@ -768,13 +908,65 @@ export const translations = {
       advisorBody: 'Discutez-en avec un guide IA indépendant — pas une banque, aucune vente, sans inscription.',
       advisorCta: 'Obtenir un conseil indépendant',
       advisorThanks: 'C’est noté — c’est sur notre feuille de route. Merci.',
+      current: 'Maximum actuel : {value}',
+      goal: 'Objectif : {value}',
+      scenariosTitle: 'Trois façons de combler l’écart',
+      scen: {
+        steady: 'Régulier',
+        more: 'Épargner plus',
+        max3a: 'Pilier 3a max + effort',
+        max3aNote: 'Inclut le pilier 3a au maximum — compte comme fonds propres durs et réduit l’impôt.',
+      },
+    },
+    next: {
+      title: 'Choisissez votre prochaine étape',
+      intro: 'Deux façons d’avancer — ou un deuxième avis.',
+      seeOptions: 'Voir les options',
+      cardSustainTitle: 'Explorer l’immobilier durable',
+      cardSustainDesc: 'À quoi faire attention — classe énergétique, rentabilité des rénovations, subventions cantonales.',
+      cardRenovTitle: 'Explorer rénovations & fiscalité',
+      cardRenovDesc: 'Modéliser une rénovation et ses effets fiscaux, y compris la valeur locative.',
+      adviceLink: 'ou : obtenir un avis indépendant',
+    },
+    levers: {
+      title: 'Vos leviers',
+      l3aTitle: 'Maximiser le pilier 3a',
+      l3aBody: 'Il vous manque {gap} pour atteindre le maximum de {max}. Le reste compte comme fonds propres durs et pourrait économiser environ {saving}/an d’impôts.',
+      hardTitle: 'Combler l’écart de fonds propres durs',
+      hardBody: 'Il vous manque environ {gap} pour les 10% qui doivent être des fonds propres durs (liquidités ou pilier 3a).',
+      debtTitle: 'Réduire les dettes existantes',
+      debtBody: '{amount}/mois d’engagements réduisent votre capacité. Les rembourser augmente votre marge.',
+    },
+    dream: {
+      contextTitle: 'Votre situation aujourd’hui',
+      currentMax: 'Votre prix d’achat maximal aujourd’hui',
+      yourEquity: 'Fonds propres durs disponibles',
+      hardEquitySub: 'liquidités + pilier 3a',
+      yourIncome: 'Revenu brut du ménage',
+      gapTitle: 'Où vous en êtes vs votre objectif',
+      gapIntro: 'À quel point vous êtes proche d’un bien à {price}, en prix et en fonds propres.',
+      gapPriceLabel: 'Prix d’achat',
+      gapEquityLabel: 'Fonds propres (apport)',
+      ofGoal: 'de l’objectif',
+      gapNote: 'Pour y arriver, il faudrait environ {priceGap} de capacité d’achat et {eqGap} de fonds propres en plus.',
+      trajTitle: 'Votre parcours dans le temps',
+      trajIntro: 'Comment vos fonds propres progressent vers l’apport nécessaire, à trois rythmes d’épargne.',
+      trajGoal: 'Objectif : {value}',
+      trajBeyond: '> 30 ans',
+      milestoneTitle: 'Jalons année par année',
+      milestoneIntro: 'Fonds propres projetés en épargnant {perMonth}/mois, plus l’impôt économisé en maximisant le pilier 3a.',
+      colYear: 'Année',
+      colEquity: 'Fonds propres projetés',
+      colPct: '% de l’objectif',
+      col3aTax: 'Impôt 3a économisé',
+      milestoneNote: 'Illustratif — suppose un rythme d’épargne régulier et un taux marginal d’environ 25%. Pas une prévision.',
     },
     header: {
       tagline: 'Explorateur immobilier durable suisse',
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
     },
     lang: { label: 'Langue' },
-    nav: { 1: 'Puis-je acheter ?', 2: 'Quoi regarder', 3: 'Mes vraies options', 4: "Plan d'action" },
+    nav: { 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action" },
     heading: {
       1: {
         title: 'Puis-je acheter ?',
@@ -782,22 +974,28 @@ export const translations = {
           "Obtenez une image honnête de votre capacité d'achat selon les règles hypothécaires suisses — avant de parler à une banque, un courtier ou un constructeur. Aucun compte, rien d'enregistré, rien à vous vendre.",
       },
       2: {
+        title: 'Calculez votre prix de rêve',
+        blurb:
+          "Confrontez un bien précis à votre situation et voyez — avec des graphiques et une chronologie — exactement ce qu'il faudrait pour y arriver.",
+      },
+      3: {
         title: 'Que dois-je rechercher ?',
         blurb:
           'Découvrez ce que votre budget achète dans le canton visé, ce qu’une classe énergétique coûte vraiment sur 10 ans, et quelles subventions s’appliquent.',
       },
-      3: {
+      4: {
         title: 'Quelles sont mes vraies options ?',
         blurb:
           'Trois voies réalistes — rénover, acheter du neuf ou construire — avec coûts indicatifs, subventions et comparaisons de coûts à long terme.',
       },
-      4: {
+      5: {
         title: 'Que dois-je faire ensuite ?',
         blurb: "Un plan d'action personnalisé basé sur tout ce qui précède, prêt à télécharger ou à partager.",
       },
     },
     btn: {
       showAfford: 'Montrer ce que je peux me permettre',
+      continueDream: 'Calculer un prix de rêve →',
       continueExplore: "Continuer vers l'exploration →",
       seeOptions: 'Voir mes vraies options →',
       buildPlan: "Créer mon plan d'action →",
@@ -822,13 +1020,18 @@ export const translations = {
     },
     form: {
       title: 'Votre situation',
+      liveNote: 'Votre résultat se met à jour automatiquement à mesure que vous tapez — aucun bouton à presser.',
+      selfNote: 'Indépendant ? Les banques évaluent souvent le revenu de façon plus prudente (p. ex. moyenne sur 2–3 ans) — considérez ceci comme optimiste.',
       incomeLabel: 'Revenu brut du ménage (par an)',
       incomeHint: 'Revenu brut annuel combiné avant impôts et déductions.',
-      savingsLabel: 'Épargne liquide / fonds propres',
-      savingsHint: 'Liquidités et actifs facilement vendables. Hors caisse de pension.',
+      savingsLabel: 'Fonds propres durs (épargne, donations — hors prévoyance)',
+      savingsHint: 'Liquidités et actifs facilement vendables. Comptent dans le minimum de 10% de fonds propres durs.',
+      pillar3aLabel: 'Pilier 3a',
+      pillar3aHint: 'Votre [[term]] compte aussi comme fonds propres durs, au même titre que les liquidités.',
       pillar2Label: '2e pilier (caisse de pension) mobilisable — optionnel',
-      pillar2Hint: 'Votre [[term]]. Laissez vide si vous ne souhaitez pas l’utiliser.',
+      pillar2Hint: 'Votre [[term]]. Fonds propres « mous » — laissez vide si vous ne souhaitez pas l’utiliser.',
       combinedEquity: 'Fonds propres totaux',
+      hardEquityNote: 'Dont {hard} de fonds propres durs (liquidités + pilier 3a) — au moins 10% du prix doit en provenir.',
       cantonLabel: "Canton d'intérêt",
       cantonHint: 'Appartements ≈ {price}/m² · impôt cantonal ≈ {tax}%',
       householdLabel: 'Taille du ménage',
@@ -847,7 +1050,10 @@ export const translations = {
     terms: {
       pillar2: '2e pilier (LPP)',
       pillar2Def:
-        "Prévoyance professionnelle. En Suisse, vous pouvez en affecter une partie à un logement, mais au plus la moitié de l'apport minimal — au moins 10% du prix doit être de l'épargne réelle. L'utiliser réduit votre future rente.",
+        "Prévoyance professionnelle. En Suisse, vous pouvez en affecter une partie à un logement, mais au plus la moitié de l'apport minimal — au moins 10% du prix doit être des fonds propres durs (liquidités ou pilier 3a). L'utiliser réduit votre future rente.",
+      pillar3a: 'Pilier 3a',
+      pillar3aDef:
+        "Prévoyance privée fiscalement avantagée. Elle compte dans le minimum de 10% de fonds propres durs, exactement comme les liquidités ; seul le 2e pilier est exclu. Le maximum annuel 2026 est de CHF 7'258 pour les salariés affiliés à une caisse de pension, et les versements sont déductibles du revenu imposable.",
       housingCosts: 'charges de logement',
       housingCostsDef:
         "Les charges annuelles théoriques — intérêts à un taux théorique de 5%, plus amortissement et entretien — doivent rester sous un tiers de votre revenu brut, même si les taux réels sont plus bas aujourd'hui.",
@@ -857,6 +1063,8 @@ export const translations = {
     },
     result: {
       headlineLabel: "Votre prix d'achat maximal estimé",
+      editNumbers: '✎ Modifier vos chiffres',
+      savePdf: 'Enregistrer le récapitulatif (PDF)',
       viable: 'Réalisable',
       heldByIncome:
         "Limité par votre **plafond de revenu**. Les banques suisses plafonnent vos [[term]] à un tiers du revenu. Plus de fonds propres seuls ne relèvera pas ce chiffre — un revenu plus élevé, oui.",
@@ -1030,7 +1238,9 @@ export const translations = {
       qualifies: '✓ Ce bien est accessible pour vous',
       qualifiesNote: "Les deux tests (apport et capacité) sont validés au taux de stress réglementaire de 5%.",
       doesNotQualify: '✗ Ce bien ne remplit pas les conditions',
-      doesNotQualifyNote: "Un ou plusieurs tests échouent. Le détail ci-dessus indique exactement ce qui devrait changer.",
+      doesNotQualifyNote: "Un ou plusieurs tests échouent. Voici l’écart à combler.",
+      gapLine: 'Écart : {equity} de fonds propres · {income}/an de revenu.',
+      calcTitle: 'Calculs requis',
       monthlyActual: 'Ce que vous paieriez réellement · {rate}',
     },
   },
@@ -1104,13 +1314,65 @@ export const translations = {
       advisorBody: 'Parlane con una guida IA indipendente — non una banca, nessuna vendita, senza registrazione.',
       advisorCta: 'Ottieni una consulenza indipendente',
       advisorThanks: 'Annotato — è nella nostra roadmap. Grazie per lo spunto.',
+      current: 'Massimo attuale: {value}',
+      goal: 'Obiettivo: {value}',
+      scenariosTitle: 'Tre modi per colmare il divario',
+      scen: {
+        steady: 'Costante',
+        more: 'Risparmiare di più',
+        max3a: 'Pilastro 3a max + spinta',
+        max3aNote: 'Include il pilastro 3a al massimo — conta come capitale proprio duro e riduce le imposte.',
+      },
+    },
+    next: {
+      title: 'Scegli il prossimo passo',
+      intro: 'Due modi per andare avanti — o un secondo parere.',
+      seeOptions: 'Vedi le opzioni',
+      cardSustainTitle: 'Esplora l’immobiliare sostenibile',
+      cardSustainDesc: 'Cosa cercare — classe energetica, convenienza delle ristrutturazioni, sussidi cantonali.',
+      cardRenovTitle: 'Esplora ristrutturazioni e fisco',
+      cardRenovDesc: 'Modella una ristrutturazione e i suoi effetti fiscali, incluso il valore locativo.',
+      adviceLink: 'oppure: ottieni una consulenza indipendente',
+    },
+    levers: {
+      title: 'Le tue leve',
+      l3aTitle: 'Massimizzare il pilastro 3a',
+      l3aBody: 'Ti mancano {gap} al massimo di {max}. Il resto conta come capitale proprio duro e potrebbe far risparmiare circa {saving}/anno di imposte.',
+      hardTitle: 'Colmare il divario di capitale proprio duro',
+      hardBody: 'Ti mancano circa {gap} al 10% che deve essere capitale proprio duro (liquidità o pilastro 3a).',
+      debtTitle: 'Ridurre i debiti esistenti',
+      debtBody: '{amount}/mese di impegni riducono la tua capacità. Estinguerli aumenta il margine.',
+    },
+    dream: {
+      contextTitle: 'La tua situazione oggi',
+      currentMax: 'Il tuo prezzo d’acquisto massimo oggi',
+      yourEquity: 'Capitale proprio duro disponibile',
+      hardEquitySub: 'liquidità + pilastro 3a',
+      yourIncome: 'Reddito lordo del nucleo',
+      gapTitle: 'Dove sei rispetto al tuo obiettivo',
+      gapIntro: 'Quanto sei vicino a un immobile da {price}, per prezzo e capitale proprio.',
+      gapPriceLabel: 'Prezzo d’acquisto',
+      gapEquityLabel: 'Capitale proprio (anticipo)',
+      ofGoal: 'dell’obiettivo',
+      gapNote: 'Per arrivarci servirebbero circa {priceGap} di capacità d’acquisto e {eqGap} di capitale proprio in più.',
+      trajTitle: 'Il tuo percorso nel tempo',
+      trajIntro: 'Come cresce il tuo capitale proprio verso l’anticipo necessario, a tre ritmi di risparmio.',
+      trajGoal: 'Obiettivo: {value}',
+      trajBeyond: '> 30 anni',
+      milestoneTitle: 'Tappe anno per anno',
+      milestoneIntro: 'Capitale proprio previsto risparmiando {perMonth}/mese, più l’imposta risparmiata massimizzando il pilastro 3a.',
+      colYear: 'Anno',
+      colEquity: 'Capitale proprio previsto',
+      colPct: '% dell’obiettivo',
+      col3aTax: 'Imposta 3a risparmiata',
+      milestoneNote: 'Illustrativo — assume un ritmo di risparmio costante e un’aliquota marginale di ~25%. Non è una previsione.',
     },
     header: {
       tagline: 'Explorer immobiliare sostenibile svizzero',
       badge: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',
     },
     lang: { label: 'Lingua' },
-    nav: { 1: 'Posso comprare?', 2: 'Cosa cercare', 3: 'Le mie opzioni reali', 4: 'Piano d’azione' },
+    nav: { 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione' },
     heading: {
       1: {
         title: 'Posso comprare?',
@@ -1118,22 +1380,28 @@ export const translations = {
           'Ottieni un quadro onesto della tua capacità di acquisto secondo le regole ipotecarie svizzere — prima di parlare con una banca, un mediatore o un costruttore. Nessun account, nulla salvato, nulla da venderti.',
       },
       2: {
+        title: 'Calcola il prezzo dei tuoi sogni',
+        blurb:
+          'Verifica un immobile specifico rispetto alla tua situazione e scopri — con grafici e una cronologia — esattamente cosa servirebbe per arrivarci.',
+      },
+      3: {
         title: 'Cosa dovrei cercare?',
         blurb:
           'Scopri cosa compra il tuo budget nel cantone scelto, quanto costa davvero una classe energetica su 10 anni e quali incentivi si applicano.',
       },
-      3: {
+      4: {
         title: 'Quali sono le mie opzioni reali?',
         blurb:
           'Tre percorsi realistici — ristrutturare, comprare nuovo o costruire — con costi indicativi, incentivi e confronti dei costi a lungo termine.',
       },
-      4: {
+      5: {
         title: 'Cosa faccio ora?',
         blurb: 'Un piano d’azione personalizzato basato su tutto quanto sopra, pronto da scaricare o condividere.',
       },
     },
     btn: {
       showAfford: 'Mostra cosa posso permettermi',
+      continueDream: 'Calcola un prezzo dei sogni →',
       continueExplore: 'Continua all’esplorazione →',
       seeOptions: 'Vedi le mie opzioni reali →',
       buildPlan: 'Crea il mio piano d’azione →',
@@ -1158,13 +1426,18 @@ export const translations = {
     },
     form: {
       title: 'La tua situazione',
+      liveNote: 'Il risultato si aggiorna automaticamente mentre digiti — nessun pulsante da premere.',
+      selfNote: 'Lavoratore autonomo? Le banche valutano spesso il reddito in modo più prudente (es. media su 2–3 anni) — considera questa stima ottimistica.',
       incomeLabel: 'Reddito lordo del nucleo (all’anno)',
       incomeHint: 'Reddito lordo annuo complessivo al lordo di imposte e deduzioni.',
-      savingsLabel: 'Risparmi liquidi / capitale proprio',
-      savingsHint: 'Liquidità e attivi facilmente vendibili. Esclusa la cassa pensione.',
+      savingsLabel: 'Capitale proprio « duro » (risparmi, donazioni — non previdenza)',
+      savingsHint: 'Liquidità e attivi facilmente vendibili. Contano per il minimo del 10% di capitale proprio duro.',
+      pillar3aLabel: 'Pilastro 3a',
+      pillar3aHint: 'Il tuo [[term]] conta anch’esso come capitale proprio duro, esattamente come la liquidità.',
       pillar2Label: '2° pilastro (cassa pensione) utilizzabile — opzionale',
-      pillar2Hint: 'Il tuo [[term]]. Lascia vuoto se non vuoi utilizzarlo.',
+      pillar2Hint: 'Il tuo [[term]]. Capitale proprio « morbido » — lascia vuoto se non vuoi utilizzarlo.',
       combinedEquity: 'Capitale proprio totale',
+      hardEquityNote: 'Di cui {hard} di capitale proprio duro (liquidità + pilastro 3a) — almeno il 10% del prezzo deve provenire da qui.',
       cantonLabel: 'Cantone di interesse',
       cantonHint: 'Appartamenti ≈ {price}/m² · imposta cantonale ≈ {tax}%',
       householdLabel: 'Dimensione del nucleo',
@@ -1183,7 +1456,10 @@ export const translations = {
     terms: {
       pillar2: '2° pilastro (LPP)',
       pillar2Def:
-        "Previdenza professionale. In Svizzera puoi destinarne una parte all'abitazione, ma al massimo metà del capitale minimo — almeno il 10% del prezzo deve essere risparmio reale. Usarlo riduce la tua futura rendita.",
+        "Previdenza professionale. In Svizzera puoi destinarne una parte all'abitazione, ma al massimo metà del capitale minimo — almeno il 10% del prezzo deve essere capitale proprio duro (liquidità o pilastro 3a). Usarlo riduce la tua futura rendita.",
+      pillar3a: 'Pilastro 3a',
+      pillar3aDef:
+        "Previdenza privata con vantaggi fiscali. Conta per il minimo del 10% di capitale proprio duro, esattamente come la liquidità; solo il 2° pilastro è escluso. Il massimo annuo 2026 è di CHF 7'258 per i dipendenti con cassa pensione, e i versamenti sono deducibili dal reddito imponibile.",
       housingCosts: 'costi abitativi',
       housingCostsDef:
         'I costi abitativi annui teorici — interessi a un tasso teorico del 5%, più ammortamento e manutenzione — devono restare sotto un terzo del reddito lordo, anche se i tassi reali oggi sono più bassi.',
@@ -1193,6 +1469,8 @@ export const translations = {
     },
     result: {
       headlineLabel: 'Il tuo prezzo d’acquisto massimo stimato',
+      editNumbers: '✎ Modifica i tuoi dati',
+      savePdf: 'Salva il riepilogo (PDF)',
       viable: 'Sostenibile',
       heldByIncome:
         'Limitato dal tuo **tetto di reddito**. Le banche svizzere limitano i tuoi [[term]] a un terzo del reddito. Più capitale proprio da solo non alza questo numero — un reddito più alto sì.',
@@ -1366,7 +1644,9 @@ export const translations = {
       qualifies: '✓ Questo immobile è accessibile per te',
       qualifiesNote: 'Entrambi i test (capitale proprio e sostenibilità) sono superati al tasso di stress regolamentare del 5%.',
       doesNotQualify: '✗ Questo immobile non soddisfa i requisiti',
-      doesNotQualifyNote: 'Uno o più test falliscono. Il dettaglio sopra mostra esattamente cosa dovrebbe cambiare.',
+      doesNotQualifyNote: 'Uno o più test falliscono. Ecco il divario da colmare.',
+      gapLine: 'Divario: {equity} di capitale · {income}/anno di reddito.',
+      calcTitle: 'Calcoli necessari',
       monthlyActual: 'Cosa pagheresti davvero · {rate}',
     },
   },
