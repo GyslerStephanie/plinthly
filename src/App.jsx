@@ -267,6 +267,7 @@ export default function App() {
                   result={previewResult}
                   renovation={renovation}
                   isPreview={!phase1}
+                  onNavigate={goToPhase}
                 />
               ) : (
                 <EmptyResult />

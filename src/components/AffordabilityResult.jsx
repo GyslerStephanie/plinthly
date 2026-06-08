@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { chf, int, pct } from '../lib/format'
 import {
   buildPriceLadder,
-  requirementsForPrice,
   monthlyCostsAtRate,
   affordabilityState,
   checkSpecificProperty,
@@ -11,6 +10,10 @@ import {
 import { getCanton, eigenmietwert } from '../lib/cantons'
 import { useI18n } from '../i18n/I18nContext'
 import { T, renderRich } from './Trans'
+import Collapsible from './Collapsible'
+import PathToGoal from './PathToGoal'
+import Levers from './Levers'
+import NextSteps from './NextSteps'
 
 const roundK = (v) => Math.round(v / 1000) * 1000
 
@@ -127,7 +130,7 @@ function MonthlyCostCard({ price, mortgage, ltv, rate, onRate, notionalPct, main
   const share = (v) => (mc.total > 0 ? pct(v / mc.total) : '0%')
 
   return (
-    <Card title={t('result.monthlyTitle')}>
+    <Collapsible title={t('result.monthlyTitle')}>
       <p className="-mt-1 mb-4 text-xs text-slate-500">{showing}</p>
 
       <RateSlider rate={rate} onChange={onRate} t={t} notional={notionalPct} />
@@ -170,7 +173,7 @@ function MonthlyCostCard({ price, mortgage, ltv, rate, onRate, notionalPct, main
         k="result.monthStress"
         vars={{ notionalPct, notionalMo: chf(mc.totalNotional) }}
       />
-    </Card>
+    </Collapsible>
   )
 }
 
@@ -242,7 +245,18 @@ function KeyTakeaways({ result, rate }) {
   )
 }
 
-export default function AffordabilityResult({ result, renovation, isPreview = false }) {
+/** Scroll to and focus the income field — the "edit your numbers" affordance. */
+function editNumbers() {
+  const el = document.getElementById('grossIncome')
+  if (!el) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    return
+  }
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  setTimeout(() => el.focus({ preventScroll: true }), 350)
+}
+
+export default function AffordabilityResult({ result, renovation, isPreview = false, onNavigate }) {
   const { t } = useI18n()
   const canton = getCanton(result.inputs.canton)
   const { downPaymentBreakdown: dp, annualCosts: ac, constraints } = result
@@ -334,6 +348,19 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         </Card>
       )}
 
+      {/* Edit/return affordance — desktop shows the form alongside; mobile scrolls to it */}
+      {!isPreview && (
+        <div className="flex justify-end no-print">
+          <button
+            type="button"
+            onClick={editNumbers}
+            className="text-sm font-medium text-body underline-offset-2 transition hover:text-ink hover:underline"
+          >
+            {t('result.editNumbers')}
+          </button>
+        </div>
+      )}
+
       {/* Key takeaways — TL;DR summary of the detail cards below */}
       <KeyTakeaways result={result} rate={rate} />
 
@@ -357,7 +384,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
       )}
 
       {/* Two ceilings chart */}
-      <Card title={t('result.ceilingsTitle')}>
+      <Collapsible title={t('result.ceilingsTitle')}>
         <T as="p" className="mb-4 text-sm leading-relaxed text-slate-600" k="result.ceilingsIntro" />
         <CeilingChart
           equity={constraints.equityMaxPrice}
@@ -365,10 +392,10 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           maxPrice={result.maxPrice}
           binding={result.bindingConstraint}
         />
-      </Card>
+      </Collapsible>
 
       {/* Down payment breakdown */}
-      <Card title={t('result.stakeTitle')}>
+      <Collapsible title={t('result.stakeTitle')}>
         <Row label={t('result.purchasePrice')} value={chf(result.maxPrice)} strong />
         <div className="my-3">
           <Bar
@@ -419,10 +446,10 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             vars={{ entered: chf(result.inputs.pillar2), used: chf(dp.fromPillar2) }}
           />
         )}
-      </Card>
+      </Collapsible>
 
       {/* Affordability / annual cost breakdown */}
-      <Card title={t('result.carryTitle')}>
+      <Collapsible title={t('result.carryTitle')}>
         <div className="mb-3">
           <div className="mb-1 flex items-center justify-between text-xs font-medium">
             <span className={ac.incomeShare > result.rules.costRatio ? 'text-amber-700' : 'text-teal-700'}>
@@ -470,7 +497,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             }}
           />
         )}
-      </Card>
+      </Collapsible>
 
       {/* Monthly cost at an actual market rate — the slider-driven "real" view */}
       {result.maxPrice > 0 && (
@@ -488,7 +515,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
 
       {/* Price ladder */}
       {result.maxPrice > 0 && (
-        <Card title={t('result.ladderTitle')}>
+        <Collapsible title={t('result.ladderTitle')}>
           <T
             as="p"
             className="mb-3 text-sm leading-relaxed text-slate-600"
@@ -500,11 +527,11 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             downPct={result.rules.downPct}
             ltvPct={result.rules.ltvPct}
           />
-        </Card>
+        </Collapsible>
       )}
 
       {/* Forward mode — check a specific property */}
-      <PropertyChecker result={result} rate={rate} />
+      <PropertyChecker result={result} rate={rate} onNavigate={onNavigate} />
 
       {/* What would change this (only when not viable) */}
       {!result.viable && result.shortfall && (
@@ -530,18 +557,29 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         </Card>
       )}
 
-      {/* Not viable → a path to get there + independent guide */}
+      {/* Not viable → a path to the goal, the levers, and next steps */}
       {!result.viable && result.shortfall && (
-        <PathForward
-          targetPrice={result.shortfall.targetPrice}
-          equityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
-          incomeGapAnnual={result.shortfall.type === 'income' ? result.shortfall.incomeGap : 0}
-          context="not_viable"
-        />
+        <>
+          <PathToGoal
+            targetPrice={result.shortfall.targetPrice}
+            currentMax={result.maxPrice}
+            equityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
+            incomeGapAnnual={result.shortfall.type === 'income' ? result.shortfall.incomeGap : 0}
+          />
+          <Levers
+            lever3a={result.pillar3aLever}
+            hardEquityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
+          />
+          <NextSteps
+            onExploreSustainable={() => onNavigate?.(2)}
+            onExploreRenovations={() => onNavigate?.(3)}
+            advisorContext="not_viable"
+          />
+        </>
       )}
 
       {/* Eigenmietwert overview */}
-      <Card title={t('result.taxTitle')}>
+      <Collapsible title={t('result.taxTitle')}>
         <T
           as="p"
           className="text-sm leading-relaxed text-slate-700"
@@ -571,7 +609,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           <span>{t('result.eigenVariance', { rate: eigenRate })}</span>
           <span>{t('result.taxVerify')}</span>
         </div>
-      </Card>
+      </Collapsible>
     </div>
   )
 }
@@ -746,106 +784,7 @@ function TestPill({ pass, label }) {
  * Runs the full spec calculation — Niederstwertprinzip, existing obligations,
  * property type adjustments — and shows a line-by-line breakdown of both tests.
  */
-/**
- * "A path to get there" + a concept CTA for an independent (non-bank) AI guide.
- * Rendered under any "you can't afford this yet" state. The savings timeline is
- * interactive (slider). The advisor CTA is a v1 concept that captures NO data —
- * clicking logs interest as a demand signal and shows an inline acknowledgement,
- * preserving the no-sign-up promise.
- *
- * @param {number} targetPrice      The price the buyer is reaching for.
- * @param {number} equityGap        CHF of extra equity needed (0 if none).
- * @param {number} incomeGapAnnual  CHF of extra gross annual income needed (0 if none).
- * @param {string} context          Label for the demand-signal log.
- */
-function PathForward({ targetPrice, equityGap = 0, incomeGapAnnual = 0, context = 'reverse' }) {
-  const { t } = useI18n()
-  const [monthly, setMonthly] = useState(2000)
-  const [noted, setNoted] = useState(false)
-
-  const months = equityGap > 0 && monthly > 0 ? Math.ceil(equityGap / monthly) : 0
-  const duration =
-    months >= 24
-      ? t('path.durYears', { n: (months / 12).toFixed(1) })
-      : t('path.durMonths', { n: months })
-
-  const registerInterest = () => {
-    // eslint-disable-next-line no-console
-    console.log('[Plinthly advisor interest]', { context, targetPrice, equityGap, incomeGapAnnual })
-    setNoted(true)
-  }
-
-  return (
-    <div className="rounded-xl border border-line bg-surface p-4">
-      <h4 className="font-display text-base font-bold text-ink">
-        {t('path.title', { target: chf(targetPrice) })}
-      </h4>
-      <p className="mt-1 text-sm leading-relaxed text-body">{t('path.intro')}</p>
-
-      <ul className="mt-3 space-y-3">
-        {equityGap > 0 && (
-          <li>
-            <p className="text-sm text-body">
-              {renderRich(t('path.saveGap', { gap: chf(roundK(equityGap)) }))}
-            </p>
-            <div className="mt-2 flex items-center gap-3">
-              <span className="shrink-0 text-xs text-muted">{t('path.saveLabel')}</span>
-              <input
-                type="range"
-                min="500"
-                max="6000"
-                step="250"
-                value={monthly}
-                onChange={(e) => setMonthly(Number(e.target.value))}
-                className="flex-1 accent-ink"
-                aria-label={t('path.saveLabel')}
-              />
-              <span className="w-24 shrink-0 text-right text-sm font-semibold tabular-nums text-ink">
-                {chf(monthly)}/mo
-              </span>
-            </div>
-            <p className="mt-1 text-sm text-body">
-              {renderRich(t('path.saveTimeline', { time: duration }))}
-            </p>
-          </li>
-        )}
-        {incomeGapAnnual > 0 && (
-          <li>
-            <p className="text-sm text-body">
-              {renderRich(t('path.incomeGap', { gap: chf(roundK(incomeGapAnnual)) }))}
-            </p>
-          </li>
-        )}
-      </ul>
-
-      {/* Independent advisor — concept CTA, captures nothing */}
-      <div className="mt-4 border-t border-line pt-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-semibold text-ink">{t('path.advisorTitle')}</p>
-          <span className="rounded-full bg-info-light px-2.5 py-0.5 text-xs font-medium text-info">
-            {t('path.advisorSoon')}
-          </span>
-        </div>
-        <p className="mt-1 text-sm leading-relaxed text-body">{t('path.advisorBody')}</p>
-        {noted ? (
-          <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-positive">
-            ✓ {t('path.advisorThanks')}
-          </p>
-        ) : (
-          <button
-            type="button"
-            onClick={registerInterest}
-            className="mt-3 inline-flex items-center justify-center rounded-full border border-ink bg-white px-4 py-2.5 text-sm font-bold text-ink transition hover:bg-surface"
-          >
-            {t('path.advisorCta')}
-          </button>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function PropertyChecker({ result, rate }) {
+function PropertyChecker({ result, rate, onNavigate }) {
   const { t } = useI18n()
 
   // --- form state ---
@@ -870,6 +809,12 @@ function PropertyChecker({ result, rate }) {
     : null
 
   const monthly = check ? monthlyCostsAtRate(check.purchasePrice, check.mortgage, rate, check.ltv) : null
+
+  // Gaps to the dream price, for the verdict line + path/levers.
+  const dreamEquityGap = check ? Math.max(check.downShortfall, check.liquidShortfall) : 0
+  const dreamIncomeGap = check && !check.affordQualifies
+    ? Math.max(0, check.monthlyNotionalTotal / 0.333 - check.effectiveMonthlyIncome) * 12
+    : 0
 
   return (
     <Card title={t('check.title')}>
@@ -969,17 +914,27 @@ function PropertyChecker({ result, rate }) {
       {check && (
         <div className="mt-6 space-y-5">
 
-          {/* Overall verdict */}
+          {/* Overall verdict — status carried by a dot + left accent, not a fill (§9) */}
           <div className={
-            'rounded-xl border p-4 ' +
-            (check.qualifies ? 'border-teal-300 bg-teal-50' : 'border-red-200 bg-red-50')
+            'rounded-xl border border-line bg-white p-4 border-l-4 ' +
+            (check.qualifies ? 'border-l-positive' : 'border-l-error')
           }>
-            <p className={'text-base font-semibold ' + (check.qualifies ? 'text-teal-800' : 'text-red-800')}>
+            <p className={'flex items-center gap-2 text-base font-semibold ' + (check.qualifies ? 'text-positive' : 'text-error')}>
+              <span className={'inline-block h-2 w-2 rounded-full ' + (check.qualifies ? 'bg-positive' : 'bg-error')} aria-hidden />
               {check.qualifies ? t('check.qualifies') : t('check.doesNotQualify')}
             </p>
-            <p className={'mt-1 text-sm leading-relaxed ' + (check.qualifies ? 'text-teal-700' : 'text-red-700')}>
+            <p className="mt-1 text-sm leading-relaxed text-body">
               {check.qualifies ? t('check.qualifiesNote') : t('check.doesNotQualifyNote')}
             </p>
+            {/* Explicit gap line on failure */}
+            {!check.qualifies && (dreamEquityGap > 0 || dreamIncomeGap > 0) && (
+              <p className="mt-2 text-sm font-medium text-ink">
+                {t('check.gapLine', {
+                  equity: dreamEquityGap > 0 ? chf(roundK(dreamEquityGap)) : '—',
+                  income: dreamIncomeGap > 0 ? chf(roundK(dreamIncomeGap)) : '—',
+                })}
+              </p>
+            )}
             {/* Sub-test pills */}
             <div className="mt-3 space-y-1">
               {check.downQualifies
@@ -998,6 +953,27 @@ function PropertyChecker({ result, rate }) {
               }
             </div>
           </div>
+
+          {/* Path + levers come before the detail (spec §6b order) */}
+          {!check.qualifies && (
+            <>
+              <PathToGoal
+                targetPrice={check.purchasePrice}
+                currentMax={result.maxPrice}
+                equityGap={dreamEquityGap}
+                incomeGapAnnual={dreamIncomeGap}
+              />
+              <Levers
+                lever3a={result.pillar3aLever}
+                hardEquityGap={check.liquidShortfall}
+                existingDebtMonthly={check.existingObligations}
+                debtBlocking={!check.affordQualifies}
+              />
+            </>
+          )}
+
+          {/* ── Required calculations (collapsed by default) ── */}
+          <Collapsible title={t('check.calcTitle')}>
 
           {/* ── Down payment breakdown ── */}
           <div>
@@ -1134,17 +1110,14 @@ function PropertyChecker({ result, rate }) {
             </div>
           </div>
 
-          {/* ── Can't afford it yet → a path to get there + independent guide ── */}
+          </Collapsible>
+
+          {/* ── Choose your next step (CTAs last, §6b) ── */}
           {!check.qualifies && (
-            <PathForward
-              targetPrice={check.purchasePrice}
-              equityGap={Math.max(check.downShortfall, check.liquidShortfall)}
-              incomeGapAnnual={
-                check.affordQualifies
-                  ? 0
-                  : Math.max(0, check.monthlyNotionalTotal / 0.333 - check.effectiveMonthlyIncome) * 12
-              }
-              context="dream_price"
+            <NextSteps
+              onExploreSustainable={() => onNavigate?.(2)}
+              onExploreRenovations={() => onNavigate?.(3)}
+              advisorContext="dream_price"
             />
           )}
 
