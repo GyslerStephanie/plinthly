@@ -261,12 +261,12 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext }) 
             </div>
           </div>
 
-          {/* Gap chart — the "what's missing", with the difference on each bar */}
+          {/* Gap chart — your real total equity vs the equity the dream needs */}
           <GapChart
             currentMax={result.maxPrice}
             dreamPrice={check.purchasePrice}
+            haveEquity={check.totalAvailable}
             needEquity={check.effectiveDown}
-            equityGap={dreamEquityGap}
           />
 
           {/* Actionable path + levers stay visible (the answer up top) */}
@@ -289,16 +289,21 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext }) 
             </>
           )}
 
-          {/* Heavy detail collapses by default (progressive disclosure) */}
+          {/* Path over time — visible & interactive (adjust the monthly budget) */}
+          {dreamEquityGap > 0 && (
+            <Card title={t('dream.trajTitle')}>
+              <TrajectoryChart
+                startEquity={result.inputs.hardEquity}
+                requiredEquity={check.effectiveDown}
+                savingsPerMonth={savingsPerMonth}
+                onSavingsChange={setSavingsPerMonth}
+              />
+            </Card>
+          )}
+
+          {/* Year-by-year detail collapses by default (progressive disclosure) */}
           {dreamEquityGap > 0 && (
             <>
-              <Collapsible title={t('dream.trajTitle')}>
-                <TrajectoryChart
-                  startEquity={result.inputs.hardEquity}
-                  requiredEquity={check.effectiveDown}
-                  savingsPerMonth={savingsPerMonth}
-                />
-              </Collapsible>
               <Collapsible title={t('dream.milestoneTitle')}>
                 <MilestoneTable
                   startEquity={result.inputs.hardEquity}

@@ -11,10 +11,10 @@ const PILLAR3A_MONTHLY = Math.round(RULE_CONSTANTS.PILLAR3A_MAX / 12) // ≈ 605
  * with the exact difference. The equity gap is passed in so it matches the
  * verdict headline exactly (accounts for the 2nd pillar).
  * ────────────────────────────────────────────────────────────────────────── */
-export function GapChart({ currentMax, dreamPrice, needEquity, equityGap }) {
+export function GapChart({ currentMax, dreamPrice, haveEquity, needEquity }) {
   const { t } = useI18n()
   const priceGap = Math.max(0, dreamPrice - currentMax)
-  const haveEquity = Math.max(0, needEquity - equityGap)
+  const equityGap = Math.max(0, needEquity - haveEquity)
 
   const GapBar = ({ label, have, goal, gap }) => {
     const haveW = goal > 0 ? Math.min(100, (have / goal) * 100) : 0
@@ -55,10 +55,11 @@ export function GapChart({ currentMax, dreamPrice, needEquity, equityGap }) {
  * line. Compact. Renders its own content (no Card) so it can live in a
  * Collapsible. The middle line tracks the user's chosen savings amount.
  * ────────────────────────────────────────────────────────────────────────── */
-export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth = 2000 }) {
+export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth = 2000, onSavingsChange }) {
   const { t } = useI18n()
   const gap = Math.max(0, requiredEquity - startEquity)
   if (gap <= 0) return null
+  const clamp = (n) => Math.min(20000, Math.max(0, Math.round(n / 50) * 50))
 
   const scenarios = [
     { key: 'steady', perMonth: 1000, color: '#999999' },
@@ -68,13 +69,15 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
   const slowest = Math.min(...scenarios.map((s) => s.perMonth))
   const monthsSlow = Math.ceil(gap / slowest)
   const maxMonths = Math.min(360, Math.max(12, monthsSlow))
-  const yMax = requiredEquity * 1.05
+  const totalYears = Math.ceil(maxMonths / 12)
+  const yMax = requiredEquity * 1.08
 
-  const W = 320, H = 120, padL = 6, padR = 6, padT = 8, padB = 16
+  const W = 320, H = 168, padL = 6, padR = 6, padT = 10, padB = 16
   const plotW = W - padL - padR, plotH = H - padT - padB
   const x = (m) => padL + (m / maxMonths) * plotW
   const y = (eq) => padT + plotH - (Math.min(eq, yMax) / yMax) * plotH
   const goalY = y(requiredEquity)
+  const abbr = (n) => (n >= 1000 ? Math.round(n / 1000) + 'k' : String(Math.round(n)))
 
   const lines = scenarios.map((s) => {
     const endEq = startEquity + s.perMonth * maxMonths
@@ -82,6 +85,13 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
     const crossM = cross <= maxMonths ? cross : null
     return { ...s, d: `M ${x(0)} ${y(startEquity)} L ${x(maxMonths)} ${y(endEq)}`, crossM, crossX: crossM != null ? x(crossM) : null }
   })
+  // Yearly increment markers on the user's chosen pace ("more") line.
+  const userPace = scenarios[1].perMonth
+  const yearDots = []
+  for (let yr = 1; yr <= totalYears; yr++) {
+    const eq = startEquity + userPace * 12 * yr
+    yearDots.push({ yr, m: yr * 12, eq, capped: eq >= requiredEquity })
+  }
 
   const yearTicks = []
   for (let m = 0; m <= maxMonths; m += 12) yearTicks.push(m)
@@ -90,6 +100,30 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
   return (
     <div>
       <p className="mb-3 text-sm leading-relaxed text-slate-600">{t('dream.trajIntro')}</p>
+
+      {/* Adjustable monthly budget — drives this chart, the path, and the table */}
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <label className="text-sm text-body">{t('dream.savedPerMonth')}</label>
+        <div className="flex w-32 items-center rounded-lg border border-line bg-white">
+          <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
+          <input
+            type="text" inputMode="numeric"
+            value={Math.max(0, savingsPerMonth)}
+            onChange={(e) => onSavingsChange?.(clamp(Number(e.target.value.replace(/[^0-9]/g, '')) || 0))}
+            className="w-full bg-transparent py-1.5 pr-1 text-right text-sm font-semibold tabular-nums text-ink focus:outline-none"
+            aria-label={t('dream.savedPerMonth')}
+          />
+          <span className="select-none pr-2 text-xs text-muted">/mo</span>
+        </div>
+        <input
+          type="range" min="0" max="6000" step="50"
+          value={Math.min(6000, savingsPerMonth)}
+          onChange={(e) => onSavingsChange?.(clamp(Number(e.target.value)))}
+          className="flex-1 accent-ink"
+          aria-label={t('dream.savedPerMonth')}
+        />
+      </div>
+
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={t('dream.trajTitle')}>
         <line x1={padL} y1={goalY} x2={W - padR} y2={goalY} stroke="#ea4335" strokeWidth="1" strokeDasharray="4 3" />
         <text x={W - padR} y={goalY - 3} fontSize="7" fill="#ea4335" textAnchor="end">
@@ -105,6 +139,15 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
           <g key={l.key}>
             <path d={l.d} fill="none" stroke={l.color} strokeWidth="2" />
             {l.crossX != null && <circle cx={l.crossX} cy={goalY} r="3" fill={l.color} />}
+          </g>
+        ))}
+        {/* Yearly increment dots + value labels on the user's pace line */}
+        {yearDots.map((d) => (
+          <g key={d.yr}>
+            <circle cx={x(d.m)} cy={y(d.eq)} r="2.2" fill="#0d0d0d" />
+            {totalYears <= 12 && (
+              <text x={x(d.m)} y={y(d.eq) - 4} fontSize="6.5" fill="#0d0d0d" textAnchor="middle">{abbr(d.eq)}</text>
+            )}
           </g>
         ))}
       </svg>
