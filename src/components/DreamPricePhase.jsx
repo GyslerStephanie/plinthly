@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { chf, int, pct } from '../lib/format'
 import {
   checkSpecificProperty,
@@ -63,11 +63,14 @@ function TestPill({ pass, label }) {
  * Runs the full spec calculation — Niederstwertprinzip, existing obligations,
  * property type adjustments — and shows a line-by-line breakdown of both tests.
  */
-export default function DreamPricePhase({ result, onNavigate }) {
+export default function DreamPricePhase({ result, onNavigate, onDreamContext }) {
   const { t } = useI18n()
 
   // Own the market-rate used for the "what you'd actually pay" lines.
   const [rate, setRate] = useState(DEFAULT_MARKET_RATE)
+  // Single source of truth for the savings pace, shared across the path, the
+  // trajectory chart, and the milestone table.
+  const [savingsPerMonth, setSavingsPerMonth] = useState(2000)
 
   // --- form state ---
   const [price, setPrice]           = useState('')
@@ -97,6 +100,20 @@ export default function DreamPricePhase({ result, onNavigate }) {
   const dreamIncomeGap = check && !check.affordQualifies
     ? Math.max(0, check.monthlyNotionalTotal / 0.333 - check.effectiveMonthlyIncome) * 12
     : 0
+
+  // Report the dream gap up to App so the AI advisor can ground answers on it.
+  // Primitive deps avoid re-firing every render (which would loop).
+  const dreamPriceVal = check ? check.purchasePrice : 0
+  const dreamQualifies = check ? check.qualifies : false
+  const dreamEffectiveDown = check ? check.effectiveDown : 0
+  useEffect(() => {
+    if (!onDreamContext) return
+    onDreamContext(
+      dreamPriceVal
+        ? { price: dreamPriceVal, qualifies: dreamQualifies, equityGap: dreamEquityGap, incomeGap: dreamIncomeGap, effectiveDown: dreamEffectiveDown }
+        : null,
+    )
+  }, [dreamPriceVal, dreamQualifies, dreamEquityGap, dreamIncomeGap, dreamEffectiveDown, onDreamContext])
 
   return (
     <div className="space-y-5">
@@ -244,27 +261,15 @@ export default function DreamPricePhase({ result, onNavigate }) {
             </div>
           </div>
 
-          {/* Charts: current situation vs goal + trajectory over time */}
+          {/* Gap chart — your real total equity vs the equity the dream needs */}
           <GapChart
             currentMax={result.maxPrice}
             dreamPrice={check.purchasePrice}
-            haveEquity={result.inputs.hardEquity}
+            haveEquity={check.totalAvailable}
             needEquity={check.effectiveDown}
           />
-          {dreamEquityGap > 0 && (
-            <>
-              <TrajectoryChart
-                startEquity={result.inputs.hardEquity}
-                requiredEquity={check.effectiveDown}
-              />
-              <MilestoneTable
-                startEquity={result.inputs.hardEquity}
-                requiredEquity={check.effectiveDown}
-              />
-            </>
-          )}
 
-          {/* Path + levers come before the detail (spec §6b order) */}
+          {/* Actionable path + levers stay visible (the answer up top) */}
           {!check.qualifies && (
             <>
               <PathToGoal
@@ -272,6 +277,8 @@ export default function DreamPricePhase({ result, onNavigate }) {
                 currentMax={result.maxPrice}
                 equityGap={dreamEquityGap}
                 incomeGapAnnual={dreamIncomeGap}
+                savingsPerMonth={savingsPerMonth}
+                onSavingsChange={setSavingsPerMonth}
               />
               <Levers
                 lever3a={result.pillar3aLever}
@@ -279,6 +286,32 @@ export default function DreamPricePhase({ result, onNavigate }) {
                 existingDebtMonthly={check.existingObligations}
                 debtBlocking={!check.affordQualifies}
               />
+            </>
+          )}
+
+          {/* Path over time — visible & interactive (adjust the monthly budget) */}
+          {dreamEquityGap > 0 && (
+            <Card title={t('dream.trajTitle')}>
+              <TrajectoryChart
+                startEquity={result.inputs.hardEquity}
+                requiredEquity={check.effectiveDown}
+                savingsPerMonth={savingsPerMonth}
+                onSavingsChange={setSavingsPerMonth}
+              />
+            </Card>
+          )}
+
+          {/* Year-by-year detail collapses by default (progressive disclosure) */}
+          {dreamEquityGap > 0 && (
+            <>
+              <Collapsible title={t('dream.milestoneTitle')}>
+                <MilestoneTable
+                  startEquity={result.inputs.hardEquity}
+                  requiredEquity={check.effectiveDown}
+                  savingsPerMonth={savingsPerMonth}
+                  onSavingsChange={setSavingsPerMonth}
+                />
+              </Collapsible>
             </>
           )}
 

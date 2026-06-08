@@ -17,10 +17,19 @@ const PILLAR3A_MONTHLY = Math.round(RULE_CONSTANTS.PILLAR3A_MAX / 12) // ≈ 605
  * @param {number} currentMax       The buyer's current achievable max price.
  * @param {number} equityGap        CHF of extra hard equity needed (0 if none).
  * @param {number} incomeGapAnnual  CHF of extra gross annual income needed (0 if none).
+ * @param {number} [savingsPerMonth] Controlled monthly-savings value (shared across
+ *                                   the dream-price viz). Falls back to local state.
+ * @param {(n:number)=>void} [onSavingsChange] Setter for the controlled value.
  */
-export default function PathToGoal({ targetPrice, currentMax = 0, equityGap = 0, incomeGapAnnual = 0 }) {
+export default function PathToGoal({
+  targetPrice, currentMax = 0, equityGap = 0, incomeGapAnnual = 0,
+  savingsPerMonth, onSavingsChange,
+}) {
   const { t } = useI18n()
-  const [monthly, setMonthly] = useState(2000)
+  const [internal, setInternal] = useState(2000)
+  const monthly = savingsPerMonth != null ? savingsPerMonth : internal
+  const setMonthly = onSavingsChange || setInternal
+  const clamp = (n) => Math.min(20000, Math.max(0, Math.round(n / 50) * 50))
 
   const fmtDuration = (months) =>
     months >= 24 ? t('path.durYears', { n: (months / 12).toFixed(1) }) : t('path.durMonths', { n: months })
@@ -61,15 +70,23 @@ export default function PathToGoal({ targetPrice, currentMax = 0, equityGap = 0,
           <div className="mt-2 flex items-center gap-3">
             <span className="shrink-0 text-xs text-muted">{t('path.saveLabel')}</span>
             <input
-              type="range" min="500" max="6000" step="250"
-              value={monthly}
-              onChange={(e) => setMonthly(Number(e.target.value))}
+              type="range" min="0" max="6000" step="50"
+              value={Math.min(6000, monthly)}
+              onChange={(e) => setMonthly(clamp(Number(e.target.value)))}
               className="flex-1 accent-ink"
               aria-label={t('path.saveLabel')}
             />
-            <span className="w-24 shrink-0 text-right text-sm font-semibold tabular-nums text-ink">
-              {chf(monthly)}/mo
-            </span>
+            <div className="flex w-28 shrink-0 items-center rounded-lg border border-line bg-white">
+              <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
+              <input
+                type="text" inputMode="numeric"
+                value={monthly}
+                onChange={(e) => setMonthly(clamp(Number(e.target.value.replace(/[^0-9]/g, '')) || 0))}
+                className="w-full bg-transparent py-1.5 pr-1 text-right text-sm font-semibold tabular-nums text-ink focus:outline-none"
+                aria-label={t('path.saveLabel')}
+              />
+              <span className="select-none pr-2 text-xs text-muted">/mo</span>
+            </div>
           </div>
           <p className="mt-1 text-sm text-body">
             {renderRich(t('path.saveTimeline', { time: fmtDuration(monthsFor(monthly)) }))}
