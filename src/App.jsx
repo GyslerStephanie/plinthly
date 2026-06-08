@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import AffordabilityForm from './components/AffordabilityForm'
 import AffordabilityResult from './components/AffordabilityResult'
 import DreamPricePhase from './components/DreamPricePhase'
@@ -356,6 +357,7 @@ export default function App() {
           {t('footer.disclaimer', { date: dataMeta.last_updated })}
         </div>
       </footer>
+      <SpeedInsights />
     </div>
     </AppStateProvider>
   )
