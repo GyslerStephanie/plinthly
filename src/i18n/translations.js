@@ -101,8 +101,11 @@ export const translations = {
       scen: {
         steady: 'Steady',
         more: 'Save more',
-        max3a: 'Max 3a + push',
-        max3aNote: 'Includes maxing Pillar 3a — counts as hard equity and cuts your tax.',
+        max3a: 'Save more + Pillar 3a',
+        reachIn: 'reaches it in {time}',
+        steadySub: 'A modest CHF 1\'000/mo baseline.',
+        moreSub: 'The monthly amount you set above.',
+        max3aNote: 'Your {save}/mo plus the ~{p3a}/mo that maxes Pillar 3a ({max}/yr). Pillar 3a also counts as hard equity and is tax-deductible.',
       },
     },
     next: {
@@ -150,6 +153,8 @@ export const translations = {
       barGap: 'Gap: {value}',
       trajReaches: 'reaches goal in {time}',
       trajGoalLegend: 'Goal line: {value} equity needed',
+      trajToday: 'Today: {value}',
+      trajHoverTitle: 'After {time}',
       savedPerMonth: 'Saved per month',
     },
     advisor: {
@@ -531,8 +536,11 @@ export const translations = {
       scen: {
         steady: 'Stetig',
         more: 'Mehr sparen',
-        max3a: 'Säule 3a max + mehr',
-        max3aNote: 'Inkl. maximaler Säule 3a — zählt als hartes Eigenkapital und senkt die Steuer.',
+        max3a: 'Mehr sparen + Säule 3a',
+        reachIn: 'erreicht in {time}',
+        steadySub: 'Eine moderate Basis von CHF 1\'000/Mt.',
+        moreSub: 'Der oben eingestellte Monatsbetrag.',
+        max3aNote: 'Ihre {save}/Mt. plus die ~{p3a}/Mt., die die Säule 3a ausschöpfen ({max}/Jahr). Die Säule 3a zählt zudem als hartes Eigenkapital und ist steuerlich abziehbar.',
       },
     },
     next: {
@@ -580,6 +588,8 @@ export const translations = {
       barGap: 'Lücke: {value}',
       trajReaches: 'erreicht das Ziel in {time}',
       trajGoalLegend: 'Ziellinie: {value} Eigenkapital nötig',
+      trajToday: 'Heute: {value}',
+      trajHoverTitle: 'Nach {time}',
       savedPerMonth: 'Gespart pro Monat',
     },
     advisor: {
@@ -962,8 +972,11 @@ export const translations = {
       scen: {
         steady: 'Régulier',
         more: 'Épargner plus',
-        max3a: 'Pilier 3a max + effort',
-        max3aNote: 'Inclut le pilier 3a au maximum — compte comme fonds propres durs et réduit l’impôt.',
+        max3a: 'Épargner plus + pilier 3a',
+        reachIn: 'atteint en {time}',
+        steadySub: 'Une base modeste de CHF 1\'000/mois.',
+        moreSub: 'Le montant mensuel défini ci-dessus.',
+        max3aNote: 'Vos {save}/mois plus les ~{p3a}/mois qui maximisent le pilier 3a ({max}/an). Le pilier 3a compte aussi comme fonds propres durs et est déductible des impôts.',
       },
     },
     next: {
@@ -1011,6 +1024,8 @@ export const translations = {
       barGap: 'Écart : {value}',
       trajReaches: 'atteint l’objectif en {time}',
       trajGoalLegend: 'Ligne d’objectif : {value} de fonds propres requis',
+      trajToday: 'Aujourd’hui : {value}',
+      trajHoverTitle: 'Après {time}',
       savedPerMonth: 'Épargné par mois',
     },
     advisor: {
@@ -1392,8 +1407,11 @@ export const translations = {
       scen: {
         steady: 'Costante',
         more: 'Risparmiare di più',
-        max3a: 'Pilastro 3a max + spinta',
-        max3aNote: 'Include il pilastro 3a al massimo — conta come capitale proprio duro e riduce le imposte.',
+        max3a: 'Risparmiare di più + pilastro 3a',
+        reachIn: 'raggiunto in {time}',
+        steadySub: 'Una base modesta di CHF 1\'000/mese.',
+        moreSub: 'L’importo mensile impostato sopra.',
+        max3aNote: 'I tuoi {save}/mese più i ~{p3a}/mese che massimizzano il pilastro 3a ({max}/anno). Il pilastro 3a conta anche come capitale proprio duro ed è deducibile dalle imposte.',
       },
     },
     next: {
@@ -1441,6 +1459,8 @@ export const translations = {
       barGap: 'Divario: {value}',
       trajReaches: 'raggiunge l’obiettivo in {time}',
       trajGoalLegend: 'Linea obiettivo: {value} di capitale necessario',
+      trajToday: 'Oggi: {value}',
+      trajHoverTitle: 'Dopo {time}',
       savedPerMonth: 'Risparmiato al mese',
     },
     advisor: {

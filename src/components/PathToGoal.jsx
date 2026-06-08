@@ -40,9 +40,14 @@ export default function PathToGoal({
   // Three transparent presets. Rates are fixed and labelled so the figures stay
   // honest (we don't know the buyer's actual current savings rate).
   const scenarios = [
-    { key: 'steady', perMonth: 1000 },
-    { key: 'more', perMonth: monthly },
-    { key: 'max3a', perMonth: monthly + PILLAR3A_MONTHLY, note: true },
+    { key: 'steady', perMonth: 1000, subKey: 'path.scen.steadySub' },
+    { key: 'more', perMonth: monthly, subKey: 'path.scen.moreSub' },
+    {
+      key: 'max3a',
+      perMonth: monthly + PILLAR3A_MONTHLY,
+      subKey: 'path.scen.max3aNote',
+      subVars: { save: chf(monthly), p3a: chf(PILLAR3A_MONTHLY), max: chf(RULE_CONSTANTS.PILLAR3A_MAX) },
+    },
   ]
 
   return (
@@ -105,10 +110,10 @@ export default function PathToGoal({
               <div key={s.key} className="rounded-lg border border-line bg-white p-3">
                 <p className="text-xs font-semibold text-ink">{t(`path.scen.${s.key}`)}</p>
                 <p className="mt-1 text-sm font-semibold tabular-nums text-ink">{chf(s.perMonth)}/mo</p>
-                <p className="mt-0.5 text-xs text-body">{fmtDuration(monthsFor(s.perMonth))}</p>
-                {s.note && (
-                  <p className="mt-1 text-[11px] leading-snug text-muted">{t('path.scen.max3aNote')}</p>
-                )}
+                <p className="mt-0.5 text-xs text-body">{t('path.scen.reachIn', { time: fmtDuration(monthsFor(s.perMonth)) })}</p>
+                <p className="mt-1.5 border-t border-line pt-1.5 text-[11px] leading-snug text-muted">
+                  {t(s.subKey, s.subVars)}
+                </p>
               </div>
             ))}
           </div>
