@@ -14,6 +14,8 @@ import { useI18n } from './i18n/I18nContext'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
+import AdvisorFab from './components/AdvisorFab'
+import { buildAdvisorContext } from './lib/advisorContext'
 
 const PHASE_NUMBERS = [1, 2, 3, 4, 5]
 const LAST_PHASE = 5
@@ -52,6 +54,7 @@ export default function App() {
   const [phase1, setPhase1] = useState(null)
   const [explore, setExplore] = useState(DEFAULT_EXPLORE)
   const [feedback, setFeedback] = useState(null) // session-only (Feature 6)
+  const [dreamContext, setDreamContext] = useState(null) // dream-price gap for the AI advisor
   const restored = useRef(false)
 
   // Record end-of-journey feedback: log it (v1 placeholder — no backend) and
@@ -272,7 +275,7 @@ export default function App() {
 
         {/* Phase 2 — Calculate dream price */}
         {phase === 2 && phase1 && (
-          <DreamPricePhase result={phase1} onNavigate={goToPhase} />
+          <DreamPricePhase result={phase1} onNavigate={goToPhase} onDreamContext={setDreamContext} />
         )}
 
         {/* Phase 3 — exploration */}
@@ -356,6 +359,11 @@ export default function App() {
           {t('footer.disclaimer', { date: dataMeta.last_updated })}
         </div>
       </footer>
+
+      {/* AI advisor — available once a result exists */}
+      {previewResult && (
+        <AdvisorFab context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)} />
+      )}
     </div>
     </AppStateProvider>
   )

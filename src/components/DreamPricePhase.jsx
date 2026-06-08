@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { chf, int, pct } from '../lib/format'
 import {
   checkSpecificProperty,
@@ -63,7 +63,7 @@ function TestPill({ pass, label }) {
  * Runs the full spec calculation — Niederstwertprinzip, existing obligations,
  * property type adjustments — and shows a line-by-line breakdown of both tests.
  */
-export default function DreamPricePhase({ result, onNavigate }) {
+export default function DreamPricePhase({ result, onNavigate, onDreamContext }) {
   const { t } = useI18n()
 
   // Own the market-rate used for the "what you'd actually pay" lines.
@@ -100,6 +100,20 @@ export default function DreamPricePhase({ result, onNavigate }) {
   const dreamIncomeGap = check && !check.affordQualifies
     ? Math.max(0, check.monthlyNotionalTotal / 0.333 - check.effectiveMonthlyIncome) * 12
     : 0
+
+  // Report the dream gap up to App so the AI advisor can ground answers on it.
+  // Primitive deps avoid re-firing every render (which would loop).
+  const dreamPriceVal = check ? check.purchasePrice : 0
+  const dreamQualifies = check ? check.qualifies : false
+  const dreamEffectiveDown = check ? check.effectiveDown : 0
+  useEffect(() => {
+    if (!onDreamContext) return
+    onDreamContext(
+      dreamPriceVal
+        ? { price: dreamPriceVal, qualifies: dreamQualifies, equityGap: dreamEquityGap, incomeGap: dreamIncomeGap, effectiveDown: dreamEffectiveDown }
+        : null,
+    )
+  }, [dreamPriceVal, dreamQualifies, dreamEquityGap, dreamIncomeGap, dreamEffectiveDown, onDreamContext])
 
   return (
     <div className="space-y-5">
