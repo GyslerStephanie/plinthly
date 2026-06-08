@@ -147,6 +147,10 @@ export const translations = {
       colPct: '% of goal',
       col3aTax: '3a tax saved',
       milestoneNote: 'Illustrative — assumes a steady savings pace and a ~25% marginal tax rate. Not a forecast.',
+      barGap: 'Gap: {value}',
+      trajReaches: 'reaches goal in {time}',
+      trajGoalLegend: 'Goal line: {value} equity needed',
+      savedPerMonth: 'Saved per month',
     },
     header: {
       tagline: 'Swiss Sustainable Real Estate Explorer',
@@ -553,6 +557,10 @@ export const translations = {
       colPct: '% des Ziels',
       col3aTax: '3a-Steuer gespart',
       milestoneNote: 'Illustrativ – nimmt ein stetiges Spartempo und einen Grenzsteuersatz von ~25% an. Keine Prognose.',
+      barGap: 'Lücke: {value}',
+      trajReaches: 'erreicht das Ziel in {time}',
+      trajGoalLegend: 'Ziellinie: {value} Eigenkapital nötig',
+      savedPerMonth: 'Gespart pro Monat',
     },
     header: {
       tagline: 'Schweizer Explorer für nachhaltige Immobilien',
@@ -960,6 +968,10 @@ export const translations = {
       colPct: '% de l’objectif',
       col3aTax: 'Impôt 3a économisé',
       milestoneNote: 'Illustratif — suppose un rythme d’épargne régulier et un taux marginal d’environ 25%. Pas une prévision.',
+      barGap: 'Écart : {value}',
+      trajReaches: 'atteint l’objectif en {time}',
+      trajGoalLegend: 'Ligne d’objectif : {value} de fonds propres requis',
+      savedPerMonth: 'Épargné par mois',
     },
     header: {
       tagline: 'Explorateur immobilier durable suisse',
@@ -1366,6 +1378,10 @@ export const translations = {
       colPct: '% dell’obiettivo',
       col3aTax: 'Imposta 3a risparmiata',
       milestoneNote: 'Illustrativo — assume un ritmo di risparmio costante e un’aliquota marginale di ~25%. Non è una previsione.',
+      barGap: 'Divario: {value}',
+      trajReaches: 'raggiunge l’obiettivo in {time}',
+      trajGoalLegend: 'Linea obiettivo: {value} di capitale necessario',
+      savedPerMonth: 'Risparmiato al mese',
     },
     header: {
       tagline: 'Explorer immobiliare sostenibile svizzero',

@@ -68,6 +68,9 @@ export default function DreamPricePhase({ result, onNavigate }) {
 
   // Own the market-rate used for the "what you'd actually pay" lines.
   const [rate, setRate] = useState(DEFAULT_MARKET_RATE)
+  // Single source of truth for the savings pace, shared across the path, the
+  // trajectory chart, and the milestone table.
+  const [savingsPerMonth, setSavingsPerMonth] = useState(2000)
 
   // --- form state ---
   const [price, setPrice]           = useState('')
@@ -244,27 +247,15 @@ export default function DreamPricePhase({ result, onNavigate }) {
             </div>
           </div>
 
-          {/* Charts: current situation vs goal + trajectory over time */}
+          {/* Gap chart — the "what's missing", with the difference on each bar */}
           <GapChart
             currentMax={result.maxPrice}
             dreamPrice={check.purchasePrice}
-            haveEquity={result.inputs.hardEquity}
             needEquity={check.effectiveDown}
+            equityGap={dreamEquityGap}
           />
-          {dreamEquityGap > 0 && (
-            <>
-              <TrajectoryChart
-                startEquity={result.inputs.hardEquity}
-                requiredEquity={check.effectiveDown}
-              />
-              <MilestoneTable
-                startEquity={result.inputs.hardEquity}
-                requiredEquity={check.effectiveDown}
-              />
-            </>
-          )}
 
-          {/* Path + levers come before the detail (spec §6b order) */}
+          {/* Actionable path + levers stay visible (the answer up top) */}
           {!check.qualifies && (
             <>
               <PathToGoal
@@ -272,6 +263,8 @@ export default function DreamPricePhase({ result, onNavigate }) {
                 currentMax={result.maxPrice}
                 equityGap={dreamEquityGap}
                 incomeGapAnnual={dreamIncomeGap}
+                savingsPerMonth={savingsPerMonth}
+                onSavingsChange={setSavingsPerMonth}
               />
               <Levers
                 lever3a={result.pillar3aLever}
@@ -279,6 +272,27 @@ export default function DreamPricePhase({ result, onNavigate }) {
                 existingDebtMonthly={check.existingObligations}
                 debtBlocking={!check.affordQualifies}
               />
+            </>
+          )}
+
+          {/* Heavy detail collapses by default (progressive disclosure) */}
+          {dreamEquityGap > 0 && (
+            <>
+              <Collapsible title={t('dream.trajTitle')}>
+                <TrajectoryChart
+                  startEquity={result.inputs.hardEquity}
+                  requiredEquity={check.effectiveDown}
+                  savingsPerMonth={savingsPerMonth}
+                />
+              </Collapsible>
+              <Collapsible title={t('dream.milestoneTitle')}>
+                <MilestoneTable
+                  startEquity={result.inputs.hardEquity}
+                  requiredEquity={check.effectiveDown}
+                  savingsPerMonth={savingsPerMonth}
+                  onSavingsChange={setSavingsPerMonth}
+                />
+              </Collapsible>
             </>
           )}
 
