@@ -32,7 +32,8 @@ export default function Collapsible({ title, sub, children, defaultOpen = false 
           <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
-      {open && <div className="px-5 pb-5">{children}</div>}
+      {/* Always in the DOM; `collapsible-body` is force-expanded in print CSS. */}
+      <div className={(open ? 'block' : 'hidden') + ' collapsible-body px-5 pb-5'}>{children}</div>
     </section>
   )
 }

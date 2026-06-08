@@ -124,12 +124,36 @@ export const translations = {
       debtTitle: 'Reduce existing debts',
       debtBody: '{amount}/month of obligations lower what you can carry. Clearing them lifts your affordability.',
     },
+    dream: {
+      contextTitle: 'Your situation today',
+      currentMax: 'Your max purchase price today',
+      yourEquity: 'Hard equity you have',
+      hardEquitySub: 'cash + Pillar 3a',
+      yourIncome: 'Gross household income',
+      gapTitle: 'Where you are vs your goal',
+      gapIntro: 'How close you are to a {price} property, on both price and equity.',
+      gapPriceLabel: 'Purchase price',
+      gapEquityLabel: 'Equity (down payment)',
+      ofGoal: 'of goal',
+      gapNote: 'To reach it you’d need about {priceGap} more in buying power and {eqGap} more equity.',
+      trajTitle: 'Your path over time',
+      trajIntro: 'How your equity grows toward the down payment needed, at three savings paces.',
+      trajGoal: 'Goal: {value}',
+      trajBeyond: '> 30y',
+      milestoneTitle: 'Year-by-year milestones',
+      milestoneIntro: 'Projected equity if you save {perMonth}/month, plus the tax you’d save maxing Pillar 3a.',
+      colYear: 'Year',
+      colEquity: 'Projected equity',
+      colPct: '% of goal',
+      col3aTax: '3a tax saved',
+      milestoneNote: 'Illustrative — assumes a steady savings pace and a ~25% marginal tax rate. Not a forecast.',
+    },
     header: {
       tagline: 'Swiss Sustainable Real Estate Explorer',
       badge: 'No selling · No sign-up · Just honest numbers',
     },
     lang: { label: 'Language' },
-    nav: { 1: 'Can I buy?', 2: 'What to look for', 3: 'My real options', 4: 'Action plan' },
+    nav: { 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan' },
     heading: {
       1: {
         title: 'Can I buy?',
@@ -137,27 +161,33 @@ export const translations = {
           'Get an honest picture of your buying power under Swiss mortgage rules — before you talk to a bank, broker, or builder. No account needed, nothing saved, nothing sold to you.',
       },
       2: {
+        title: 'Calculate your dream price',
+        blurb:
+          'Check a specific property against your situation, and see — with charts and a timeline — exactly what it would take to get there.',
+      },
+      3: {
         title: 'What should I look for?',
         blurb:
           'See what your budget buys in your target canton, what an energy rating really costs over 10 years, and which subsidies apply.',
       },
-      3: {
+      4: {
         title: 'What are my real options?',
         blurb:
           'Three realistic routes — renovate, buy new, or build — with indicative costs, subsidies, and long-term running-cost comparisons.',
       },
-      4: {
+      5: {
         title: 'What do I do next?',
         blurb: 'A personalized action plan based on everything above, ready to download or share.',
       },
     },
     btn: {
       showAfford: 'Show what I can afford',
+      continueDream: 'Calculate a dream price →',
       continueExplore: 'Continue to exploration →',
       seeOptions: 'See my real options →',
       buildPlan: 'Build my action plan →',
       back: '← Back',
-      runToContinue: 'Run the calculator to continue →',
+      runToContinue: 'Enter income and savings to continue →',
     },
     empty: {
       title: 'Your results will appear here',
@@ -177,6 +207,8 @@ export const translations = {
     },
     form: {
       title: 'Your situation',
+      liveNote: 'Your result updates automatically as you type — no button to press.',
+      selfNote: 'Self-employed? Banks usually assess income more conservatively (e.g. a 2–3 year average) — treat this as optimistic.',
       incomeLabel: 'Gross household income (per year)',
       incomeHint: 'Combined annual gross income before tax and deductions.',
       savingsLabel: 'Hard cash (savings, gifts — not pension)',
@@ -219,6 +251,7 @@ export const translations = {
     result: {
       headlineLabel: 'Your estimated maximum purchase price',
       editNumbers: '✎ Edit your numbers',
+      savePdf: 'Save snapshot (PDF)',
       viable: 'Viable',
       heldByIncome:
         "Held by your **income ceiling**. Swiss banks cap your [[term]] at one third of income. More equity alone won't lift this — higher income would.",
@@ -497,12 +530,36 @@ export const translations = {
       debtTitle: 'Bestehende Schulden reduzieren',
       debtBody: '{amount}/Monat an Verpflichtungen senken Ihre Tragbarkeit. Ein Abbau erhöht Ihren Spielraum.',
     },
+    dream: {
+      contextTitle: 'Ihre Situation heute',
+      currentMax: 'Ihr maximaler Kaufpreis heute',
+      yourEquity: 'Vorhandenes hartes Eigenkapital',
+      hardEquitySub: 'Bargeld + Säule 3a',
+      yourIncome: 'Brutto-Haushaltseinkommen',
+      gapTitle: 'Wo Sie stehen vs. Ihr Ziel',
+      gapIntro: 'Wie nah Sie einer Immobilie für {price} sind – bei Preis und Eigenkapital.',
+      gapPriceLabel: 'Kaufpreis',
+      gapEquityLabel: 'Eigenkapital (Anzahlung)',
+      ofGoal: 'des Ziels',
+      gapNote: 'Um dorthin zu gelangen, bräuchten Sie rund {priceGap} mehr Kaufkraft und {eqGap} mehr Eigenkapital.',
+      trajTitle: 'Ihr Weg über die Zeit',
+      trajIntro: 'Wie Ihr Eigenkapital in Richtung der nötigen Anzahlung wächst, bei drei Spartempi.',
+      trajGoal: 'Ziel: {value}',
+      trajBeyond: '> 30 J',
+      milestoneTitle: 'Meilensteine Jahr für Jahr',
+      milestoneIntro: 'Voraussichtliches Eigenkapital bei {perMonth}/Monat Sparen, plus die Steuerersparnis durch maximale Säule 3a.',
+      colYear: 'Jahr',
+      colEquity: 'Eigenkapital (Prognose)',
+      colPct: '% des Ziels',
+      col3aTax: '3a-Steuer gespart',
+      milestoneNote: 'Illustrativ – nimmt ein stetiges Spartempo und einen Grenzsteuersatz von ~25% an. Keine Prognose.',
+    },
     header: {
       tagline: 'Schweizer Explorer für nachhaltige Immobilien',
       badge: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
     },
     lang: { label: 'Sprache' },
-    nav: { 1: 'Kann ich kaufen?', 2: 'Worauf achten', 3: 'Meine echten Optionen', 4: 'Aktionsplan' },
+    nav: { 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan' },
     heading: {
       1: {
         title: 'Kann ich kaufen?',
@@ -510,16 +567,21 @@ export const translations = {
           'Verschaffen Sie sich ein ehrliches Bild Ihrer Kaufkraft nach Schweizer Hypothekarregeln – bevor Sie mit Bank, Makler oder Bauunternehmen sprechen. Kein Konto nötig, nichts wird gespeichert, nichts wird Ihnen verkauft.',
       },
       2: {
+        title: 'Ihren Wunschpreis berechnen',
+        blurb:
+          'Prüfen Sie eine konkrete Immobilie gegen Ihre Situation und sehen Sie – mit Diagrammen und einer Zeitleiste – genau, was es bräuchte, um dorthin zu gelangen.',
+      },
+      3: {
         title: 'Worauf sollte ich achten?',
         blurb:
           'Sehen Sie, was Ihr Budget im Wunschkanton kauft, was eine Energieklasse über 10 Jahre wirklich kostet und welche Förderungen gelten.',
       },
-      3: {
+      4: {
         title: 'Was sind meine echten Optionen?',
         blurb:
           'Drei realistische Wege – sanieren, neu kaufen oder bauen – mit Richtkosten, Förderungen und langfristigen Betriebskostenvergleichen.',
       },
-      4: {
+      5: {
         title: 'Was mache ich als Nächstes?',
         blurb:
           'Ein persönlicher Aktionsplan auf Basis von allem oben – bereit zum Herunterladen oder Teilen.',
@@ -527,6 +589,7 @@ export const translations = {
     },
     btn: {
       showAfford: 'Zeigen, was ich mir leisten kann',
+      continueDream: 'Wunschpreis berechnen →',
       continueExplore: 'Weiter zur Erkundung →',
       seeOptions: 'Meine echten Optionen ansehen →',
       buildPlan: 'Meinen Aktionsplan erstellen →',
@@ -551,6 +614,8 @@ export const translations = {
     },
     form: {
       title: 'Ihre Situation',
+      liveNote: 'Ihr Ergebnis aktualisiert sich automatisch beim Tippen – kein Knopfdruck nötig.',
+      selfNote: 'Selbstständig? Banken beurteilen das Einkommen meist vorsichtiger (z. B. Durchschnitt über 2–3 Jahre) – betrachten Sie dies als optimistisch.',
       incomeLabel: 'Brutto-Haushaltseinkommen (pro Jahr)',
       incomeHint: 'Gesamtes jährliches Bruttoeinkommen vor Steuern und Abzügen.',
       savingsLabel: 'Hartes Eigenkapital (Ersparnisse, Schenkungen – keine Pensionskasse)',
@@ -593,6 +658,7 @@ export const translations = {
     result: {
       headlineLabel: 'Ihr geschätzter maximaler Kaufpreis',
       editNumbers: '✎ Zahlen bearbeiten',
+      savePdf: 'Snapshot speichern (PDF)',
       viable: 'Tragbar',
       heldByIncome:
         'Begrenzt durch Ihre **Einkommensgrenze**. Schweizer Banken begrenzen Ihre [[term]] auf ein Drittel des Einkommens. Mehr Eigenkapital allein hebt das nicht an – höheres Einkommen schon.',
@@ -871,12 +937,36 @@ export const translations = {
       debtTitle: 'Réduire les dettes existantes',
       debtBody: '{amount}/mois d’engagements réduisent votre capacité. Les rembourser augmente votre marge.',
     },
+    dream: {
+      contextTitle: 'Votre situation aujourd’hui',
+      currentMax: 'Votre prix d’achat maximal aujourd’hui',
+      yourEquity: 'Fonds propres durs disponibles',
+      hardEquitySub: 'liquidités + pilier 3a',
+      yourIncome: 'Revenu brut du ménage',
+      gapTitle: 'Où vous en êtes vs votre objectif',
+      gapIntro: 'À quel point vous êtes proche d’un bien à {price}, en prix et en fonds propres.',
+      gapPriceLabel: 'Prix d’achat',
+      gapEquityLabel: 'Fonds propres (apport)',
+      ofGoal: 'de l’objectif',
+      gapNote: 'Pour y arriver, il faudrait environ {priceGap} de capacité d’achat et {eqGap} de fonds propres en plus.',
+      trajTitle: 'Votre parcours dans le temps',
+      trajIntro: 'Comment vos fonds propres progressent vers l’apport nécessaire, à trois rythmes d’épargne.',
+      trajGoal: 'Objectif : {value}',
+      trajBeyond: '> 30 ans',
+      milestoneTitle: 'Jalons année par année',
+      milestoneIntro: 'Fonds propres projetés en épargnant {perMonth}/mois, plus l’impôt économisé en maximisant le pilier 3a.',
+      colYear: 'Année',
+      colEquity: 'Fonds propres projetés',
+      colPct: '% de l’objectif',
+      col3aTax: 'Impôt 3a économisé',
+      milestoneNote: 'Illustratif — suppose un rythme d’épargne régulier et un taux marginal d’environ 25%. Pas une prévision.',
+    },
     header: {
       tagline: 'Explorateur immobilier durable suisse',
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
     },
     lang: { label: 'Langue' },
-    nav: { 1: 'Puis-je acheter ?', 2: 'Quoi regarder', 3: 'Mes vraies options', 4: "Plan d'action" },
+    nav: { 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action" },
     heading: {
       1: {
         title: 'Puis-je acheter ?',
@@ -884,22 +974,28 @@ export const translations = {
           "Obtenez une image honnête de votre capacité d'achat selon les règles hypothécaires suisses — avant de parler à une banque, un courtier ou un constructeur. Aucun compte, rien d'enregistré, rien à vous vendre.",
       },
       2: {
+        title: 'Calculez votre prix de rêve',
+        blurb:
+          "Confrontez un bien précis à votre situation et voyez — avec des graphiques et une chronologie — exactement ce qu'il faudrait pour y arriver.",
+      },
+      3: {
         title: 'Que dois-je rechercher ?',
         blurb:
           'Découvrez ce que votre budget achète dans le canton visé, ce qu’une classe énergétique coûte vraiment sur 10 ans, et quelles subventions s’appliquent.',
       },
-      3: {
+      4: {
         title: 'Quelles sont mes vraies options ?',
         blurb:
           'Trois voies réalistes — rénover, acheter du neuf ou construire — avec coûts indicatifs, subventions et comparaisons de coûts à long terme.',
       },
-      4: {
+      5: {
         title: 'Que dois-je faire ensuite ?',
         blurb: "Un plan d'action personnalisé basé sur tout ce qui précède, prêt à télécharger ou à partager.",
       },
     },
     btn: {
       showAfford: 'Montrer ce que je peux me permettre',
+      continueDream: 'Calculer un prix de rêve →',
       continueExplore: "Continuer vers l'exploration →",
       seeOptions: 'Voir mes vraies options →',
       buildPlan: "Créer mon plan d'action →",
@@ -924,6 +1020,8 @@ export const translations = {
     },
     form: {
       title: 'Votre situation',
+      liveNote: 'Votre résultat se met à jour automatiquement à mesure que vous tapez — aucun bouton à presser.',
+      selfNote: 'Indépendant ? Les banques évaluent souvent le revenu de façon plus prudente (p. ex. moyenne sur 2–3 ans) — considérez ceci comme optimiste.',
       incomeLabel: 'Revenu brut du ménage (par an)',
       incomeHint: 'Revenu brut annuel combiné avant impôts et déductions.',
       savingsLabel: 'Fonds propres durs (épargne, donations — hors prévoyance)',
@@ -966,6 +1064,7 @@ export const translations = {
     result: {
       headlineLabel: "Votre prix d'achat maximal estimé",
       editNumbers: '✎ Modifier vos chiffres',
+      savePdf: 'Enregistrer le récapitulatif (PDF)',
       viable: 'Réalisable',
       heldByIncome:
         "Limité par votre **plafond de revenu**. Les banques suisses plafonnent vos [[term]] à un tiers du revenu. Plus de fonds propres seuls ne relèvera pas ce chiffre — un revenu plus élevé, oui.",
@@ -1244,12 +1343,36 @@ export const translations = {
       debtTitle: 'Ridurre i debiti esistenti',
       debtBody: '{amount}/mese di impegni riducono la tua capacità. Estinguerli aumenta il margine.',
     },
+    dream: {
+      contextTitle: 'La tua situazione oggi',
+      currentMax: 'Il tuo prezzo d’acquisto massimo oggi',
+      yourEquity: 'Capitale proprio duro disponibile',
+      hardEquitySub: 'liquidità + pilastro 3a',
+      yourIncome: 'Reddito lordo del nucleo',
+      gapTitle: 'Dove sei rispetto al tuo obiettivo',
+      gapIntro: 'Quanto sei vicino a un immobile da {price}, per prezzo e capitale proprio.',
+      gapPriceLabel: 'Prezzo d’acquisto',
+      gapEquityLabel: 'Capitale proprio (anticipo)',
+      ofGoal: 'dell’obiettivo',
+      gapNote: 'Per arrivarci servirebbero circa {priceGap} di capacità d’acquisto e {eqGap} di capitale proprio in più.',
+      trajTitle: 'Il tuo percorso nel tempo',
+      trajIntro: 'Come cresce il tuo capitale proprio verso l’anticipo necessario, a tre ritmi di risparmio.',
+      trajGoal: 'Obiettivo: {value}',
+      trajBeyond: '> 30 anni',
+      milestoneTitle: 'Tappe anno per anno',
+      milestoneIntro: 'Capitale proprio previsto risparmiando {perMonth}/mese, più l’imposta risparmiata massimizzando il pilastro 3a.',
+      colYear: 'Anno',
+      colEquity: 'Capitale proprio previsto',
+      colPct: '% dell’obiettivo',
+      col3aTax: 'Imposta 3a risparmiata',
+      milestoneNote: 'Illustrativo — assume un ritmo di risparmio costante e un’aliquota marginale di ~25%. Non è una previsione.',
+    },
     header: {
       tagline: 'Explorer immobiliare sostenibile svizzero',
       badge: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',
     },
     lang: { label: 'Lingua' },
-    nav: { 1: 'Posso comprare?', 2: 'Cosa cercare', 3: 'Le mie opzioni reali', 4: 'Piano d’azione' },
+    nav: { 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione' },
     heading: {
       1: {
         title: 'Posso comprare?',
@@ -1257,22 +1380,28 @@ export const translations = {
           'Ottieni un quadro onesto della tua capacità di acquisto secondo le regole ipotecarie svizzere — prima di parlare con una banca, un mediatore o un costruttore. Nessun account, nulla salvato, nulla da venderti.',
       },
       2: {
+        title: 'Calcola il prezzo dei tuoi sogni',
+        blurb:
+          'Verifica un immobile specifico rispetto alla tua situazione e scopri — con grafici e una cronologia — esattamente cosa servirebbe per arrivarci.',
+      },
+      3: {
         title: 'Cosa dovrei cercare?',
         blurb:
           'Scopri cosa compra il tuo budget nel cantone scelto, quanto costa davvero una classe energetica su 10 anni e quali incentivi si applicano.',
       },
-      3: {
+      4: {
         title: 'Quali sono le mie opzioni reali?',
         blurb:
           'Tre percorsi realistici — ristrutturare, comprare nuovo o costruire — con costi indicativi, incentivi e confronti dei costi a lungo termine.',
       },
-      4: {
+      5: {
         title: 'Cosa faccio ora?',
         blurb: 'Un piano d’azione personalizzato basato su tutto quanto sopra, pronto da scaricare o condividere.',
       },
     },
     btn: {
       showAfford: 'Mostra cosa posso permettermi',
+      continueDream: 'Calcola un prezzo dei sogni →',
       continueExplore: 'Continua all’esplorazione →',
       seeOptions: 'Vedi le mie opzioni reali →',
       buildPlan: 'Crea il mio piano d’azione →',
@@ -1297,6 +1426,8 @@ export const translations = {
     },
     form: {
       title: 'La tua situazione',
+      liveNote: 'Il risultato si aggiorna automaticamente mentre digiti — nessun pulsante da premere.',
+      selfNote: 'Lavoratore autonomo? Le banche valutano spesso il reddito in modo più prudente (es. media su 2–3 anni) — considera questa stima ottimistica.',
       incomeLabel: 'Reddito lordo del nucleo (all’anno)',
       incomeHint: 'Reddito lordo annuo complessivo al lordo di imposte e deduzioni.',
       savingsLabel: 'Capitale proprio « duro » (risparmi, donazioni — non previdenza)',
@@ -1339,6 +1470,7 @@ export const translations = {
     result: {
       headlineLabel: 'Il tuo prezzo d’acquisto massimo stimato',
       editNumbers: '✎ Modifica i tuoi dati',
+      savePdf: 'Salva il riepilogo (PDF)',
       viable: 'Sostenibile',
       heldByIncome:
         'Limitato dal tuo **tetto di reddito**. Le banche svizzere limitano i tuoi [[term]] a un terzo del reddito. Più capitale proprio da solo non alza questo numero — un reddito più alto sì.',

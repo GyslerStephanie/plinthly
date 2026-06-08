@@ -15,7 +15,6 @@ const KEYS = [
   ['dn', 'downPct'],
   ['ct', 'canton'],
   ['hs', 'householdSize'],
-  ['em', 'employmentType'],
   ['bg', 'budget'],
   ['pt', 'propertyType'],
   ['cd', 'condition'],

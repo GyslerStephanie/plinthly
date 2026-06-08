@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import AffordabilityForm from './components/AffordabilityForm'
 import AffordabilityResult from './components/AffordabilityResult'
+import DreamPricePhase from './components/DreamPricePhase'
 import Phase2Exploration from './components/Phase2Exploration'
 import Phase3Options from './components/Phase3Options'
 import Phase4ActionPlan from './components/Phase4ActionPlan'
@@ -14,7 +15,8 @@ import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 
-const PHASE_NUMBERS = [1, 2, 3, 4]
+const PHASE_NUMBERS = [1, 2, 3, 4, 5]
+const LAST_PHASE = 5
 
 const DEFAULT_VALUES = {
   grossIncome: '',
@@ -24,7 +26,6 @@ const DEFAULT_VALUES = {
   downPct: '20',
   canton: 'ZH',
   householdSize: '2',
-  employmentType: 'employed',
 }
 
 const DEFAULT_EXPLORE = {
@@ -76,7 +77,6 @@ export default function App() {
       downPct: s.downPct ?? DEFAULT_VALUES.downPct,
       canton: s.canton ?? DEFAULT_VALUES.canton,
       householdSize: s.householdSize ?? DEFAULT_VALUES.householdSize,
-      employmentType: s.employmentType ?? DEFAULT_VALUES.employmentType,
     }
     setValues(nextValues)
     setExplore({
@@ -92,7 +92,7 @@ export default function App() {
     if (nextValues.grossIncome && nextValues.savings) {
       const result = calc(nextValues)
       setPhase1(result)
-      const target = Math.min(4, Math.max(1, Number(s.phase) || 1))
+      const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
       setPhase(target)
       setMaxVisited(target)
     }
@@ -125,24 +125,20 @@ export default function App() {
     phase,
   }
 
-  const runPhase1 = () => setPhase1(calc(values))
-
-  // Live preview: as soon as income + savings are present, compute a result so
-  // the right column updates in real time, before the user clicks the button.
-  // The button (runPhase1) "locks in" the result, which is what unlocks Phase 2.
-  const livePreview = (() => {
-    const inc = Number(String(values.grossIncome).replace(/[^0-9.]/g, ''))
-    const sav = Number(String(values.savings).replace(/[^0-9.]/g, ''))
-    return inc > 0 && sav > 0 ? calc(values) : null
-  })()
-  const previewResult = phase1 || livePreview
+  // Fully live: the result reflects the current inputs continuously (no "run"
+  // button). phase1 is set whenever income + savings are valid, which is also
+  // what unlocks the later phases.
+  const isValid = (v) =>
+    Number(String(v.grossIncome).replace(/[^0-9.]/g, '')) > 0 &&
+    Number(String(v.savings).replace(/[^0-9.]/g, '')) > 0
+  const previewResult = phase1
 
   const handleValuesChange = (next) => {
     setValues(next)
-    if (phase1) setPhase1(calc(next)) // live recompute once shown
+    setPhase1(isValid(next) ? calc(next) : null)
   }
 
-  // Phase 2 canton is the single source of truth once we're past Phase 1;
+  // Phase 3 canton is the single source of truth once we're past Phase 1;
   // mirror it back so the Phase 1 tax note stays consistent if revisited.
   const handleExploreChange = (next) => {
     setExplore(next)
@@ -154,10 +150,10 @@ export default function App() {
   }
 
   const goToPhase = (n) => {
-    if (n < 1 || n > 4) return
+    if (n < 1 || n > LAST_PHASE) return
     if (n > 1 && !phase1) return
-    // Entering Phase 2 for the first time: seed budget + canton from Phase 1.
-    if (n === 2) {
+    // Entering exploration (phase 3) for the first time: seed budget + canton.
+    if (n === 3) {
       setExplore((e) => ({
         ...e,
         budget: e.budget || String(phase1?.maxPrice || ''),
@@ -169,7 +165,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const canContinue = phase < 4 && (phase > 1 || !!phase1)
+  const canContinue = phase < LAST_PHASE && (phase > 1 || !!phase1)
   const mtNotice = t('meta.mtNotice')
 
   // Derived, read-only view of state shared with descendants via context.
@@ -256,7 +252,6 @@ export default function App() {
                 <AffordabilityForm
                   values={values}
                   onChange={handleValuesChange}
-                  onSubmit={runPhase1}
                 />
               </div>
             </div>
@@ -266,7 +261,6 @@ export default function App() {
                 <AffordabilityResult
                   result={previewResult}
                   renovation={renovation}
-                  isPreview={!phase1}
                   onNavigate={goToPhase}
                 />
               ) : (
@@ -276,26 +270,31 @@ export default function App() {
           </div>
         )}
 
-        {/* Phase 2 */}
-        {phase === 2 && (
+        {/* Phase 2 — Calculate dream price */}
+        {phase === 2 && phase1 && (
+          <DreamPricePhase result={phase1} onNavigate={goToPhase} />
+        )}
+
+        {/* Phase 3 — exploration */}
+        {phase === 3 && (
           <>
-            <PhaseContextBanner phase={2} />
+            <PhaseContextBanner phase={3} />
             <Phase2Exploration explore={explore} onChange={handleExploreChange} />
           </>
         )}
 
-        {/* Phase 3 */}
-        {phase === 3 && (
+        {/* Phase 4 — real options */}
+        {phase === 4 && (
           <>
-            <PhaseContextBanner phase={3} />
+            <PhaseContextBanner phase={4} />
             <Phase3Options explore={explore} onChange={handleExploreChange} phase1={phase1} />
           </>
         )}
 
-        {/* Phase 4 */}
-        {phase === 4 && phase1 && (
+        {/* Phase 5 — action plan */}
+        {phase === 5 && phase1 && (
           <>
-            <PhaseContextBanner phase={4} />
+            <PhaseContextBanner phase={5} />
             <Phase4ActionPlan
               phase1={phase1}
               explore={explore}
@@ -324,8 +323,10 @@ export default function App() {
               className="rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
             >
               {phase === 1
-                ? t('btn.continueExplore')
+                ? t('btn.continueDream')
                 : phase === 2
+                ? t('btn.continueExplore')
+                : phase === 3
                 ? t('btn.seeOptions')
                 : t('btn.buildPlan')}
             </button>

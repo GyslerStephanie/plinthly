@@ -125,4 +125,16 @@ body {
   .shadow-sm {
     box-shadow: none !important;
   }
+  /* Stack the Phase 1 two-column layout into one column for a clean snapshot. */
+  .lg\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+  /* Force-expand every collapsed detail section so the snapshot is complete. */
+  .collapsible-body {
+    display: block !important;
+  }
+  /* Avoid splitting cards/sections across pages where possible. */
+  section {
+    break-inside: avoid;
+  }
 }
