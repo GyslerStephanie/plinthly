@@ -8,12 +8,12 @@
   web tool that gives prospective Swiss home buyers an honest, regulation-accurate
   affordability picture before they talk to a bank, with a sustainability lens.
   Full product description: `PRODUCT_BRIEF.md` in the repo root.
-- **Repo:** `GyslerStephanie/designify` (private GitHub). Local: `/Users/stephaniegysler/designify`.
+- **Repo:** `GyslerStephanie/plinthly` (private GitHub). Local: `/Users/stephaniegysler/plinthly`.
 - **Stack:** Vite + React (JSX, not TypeScript) + Tailwind CSS v4. Client-only, no
   backend, no accounts, no DB. State is shareable via URL hash; only UI language is
   in localStorage. i18n in EN/DE/FR/IT (custom, nested keys + `{var}` interpolation,
   English fallback).
-- **Run it:** `cd ~/designify && npm run dev` then open the printed URL (Vite default
+- **Run it:** `cd ~/plinthly && npm run dev` then open the printed URL (Vite default
   is `http://localhost:5173`; a `.claude/launch.json` preset uses 5180).
 - **Build:** `npm run build` (passes clean).
 

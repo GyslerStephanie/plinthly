@@ -9,7 +9,7 @@ the redline annotations, and the high-fidelity mockup into one buildable plan.
 
 If you are a fresh Claude session picking this up:
 
-1. You are in repo `GyslerStephanie/designify` at `/Users/stephaniegysler/designify`.
+1. You are in repo `GyslerStephanie/plinthly` at `/Users/stephaniegysler/plinthly`.
    Stack: Vite + React (JSX) + Tailwind v4. Run `npm run dev` (port 5173).
 2. **Read these first, in order:** `SESSION_HANDOFF.md` (overall state),
    `PRODUCT_BRIEF.md` (what the product is), then THIS file (the redesign plan).
