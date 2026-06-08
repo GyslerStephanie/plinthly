@@ -59,8 +59,10 @@ export function GapChart({ currentMax, dreamPrice, haveEquity, needEquity }) {
 export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth = 2000, onSavingsChange }) {
   const { t } = useI18n()
   const [hoverM, setHoverM] = useState(null)
+  // Bail on missing/transient/non-finite inputs. NOTE: `!(gap > 0)` not `gap <= 0`
+  // — the latter is `false` for NaN, which would render NaN geometry (NaN cx/cy).
   const gap = Math.max(0, requiredEquity - startEquity)
-  if (gap <= 0) return null
+  if (!Number.isFinite(requiredEquity) || requiredEquity <= 0 || !Number.isFinite(startEquity) || !(gap > 0)) return null
   const clampSave = (n) => Math.min(20000, Math.max(0, Math.round(n / 50) * 50))
 
   const scenarios = [
