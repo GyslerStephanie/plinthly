@@ -16,6 +16,7 @@ import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
 import { buildAdvisorContext } from './lib/advisorContext'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 const PHASE_NUMBERS = [1, 2, 3, 4, 5]
 const LAST_PHASE = 5
@@ -364,6 +365,9 @@ export default function App() {
       {previewResult && (
         <AdvisorFab context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)} />
       )}
+
+      {/* Vercel Speed Insights — anonymous Web Vitals, no PII */}
+      <SpeedInsights />
     </div>
     </AppStateProvider>
   )
