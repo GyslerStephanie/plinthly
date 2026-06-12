@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
+import { track } from '../lib/track'
 
 /**
  * Floating "Ask the advisor" button + chat drawer (Push 2).
@@ -43,6 +44,7 @@ export default function AdvisorFab({ context }) {
     setMessages(next)
     setInput('')
     setBusy(true)
+    track('advisor_message_sent', { mode: mode === 'plan' ? 'plan' : 'chat' })
     let reply = '', isMock = false
     try {
       const res = await fetch('/api/advisor', {
@@ -147,7 +149,10 @@ export default function AdvisorFab({ context }) {
       {/* FAB */}
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          if (!open) track('advisor_opened', undefined, { once: true })
+          setOpen(!open)
+        }}
         aria-label={t('advisor.fabLabel')}
         className="ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-ink text-white shadow-lg transition hover:opacity-90"
       >

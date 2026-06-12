@@ -5,6 +5,7 @@ import { impliedSize } from '../lib/exploration'
 import { computeLedger, selectedMeasures } from '../lib/retrofit'
 import { chf, int } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
+import { track } from '../lib/track'
 import { Card, Pill } from './ui'
 import BankInquiry from './BankInquiry'
 import FeedbackSection from './FeedbackSection'
@@ -36,6 +37,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, 
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
+      track('result_shared', { method: 'link' })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -136,6 +138,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, 
           <button
             type="button"
             onClick={() => {
+              track('result_shared', { method: 'pdf' })
               try {
                 window.print()
               } catch {

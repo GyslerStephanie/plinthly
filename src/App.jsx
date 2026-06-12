@@ -17,6 +17,8 @@ import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
 import { buildAdvisorContext } from './lib/advisorContext'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { Analytics } from '@vercel/analytics/react'
+import { track } from './lib/track'
 
 const PHASE_NUMBERS = [1, 2, 3, 4, 5]
 const LAST_PHASE = 5
@@ -139,7 +141,9 @@ export default function App() {
 
   const handleValuesChange = (next) => {
     setValues(next)
-    setPhase1(isValid(next) ? calc(next) : null)
+    const ok = isValid(next)
+    setPhase1(ok ? calc(next) : null)
+    if (ok) track('calculation_completed', undefined, { once: true })
   }
 
   // Phase 3 canton is the single source of truth once we're past Phase 1;
@@ -164,6 +168,7 @@ export default function App() {
         canton: e.canton || values.canton,
       }))
     }
+    if (n === 2) track('dream_price_opened', undefined, { once: true })
     setPhase(n)
     setMaxVisited((m) => Math.max(m, n))
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -368,6 +373,8 @@ export default function App() {
 
       {/* Vercel Speed Insights — anonymous Web Vitals, no PII */}
       <SpeedInsights />
+      {/* Vercel Web Analytics — cookieless pageviews + the 5 product events */}
+      <Analytics />
     </div>
     </AppStateProvider>
   )
