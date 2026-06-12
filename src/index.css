@@ -209,7 +209,7 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
 @media print {
   .no-print { display: none !important; }
   header, footer { display: none !important; }
-  body { background: #fff; }
+  html, body { background: #fff !important; }
   main { max-width: none !important; padding: 0 !important; }
   .shadow-sm, .ds-card-float { box-shadow: none !important; }
   .ds-hero, .ds-terrain-band { display: none !important; }
