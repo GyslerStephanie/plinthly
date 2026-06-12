@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { chf, int, pct } from '../lib/format'
+import { track } from '../lib/track'
 import {
   buildPriceLadder,
   monthlyCostsAtRate,
@@ -351,7 +352,10 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
       <div className="flex items-center justify-between gap-3 no-print">
         <button
           type="button"
-          onClick={() => window.print()}
+          onClick={() => {
+            track('result_shared', { method: 'pdf' })
+            window.print()
+          }}
           className="inline-flex items-center gap-1.5 rounded-full border border-ink px-3.5 py-1.5 text-sm font-semibold text-ink transition hover:bg-surface"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
