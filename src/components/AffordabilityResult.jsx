@@ -302,11 +302,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
               ● {t(stateMeta.labelKey)}
             </span>
           </div>
-          <p
-            className={
-              'mt-1 font-display text-3xl font-black tracking-tight tabular-nums text-ink'
-            }
-          >
+          <p className="ds-figure mt-1 text-4xl font-medium text-ink">
             {chf(result.maxPrice)}
           </p>
           {/* Actionable, state-specific lead message */}
