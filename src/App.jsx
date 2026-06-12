@@ -58,14 +58,23 @@ export default function App() {
   const [explore, setExplore] = useState(DEFAULT_EXPLORE)
   const [feedback, setFeedback] = useState(null) // session-only (Feature 6)
   const [dreamContext, setDreamContext] = useState(null) // dream-price gap for the AI advisor
+  const [dreamPrice, setDreamPrice] = useState('') // Phase 2 dream price (persisted in hash)
   const restored = useRef(false)
 
-  // Record end-of-journey feedback: log it (v1 placeholder — no backend) and
-  // keep it in state so it persists for the session.
+  // Record end-of-journey feedback. Show the thank-you optimistically (so a
+  // failed/missing sink never punishes the user) and fire the response at the
+  // serverless endpoint, which forwards ONLY these fields to the Sheet — no
+  // financial inputs are ever sent.
   const handleFeedback = (payload) => {
-    // eslint-disable-next-line no-console
-    console.log('[Plinthly feedback]', payload)
     setFeedback(payload)
+    fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('[Plinthly feedback] not stored:', err)
+    })
   }
 
   // Restore from a shared URL hash on first load.
@@ -94,6 +103,7 @@ export default function App() {
       chosenOption: s.chosenOption ?? '',
       measures: s.measures, // undefined → configurator default
     })
+    if (s.dreamPrice) setDreamPrice(s.dreamPrice)
 
     if (nextValues.grossIncome && nextValues.savings) {
       const result = calc(nextValues)
@@ -115,9 +125,10 @@ export default function App() {
       sustainability: explore.sustainability,
       chosenOption: explore.chosenOption,
       measures: explore.measures,
+      dreamPrice,
       phase,
     })
-  }, [values, explore, phase])
+  }, [values, explore, phase, dreamPrice])
 
   const flatState = {
     ...values,
@@ -128,6 +139,7 @@ export default function App() {
     sustainability: explore.sustainability,
     chosenOption: explore.chosenOption,
     measures: explore.measures,
+    dreamPrice,
     phase,
   }
 
@@ -178,7 +190,7 @@ export default function App() {
   const mtNotice = t('meta.mtNotice')
 
   // Derived, read-only view of state shared with descendants via context.
-  const appState = deriveAppState({ values, phase1, explore, phase, maxVisited })
+  const appState = deriveAppState({ values, phase1, explore, phase, maxVisited, dreamContext })
 
   // If the buyer has modelled a renovation (Phase 3, Option A), surface its net
   // cost back in Phase 1 as an "effective property budget".
@@ -281,7 +293,7 @@ export default function App() {
 
         {/* Phase 2 — Calculate dream price */}
         {phase === 2 && phase1 && (
-          <DreamPricePhase result={phase1} onNavigate={goToPhase} onDreamContext={setDreamContext} />
+          <DreamPricePhase result={phase1} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} />
         )}
 
         {/* Phase 3 — exploration */}

@@ -46,13 +46,21 @@ function Metric({ label, value }) {
  */
 export default function StickySummaryBar() {
   const { t } = useI18n()
-  const { hasResult, viable, maxPrice, downPayment, monthlyActual } = useAppState()
+  const { hasResult, viable, maxPrice, downPayment, monthlyActual, dreamOutOfReach } = useAppState()
   const [expanded, setExpanded] = useState(false)
 
   // Only after Phase 1 is locked in.
   if (!hasResult) return null
 
-  const statusLabel = viable ? t('summary.ready') : t('summary.notYet')
+  // On the dream-price step, an out-of-reach dream overrides the Phase-1
+  // "Affordable" status so the header doesn't contradict the verdict below.
+  const statusViable = dreamOutOfReach ? false : viable
+  const statusLabel = dreamOutOfReach
+    ? t('summary.outOfReach')
+    : viable ? t('summary.ready') : t('summary.notYet')
+
+  const scrollToGap = () =>
+    document.getElementById('close-the-gap')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
   return (
     <div className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur no-print">
@@ -66,7 +74,18 @@ export default function StickySummaryBar() {
             <Metric label={t('summary.maxPrice')} value={chf(maxPrice)} />
             <Metric label={t('summary.downPayment')} value={chf(downPayment)} />
             <Metric label={t('summary.monthly')} value={`${chf(monthlyActual)}/mo`} />
-            <StatusBadge viable={viable} label={statusLabel} />
+            <div className="flex shrink-0 items-center gap-3">
+              <StatusBadge viable={statusViable} label={statusLabel} />
+              {dreamOutOfReach && (
+                <button
+                  type="button"
+                  onClick={scrollToGap}
+                  className="text-xs font-medium text-body underline decoration-line underline-offset-2 transition hover:text-ink"
+                >
+                  {t('summary.closeGap')} ↓
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -87,7 +106,7 @@ export default function StickySummaryBar() {
               </span>
             </span>
             <span className="flex items-center gap-2">
-              <StatusBadge viable={viable} label={statusLabel} />
+              <StatusBadge viable={statusViable} label={statusLabel} />
               <svg
                 width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -99,9 +118,20 @@ export default function StickySummaryBar() {
             </span>
           </button>
           {expanded && (
-            <div className="grid grid-cols-2 gap-3 border-t border-slate-100 py-3">
-              <Metric label={t('summary.downPayment')} value={chf(downPayment)} />
-              <Metric label={t('summary.monthly')} value={`${chf(monthlyActual)}/mo`} />
+            <div className="border-t border-slate-100 py-3">
+              <div className="grid grid-cols-2 gap-3">
+                <Metric label={t('summary.downPayment')} value={chf(downPayment)} />
+                <Metric label={t('summary.monthly')} value={`${chf(monthlyActual)}/mo`} />
+              </div>
+              {dreamOutOfReach && (
+                <button
+                  type="button"
+                  onClick={scrollToGap}
+                  className="mt-3 text-xs font-medium text-body underline decoration-line underline-offset-2 transition hover:text-ink"
+                >
+                  {t('summary.closeGap')} ↓
+                </button>
+              )}
             </div>
           )}
         </div>

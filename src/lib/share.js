@@ -21,6 +21,7 @@ const KEYS = [
   ['su', 'sustainability'],
   ['op', 'chosenOption'],
   ['ms', 'measures'],
+  ['dp', 'dreamPrice'],
   ['ph', 'phase'],
 ]
 

@@ -47,7 +47,7 @@ function Choice({ active, onClick, children }) {
  * `onSubmit(payload)` records it at the App level.
  */
 export default function FeedbackSection({ feedback, onSubmit }) {
-  const { t } = useI18n()
+  const { t, lang } = useI18n()
   const [goal, setGoal] = useState('')
   const [strategy, setStrategy] = useState('')
   const [text, setText] = useState('')
@@ -79,6 +79,7 @@ export default function FeedbackSection({ feedback, onSubmit }) {
       goal,
       strategy,
       message: text.trim(),
+      lang,
     })
   }
 
@@ -137,6 +138,8 @@ export default function FeedbackSection({ feedback, onSubmit }) {
       >
         {t('feedback.submit')}
       </button>
+
+      <p className="mt-3 text-xs leading-relaxed text-slate-400">{t('feedback.consent')}</p>
     </Card>
   )
 }
