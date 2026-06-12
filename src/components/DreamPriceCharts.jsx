@@ -40,7 +40,7 @@ function HatchBar({ label, sub, have, goal, startMarker, endMarker }) {
           {sub && <span className="ml-1.5 text-xs font-normal text-muted">{sub}</span>}
         </span>
         <span className="shrink-0 tabular-nums text-slate-700">
-          {chf(have)} <span className="text-xs text-muted">/ {chf(goal)} · {pct(have / (goal || 1))}</span>
+          {chf(have)} <span className="text-xs text-muted">/ {chf(goal)}{covered ? '' : ` · ${pct(have / (goal || 1))}`}</span>
         </span>
       </div>
       <div className="h-5 w-full overflow-hidden rounded border border-line bg-white">
