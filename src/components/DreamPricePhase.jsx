@@ -46,24 +46,12 @@ function TierBadge({ labelKey }) {
   )
 }
 
-/** Pass / fail pill for each sub-test. */
-function TestPill({ pass, label }) {
-  return (
-    <div className={
-      'mt-1 rounded-lg px-3 py-2 text-sm font-medium ' +
-      (pass ? 'bg-teal-50 text-teal-800' : 'bg-red-50 text-red-800')
-    }>
-      {label}
-    </div>
-  )
-}
-
 /**
  * Forward mode: "does this specific property work for me?"
  * Runs the full spec calculation — Niederstwertprinzip, existing obligations,
  * property type adjustments — and shows a line-by-line breakdown of both tests.
  */
-export default function DreamPricePhase({ result, onNavigate, onDreamContext }) {
+export default function DreamPricePhase({ result, onNavigate, onDreamContext, dreamPrice, onDreamPriceChange }) {
   const { t } = useI18n()
 
   // Own the market-rate used for the "what you'd actually pay" lines.
@@ -73,7 +61,16 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext }) 
   const [savingsPerMonth, setSavingsPerMonth] = useState(2000)
 
   // --- form state ---
-  const [price, setPrice]           = useState('')
+  // Dream price is lifted to App (controlled) so it persists in the URL hash;
+  // fall back to local state if rendered standalone.
+  const [localPrice, setLocalPrice] = useState('')
+  const price    = dreamPrice != null ? dreamPrice : localPrice
+  const setPrice = onDreamPriceChange || setLocalPrice
+  // Two-step: enter the dream price, then reveal the comparison. Land on the
+  // result step when a price was restored from the hash.
+  const [step, setStep] = useState(() =>
+    String(dreamPrice ?? '').replace(/[^0-9]/g, '') ? 'result' : 'input',
+  )
   const [showAssessed, setShowAssessed] = useState(false)
   const [assessed, setAssessed]     = useState('')
   const [propType, setPropType]     = useState('primary')
@@ -101,6 +98,20 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext }) 
     ? Math.max(0, check.monthlyNotionalTotal / 0.333 - check.effectiveMonthlyIncome) * 12
     : 0
 
+  // Reframed verdict: which test is the real blocker, and the concrete levers
+  // to close the gap (income, equity, a reachable-now price, obligations).
+  const eqShort  = check ? !check.downQualifies : false
+  const affShort = check ? !check.affordQualifies : false
+  const blockerKey = affShort && !eqShort ? 'blockerIncome'
+    : eqShort && !affShort ? 'blockerEquity'
+    : 'blockerBoth'
+  const closeGapLevers = check && !check.qualifies ? [
+    affShort && dreamIncomeGap > 0 && { key: 'check.leverIncome', vars: { amount: chf(roundK(dreamIncomeGap)) } },
+    eqShort && check.downShortfall > 0 && { key: 'check.leverEquity', vars: { amount: chf(roundK(check.downShortfall)) } },
+    { key: 'check.leverPrice', vars: { amount: chf(result.maxPrice) } },
+    affShort && check.existingObligations > 0 && { key: 'check.leverObligations', vars: { amount: chf(check.existingObligations) } },
+  ].filter(Boolean) : []
+
   // Report the dream gap up to App so the AI advisor can ground answers on it.
   // Primitive deps avoid re-firing every render (which would loop).
   const dreamPriceVal = check ? check.purchasePrice : 0
@@ -125,6 +136,8 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext }) 
       </Card>
 
       <Card title={t('check.title')}>
+      {(step === 'input' || !check) ? (
+      <div className="dream-input-step">
       <p className="mb-4 text-sm leading-relaxed text-slate-600">{t('check.intro')}</p>
 
       {/* ── Price input ── */}
@@ -217,55 +230,68 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext }) 
         </div>
       </div>
 
-      {/* ── Results ── */}
-      {check && (
-        <div className="mt-6 space-y-5">
+      {/* Save the dream price & reveal the comparison */}
+      <button
+        type="button"
+        onClick={() => { if (priceNum > 0) setStep('result') }}
+        disabled={priceNum <= 0}
+        className="mt-6 inline-flex items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        {t('check.saveNext')}
+      </button>
+      </div>
+      ) : (
+        <div className="space-y-5">
+          {/* Back to edit the saved numbers */}
+          <button
+            type="button"
+            onClick={() => setStep('input')}
+            className="inline-flex items-center gap-1 text-sm font-medium text-body transition hover:text-ink"
+          >
+            ← {t('check.editNumbers')}
+          </button>
 
-          {/* Overall verdict — status carried by a dot + left accent, not a fill (§9) */}
-          <div className={
-            'rounded-xl border border-line bg-white p-4 border-l-4 ' +
-            (check.qualifies ? 'border-l-positive' : 'border-l-error')
-          }>
-            <p className={'flex items-center gap-2 text-base font-semibold ' + (check.qualifies ? 'text-positive' : 'text-error')}>
-              <span className={'inline-block h-2 w-2 rounded-full ' + (check.qualifies ? 'bg-positive' : 'bg-error')} aria-hidden />
-              {check.qualifies ? t('check.qualifies') : t('check.doesNotQualify')}
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-body">
-              {check.qualifies ? t('check.qualifiesNote') : t('check.doesNotQualifyNote')}
-            </p>
-            {/* Explicit gap line on failure */}
-            {!check.qualifies && (dreamEquityGap > 0 || dreamIncomeGap > 0) && (
-              <p className="mt-2 text-sm font-medium text-ink">
-                {t('check.gapLine', {
-                  equity: dreamEquityGap > 0 ? chf(roundK(dreamEquityGap)) : '—',
-                  income: dreamIncomeGap > 0 ? chf(roundK(dreamIncomeGap)) : '—',
-                })}
+          {/* Overall verdict. Qualifying = a clean positive panel. Not yet =
+              a NEUTRAL "out of reach right now" panel that names the blocker and
+              lists how to close the gap — an invitation to explore, not a fail. */}
+          {check.qualifies ? (
+            <div className="rounded-xl border border-line bg-white p-4 border-l-4 border-l-positive">
+              <p className="flex items-center gap-2 text-base font-semibold text-positive">
+                <span className="inline-block h-2 w-2 rounded-full bg-positive" aria-hidden />
+                {t('check.qualifies')}
               </p>
-            )}
-            {/* Sub-test pills */}
-            <div className="mt-3 space-y-1">
-              {check.downQualifies
-                ? <TestPill pass={true}  label={t('check.passDown')} />
-                : <>
-                    {check.downShortfall > 0   && <TestPill pass={false} label={t('check.failDown',   { amount: chf(check.downShortfall) })} />}
-                    {check.liquidShortfall > 0 && <TestPill pass={false} label={t('check.failLiquid', { short: chf(check.liquidShortfall) })} />}
-                  </>
-              }
-              {check.affordQualifies
-                ? <TestPill pass={true}  label={t('check.passAfford')} />
-                : <TestPill pass={false} label={t('check.failAfford', {
-                    ratio:   pct(check.affordRatio, 1),
-                    ceiling: pct(0.333, 1),
-                  })} />
-              }
+              <p className="mt-1 text-sm leading-relaxed text-body">{t('check.qualifiesNote')}</p>
             </div>
-          </div>
+          ) : (
+            <div className="rounded-xl border border-line bg-white p-4 border-l-4 border-l-ink">
+              <p className="flex items-center gap-2 text-base font-semibold text-ink">
+                <span className="inline-block h-2 w-2 rounded-full bg-ink" aria-hidden />
+                {t('check.outOfReach', { price: chf(check.purchasePrice) })}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-body">{t('check.outOfReachNote')}</p>
+              <p className="mt-1 text-sm font-medium text-ink">{t(`check.${blockerKey}`)}</p>
 
-          {/* Gap chart — your real total equity vs the equity the dream needs */}
+              {/* How to close the gap — the concrete levers */}
+              <p id="close-the-gap" className="mt-3 scroll-mt-24 text-xs font-semibold uppercase tracking-wide text-muted">
+                {t('check.closeGapTitle')}
+              </p>
+              <ul className="mt-1.5 space-y-1.5">
+                {closeGapLevers.map((lever) => (
+                  <li key={lever.key} className="flex items-start gap-2 text-sm text-body">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden />
+                    <span>{t(lever.key, lever.vars)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Gap chart — price + hard equity + equity-with-pillar-2, vs the dream */}
           <GapChart
             currentMax={result.maxPrice}
             dreamPrice={check.purchasePrice}
-            haveEquity={check.totalAvailable}
+            hardEquity={check.hardEquity}
+            totalEquity={check.totalAvailable}
             needEquity={check.effectiveDown}
           />
 

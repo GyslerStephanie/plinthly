@@ -47,6 +47,7 @@ export function deriveAppState({
   explore,
   phase,
   maxVisited,
+  dreamContext = null,
   marketRate = DEFAULT_MARKET_RATE,
 }) {
   const cantonCode = explore?.canton || values?.canton || ''
@@ -74,6 +75,10 @@ export function deriveAppState({
     hasResult: !!phase1,
     completedPhase1: !!phase1 && maxVisited >= 1,
     viable: !!phase1?.viable,
+
+    // Dream-price status (Phase 2): true when a saved dream price doesn't yet
+    // qualify, so the sticky header can reflect "out of reach" over "Affordable".
+    dreamOutOfReach: phase === 2 && !!dreamContext && dreamContext.qualifies === false,
 
     // Derived figures shared by features 3/4/5
     cantonCode,

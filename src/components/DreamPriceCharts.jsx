@@ -7,45 +7,94 @@ import { Card } from './ui'
 const PILLAR3A_MONTHLY = Math.round(RULE_CONSTANTS.PILLAR3A_MAX / 12) // ≈ 605/mo
 
 /* ──────────────────────────────────────────────────────────────────────────
- * GapChart — "where you are vs your goal", on price and on equity. Each bar
- * shows the filled "have" portion (ink) and the remaining gap (red) labelled
- * with the exact difference. The equity gap is passed in so it matches the
- * verdict headline exactly (accounts for the 2nd pillar).
+ * GapChart — "where you are vs your goal", as three labelled bars: price, hard
+ * equity (cash + Pillar 3a), and equity once Pillar 2 (BVG) is added. Each bar
+ * fills the "have" portion with a diagonal hatch and shows the exact gap below
+ * — or a "Covered ✓" marker when the buyer is already there (no >100% bars).
+ * Framed as evidence under the reframed "out of reach" verdict, not a verdict
+ * itself, so the styling stays neutral (no red fills).
  * ────────────────────────────────────────────────────────────────────────── */
-export function GapChart({ currentMax, dreamPrice, haveEquity, needEquity }) {
+
+// Diagonal hatch for the filled "have" portion of a bar.
+const HATCH = {
+  backgroundColor: 'rgba(13,13,13,0.06)',
+  backgroundImage:
+    'repeating-linear-gradient(45deg, #0D0D0D 0, #0D0D0D 1.5px, transparent 1.5px, transparent 6px)',
+}
+
+/**
+ * One progress bar. `have` fills toward `goal`; the remainder is the gap.
+ * Optional `startMarker`/`endMarker` label the fill boundary and the goal end
+ * (used by the price bar for "Max purchase price" / "Dream price").
+ */
+function HatchBar({ label, sub, have, goal, startMarker, endMarker }) {
   const { t } = useI18n()
-  const priceGap = Math.max(0, dreamPrice - currentMax)
-  const equityGap = Math.max(0, needEquity - haveEquity)
-
-  const GapBar = ({ label, have, goal, gap }) => {
-    const haveW = goal > 0 ? Math.min(100, (have / goal) * 100) : 0
-    return (
-      <div>
-        <div className="mb-1 flex items-baseline justify-between text-sm">
-          <span className="font-medium text-slate-700">{label}</span>
-          <span className="tabular-nums text-slate-700">
-            {chf(have)} <span className="text-xs text-muted">/ {chf(goal)} · {pct(have / (goal || 1))}</span>
-          </span>
-        </div>
-        <div className="flex h-5 w-full overflow-hidden rounded bg-slate-50">
-          <div className="h-full bg-ink" style={{ width: `${haveW}%` }} />
-          <div className="h-full bg-error/80" style={{ width: `${100 - haveW}%` }} />
-        </div>
-        {gap > 0 && (
-          <p className="mt-1 text-xs font-medium text-error">{t('dream.barGap', { value: chf(gap) })}</p>
-        )}
+  const covered = have >= goal
+  const haveW = goal > 0 ? Math.min(100, (have / goal) * 100) : 0
+  const gap = Math.max(0, goal - have)
+  return (
+    <div>
+      <div className="mb-1 flex items-baseline justify-between gap-2 text-sm">
+        <span className="font-medium text-slate-700">
+          {label}
+          {sub && <span className="ml-1.5 text-xs font-normal text-muted">{sub}</span>}
+        </span>
+        <span className="shrink-0 tabular-nums text-slate-700">
+          {chf(have)} <span className="text-xs text-muted">/ {chf(goal)} · {pct(have / (goal || 1))}</span>
+        </span>
       </div>
-    )
-  }
+      <div className="h-5 w-full overflow-hidden rounded border border-line bg-white">
+        <div className="h-full border-r border-ink/30" style={{ ...HATCH, width: `${haveW}%` }} />
+      </div>
+      {(startMarker || endMarker) && (
+        <div className="relative mt-1 h-4 text-[11px] text-muted">
+          {startMarker && (
+            <span
+              className="absolute -translate-x-1/2 whitespace-nowrap"
+              style={{ left: `${Math.min(88, Math.max(12, haveW))}%` }}
+            >
+              ▲ {startMarker}
+            </span>
+          )}
+          {endMarker && <span className="absolute right-0 whitespace-nowrap">{endMarker} ▲</span>}
+        </div>
+      )}
+      {covered ? (
+        <p className="mt-1 text-xs font-medium text-positive">{t('dream.barCovered')}</p>
+      ) : (
+        <p className="mt-1 text-xs font-medium text-body">{t('dream.barGap', { value: chf(gap) })}</p>
+      )}
+    </div>
+  )
+}
 
+export function GapChart({ currentMax, dreamPrice, hardEquity, totalEquity, needEquity }) {
+  const { t } = useI18n()
   return (
     <Card title={t('dream.gapTitle')}>
       <p className="mb-4 text-sm leading-relaxed text-slate-600">
         {t('dream.gapIntro', { price: chf(dreamPrice) })}
       </p>
-      <div className="space-y-4">
-        <GapBar label={t('dream.gapPriceLabel')} have={currentMax} goal={dreamPrice} gap={priceGap} />
-        <GapBar label={t('dream.gapEquityLabel')} have={haveEquity} goal={needEquity} gap={equityGap} />
+      <div className="space-y-5">
+        <HatchBar
+          label={t('dream.gapPriceLabel')}
+          have={currentMax}
+          goal={dreamPrice}
+          startMarker={t('dream.barMaxPrice')}
+          endMarker={t('dream.barDreamPrice')}
+        />
+        <HatchBar
+          label={t('dream.gapEquityHard')}
+          sub={t('dream.gapEquityHardSub')}
+          have={hardEquity}
+          goal={needEquity}
+        />
+        <HatchBar
+          label={t('dream.gapEquityPillar')}
+          sub={t('dream.gapEquityPillarSub')}
+          have={totalEquity}
+          goal={needEquity}
+        />
       </div>
     </Card>
   )
