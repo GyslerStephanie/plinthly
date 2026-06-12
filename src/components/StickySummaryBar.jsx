@@ -31,8 +31,8 @@ function StatusBadge({ viable, label }) {
 function Metric({ label, value }) {
   return (
     <div className="min-w-0">
-      <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">{label}</p>
-      <p className="truncate text-sm font-semibold tabular-nums text-slate-900">{value}</p>
+      <p className="ds-eyebrow text-[10px] text-slate-400">{label}</p>
+      <p className="ds-figure truncate text-sm font-medium text-slate-900">{value}</p>
     </div>
   )
 }
@@ -98,10 +98,10 @@ export default function StickySummaryBar() {
             className="flex w-full items-center justify-between gap-3 py-2.5 text-left"
           >
             <span className="flex items-center gap-2">
-              <span className="text-[10px] font-medium uppercase tracking-wide text-slate-400">
+              <span className="ds-eyebrow text-[10px] text-slate-400">
                 {t('summary.maxPrice')}
               </span>
-              <span className="text-sm font-semibold tabular-nums text-slate-900">
+              <span className="ds-figure text-sm font-medium text-slate-900">
                 {chf(maxPrice)}
               </span>
             </span>

@@ -19,7 +19,7 @@ const PILLAR3A_MONTHLY = Math.round(RULE_CONSTANTS.PILLAR3A_MAX / 12) // ≈ 605
 const HATCH = {
   backgroundColor: 'rgba(13,13,13,0.06)',
   backgroundImage:
-    'repeating-linear-gradient(45deg, #0D0D0D 0, #0D0D0D 1.5px, transparent 1.5px, transparent 6px)',
+    'repeating-linear-gradient(45deg, #42541f 0, #42541f 1.5px, transparent 1.5px, transparent 6px)',
 }
 
 /**
@@ -115,9 +115,9 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
   const clampSave = (n) => Math.min(20000, Math.max(0, Math.round(n / 50) * 50))
 
   const scenarios = [
-    { key: 'steady', perMonth: 1000, color: '#9aa0a6', width: 2 },
-    { key: 'more', perMonth: Math.max(50, savingsPerMonth), color: '#0d0d0d', width: 2.6, focal: true },
-    { key: 'max3a', perMonth: Math.max(50, savingsPerMonth) + PILLAR3A_MONTHLY, color: '#34a853', width: 2 },
+    { key: 'steady', perMonth: 1000, color: '#847f70', width: 2 },
+    { key: 'more', perMonth: Math.max(50, savingsPerMonth), color: '#1b1c17', width: 2.6, focal: true },
+    { key: 'max3a', perMonth: Math.max(50, savingsPerMonth) + PILLAR3A_MONTHLY, color: '#6f8a35', width: 2 },
   ]
   const slowest = Math.min(...scenarios.map((s) => s.perMonth))
   const maxMonths = Math.min(360, Math.max(12, Math.ceil(gap / slowest)))
@@ -205,29 +205,29 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`${t('dream.trajTitle')}. ${ariaSummary}.`}>
           <defs>
             <linearGradient id="trajMoreFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#0d0d0d" stopOpacity="0.10" />
-              <stop offset="100%" stopColor="#0d0d0d" stopOpacity="0" />
+              <stop offset="0%" stopColor="#1b1c17" stopOpacity="0.10" />
+              <stop offset="100%" stopColor="#1b1c17" stopOpacity="0" />
             </linearGradient>
           </defs>
 
           {/* year gridlines + labels */}
           {ticks.map((m) => (
             <g key={m}>
-              <line x1={x(m)} y1={padT} x2={x(m)} y2={baseY} stroke="#f1f1f1" strokeWidth="1" />
-              <text x={x(m)} y={H - 8} fontSize="11" fill="#9aa0a6" textAnchor="middle">{Math.round(m / 12)}y</text>
+              <line x1={x(m)} y1={padT} x2={x(m)} y2={baseY} stroke="#efece0" strokeWidth="1" />
+              <text x={x(m)} y={H - 8} fontSize="11" fill="#847f70" textAnchor="middle">{Math.round(m / 12)}y</text>
             </g>
           ))}
 
           {/* "today" baseline */}
-          <line x1={padL} y1={startY} x2={W - padR} y2={startY} stroke="#ebebeb" strokeWidth="1" strokeDasharray="2 3" />
-          <text x={padL} y={startY - 5} fontSize="10" fill="#9aa0a6">{t('dream.trajToday', { value: chf(startEquity) })}</text>
+          <line x1={padL} y1={startY} x2={W - padR} y2={startY} stroke="#e3e0d2" strokeWidth="1" strokeDasharray="2 3" />
+          <text x={padL} y={startY - 5} fontSize="10" fill="#847f70">{t('dream.trajToday', { value: chf(startEquity) })}</text>
 
           {/* focal area fill under the user's pace */}
           <path d={`M ${x(0)} ${startY} L ${more.endX} ${more.endY} L ${more.endX} ${baseY} L ${x(0)} ${baseY} Z`} fill="url(#trajMoreFill)" />
 
           {/* goal line + label */}
-          <line x1={padL} y1={goalY} x2={W - padR} y2={goalY} stroke="#ea4335" strokeWidth="1.5" strokeDasharray="5 4" />
-          <text x={padL} y={goalY - 8} fontSize="11" fontWeight="600" fill="#ea4335" style={{ paintOrder: 'stroke' }} stroke="#ffffff" strokeWidth="3">
+          <line x1={padL} y1={goalY} x2={W - padR} y2={goalY} stroke="#c4452f" strokeWidth="1.5" strokeDasharray="5 4" />
+          <text x={padL} y={goalY - 8} fontSize="11" fontWeight="600" fill="#c4452f" style={{ paintOrder: 'stroke' }} stroke="#ffffff" strokeWidth="3">
             {t('dream.trajGoal', { value: chf(requiredEquity) })}
           </text>
 
@@ -248,7 +248,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
           {/* hover guide + per-line dots */}
           {hover && (
             <g>
-              <line x1={x(hoverM)} y1={padT} x2={x(hoverM)} y2={baseY} stroke="#0d0d0d" strokeOpacity="0.22" strokeWidth="1" />
+              <line x1={x(hoverM)} y1={padT} x2={x(hoverM)} y2={baseY} stroke="#1b1c17" strokeOpacity="0.22" strokeWidth="1" />
               {hover.rows.map((r) => (
                 <circle key={r.key} cx={x(hoverM)} cy={y(r.eq)} r="3.5" fill={r.color} stroke="#fff" strokeWidth="1.5" />
               ))}
