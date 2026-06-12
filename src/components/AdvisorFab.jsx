@@ -74,9 +74,12 @@ export default function AdvisorFab({ context }) {
         <div className="mb-3 flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-xl">
           {/* Header */}
           <div className="flex items-start justify-between border-b border-line px-4 py-3">
-            <div>
-              <p className="font-display text-sm font-bold text-ink">{t('advisor.title')}</p>
-              <p className="text-xs text-muted">{t('advisor.subtitle')}</p>
+            <div className="flex items-center gap-2.5">
+              <img src="/brand/plinthly-mark.png" alt="" className="h-7 w-7" style={{ imageRendering: 'pixelated' }} />
+              <div>
+                <p className="font-display text-sm font-semibold text-ink">{t('advisor.title')}</p>
+                <p className="text-xs text-muted">{t('advisor.subtitle')}</p>
+              </div>
             </div>
             <button type="button" onClick={() => setOpen(false)} aria-label={t('advisor.close')} className="text-muted hover:text-ink">✕</button>
           </div>
@@ -87,7 +90,7 @@ export default function AdvisorFab({ context }) {
               <p className="text-sm font-semibold text-ink">{t('advisor.consentTitle')}</p>
               <p className="text-sm leading-relaxed text-body">{t('advisor.consentBody')}</p>
               <div className="mt-1 flex gap-2">
-                <button type="button" onClick={() => setConsented(true)} className="rounded-full bg-ink px-4 py-2 text-sm font-bold text-white hover:opacity-90">
+                <button type="button" onClick={() => setConsented(true)} className="rounded-full bg-teal-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-teal-700">
                   {t('advisor.consentAccept')}
                 </button>
                 <button type="button" onClick={() => setOpen(false)} className="rounded-full border border-line px-4 py-2 text-sm font-medium text-body hover:border-ink">
@@ -108,7 +111,7 @@ export default function AdvisorFab({ context }) {
                       </button>
                     ))}
                     {context.dream && (
-                      <button type="button" onClick={() => send(null, 'plan')} className="block w-full rounded-lg bg-ink px-3 py-2 text-left text-sm font-semibold text-white hover:opacity-90">
+                      <button type="button" onClick={() => send(null, 'plan')} className="block w-full rounded-lg bg-teal-600 px-3 py-2 text-left text-sm font-semibold text-white transition hover:bg-teal-700">
                         {t('advisor.planButton')}
                       </button>
                     )}
@@ -136,7 +139,7 @@ export default function AdvisorFab({ context }) {
                   placeholder={t('advisor.inputPlaceholder')}
                   className="flex-1 rounded-full border border-line px-3 py-2 text-sm focus:border-ink focus:outline-none"
                 />
-                <button type="submit" disabled={busy || !input.trim()} className="rounded-full bg-ink px-3 py-2 text-sm font-bold text-white disabled:opacity-40">
+                <button type="submit" disabled={busy || !input.trim()} className="rounded-full bg-teal-600 px-3 py-2 text-sm font-bold text-white transition hover:bg-teal-700 disabled:opacity-40">
                   {t('advisor.send')}
                 </button>
               </form>
@@ -154,7 +157,7 @@ export default function AdvisorFab({ context }) {
           setOpen(!open)
         }}
         aria-label={t('advisor.fabLabel')}
-        className="ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-ink text-white shadow-lg transition hover:opacity-90"
+        className="ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white shadow-lg transition hover:bg-teal-700"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 20l1.4-4.2A8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z" />

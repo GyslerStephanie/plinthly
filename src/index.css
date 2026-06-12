@@ -1,140 +1,219 @@
 @import "tailwindcss";
 
+/* ============================================================
+   PLINTHLY — "Digital Naturalism" design tokens
+   Palette sampled from the voxel Swiss landscape: moss greens
+   (primary), warm sand, alpine stone, sky, earth, coral accent.
+   Honest numbers, grounded in nature.
+   ============================================================ */
+:root {
+  /* ---- Moss / Grass (primary) ---- */
+  --moss-50:#f1f5e6; --moss-100:#e2ebc9; --moss-200:#cbdc9c; --moss-300:#b0c86c;
+  --moss-400:#93ad48; --moss-500:#6f8a35; --moss-600:#566d29; --moss-700:#42541f;
+  --moss-800:#313f18; --moss-900:#222c11;
+  /* ---- Sand / Loam ---- */
+  --sand-50:#faf4e6; --sand-100:#f1e3c6; --sand-200:#e6d0a2; --sand-300:#d8ba79;
+  --sand-400:#c79f54; --sand-500:#a9803a; --sand-600:#836129; --sand-700:#5e451d;
+  /* ---- Earth ---- */
+  --earth-300:#ab8a64; --earth-500:#7e5f3d; --earth-700:#4f3a23;
+  /* ---- Sky ---- */
+  --sky-50:#eef4f3; --sky-100:#dbe9e8; --sky-200:#bfd7d8; --sky-300:#9cc0c6;
+  --sky-400:#74a2ab; --sky-500:#4f7d88;
+  /* ---- Stone ---- */
+  --stone-50:#f3f3ee; --stone-100:#e6e5dc; --stone-200:#cecbbf; --stone-300:#aca99b;
+  --stone-400:#847f70; --stone-500:#5f5b4f;
+  /* ---- Coral (accent) ---- */
+  --coral-50:#fceae4; --coral-100:#f8d2c8; --coral-200:#f0a896; --coral-300:#e67d65;
+  --coral-400:#dd5c47; --coral-500:#c4452f; --coral-600:#9e3422;
+  /* ---- Ink & Paper (warm) ---- */
+  --ink-900:#1b1c17; --ink-800:#2c2e26; --ink-700:#3d3f35; --ink-500:#6a6c5f;
+  --ink-400:#8d8f80; --ink-300:#b4b5a8; --ink-200:#d6d6cc;
+  --paper-100:#ffffff; --paper-200:#fbfaf4; --paper-300:#f4f2e8; --paper-400:#ece9da;
+  --line-soft:#efece0; --line:#e3e0d2; --line-strong:#d2cebd;
+
+  /* ---- Semantic aliases ---- */
+  --color-primary:#6f8a35; --color-primary-hover:#566d29; --color-primary-press:#42541f;
+  --color-primary-soft:#e2ebc9; --color-primary-tint:#f1f5e6; --color-on-primary:#f7faef;
+  --color-accent:#dd5c47; --color-accent-hover:#c4452f; --color-accent-soft:#fceae4; --color-on-accent:#fff7f4;
+  --color-success:#6f8a35; --color-success-soft:#f1f5e6; --color-success-ink:#42541f;
+  --color-warning:#c79f54; --color-warning-soft:#faf4e6; --color-warning-ink:#5e451d;
+  --color-danger:#c4452f; --color-danger-soft:#fceae4; --color-danger-ink:#9e3422;
+  --color-info:#4f7d88; --color-info-soft:#eef4f3;
+  --text-strong:#1b1c17; --text-body:#3d3f35; --text-muted:#6a6c5f; --text-faint:#8d8f80;
+  --text-placeholder:#b4b5a8; --text-on-dark:#f3f3ea; --text-link:#566d29;
+  --surface-page:#fbfaf4; --surface-card:#ffffff; --surface-sunken:#f4f2e8; --surface-hover:#ece9da;
+  --surface-ink:#1b1c17; --surface-moss:#42541f;
+  --border-soft:#efece0; --border-default:#e3e0d2; --border-strong:#d2cebd; --border-focus:#93ad48;
+  --ring:0 0 0 3px rgba(147,173,72,.45);
+
+  /* ---- Type ---- */
+  --font-serif:'Spectral', Georgia, 'Times New Roman', serif;
+  --font-sans:'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-display:var(--font-serif); --font-heading:var(--font-sans);
+  --font-body:var(--font-sans); --font-figure:var(--font-mono); --font-eyebrow:var(--font-mono);
+  --tracking-eyebrow:0.14em;
+
+  /* ---- Radii ---- */
+  --radius-xs:4px; --radius-sm:7px; --radius-md:10px; --radius-lg:14px;
+  --radius-xl:20px; --radius-2xl:28px; --radius-full:999px;
+
+  /* ---- Elevation (warm, never pure black) ---- */
+  --shadow-xs:0 1px 2px rgba(34,44,17,.08);
+  --shadow-sm:0 1px 2px rgba(34,44,17,.07), 0 2px 6px rgba(34,44,17,.06);
+  --shadow-md:0 2px 4px rgba(34,44,17,.06), 0 8px 20px rgba(34,44,17,.09);
+  --shadow-lg:0 4px 8px rgba(34,44,17,.07), 0 18px 40px rgba(34,44,17,.12);
+  --shadow-xl:0 8px 16px rgba(34,44,17,.09), 0 32px 64px rgba(34,44,17,.16);
+  --shadow-float:0 2px 4px rgba(34,44,17,.06), 0 14px 36px rgba(95,91,79,.18);
+  --shadow-inset:inset 0 1px 2px rgba(34,44,17,.07);
+  --ease-out:cubic-bezier(0.22,0.61,0.36,1);
+}
+
+/* ============================================================
+   Tailwind theme remap — re-skins the utility classes the app
+   already uses (bg-ink, text-body, border-line, bg-teal-*,
+   bg-slate-*, bg-amber-*, shadow-sm…) onto the new palette.
+   ============================================================ */
 @theme {
-  /* Body / UI — Inter. Falls back to system sans. */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
-  /* Display / headings — Satoshi, falling back to Inter (then system) if it
-     fails to load, so heavy headings still read as bold sans. */
-  --font-display: "Satoshi", "Inter", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display:"Spectral", Georgia, "Times New Roman", serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* Type scale (px + line-height) — functional sizes from the design system. */
-  --text-xs: 11px;
-  --text-xs--line-height: 1.4; /* captions, source labels */
-  --text-sm: 13px;
-  --text-sm--line-height: 1.5; /* input labels, badges, tooltips */
-  --text-base: 15px;
-  --text-base--line-height: 1.6; /* body text, descriptions */
-  --text-lg: 18px;
-  --text-lg--line-height: 1.5; /* section intros, card titles */
-  --text-xl: 24px;
-  --text-xl--line-height: 1.3; /* section headings */
-  --text-2xl: 32px;
-  --text-2xl--line-height: 1.2; /* phase titles */
-  --text-3xl: 42px;
-  --text-3xl--line-height: 1.1; /* key output numbers (CHF) */
-  --text-4xl: 56px;
-  --text-4xl--line-height: 1.05; /* hero headings only */
-  --text-5xl: 64px;
-  --text-5xl--line-height: 1; /* landing hero only */
+  /* Type scale (px + line-height) */
+  --text-xs:11px;   --text-xs--line-height:1.4;
+  --text-sm:13px;   --text-sm--line-height:1.5;
+  --text-base:15px; --text-base--line-height:1.6;
+  --text-lg:18px;   --text-lg--line-height:1.5;
+  --text-xl:24px;   --text-xl--line-height:1.3;
+  --text-2xl:32px;  --text-2xl--line-height:1.2;
+  --text-3xl:42px;  --text-3xl--line-height:1.1;
+  --text-4xl:56px;  --text-4xl--line-height:1.05;
+  --text-5xl:64px;  --text-5xl--line-height:1;
 
-  /* ---- Semantic palette ------------------------------------------------- */
-  /* Neutrals — monochrome base. Color is functional, never decorative. */
-  --color-ink: #0d0d0d; /* headings */
-  --color-body: #666666; /* body text */
-  --color-muted: #999999; /* captions, labels, placeholders */
-  --color-line: #ebebeb; /* card / input borders */
-  --color-surface: #f5f5f5; /* section alternation */
+  /* Semantic palette */
+  --color-ink:#1b1c17;
+  --color-body:#3d3f35;
+  --color-muted:#6a6c5f;
+  --color-line:#e3e0d2;
+  --color-surface:#f4f2e8;
+  --color-positive:#6f8a35;      --color-positive-light:#f1f5e6;
+  --color-info:#4f7d88;          --color-info-light:#eef4f3;
+  --color-warning:#c79f54;       --color-warning-light:#faf4e6;
+  --color-error:#c4452f;         --color-error-light:#fceae4;
+  --color-accent:#dd5c47;        --color-accent-light:#fceae4;
 
-  /* Status accents — used ONLY for state (dots, badges, thin accents). */
-  --color-positive: #34a853;
-  --color-positive-light: #e8f5e9;
-  --color-info: #4285f4;
-  --color-info-light: #e3f2fd;
-  --color-warning: #fbbc04;
-  --color-warning-light: #fff8e1;
-  --color-error: #ea4335;
-  --color-error-light: #ffebee;
+  /* Neutral scale -> warm stone/ink */
+  --color-slate-50:#ffffff;  --color-slate-100:#f4f2e8; --color-slate-200:#e3e0d2;
+  --color-slate-300:#d2cebd; --color-slate-400:#8d8f80; --color-slate-500:#6a6c5f;
+  --color-slate-600:#3d3f35; --color-slate-700:#2c2e26; --color-slate-800:#1b1c17;
+  --color-slate-900:#1b1c17;
 
-  /* ---- Remap the neutral scale the app already uses -> monochrome ------- */
-  --color-slate-50: #ffffff;
-  --color-slate-100: #f5f5f5;
-  --color-slate-200: #ebebeb;
-  --color-slate-300: #ebebeb;
-  --color-slate-400: #999999;
-  --color-slate-500: #999999;
-  --color-slate-600: #666666;
-  --color-slate-700: #666666;
-  --color-slate-800: #0d0d0d;
-  --color-slate-900: #0d0d0d;
+  /* teal -> moss (primary) */
+  --color-teal-50:#f1f5e6;  --color-teal-100:#e2ebc9; --color-teal-200:#cbdc9c;
+  --color-teal-300:#b0c86c; --color-teal-400:#93ad48; --color-teal-500:#6f8a35;
+  --color-teal-600:#566d29; --color-teal-700:#42541f; --color-teal-800:#313f18;
+  --color-teal-900:#222c11;
 
-  /* Remap the old "brand" teal -> ink/greys. Primary is black now; positive
-     status is reintroduced explicitly via --color-positive where it belongs. */
-  --color-teal-50: #f5f5f5;
-  --color-teal-100: #ebebeb;
-  --color-teal-200: #ebebeb;
-  --color-teal-300: #d6d6d6;
-  --color-teal-400: #999999;
-  --color-teal-500: #666666;
-  --color-teal-600: #0d0d0d;
-  --color-teal-700: #0d0d0d;
-  --color-teal-800: #000000;
-  --color-teal-900: #0d0d0d;
+  /* green -> moss (stragglers) */
+  --color-green-50:#f1f5e6;  --color-green-100:#e2ebc9; --color-green-200:#cbdc9c;
+  --color-green-300:#b0c86c; --color-green-400:#93ad48; --color-green-500:#6f8a35;
+  --color-green-600:#566d29; --color-green-700:#42541f; --color-green-800:#313f18;
+  --color-green-900:#222c11;
 
-  /* Remap amber -> the system yellow (warning). */
-  --color-amber-50: #fff8e1;
-  --color-amber-100: #fff8e1;
-  --color-amber-200: #fce9a8;
-  --color-amber-500: #fbbc04;
-  --color-amber-600: #e0a800;
-  --color-amber-700: #8a6d00;
-  --color-amber-800: #6f5700;
-  --color-amber-900: #574500;
+  /* amber -> sand (warning) */
+  --color-amber-50:#faf4e6;  --color-amber-100:#f1e3c6; --color-amber-200:#e6d0a2;
+  --color-amber-500:#c79f54; --color-amber-600:#a9803a; --color-amber-700:#5e451d;
+  --color-amber-800:#5e451d; --color-amber-900:#4f3a23;
+
+  /* red -> coral (cost / danger) */
+  --color-red-50:#fceae4;  --color-red-100:#f8d2c8; --color-red-200:#f0a896;
+  --color-red-300:#e67d65; --color-red-400:#dd5c47; --color-red-500:#c4452f;
+  --color-red-600:#9e3422; --color-red-700:#9e3422; --color-red-800:#9e3422;
+  --color-red-900:#7a2818;
+
+  /* coral scale (accent) — bg-coral-NNN / text-coral-NNN */
+  --color-coral-50:#fceae4;  --color-coral-100:#f8d2c8; --color-coral-200:#f0a896;
+  --color-coral-300:#e67d65; --color-coral-400:#dd5c47; --color-coral-500:#c4452f;
+  --color-coral-600:#9e3422;
+
+  /* moss scale — bg-moss-NNN / text-moss-NNN */
+  --color-moss-50:#f1f5e6;  --color-moss-100:#e2ebc9; --color-moss-200:#cbdc9c;
+  --color-moss-300:#b0c86c; --color-moss-400:#93ad48; --color-moss-500:#6f8a35;
+  --color-moss-600:#566d29; --color-moss-700:#42541f; --color-moss-800:#313f18;
+  --color-moss-900:#222c11;
+  --color-sand-400:#c79f54; --color-sky-500:#4f7d88; --color-stone-500:#5f5b4f;
+
+  /* Warm-tinted shadow scale (re-skins shadow-sm / shadow-lg …) */
+  --shadow-xs:0 1px 2px rgba(34,44,17,.08);
+  --shadow-sm:0 1px 2px rgba(34,44,17,.07), 0 2px 6px rgba(34,44,17,.06);
+  --shadow-md:0 2px 4px rgba(34,44,17,.06), 0 8px 20px rgba(34,44,17,.09);
+  --shadow-lg:0 4px 8px rgba(34,44,17,.07), 0 18px 40px rgba(34,44,17,.12);
+  --shadow-xl:0 8px 16px rgba(34,44,17,.09), 0 32px 64px rgba(34,44,17,.16);
 }
 
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background: #ffffff; /* page background — clean white */
+  background: var(--surface-page); /* warm cream, never cold white */
 }
+body { margin: 0; background: var(--surface-page); color: var(--text-body); }
 
-body {
-  margin: 0;
-}
-
-/* Headings carry the Satoshi display face; weight utilities (font-bold 700 /
-   font-black 900) still apply on top. Body stays Inter via --font-sans. */
+/* Editorial headings (hero, phase titles) in Spectral serif; UI section
+   headings (h3/h4 inside cards) stay in Plex Sans for a technical read. */
 @layer base {
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-display);
+  h1, h2 { font-family: var(--font-display); letter-spacing: -0.015em; }
+  h3, h4, h5, h6 { font-family: var(--font-sans); }
+}
+
+/* ---- Rebrand helpers ------------------------------------------------- */
+@layer components {
+  /* Cards float gently over the landscape. */
+  .ds-card-float { box-shadow: var(--shadow-float) !important; }
+
+  /* Mono uppercase eyebrow label. */
+  .ds-eyebrow {
+    font-family: var(--font-mono); font-weight: 500;
+    letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
   }
+
+  /* CHF figures / data in mono tabular. */
+  .ds-figure { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+  /* Hero band: sky gradient with the voxel landscape resting in the corner. */
+  .ds-hero {
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, var(--sky-200) 0%, var(--sky-100) 28%, var(--surface-page) 100%);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .ds-hero-land {
+    position: absolute; right: -32px; bottom: -24px; width: 560px; max-width: 48%;
+    opacity: .92; pointer-events: none; image-rendering: pixelated;
+  }
+
+  /* Footer terrain band — a pixel skyline divider over a forest bar. */
+  .ds-terrain-band {
+    height: 80px;
+    background: url('/brand/terrain-band.png') repeat-x bottom / auto 80px;
+  }
+  .ds-footer-bar { background: var(--surface-moss); color: var(--text-on-dark); }
+
+  /* Brand wordmark in Spectral. */
+  .ds-wordmark { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; }
+
+  /* Affordability meter. */
+  .ds-meter-track { height: 10px; border-radius: var(--radius-full); background: var(--surface-sunken); overflow: hidden; }
+  .ds-meter-fill { height: 100%; border-radius: var(--radius-full); background: linear-gradient(90deg, var(--moss-400), var(--moss-500)); transition: width .32s var(--ease-out); }
 }
 
 /* Print: keep only the action-plan summary, drop chrome and controls. */
 @media print {
-  .no-print {
-    display: none !important;
-  }
-  header,
-  footer {
-    display: none !important;
-  }
-  body {
-    background: #fff;
-  }
-  main {
-    max-width: none !important;
-    padding: 0 !important;
-  }
-  .shadow-sm {
-    box-shadow: none !important;
-  }
-  /* Stack the Phase 1 two-column layout into one column for a clean snapshot. */
-  .lg\:grid-cols-2 {
-    grid-template-columns: 1fr !important;
-  }
-  /* Force-expand every collapsed detail section so the snapshot is complete. */
-  .collapsible-body {
-    display: block !important;
-  }
-  /* Avoid splitting cards/sections across pages where possible. */
-  section {
-    break-inside: avoid;
-  }
+  .no-print { display: none !important; }
+  header, footer { display: none !important; }
+  html, body { background: #fff !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  .shadow-sm, .ds-card-float { box-shadow: none !important; }
+  .ds-hero, .ds-terrain-band { display: none !important; }
+  .lg\:grid-cols-2 { grid-template-columns: 1fr !important; }
+  .collapsible-body { display: block !important; }
+  section { break-inside: avoid; }
 }

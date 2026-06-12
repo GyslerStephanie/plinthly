@@ -210,14 +210,15 @@ export default function App() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-3 px-5 py-4 md:px-8 lg:px-[60px]">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">
-              P
-            </span>
+            <img
+              src="/brand/plinthly-mark.png"
+              alt=""
+              className="h-9 w-9"
+              style={{ imageRendering: 'pixelated' }}
+            />
             <div>
-              <p className="text-sm font-semibold leading-tight text-slate-900">
-                Plinthly
-              </p>
-              <p className="text-xs leading-tight text-slate-500">
+              <p className="ds-wordmark text-lg leading-tight text-ink">Plinthly</p>
+              <p className="text-xs leading-tight text-muted">
                 {t('header.tagline')}
               </p>
             </div>
@@ -253,14 +254,28 @@ export default function App() {
           />
         </div>
 
-        <div className="mb-8 max-w-2xl no-print">
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">
-            {t(`heading.${phase}.title`)}
-          </h1>
-          <p className="mt-2 text-base leading-relaxed text-slate-600 lg:mt-3 lg:text-lg">
-            {t(`heading.${phase}.blurb`)}
-          </p>
-        </div>
+        {phase === 1 ? (
+          <div className="ds-hero relative mb-8 overflow-hidden rounded-2xl border border-line shadow-sm no-print">
+            <img src="/brand/voxel-landscape-hero.png" alt="" className="ds-hero-land hidden sm:block" />
+            <div className="relative max-w-2xl px-6 py-10 lg:px-10 lg:py-12">
+              <h1 className="font-display text-4xl font-semibold tracking-tight text-ink lg:text-5xl">
+                {t('heading.1.title')}
+              </h1>
+              <p className="mt-3 max-w-xl text-base leading-relaxed text-body lg:text-lg">
+                {t('heading.1.blurb')}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-8 max-w-2xl no-print">
+            <h1 className="text-2xl font-semibold tracking-tight text-ink">
+              {t(`heading.${phase}.title`)}
+            </h1>
+            <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
+              {t(`heading.${phase}.blurb`)}
+            </p>
+          </div>
+        )}
 
         {/* Phase 1 — two-column on desktop: inputs left, live output right */}
         {phase === 1 && (
@@ -372,9 +387,23 @@ export default function App() {
         )}
       </main>
 
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-[1320px] px-5 py-8 md:px-8 lg:px-[60px] text-xs leading-relaxed text-slate-400">
-          {t('footer.disclaimer', { date: dataMeta.last_updated })}
+      <footer className="mt-12">
+        <div className="ds-terrain-band" aria-hidden />
+        <div className="ds-footer-bar">
+          <div className="mx-auto flex max-w-[1320px] flex-wrap items-center gap-4 px-5 py-6 md:px-8 lg:px-[60px]">
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/brand/plinthly-mark-flat.png"
+                alt=""
+                className="h-6 w-6"
+                style={{ imageRendering: 'pixelated' }}
+              />
+              <span className="ds-wordmark text-base">Plinthly</span>
+            </div>
+            <p className="ml-auto max-w-xl text-xs leading-relaxed" style={{ color: 'color-mix(in oklab, var(--text-on-dark) 80%, transparent)' }}>
+              {t('footer.disclaimer', { date: dataMeta.last_updated })}
+            </p>
+          </div>
         </div>
       </footer>
 
