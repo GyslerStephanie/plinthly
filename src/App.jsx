@@ -61,12 +61,20 @@ export default function App() {
   const [dreamPrice, setDreamPrice] = useState('') // Phase 2 dream price (persisted in hash)
   const restored = useRef(false)
 
-  // Record end-of-journey feedback: log it (v1 placeholder — no backend) and
-  // keep it in state so it persists for the session.
+  // Record end-of-journey feedback. Show the thank-you optimistically (so a
+  // failed/missing sink never punishes the user) and fire the response at the
+  // serverless endpoint, which forwards ONLY these fields to the Sheet — no
+  // financial inputs are ever sent.
   const handleFeedback = (payload) => {
-    // eslint-disable-next-line no-console
-    console.log('[Plinthly feedback]', payload)
     setFeedback(payload)
+    fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('[Plinthly feedback] not stored:', err)
+    })
   }
 
   // Restore from a shared URL hash on first load.
