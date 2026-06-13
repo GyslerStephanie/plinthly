@@ -15,11 +15,10 @@ const PILLAR3A_MONTHLY = Math.round(RULE_CONSTANTS.PILLAR3A_MAX / 12) // ≈ 605
  * itself, so the styling stays neutral (no red fills).
  * ────────────────────────────────────────────────────────────────────────── */
 
-// Diagonal hatch for the filled "have" portion of a bar.
-const HATCH = {
-  backgroundColor: 'rgba(13,13,13,0.06)',
-  backgroundImage:
-    'repeating-linear-gradient(45deg, #42541f 0, #42541f 1.5px, transparent 1.5px, transparent 6px)',
+// Solid moss fill for the "have" portion of a bar — accessible mid-green
+// (matches the affordability meter), not a low-contrast hatch.
+const FILL = {
+  backgroundImage: 'linear-gradient(90deg, var(--moss-400), var(--moss-500))',
 }
 
 /**
@@ -43,8 +42,8 @@ function HatchBar({ label, sub, have, goal, startMarker, endMarker }) {
           {chf(have)} <span className="text-xs text-muted">/ {chf(goal)}{covered ? '' : ` · ${pct(have / (goal || 1))}`}</span>
         </span>
       </div>
-      <div className="h-5 w-full overflow-hidden rounded border border-line bg-white">
-        <div className="h-full border-r border-ink/30" style={{ ...HATCH, width: `${haveW}%` }} />
+      <div className="h-5 w-full overflow-hidden rounded border border-line bg-surface">
+        <div className="h-full" style={{ ...FILL, width: `${haveW}%` }} />
       </div>
       {(startMarker || endMarker) && (
         <div className="relative mt-1 h-4 text-[11px] text-muted">
