@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { chf, pct } from '../lib/format'
+import { chf, pct, groupDigits } from '../lib/format'
 import { RULE_CONSTANTS } from '../lib/affordability'
 import { useI18n } from '../i18n/I18nContext'
 import { Card } from './ui'
@@ -177,7 +177,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
           <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
           <input
             type="text" inputMode="numeric"
-            value={Math.max(0, savingsPerMonth)}
+            value={groupDigits(String(Math.max(0, savingsPerMonth)))}
             onChange={(e) => onSavingsChange?.(clampSave(Number(e.target.value.replace(/[^0-9]/g, '')) || 0))}
             className="w-full bg-transparent py-1.5 pr-1 text-right text-sm font-semibold tabular-nums text-ink focus:outline-none"
             aria-label={t('dream.savedPerMonth')}
@@ -332,7 +332,7 @@ export function MilestoneTable({
           <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
           <input
             type="text" inputMode="numeric"
-            value={perMonth}
+            value={groupDigits(String(perMonth))}
             onChange={(e) => onSavingsChange?.(clamp(Number(e.target.value.replace(/[^0-9]/g, '')) || 0))}
             className="w-full bg-transparent py-1.5 pr-1 text-right text-sm font-semibold tabular-nums text-ink focus:outline-none"
             aria-label={t('dream.savedPerMonth')}

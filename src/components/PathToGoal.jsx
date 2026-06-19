@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { chf } from '../lib/format'
+import { chf, groupDigits } from '../lib/format'
 import { RULE_CONSTANTS } from '../lib/affordability'
 import { useI18n } from '../i18n/I18nContext'
 import { renderRich } from './Trans'
@@ -85,7 +85,7 @@ export default function PathToGoal({
               <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
               <input
                 type="text" inputMode="numeric"
-                value={monthly}
+                value={groupDigits(String(monthly))}
                 onChange={(e) => setMonthly(clamp(Number(e.target.value.replace(/[^0-9]/g, '')) || 0))}
                 className="w-full bg-transparent py-1.5 pr-1 text-right text-sm font-semibold tabular-nums text-ink focus:outline-none"
                 aria-label={t('path.saveLabel')}

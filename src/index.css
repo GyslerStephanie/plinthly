@@ -55,8 +55,10 @@
   --tracking-eyebrow:0.14em;
 
   /* ---- Radii ---- */
-  --radius-xs:4px; --radius-sm:7px; --radius-md:10px; --radius-lg:14px;
-  --radius-xl:20px; --radius-2xl:28px; --radius-full:999px;
+  /* Architectural, plinth-like: crisp corners, not pillowy. Pills stay round
+     via --radius-full. Tailwind's rounded-* utilities resolve to these vars. */
+  --radius-xs:2px; --radius-sm:4px; --radius-md:5px; --radius-lg:7px;
+  --radius-xl:9px; --radius-2xl:12px; --radius-full:999px;
 
   /* ---- Elevation (warm, never pure black) ---- */
   --shadow-xs:0 1px 2px rgba(34,44,17,.08);
