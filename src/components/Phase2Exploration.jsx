@@ -7,7 +7,7 @@ import {
   minergieStandards,
   subsidyOverview,
 } from '../lib/exploration'
-import { chf, int } from '../lib/format'
+import { chf, int, groupDigits } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 import { Card, Indicative, Pill } from './ui'
@@ -69,8 +69,8 @@ export default function Phase2Exploration({ explore, onChange }) {
                 id="budget"
                 type="text"
                 inputMode="numeric"
-                value={explore.budget}
-                onChange={(e) => set('budget')(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+                value={groupDigits(explore.budget)}
+                onChange={(e) => set('budget')(groupDigits(e.target.value))}
                 className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 focus:outline-none"
               />
             </div>

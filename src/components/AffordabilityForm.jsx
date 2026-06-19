@@ -1,5 +1,5 @@
 import { cantonOptions, getCanton } from '../lib/cantons'
-import { chf } from '../lib/format'
+import { chf, groupDigits } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 
@@ -22,8 +22,8 @@ function MoneyField({ id, label, value, onChange, placeholder, hint }) {
           id={id}
           type="text"
           inputMode="numeric"
-          value={value}
-          onChange={(e) => onChange(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+          value={groupDigits(value)}
+          onChange={(e) => onChange(groupDigits(e.target.value))}
           placeholder={placeholder}
           className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
         />

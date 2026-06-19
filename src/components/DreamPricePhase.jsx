@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { chf, int, pct } from '../lib/format'
+import { chf, int, pct, groupDigits } from '../lib/format'
 import {
   checkSpecificProperty,
   monthlyCostsAtRate,
@@ -148,8 +148,8 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext, dr
             <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
             <input
               type="text" inputMode="numeric"
-              value={price}
-              onChange={(e) => setPrice(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+              value={groupDigits(price)}
+              onChange={(e) => setPrice(groupDigits(e.target.value))}
               placeholder="1'200'000"
               className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
             />
@@ -173,8 +173,8 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext, dr
                 <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
                 <input
                   type="text" inputMode="numeric"
-                  value={assessed}
-                  onChange={(e) => setAssessed(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+                  value={groupDigits(assessed)}
+                  onChange={(e) => setAssessed(groupDigits(e.target.value))}
                   placeholder="1'100'000"
                   className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
                 />
@@ -216,8 +216,8 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext, dr
             <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
             <input
               type="text" inputMode="numeric"
-              value={obligations}
-              onChange={(e) => setObligations(e.target.value.replace(/[^0-9'.\s]/g, ''))}
+              value={groupDigits(obligations)}
+              onChange={(e) => setObligations(groupDigits(e.target.value))}
               placeholder="0"
               className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
             />
