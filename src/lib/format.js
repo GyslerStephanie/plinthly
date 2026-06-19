@@ -25,18 +25,17 @@ export function pct(fraction, digits = 0) {
 }
 
 /**
- * Group a numeric-ish input string with Swiss apostrophe separators so the
- * zeros stay countable while typing (e.g. "1250000" -> "1'250'000"). Strips
- * any non-digit/non-dot, keeps a single decimal portion, and uses the straight
- * apostrophe (U+0027) to match the input masks and CHF placeholders. Pass the
- * raw field value in onChange; the result is safe to store because every
- * consumer parses with `replace(/[^0-9.]/g, '')`.
+ * Group a numeric-ish input string with comma thousands separators so the
+ * zeros stay countable while typing (e.g. "1250000" -> "1,250,000"). Strips
+ * any non-digit/non-dot and keeps a single decimal portion. Pass the raw field
+ * value in onChange; the result is safe to store because every consumer parses
+ * with `replace(/[^0-9.]/g, '')`.
  */
 export function groupDigits(value) {
   if (value == null) return ''
   const raw = String(value).replace(/[^0-9.]/g, '')
   if (raw === '') return ''
   const [intPart, ...rest] = raw.split('.')
-  const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'")
+  const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return rest.length ? `${grouped}.${rest.join('')}` : grouped
 }

@@ -45,7 +45,7 @@ export default function AffordabilityForm({ values, onChange }) {
           label={t('form.incomeLabel')}
           value={values.grossIncome}
           onChange={set('grossIncome')}
-          placeholder="120'000"
+          placeholder="120,000"
           hint={t('form.incomeHint')}
         />
         <p className="mt-1 text-xs italic text-amber-700">{t('form.selfNote')}</p>
@@ -56,7 +56,7 @@ export default function AffordabilityForm({ values, onChange }) {
         label={t('form.savingsLabel')}
         value={values.savings}
         onChange={set('savings')}
-        placeholder="150'000"
+        placeholder="150,000"
         hint={t('form.savingsHint')}
       />
 
@@ -66,7 +66,7 @@ export default function AffordabilityForm({ values, onChange }) {
           label={t('form.pillar3aLabel')}
           value={values.pillar3a}
           onChange={set('pillar3a')}
-          placeholder="40'000"
+          placeholder="40,000"
         />
         <T
           as="p"
@@ -83,7 +83,7 @@ export default function AffordabilityForm({ values, onChange }) {
           label={t('form.pillar2Label')}
           value={values.pillar2}
           onChange={set('pillar2')}
-          placeholder="80'000"
+          placeholder="80,000"
         />
         <T
           as="p"

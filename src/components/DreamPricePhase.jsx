@@ -150,7 +150,7 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext, dr
               type="text" inputMode="numeric"
               value={groupDigits(price)}
               onChange={(e) => setPrice(groupDigits(e.target.value))}
-              placeholder="1'200'000"
+              placeholder="1,200,000"
               className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
             />
           </div>
@@ -175,7 +175,7 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext, dr
                   type="text" inputMode="numeric"
                   value={groupDigits(assessed)}
                   onChange={(e) => setAssessed(groupDigits(e.target.value))}
-                  placeholder="1'100'000"
+                  placeholder="1,100,000"
                   className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
                 />
               </div>
