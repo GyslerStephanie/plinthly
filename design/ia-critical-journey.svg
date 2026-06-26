@@ -1,0 +1,78 @@
+<svg viewBox="0 0 760 600" xmlns="http://www.w3.org/2000/svg" width="760" height="600" font-family="'IBM Plex Sans', system-ui, sans-serif">
+<title>Predicted critical user journey for a fence-sitting renter</title>
+<desc>Six stages from life-trigger to commitment, with an emotion curve that bottoms out at stage four, the rent-or-buy fork, which is the only stage with no product touchpoint and the highest drop-off risk. The Compare feature is the intervention at that moment.</desc>
+<rect x="0" y="0" width="760" height="600" fill="#fbfaf4"/>
+<rect x="394" y="24" width="118" height="552" rx="8" fill="#FAECE7" opacity="0.55"/>
+
+<g font-size="11" font-weight="500">
+<text x="98" y="40" text-anchor="middle" fill="#1b1c17">1 · Trigger</text>
+<text x="216" y="40" text-anchor="middle" fill="#1b1c17">2 · Curiosity</text>
+<text x="334" y="40" text-anchor="middle" fill="#1b1c17">3 · Reality check</text>
+<text x="453" y="40" text-anchor="middle" fill="#993C1D">4 · The fork</text>
+<text x="570" y="40" text-anchor="middle" fill="#1b1c17">5 · Exploration</text>
+<text x="688" y="40" text-anchor="middle" fill="#1b1c17">6 · Commitment</text>
+</g>
+<line x1="20" y1="50" x2="740" y2="50" stroke="#e3e0d2"/>
+
+<text x="20" y="74" font-size="10" font-weight="500" fill="#6a6c5f">DOING</text>
+<g font-size="10" fill="#3d3f35">
+<text x="98" y="92" text-anchor="middle">rent hike,</text><text x="98" y="105" text-anchor="middle">savings milestone</text>
+<text x="216" y="92" text-anchor="middle">finds Plinthly,</text><text x="216" y="105" text-anchor="middle">tries numbers</text>
+<text x="334" y="92" text-anchor="middle">enters income +</text><text x="334" y="105" text-anchor="middle">savings → max price</text>
+<text x="453" y="92" text-anchor="middle" fill="#993C1D">hesitates,</text><text x="453" y="105" text-anchor="middle" fill="#993C1D">compares to renting</text>
+<text x="570" y="92" text-anchor="middle">cantons, energy,</text><text x="570" y="105" text-anchor="middle">new vs renovate</text>
+<text x="688" y="92" text-anchor="middle">action plan,</text><text x="688" y="105" text-anchor="middle">bank inquiry</text>
+</g>
+
+<text x="20" y="132" font-size="10" font-weight="500" fill="#6a6c5f">THINKING</text>
+<g font-size="10" font-style="italic" fill="#3d3f35">
+<text x="98" y="150" text-anchor="middle">“should we</text><text x="98" y="162" text-anchor="middle">stop renting?”</text>
+<text x="216" y="150" text-anchor="middle">“is this for</text><text x="216" y="162" text-anchor="middle">people like me?”</text>
+<text x="334" y="150" text-anchor="middle">“ok… so that's</text><text x="334" y="162" text-anchor="middle">my number”</text>
+<text x="453" y="150" text-anchor="middle" fill="#993C1D">“but is buying</text><text x="453" y="162" text-anchor="middle" fill="#993C1D">even worth it?”</text>
+<text x="570" y="150" text-anchor="middle">“what can I</text><text x="570" y="162" text-anchor="middle">actually get?”</text>
+<text x="688" y="150" text-anchor="middle">“let's make</text><text x="688" y="162" text-anchor="middle">it real”</text>
+</g>
+
+<text x="20" y="192" font-size="10" font-weight="500" fill="#6a6c5f">FEELING</text>
+<rect x="40" y="196" width="708" height="84" rx="6" fill="#f4f2e8"/>
+<polyline points="98,222 216,210 334,236 453,262 570,224 688,206" fill="none" stroke="#5F5E5A" stroke-width="2"/>
+<circle cx="98" cy="222" r="4" fill="#639922"/>
+<circle cx="216" cy="210" r="4" fill="#639922"/>
+<circle cx="334" cy="236" r="4" fill="#EF9F27"/>
+<circle cx="453" cy="262" r="6" fill="#E24B4A"/>
+<circle cx="570" cy="224" r="4" fill="#639922"/>
+<circle cx="688" cy="206" r="4" fill="#639922"/>
+<text x="453" y="278" text-anchor="middle" font-size="9.5" fill="#A32D2D" font-weight="500">doubt · lowest point</text>
+
+<text x="20" y="306" font-size="10" font-weight="500" fill="#6a6c5f">TOUCHPOINT</text>
+<g font-size="10">
+<rect x="170" y="296" width="92" height="20" rx="10" fill="#E6F1FB"/><text x="216" y="310" text-anchor="middle" fill="#0C447C">Phase 1</text>
+<rect x="288" y="296" width="92" height="20" rx="10" fill="#E6F1FB"/><text x="334" y="310" text-anchor="middle" fill="#0C447C">Phase 1 result</text>
+<rect x="402" y="296" width="102" height="20" rx="10" fill="#FCEBEB" stroke="#E24B4A"/><text x="453" y="310" text-anchor="middle" fill="#A32D2D" font-weight="500">none — gap</text>
+<rect x="524" y="296" width="92" height="20" rx="10" fill="#E6F1FB"/><text x="570" y="310" text-anchor="middle" fill="#0C447C">Phase 2–4</text>
+<rect x="642" y="296" width="92" height="20" rx="10" fill="#E6F1FB"/><text x="688" y="310" text-anchor="middle" fill="#0C447C">Phase 5</text>
+</g>
+
+<text x="20" y="344" font-size="10" font-weight="500" fill="#6a6c5f">COMPARE</text>
+<text x="20" y="356" font-size="10" font-weight="500" fill="#6a6c5f">FITS</text>
+<rect x="396" y="332" width="114" height="62" rx="8" fill="#FAECE7" stroke="#D85A30"/>
+<text x="453" y="350" text-anchor="middle" font-size="10.5" font-weight="500" fill="#4A1B0C">Rent vs buy</text>
+<text x="453" y="364" text-anchor="middle" font-size="9.5" fill="#993C1D">+ invest the diff</text>
+<text x="453" y="378" text-anchor="middle" font-size="9.5" fill="#993C1D">→ break-even year</text>
+<text x="453" y="390" text-anchor="middle" font-size="9.5" fill="#993C1D">turns doubt → decision</text>
+<rect x="513" y="332" width="114" height="62" rx="8" fill="#FAEEDA" stroke="#EF9F27"/>
+<text x="570" y="350" text-anchor="middle" font-size="10.5" font-weight="500" fill="#412402">New vs renovate</text>
+<text x="570" y="364" text-anchor="middle" font-size="9.5" fill="#854F0B">substantiality</text>
+<text x="570" y="378" text-anchor="middle" font-size="9.5" fill="#854F0B">verdict</text>
+<text x="570" y="390" text-anchor="middle" font-size="9.5" fill="#854F0B">enhances Phase 4</text>
+
+<rect x="20" y="414" width="720" height="80" rx="8" fill="#f4f2e8"/>
+<text x="34" y="436" font-size="12.5" font-weight="500" fill="#1b1c17">Why stage 4 is the critical moment</text>
+<text x="34" y="457" font-size="11" fill="#3d3f35">The emotional low point and the only un-served touchpoint coincide — a user you already qualified silently churns here,</text>
+<text x="34" y="476" font-size="11" fill="#3d3f35">stuck on “is buying even worth it vs. renting &amp; investing?” This is the highest-leverage place to intervene — and the</text>
+<text x="34" y="489" font-size="11" fill="#3d3f35">break-even answer is exactly what converts hesitation into a confident decision (either direction is a good outcome).</text>
+
+<rect x="20" y="506" width="720" height="34" rx="8" fill="none" stroke="#e3e0d2"/>
+<text x="34" y="527" font-size="10.5" fill="#6a6c5f">Predicted journey — validate the trigger, the fork, and the drop-off with interviews/analytics before building. Persona: fence-sitting renter (highest Compare leverage).</text>
+</svg>

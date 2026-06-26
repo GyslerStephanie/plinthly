@@ -1,0 +1,88 @@
+<svg viewBox="0 0 760 1240" xmlns="http://www.w3.org/2000/svg" width="760" height="1240" font-family="'IBM Plex Sans', system-ui, sans-serif">
+<title>Plinthly information architecture and navigation map</title>
+<desc>A linear five-phase funnel (Can I buy, Dream price, What to look for, My real options, Action plan) with a persistent global chrome layer, contextual cross-links from phases 1 and 2 into phases 3 and 4, an AI advisor overlay, external endpoints, and URL-hash state persistence.</desc>
+<defs>
+<marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#0F6E56"/></marker>
+<marker id="ahc" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#D85A30"/></marker>
+</defs>
+<rect x="0" y="0" width="760" height="1240" fill="#fbfaf4"/>
+
+<rect x="20" y="16" width="720" height="74" rx="8" fill="#F1EFE8" stroke="#D3D1C7"/>
+<text x="34" y="40" font-size="13" font-weight="500" fill="#2C2C2A">Global chrome — persistent on every phase</text>
+<text x="34" y="60" font-size="11" fill="#5F5E5A">Header: logo · tagline · "indicative" badge · language EN/DE/FR/IT</text>
+<text x="34" y="76" font-size="11" fill="#5F5E5A">MT-notice banner (top) · Sticky summary bar (max price / down / monthly) · Footer disclaimer</text>
+
+<rect x="20" y="104" width="720" height="44" rx="8" fill="#E6F1FB" stroke="#85B7EB"/>
+<text x="34" y="124" font-size="12" font-weight="500" fill="#0C447C">PhaseNav stepper  1 → 2 → 3 → 4 → 5</text>
+<text x="34" y="140" font-size="11" fill="#185FA5">Click any already-visited step to jump · future steps locked until reached</text>
+
+<rect x="120" y="168" width="430" height="118" rx="8" fill="#E1F5EE" stroke="#1D9E75"/>
+<circle cx="148" cy="194" r="13" fill="#0F6E56"/><text x="148" y="198" font-size="13" text-anchor="middle" fill="#E1F5EE">1</text>
+<text x="172" y="192" font-size="14" font-weight="500" fill="#04342C">Can I buy?</text>
+<text x="172" y="208" font-size="11" fill="#0F6E56">entry · the only phase reachable cold</text>
+<text x="138" y="232" font-size="11" fill="#085041">• AffordabilityForm — income, savings, P3a, P2, down %, canton, household</text>
+<text x="138" y="250" font-size="11" fill="#085041">• AffordabilityResult (live) — max price, monthly breakdown, ceilings, takeaways</text>
+<text x="138" y="268" font-size="11" fill="#085041">• NextSteps (reveal → 2 cards) · "Other tracks": own / land (coming soon)</text>
+
+<rect x="120" y="306" width="430" height="100" rx="8" fill="#E1F5EE" stroke="#1D9E75"/>
+<circle cx="148" cy="332" r="13" fill="#0F6E56"/><text x="148" y="336" font-size="13" text-anchor="middle" fill="#E1F5EE">2</text>
+<text x="172" y="330" font-size="14" font-weight="500" fill="#04342C">Calculate dream price</text>
+<text x="138" y="356" font-size="11" fill="#085041">• Context card · Check-a-specific-property calculator</text>
+<text x="138" y="374" font-size="11" fill="#085041">• GapChart · TrajectoryChart · MilestoneTable · PathToGoal · Levers</text>
+<text x="138" y="392" font-size="11" fill="#085041">• NextSteps (same two cross-links as Phase 1)</text>
+
+<rect x="120" y="426" width="430" height="84" rx="8" fill="#E1F5EE" stroke="#1D9E75"/>
+<circle cx="148" cy="452" r="13" fill="#0F6E56"/><text x="148" y="456" font-size="13" text-anchor="middle" fill="#E1F5EE">3</text>
+<text x="172" y="450" font-size="14" font-weight="500" fill="#04342C">What to look for</text>
+<text x="138" y="476" font-size="11" fill="#085041">• PhaseContextBanner · Phase2Exploration — budget, canton, type,</text>
+<text x="138" y="494" font-size="11" fill="#085041">  condition, sustainability · market overview · energy-class table</text>
+
+<rect x="120" y="530" width="430" height="100" rx="8" fill="#E1F5EE" stroke="#1D9E75"/>
+<circle cx="148" cy="556" r="13" fill="#0F6E56"/><text x="148" y="560" font-size="13" text-anchor="middle" fill="#E1F5EE">4</text>
+<text x="172" y="554" font-size="14" font-weight="500" fill="#04342C">My real options</text>
+<text x="138" y="580" font-size="11" fill="#085041">• PhaseContextBanner · Phase3Options:</text>
+<text x="138" y="598" font-size="11" fill="#085041">  A) buy + renovate (RetrofitConfigurator) · B) buy new · C) build</text>
+<text x="138" y="616" font-size="11" fill="#085041">• head-to-head comparison + 10-yr running cost</text>
+
+<rect x="120" y="650" width="430" height="100" rx="8" fill="#E1F5EE" stroke="#1D9E75"/>
+<circle cx="148" cy="676" r="13" fill="#0F6E56"/><text x="148" y="680" font-size="13" text-anchor="middle" fill="#E1F5EE">5</text>
+<text x="172" y="674" font-size="14" font-weight="500" fill="#04342C">Action plan</text>
+<text x="138" y="700" font-size="11" fill="#085041">• PhaseContextBanner · Phase4ActionPlan (at-a-glance)</text>
+<text x="138" y="718" font-size="11" fill="#085041">• BankInquiry (mailto) · FeedbackSection · print / share</text>
+<text x="138" y="736" font-size="11" fill="#085041">• terminal phase — no Continue</text>
+
+<path d="M335 286 L335 304" stroke="#0F6E56" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M335 406 L335 424" stroke="#0F6E56" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M335 510 L335 528" stroke="#0F6E56" stroke-width="2" marker-end="url(#ah)"/>
+<path d="M335 630 L335 648" stroke="#0F6E56" stroke-width="2" marker-end="url(#ah)"/>
+<text x="343" y="300" font-size="10" fill="#0F6E56">Continue ▸ (Back mirrors up)</text>
+
+<path d="M120 250 C 70 250, 70 468, 118 468" fill="none" stroke="#D85A30" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ahc)"/>
+<path d="M120 262 C 40 300, 40 580, 118 580" fill="none" stroke="#D85A30" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ahc)"/>
+<path d="M120 384 C 92 410, 92 470, 118 482" fill="none" stroke="#D85A30" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ahc)"/>
+<text x="26" y="430" font-size="10" fill="#D85A30" transform="rotate(-90 26 430)">NextSteps cross-links (skip the funnel)</text>
+
+<rect x="566" y="168" width="174" height="92" rx="8" fill="#FAEEDA" stroke="#EF9F27"/>
+<text x="580" y="190" font-size="12" font-weight="500" fill="#633806">AI Advisor (FAB)</text>
+<text x="580" y="208" font-size="10.5" fill="#854F0B">Floating · appears once a</text>
+<text x="580" y="222" font-size="10.5" fill="#854F0B">result exists (any phase)</text>
+<text x="580" y="240" font-size="10.5" fill="#854F0B">chat + savings-plan mode</text>
+<text x="580" y="254" font-size="10.5" fill="#854F0B">→ POST /api/advisor</text>
+
+<rect x="566" y="556" width="174" height="92" rx="8" fill="#FAEEDA" stroke="#EF9F27"/>
+<text x="580" y="578" font-size="12" font-weight="500" fill="#633806">Phase 5 outflows</text>
+<text x="580" y="598" font-size="10.5" fill="#854F0B">BankInquiry → mailto draft</text>
+<text x="580" y="614" font-size="10.5" fill="#854F0B">Feedback → POST /api/feedback</text>
+<text x="580" y="630" font-size="10.5" fill="#854F0B">Share → URL · Print → PDF</text>
+<text x="580" y="644" font-size="10.5" fill="#854F0B">(no financial PII sent)</text>
+
+<rect x="20" y="766" width="720" height="64" rx="8" fill="#EEEDFE" stroke="#AFA9EC"/>
+<text x="34" y="788" font-size="12" font-weight="500" fill="#26215C">State &amp; persistence — URL hash (15 keys), updated on every change → fully shareable / restorable</text>
+<text x="34" y="808" font-size="11" fill="#534AB7">gi sv p3 p2 dn ct hs · bg pt cd su op ms · dp · ph   (income…household · exploration · dream price · current phase)</text>
+<text x="34" y="823" font-size="11" fill="#534AB7">Session-only: feedback, dreamContext. Canton is shared truth across phases. Renovation cost from Phase 4 feeds back into Phase 1.</text>
+
+<rect x="20" y="846" width="720" height="76" rx="8" fill="#F1EFE8" stroke="#D3D1C7"/>
+<text x="34" y="868" font-size="12" font-weight="500" fill="#2C2C2A">Legend &amp; gating</text>
+<text x="34" y="888" font-size="11" fill="#5F5E5A">— green = linear Continue/Back · blue = PhaseNav jump (visited only) · coral dashed = contextual cross-link · amber = overlay/API</text>
+<text x="34" y="906" font-size="11" fill="#5F5E5A">Gate: Phases 2–5 require a valid Phase 1 (income + savings &gt; 0). No deep-link can bypass it; hash restore re-runs the calc first.</text>
+</svg>

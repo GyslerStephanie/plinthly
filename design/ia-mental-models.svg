@@ -1,0 +1,58 @@
+<svg viewBox="0 0 760 640" xmlns="http://www.w3.org/2000/svg" width="760" height="640" font-family="'IBM Plex Sans', system-ui, sans-serif">
+<title>Plinthly mental models, jobs-to-be-done, and decision-moment timeline</title>
+<desc>Five core buyer questions placed on a timeline from before-the-funnel to choose-and-act. The two unanswered comparison questions cluster before the funnel; affordability and dream price are answered in phases 1 and 2; buy-new-vs-renovate is partial in phase 4.</desc>
+<rect x="0" y="0" width="760" height="640" fill="#fbfaf4"/>
+<text x="20" y="28" font-size="13" font-weight="500" fill="#1b1c17">Decision timeline →</text>
+<g font-size="11" font-weight="500" fill="#2C2C2A">
+<rect x="150" y="40" width="150" height="30" rx="6" fill="#F1EFE8" stroke="#D3D1C7"/><text x="225" y="60" text-anchor="middle">Before the funnel</text>
+<rect x="306" y="40" width="140" height="30" rx="6" fill="#F1EFE8" stroke="#D3D1C7"/><text x="376" y="60" text-anchor="middle">Phase 1 · qualify</text>
+<rect x="452" y="40" width="140" height="30" rx="6" fill="#F1EFE8" stroke="#D3D1C7"/><text x="522" y="60" text-anchor="middle">Phase 2–3 · aspire/shop</text>
+<rect x="598" y="40" width="142" height="30" rx="6" fill="#F1EFE8" stroke="#D3D1C7"/><text x="669" y="60" text-anchor="middle">Phase 4–5 · choose/act</text>
+</g>
+<line x1="20" y1="84" x2="740" y2="84" stroke="#e3e0d2"/>
+
+<rect x="150" y="98" width="160" height="74" rx="8" fill="#FAECE7" stroke="#D85A30"/>
+<text x="162" y="120" font-size="12.5" font-weight="500" fill="#4A1B0C">“Rent or buy?”</text>
+<text x="162" y="137" font-size="10.5" fill="#993C1D">+ invest the difference</text>
+<text x="162" y="153" font-size="10.5" fill="#993C1D">Persona: fence-sitting renter</text>
+<text x="162" y="166" font-size="10.5" fill="#993C1D">JTBD: should I enter at all?</text>
+<rect x="318" y="120" width="60" height="20" rx="10" fill="#FCEBEB" stroke="#E24B4A"/><text x="348" y="134" font-size="10" text-anchor="middle" fill="#A32D2D" font-weight="500">gap</text>
+
+<rect x="150" y="186" width="160" height="74" rx="8" fill="#FAECE7" stroke="#D85A30"/>
+<text x="162" y="208" font-size="12.5" font-weight="500" fill="#4A1B0C">“Markets or property?”</text>
+<text x="162" y="225" font-size="10.5" fill="#993C1D">opportunity cost of equity</text>
+<text x="162" y="241" font-size="10.5" fill="#993C1D">Persona: capital allocator</text>
+<text x="162" y="254" font-size="10.5" fill="#993C1D">JTBD: best use of my CHF</text>
+<rect x="318" y="208" width="60" height="20" rx="10" fill="#FCEBEB" stroke="#E24B4A"/><text x="348" y="222" font-size="10" text-anchor="middle" fill="#A32D2D" font-weight="500">gap</text>
+
+<rect x="306" y="274" width="140" height="74" rx="8" fill="#E1F5EE" stroke="#1D9E75"/>
+<text x="318" y="296" font-size="12.5" font-weight="500" fill="#04342C">“Can I afford it?”</text>
+<text x="318" y="313" font-size="10.5" fill="#085041">income/savings → max</text>
+<text x="318" y="329" font-size="10.5" fill="#085041">Persona: anxious first-timer</text>
+<text x="318" y="342" font-size="10.5" fill="#085041">JTBD: qualify, de-risk</text>
+<rect x="306" y="356" width="120" height="20" rx="10" fill="#E1F5EE" stroke="#1D9E75"/><text x="366" y="370" font-size="10" text-anchor="middle" fill="#0F6E56" font-weight="500">✓ Phase 1</text>
+
+<rect x="452" y="274" width="140" height="74" rx="8" fill="#E1F5EE" stroke="#1D9E75"/>
+<text x="464" y="296" font-size="12.5" font-weight="500" fill="#04342C">“How much home?”</text>
+<text x="464" y="313" font-size="10.5" fill="#085041">dream price + path</text>
+<text x="464" y="329" font-size="10.5" fill="#085041">Persona: aspiring buyer</text>
+<text x="464" y="342" font-size="10.5" fill="#085041">JTBD: stretch / plan</text>
+<rect x="452" y="356" width="120" height="20" rx="10" fill="#E1F5EE" stroke="#1D9E75"/><text x="512" y="370" font-size="10" text-anchor="middle" fill="#0F6E56" font-weight="500">✓ Phase 2–3</text>
+
+<rect x="598" y="274" width="142" height="74" rx="8" fill="#FAEEDA" stroke="#EF9F27"/>
+<text x="610" y="296" font-size="12.5" font-weight="500" fill="#412402">“Buy new or renovate?”</text>
+<text x="610" y="313" font-size="10.5" fill="#854F0B">is the gap substantial?</text>
+<text x="610" y="329" font-size="10.5" fill="#854F0B">Persona: pragmatist buyer</text>
+<text x="610" y="342" font-size="10.5" fill="#854F0B">JTBD: best value per CHF</text>
+<rect x="598" y="356" width="142" height="20" rx="10" fill="#FAEEDA" stroke="#EF9F27"/><text x="669" y="370" font-size="10" text-anchor="middle" fill="#854F0B" font-weight="500">◑ partial · Phase 4</text>
+
+<rect x="20" y="408" width="720" height="92" rx="8" fill="#f4f2e8"/>
+<text x="34" y="430" font-size="12.5" font-weight="500" fill="#1b1c17">The punchline for placement</text>
+<text x="34" y="451" font-size="11" fill="#3d3f35">• The two un-served questions are comparison/opportunity-cost questions — and both arise BEFORE entering the funnel.</text>
+<text x="34" y="470" font-size="11" fill="#3d3f35">• So rent-vs-buy / invest-vs-property wants a pre-funnel or parallel surface, not a step wedged mid-commitment.</text>
+<text x="34" y="489" font-size="11" fill="#3d3f35">• New-vs-renovate is a different job — it's an enhancement to Phase 4, where the comparison already lives.</text>
+
+<rect x="20" y="512" width="720" height="40" rx="8" fill="none" stroke="#e3e0d2"/>
+<text x="34" y="530" font-size="10.5" fill="#6a6c5f">Coverage: ✓ answered today · ◑ partially answered · gap = not in product. Personas are predicted (validate in interviews — IA_AUDIT §6).</text>
+<text x="34" y="546" font-size="10.5" fill="#6a6c5f">Teal = served by funnel · Amber = partial · Coral = the Compare opportunity.</text>
+</svg>
