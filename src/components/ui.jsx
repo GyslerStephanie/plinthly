@@ -1,5 +1,16 @@
 import { chf } from '../lib/format'
 
+// Shared custom dropdown chevron for native <select>s — the browser's native
+// arrow had inconsistent spacing that clashed with the custom-styled forms.
+// Pair with `appearance-none pl-3 pr-10` on the select to reserve room.
+export const SELECT_CHEVRON = {
+  backgroundImage:
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236a6c5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")",
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'right 0.75rem center',
+  backgroundSize: '16px',
+}
+
 // Cards are white on white; status is carried by dots/badges, never a fill
 // (design system: "no colored backgrounds larger than a badge"). The `slate`
 // tone uses the grey surface for section alternation.
