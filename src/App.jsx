@@ -57,6 +57,7 @@ export default function App() {
   const [phase1, setPhase1] = useState(null)
   const [explore, setExplore] = useState(DEFAULT_EXPLORE)
   const [feedback, setFeedback] = useState(null) // session-only (Feature 6)
+  const [showWithoutEquity, setShowWithoutEquity] = useState(false) // CTA: compute with income only
   const [dreamContext, setDreamContext] = useState(null) // dream-price gap for the AI advisor
   const [dreamPrice, setDreamPrice] = useState('') // Phase 2 dream price (persisted in hash)
   const restored = useRef(false)
@@ -105,7 +106,13 @@ export default function App() {
     })
     if (s.dreamPrice) setDreamPrice(s.dreamPrice)
 
-    if (nextValues.grossIncome && nextValues.savings) {
+    const restoredEquity =
+      Number(String(nextValues.savings).replace(/[^0-9.]/g, '')) +
+        Number(String(nextValues.pillar3a).replace(/[^0-9.]/g, '')) +
+        Number(String(nextValues.pillar2).replace(/[^0-9.]/g, '')) >
+      0
+    if (nextValues.grossIncome && (restoredEquity || Number(s.phase) > 1)) {
+      if (!restoredEquity) setShowWithoutEquity(true)
       const result = calc(nextValues)
       setPhase1(result)
       const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
@@ -144,18 +151,33 @@ export default function App() {
   }
 
   // Fully live: the result reflects the current inputs continuously (no "run"
-  // button). phase1 is set whenever income + savings are valid, which is also
-  // what unlocks the later phases.
-  const isValid = (v) =>
-    Number(String(v.grossIncome).replace(/[^0-9.]/g, '')) > 0 &&
-    Number(String(v.savings).replace(/[^0-9.]/g, '')) > 0
+  // button). The result is computed once income is entered AND there's some
+  // equity (cash, Pillar 3a, or 2nd pillar) — OR the buyer has explicitly asked
+  // to see it with no equity yet (the "Show me with no equity yet" CTA), so a
+  // saver-from-zero never hits a dead end.
+  const num0 = (x) => Number(String(x).replace(/[^0-9.]/g, '')) || 0
+  const hasIncome = (v) => num0(v.grossIncome) > 0
+  const hasEquity = (v) => num0(v.savings) + num0(v.pillar3a) + num0(v.pillar2) > 0
+  const shouldCompute = (v) => hasIncome(v) && (hasEquity(v) || showWithoutEquity)
   const previewResult = phase1
 
   const handleValuesChange = (next) => {
     setValues(next)
-    const ok = isValid(next)
+    // Adding any equity makes the opt-in CTA moot; clearing income resets it.
+    if (!hasIncome(next)) setShowWithoutEquity(false)
+    const ok = shouldCompute(next)
     setPhase1(ok ? calc(next) : null)
     if (ok) track('calculation_completed', undefined, { once: true })
+  }
+
+  // CTA in the empty panel: the buyer has income but no equity and wants to see
+  // the result anyway (it becomes a "here's your savings target" view).
+  const handleShowWithoutEquity = () => {
+    setShowWithoutEquity(true)
+    if (hasIncome(values)) {
+      setPhase1(calc(values))
+      track('calculation_completed', undefined, { once: true })
+    }
   }
 
   // Phase 3 canton is the single source of truth once we're past Phase 1;
@@ -300,7 +322,10 @@ export default function App() {
                   onNavigate={goToPhase}
                 />
               ) : (
-                <EmptyResult />
+                <EmptyResult
+                  hasIncome={hasIncome(values)}
+                  onShowWithoutEquity={handleShowWithoutEquity}
+                />
               )}
             </div>
           </div>
@@ -490,7 +515,7 @@ function LanguageSwitcher({ lang, setLang, languages, label }) {
   )
 }
 
-function EmptyResult() {
+function EmptyResult({ hasIncome = false, onShowWithoutEquity }) {
   const { t } = useI18n()
   return (
     <div className="flex h-full min-h-72 flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white/60 p-8 text-center">
@@ -510,8 +535,24 @@ function EmptyResult() {
           <path d="M9 20 v-6 h6 v6" />
         </svg>
       </div>
-      <p className="text-sm font-medium text-slate-700">{t('empty.title')}</p>
-      <p className="mt-1 max-w-xs text-sm text-slate-500">{t('empty.body')}</p>
+      {hasIncome ? (
+        <>
+          <p className="text-sm font-medium text-slate-700">{t('empty.ctaTitle')}</p>
+          <p className="mt-1 max-w-xs text-sm text-slate-500">{t('empty.ctaBody')}</p>
+          <button
+            type="button"
+            onClick={onShowWithoutEquity}
+            className="mt-4 rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
+          >
+            {t('empty.ctaButton')}
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="text-sm font-medium text-slate-700">{t('empty.title')}</p>
+          <p className="mt-1 max-w-xs text-sm text-slate-500">{t('empty.body')}</p>
+        </>
+      )}
     </div>
   )
 }

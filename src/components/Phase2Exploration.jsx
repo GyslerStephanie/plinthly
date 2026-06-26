@@ -10,7 +10,7 @@ import {
 import { chf, int, groupDigits } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
-import { Card, Indicative, Pill } from './ui'
+import { Card, Indicative, Pill, SELECT_CHEVRON } from './ui'
 
 const PRIORITY_VALUES = ['energy', 'solar', 'heating', 'minergie']
 
@@ -85,7 +85,8 @@ export default function Phase2Exploration({ explore, onChange }) {
               id="canton2"
               value={explore.canton}
               onChange={(e) => set('canton')(e.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white py-2.5 px-3 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+              className="mt-1.5 w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 pl-3 pr-10 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+              style={SELECT_CHEVRON}
             >
               {cantonOptions.map((c) => (
                 <option key={c.code} value={c.code}>

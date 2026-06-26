@@ -25,12 +25,22 @@ const KEYS = [
   ['ph', 'phase'],
 ]
 
+// Numeric inputs are displayed with thousands separators (e.g. "1,250,000").
+// Strip them before encoding so shared URLs stay clean — values are re-grouped
+// on display and every consumer parses with replace(/[^0-9.]/g, '').
+const NUMERIC_KEYS = new Set([
+  'grossIncome', 'savings', 'pillar3a', 'pillar2', 'downPct',
+  'householdSize', 'budget', 'dreamPrice',
+])
+
 /** Build a shareable URL hash from the flat state object. */
 export function encodeState(state) {
   const params = new URLSearchParams()
   for (const [short, full] of KEYS) {
     const v = state[full]
-    if (v !== undefined && v !== null && v !== '') params.set(short, String(v))
+    if (v === undefined || v === null || v === '') continue
+    const s = NUMERIC_KEYS.has(full) ? String(v).replace(/[^0-9.]/g, '') : String(v)
+    if (s !== '') params.set(short, s)
   }
   return params.toString()
 }

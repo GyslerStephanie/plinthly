@@ -2,6 +2,7 @@ import { cantonOptions, getCanton } from '../lib/cantons'
 import { chf, groupDigits } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
+import { SELECT_CHEVRON } from './ui'
 
 /** Parse a CHF-ish string into a number. */
 function toNum(v) {
@@ -143,7 +144,8 @@ export default function AffordabilityForm({ values, onChange }) {
             id="canton"
             value={values.canton}
             onChange={(e) => set('canton')(e.target.value)}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white py-2.5 px-3 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            className="mt-1.5 w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 pl-3 pr-10 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            style={SELECT_CHEVRON}
           >
             {cantonOptions.map((c) => (
               <option key={c.code} value={c.code}>
@@ -162,7 +164,8 @@ export default function AffordabilityForm({ values, onChange }) {
             id="householdSize"
             value={values.householdSize}
             onChange={(e) => set('householdSize')(e.target.value)}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white py-2.5 px-3 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            className="mt-1.5 w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 pl-3 pr-10 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            style={SELECT_CHEVRON}
           >
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <option key={n} value={n}>
