@@ -636,16 +636,19 @@ function CeilingChart({ equity, income, maxPrice, binding }) {
 
   return (
     <div className="relative">
-      {maxPrice > 0 && (
-        <div className="pointer-events-none absolute inset-y-0 z-10" style={{ left: `${markerLeft}%` }}>
-          <div className="absolute -top-1 -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
-            {chf(maxPrice)}
+      {/* Marker is scoped to the bars region (this relative wrapper) so the
+          dashed line never bleeds across the axis labels or the caption. */}
+      <div className="relative pt-5">
+        {maxPrice > 0 && (
+          <div className="pointer-events-none absolute inset-y-0 z-10" style={{ left: `${markerLeft}%` }}>
+            <div className="absolute -top-1 -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
+              {chf(maxPrice)}
+            </div>
+            <div className="h-full w-px border-l border-dashed border-slate-400" />
           </div>
-          <div className="h-full w-px border-l border-dashed border-slate-400" />
-        </div>
-      )}
+        )}
 
-      <div className="space-y-3 pt-5">
+        <div className="space-y-3">
         {rows.map((r) => {
           const reachW = Math.min(100, (Math.min(r.value, maxPrice) / niceMax) * 100)
           const slackW = Math.max(0, (r.value / niceMax) * 100 - reachW)
@@ -687,6 +690,7 @@ function CeilingChart({ equity, income, maxPrice, binding }) {
             </div>
           )
         })}
+        </div>
       </div>
 
       <div className="mt-2 flex justify-between text-[10px] tabular-nums text-slate-400">

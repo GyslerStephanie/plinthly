@@ -300,7 +300,7 @@ export const translations = {
       heldByEquity:
         'Held by your **equity ceiling**, not your income. You could carry a larger mortgage, but Swiss rules require at least {down} down — and at least {liquid} of the price in real cash savings.',
       notViableTitle: "The numbers don't work yet — and that's worth knowing now.",
-      ceilingsTitle: 'Why this number — the two ceilings',
+      ceilingsTitle: 'What sets your limit',
       ceilingsIntro:
         "Swiss rules cap you two independent ways. Your price is the **lower** of the two — everything past it is headroom you can't use yet.",
       equityCeiling: 'Equity ceiling',
@@ -308,10 +308,10 @@ export const translations = {
       binding: 'Binding',
       slack: 'Slack',
       gapIncome:
-        "Your income ceiling sits **{gap}** below the other. That gap is the room you'd unlock by raising household income.",
+        '**{gap}** more household income would lift you to the higher limit.',
       gapEquity:
-        "Your equity ceiling sits **{gap}** below the other. That gap is the room you'd unlock by raising cash savings.",
-      stakeTitle: 'The stake — your 20% down',
+        '**{gap}** more in cash savings would lift you to the higher limit.',
+      stakeTitle: 'Your down payment',
       purchasePrice: 'Purchase price',
       cashSavings: 'Cash savings',
       mortgageDebt: 'Mortgage (debt)',
@@ -323,7 +323,7 @@ export const translations = {
       ltv: '{pct} loan-to-value',
       stakeNote:
         'At least {liquid} of the price must be real cash; the 2nd pillar can only cover the other {pillar} of the down payment.',
-      carryTitle: 'Can you carry it? — the ⅓ rule',
+      carryTitle: 'Can you afford the monthly cost?',
       used: '{pct} used',
       ceilingPct: '{pct} ceiling',
       interest: 'Notional interest',
@@ -334,7 +334,7 @@ export const translations = {
       maintenanceSub: '{pct} of value',
       totalAnnual: 'Total annual housing cost',
       ceilingThird: 'Ceiling = ⅓ of income',
-      ladderTitle: 'What 20% looks like at each price',
+      ladderTitle: 'Down payment at different prices',
       ladderIntro:
         "Your reach today is **{max}**. Here's the deposit each price demands — and how much of it has to be real cash.",
       colPrice: 'Purchase price',
@@ -761,7 +761,7 @@ export const translations = {
       heldByEquity:
         'Begrenzt durch Ihre **Eigenkapitalgrenze**, nicht durch Ihr Einkommen. Sie könnten eine grössere Hypothek tragen, doch Schweizer Regeln verlangen mindestens {down} Eigenkapital – und mindestens {liquid} des Preises als echte Barersparnisse.',
       notViableTitle: 'Die Zahlen gehen noch nicht auf – und das sollten Sie jetzt wissen.',
-      ceilingsTitle: 'Warum diese Zahl – die zwei Grenzen',
+      ceilingsTitle: 'Was Ihr Limit bestimmt',
       ceilingsIntro:
         'Schweizer Regeln begrenzen Sie auf zwei unabhängige Arten. Ihr Preis ist der **tiefere** der beiden – alles darüber ist Spielraum, den Sie noch nicht nutzen können.',
       equityCeiling: 'Eigenkapitalgrenze',
@@ -769,10 +769,10 @@ export const translations = {
       binding: 'Bindend',
       slack: 'Spielraum',
       gapIncome:
-        'Ihre Einkommensgrenze liegt **{gap}** unter der anderen. Diese Lücke wäre der Spielraum, den Sie mit höherem Haushaltseinkommen freisetzen.',
+        '**{gap}** mehr Haushaltseinkommen würde Sie auf das höhere Limit heben.',
       gapEquity:
-        'Ihre Eigenkapitalgrenze liegt **{gap}** unter der anderen. Diese Lücke wäre der Spielraum, den Sie mit mehr Barersparnissen freisetzen.',
-      stakeTitle: 'Der Einsatz – Ihre 20% Eigenkapital',
+        '**{gap}** mehr Barersparnisse würden Sie auf das höhere Limit heben.',
+      stakeTitle: 'Ihre Anzahlung',
       purchasePrice: 'Kaufpreis',
       cashSavings: 'Barersparnisse',
       mortgageDebt: 'Hypothek (Schuld)',
@@ -784,7 +784,7 @@ export const translations = {
       ltv: '{pct} Belehnung',
       stakeNote:
         'Mindestens {liquid} des Preises müssen echtes Bargeld sein; die 2. Säule kann nur die anderen {pillar} des Eigenkapitals decken.',
-      carryTitle: 'Können Sie es tragen? – die ⅓-Regel',
+      carryTitle: 'Können Sie die monatlichen Kosten tragen?',
       used: '{pct} genutzt',
       ceilingPct: '{pct} Obergrenze',
       interest: 'Kalkulatorischer Zins',
@@ -795,7 +795,7 @@ export const translations = {
       maintenanceSub: '{pct} des Werts',
       totalAnnual: 'Jährliche Wohnkosten total',
       ceilingThird: 'Obergrenze = ⅓ des Einkommens',
-      ladderTitle: 'Was 20% bei jedem Preis bedeuten',
+      ladderTitle: 'Anzahlung bei verschiedenen Preisen',
       ladderIntro:
         'Ihre Reichweite heute ist **{max}**. Hier ist das Eigenkapital, das jeder Preis verlangt – und wie viel davon echtes Bargeld sein muss.',
       colPrice: 'Kaufpreis',
@@ -1221,7 +1221,7 @@ export const translations = {
       heldByEquity:
         "Limité par votre **plafond de fonds propres**, pas par votre revenu. Vous pourriez porter une hypothèque plus grande, mais les règles suisses exigent au moins {down} d'apport — et au moins {liquid} du prix en épargne réelle.",
       notViableTitle: "Les chiffres ne fonctionnent pas encore — et il vaut mieux le savoir maintenant.",
-      ceilingsTitle: 'Pourquoi ce chiffre — les deux plafonds',
+      ceilingsTitle: 'Ce qui fixe votre limite',
       ceilingsIntro:
         "Les règles suisses vous plafonnent de deux manières indépendantes. Votre prix est le **plus bas** des deux — tout ce qui dépasse est une marge que vous ne pouvez pas encore utiliser.",
       equityCeiling: 'Plafond de fonds propres',
@@ -1229,10 +1229,10 @@ export const translations = {
       binding: 'Contraignant',
       slack: 'Marge',
       gapIncome:
-        'Votre plafond de revenu est **{gap}** en dessous de l’autre. Cet écart est la marge que vous débloqueriez en augmentant le revenu du ménage.',
+        '**{gap}** de revenu du ménage en plus vous porterait à la limite supérieure.',
       gapEquity:
-        'Votre plafond de fonds propres est **{gap}** en dessous de l’autre. Cet écart est la marge que vous débloqueriez en augmentant votre épargne.',
-      stakeTitle: 'La mise — vos 20% d’apport',
+        '**{gap}** d’épargne en plus vous porterait à la limite supérieure.',
+      stakeTitle: 'Votre apport',
       purchasePrice: "Prix d'achat",
       cashSavings: 'Épargne en liquide',
       mortgageDebt: 'Hypothèque (dette)',
@@ -1244,7 +1244,7 @@ export const translations = {
       ltv: '{pct} de nantissement',
       stakeNote:
         "Au moins {liquid} du prix doit être du liquide réel ; le 2e pilier ne peut couvrir que les autres {pillar} de l'apport.",
-      carryTitle: 'Pouvez-vous l’assumer ? — la règle du ⅓',
+      carryTitle: 'Pouvez-vous assumer le coût mensuel ?',
       used: '{pct} utilisé',
       ceilingPct: '{pct} plafond',
       interest: 'Intérêt théorique',
@@ -1255,7 +1255,7 @@ export const translations = {
       maintenanceSub: '{pct} de la valeur',
       totalAnnual: 'Charges annuelles totales',
       ceilingThird: 'Plafond = ⅓ du revenu',
-      ladderTitle: 'Ce que 20% représentent à chaque prix',
+      ladderTitle: 'Apport selon le prix',
       ladderIntro:
         "Votre portée aujourd'hui est **{max}**. Voici l'apport exigé à chaque prix — et la part qui doit être du liquide réel.",
       colPrice: "Prix d'achat",
@@ -1681,7 +1681,7 @@ export const translations = {
       heldByEquity:
         'Limitato dal tuo **tetto di capitale proprio**, non dal reddito. Potresti sostenere un’ipoteca maggiore, ma le regole svizzere richiedono almeno {down} di anticipo — e almeno {liquid} del prezzo in risparmio reale.',
       notViableTitle: 'I conti non tornano ancora — ed è bene saperlo ora.',
-      ceilingsTitle: 'Perché questo numero — i due tetti',
+      ceilingsTitle: 'Cosa determina il tuo limite',
       ceilingsIntro:
         'Le regole svizzere ti limitano in due modi indipendenti. Il tuo prezzo è il **più basso** dei due — tutto ciò che lo supera è margine che non puoi ancora usare.',
       equityCeiling: 'Tetto di capitale proprio',
@@ -1689,10 +1689,10 @@ export const translations = {
       binding: 'Vincolante',
       slack: 'Margine',
       gapIncome:
-        'Il tuo tetto di reddito è **{gap}** sotto l’altro. Quel divario è il margine che sbloccheresti aumentando il reddito del nucleo.',
+        '**{gap}** di reddito in più ti porterebbe al limite superiore.',
       gapEquity:
-        'Il tuo tetto di capitale proprio è **{gap}** sotto l’altro. Quel divario è il margine che sbloccheresti aumentando i risparmi.',
-      stakeTitle: 'La posta — il tuo 20% di anticipo',
+        '**{gap}** di risparmi in più ti porterebbe al limite superiore.',
+      stakeTitle: 'Il tuo anticipo',
       purchasePrice: 'Prezzo d’acquisto',
       cashSavings: 'Risparmi liquidi',
       mortgageDebt: 'Ipoteca (debito)',
@@ -1704,7 +1704,7 @@ export const translations = {
       ltv: '{pct} di anticipo/valore',
       stakeNote:
         "Almeno {liquid} del prezzo deve essere liquidità reale; il 2° pilastro può coprire solo l'altro {pillar} dell'anticipo.",
-      carryTitle: 'Riesci a sostenerlo? — la regola del ⅓',
+      carryTitle: 'Puoi sostenere il costo mensile?',
       used: '{pct} usato',
       ceilingPct: '{pct} tetto',
       interest: 'Interesse teorico',
@@ -1715,7 +1715,7 @@ export const translations = {
       maintenanceSub: '{pct} del valore',
       totalAnnual: 'Costi abitativi annui totali',
       ceilingThird: 'Tetto = ⅓ del reddito',
-      ladderTitle: 'Cosa significa il 20% a ogni prezzo',
+      ladderTitle: 'Anticipo a vari prezzi',
       ladderIntro:
         'La tua portata oggi è **{max}**. Ecco l’anticipo richiesto a ogni prezzo — e quanto deve essere liquidità reale.',
       colPrice: 'Prezzo d’acquisto',
