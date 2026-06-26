@@ -3,6 +3,17 @@ import { chf, groupDigits } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 
+// Custom dropdown chevron so the selects match the rest of the UI — the native
+// arrow's spacing was inconsistent. Pairs with `appearance-none pr-10` on the
+// select to reserve room for the icon.
+const SELECT_CHEVRON = {
+  backgroundImage:
+    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236a6c5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")",
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'right 0.75rem center',
+  backgroundSize: '16px',
+}
+
 /** Parse a CHF-ish string into a number. */
 function toNum(v) {
   const n = parseFloat(String(v).replace(/[^0-9.]/g, ''))
@@ -143,7 +154,8 @@ export default function AffordabilityForm({ values, onChange }) {
             id="canton"
             value={values.canton}
             onChange={(e) => set('canton')(e.target.value)}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white py-2.5 px-3 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            className="mt-1.5 w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 pl-3 pr-10 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            style={SELECT_CHEVRON}
           >
             {cantonOptions.map((c) => (
               <option key={c.code} value={c.code}>
@@ -162,7 +174,8 @@ export default function AffordabilityForm({ values, onChange }) {
             id="householdSize"
             value={values.householdSize}
             onChange={(e) => set('householdSize')(e.target.value)}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white py-2.5 px-3 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            className="mt-1.5 w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 pl-3 pr-10 text-slate-900 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+            style={SELECT_CHEVRON}
           >
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <option key={n} value={n}>
