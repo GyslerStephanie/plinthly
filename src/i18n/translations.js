@@ -231,6 +231,9 @@ export const translations = {
     empty: {
       title: 'Your results will appear here',
       body: "Fill in your income and savings, and we'll show your maximum purchase price, how the down payment breaks down, and an honest flag if it doesn't add up yet.",
+      ctaTitle: 'Add your savings to see your result',
+      ctaBody: 'Cash, Pillar 3a or 2nd pillar — any of them works. No savings to add yet?',
+      ctaButton: 'Show me with no equity yet →',
     },
     tracks: {
       heading: 'Not a first-time buyer?',
@@ -689,6 +692,9 @@ export const translations = {
     empty: {
       title: 'Ihre Ergebnisse erscheinen hier',
       body: 'Geben Sie Einkommen und Ersparnisse ein, und wir zeigen Ihren maximalen Kaufpreis, die Aufteilung des Eigenkapitals und einen ehrlichen Hinweis, falls es noch nicht aufgeht.',
+      ctaTitle: 'Fügen Sie Ihr Eigenkapital hinzu, um Ihr Ergebnis zu sehen',
+      ctaBody: 'Bargeld, Säule 3a oder Pensionskasse — alles zählt. Noch kein Eigenkapital?',
+      ctaButton: 'Ergebnis ohne Eigenkapital anzeigen →',
     },
     tracks: {
       heading: 'Kein Erstkäufer?',
@@ -1146,6 +1152,9 @@ export const translations = {
     empty: {
       title: 'Vos résultats apparaîtront ici',
       body: "Indiquez vos revenus et votre épargne, et nous afficherons votre prix d'achat maximal, la répartition de l'apport, et un signal honnête si cela ne fonctionne pas encore.",
+      ctaTitle: 'Ajoutez vos fonds propres pour voir votre résultat',
+      ctaBody: 'Liquidités, pilier 3a ou 2e pilier — tout compte. Pas encore de fonds propres ?',
+      ctaButton: 'Afficher sans fonds propres →',
     },
     tracks: {
       heading: 'Pas un primo-accédant ?',
@@ -1603,6 +1612,9 @@ export const translations = {
     empty: {
       title: 'I tuoi risultati appariranno qui',
       body: "Inserisci reddito e risparmi e mostreremo il tuo prezzo d'acquisto massimo, la composizione dell'anticipo e un avviso onesto se i conti non tornano ancora.",
+      ctaTitle: 'Aggiungi il tuo capitale proprio per vedere il risultato',
+      ctaBody: 'Contanti, pilastro 3a o 2° pilastro — vale qualsiasi. Nessun capitale ancora?',
+      ctaButton: 'Mostra senza capitale proprio →',
     },
     tracks: {
       heading: 'Non sei un primo acquirente?',
