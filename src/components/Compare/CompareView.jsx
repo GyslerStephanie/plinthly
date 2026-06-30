@@ -13,30 +13,41 @@ const MOSS = '#566d29' // path A — rent / rent+invest
 const CORAL = '#c4452f' // path B — own / buy
 const fK = (v) => `${v < 0 ? '−' : ''}CHF ${Math.round(Math.abs(v) / 1000).toLocaleString('en-US')}k`
 
-/** Hand-rolled net-worth-over-time chart (SVG, matching the app's chart style). */
+const HALO = { paintOrder: 'stroke', stroke: 'var(--paper-100)', strokeWidth: 3 }
+
+/** Hand-rolled net-worth-over-time chart (SVG, matching the app's chart style):
+ *  soft area fills, both trajectories, and value tags at the scrubbed year. */
 function TrajectoryChart({ A, B, year, labelA, labelB }) {
   const W = 600
-  const H = 190
+  const H = 200
   const padL = 8
-  const padB = 18
+  const padR = 8
+  const padT = 18
+  const padB = 20
   let max = 1
   let min = 0
   for (let k = 1; k <= MAX_YEARS; k++) {
     max = Math.max(max, A[k], B[k])
     min = Math.min(min, A[k], B[k])
   }
-  const x = (k) => padL + ((k - 1) / (MAX_YEARS - 1)) * (W - padL * 2)
-  const y = (v) => H - padB - ((v - min) / (max - min || 1)) * (H - padB - 6)
-  const line = (arr) =>
-    Array.from({ length: MAX_YEARS }, (_, i) => `${x(i + 1)},${y(arr[i + 1])}`).join(' ')
+  const x = (k) => padL + ((k - 1) / (MAX_YEARS - 1)) * (W - padL - padR)
+  const y = (v) => H - padB - ((v - min) / (max - min || 1)) * (H - padB - padT)
+  const pts = (arr) => Array.from({ length: MAX_YEARS }, (_, i) => `${x(i + 1)},${y(arr[i + 1])}`).join(' ')
+  const area = (arr) => `${x(1)},${y(min)} ${pts(arr)} ${x(MAX_YEARS)},${y(min)}`
+  const anchor = x(year) > W * 0.82 ? 'end' : x(year) < W * 0.18 ? 'start' : 'middle'
+  const aHigh = A[year] >= B[year]
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={`${labelA} vs ${labelB} over time`}>
-      <line x1={padL} y1={H - padB} x2={W - padL} y2={H - padB} stroke="var(--line)" strokeWidth="1" />
-      <polyline points={line(A)} fill="none" stroke={MOSS} strokeWidth="2.5" />
-      <polyline points={line(B)} fill="none" stroke={CORAL} strokeWidth="2.5" strokeDasharray="6 4" />
-      <line x1={x(year)} y1={2} x2={x(year)} y2={H - padB} stroke="var(--line-strong)" strokeWidth="1" strokeDasharray="3 3" />
-      <circle cx={x(year)} cy={y(A[year])} r="4" fill={MOSS} />
-      <circle cx={x(year)} cy={y(B[year])} r="4" fill={CORAL} />
+      <polygon points={area(B)} fill={CORAL} opacity="0.06" />
+      <polygon points={area(A)} fill={MOSS} opacity="0.1" />
+      <line x1={padL} y1={y(Math.max(0, min))} x2={W - padR} y2={y(Math.max(0, min))} stroke="var(--line)" strokeWidth="1" />
+      <polyline points={pts(B)} fill="none" stroke={CORAL} strokeWidth="2.5" strokeDasharray="6 4" />
+      <polyline points={pts(A)} fill="none" stroke={MOSS} strokeWidth="2.5" />
+      <line x1={x(year)} y1={padT - 6} x2={x(year)} y2={H - padB} stroke="var(--line-strong)" strokeWidth="1" strokeDasharray="3 3" />
+      <circle cx={x(year)} cy={y(A[year])} r="4.5" fill={MOSS} stroke="var(--paper-100)" strokeWidth="1.5" />
+      <circle cx={x(year)} cy={y(B[year])} r="4.5" fill={CORAL} stroke="var(--paper-100)" strokeWidth="1.5" />
+      <text x={x(year)} y={y(A[year]) + (aHigh ? -9 : 16)} textAnchor={anchor} fontSize="11" fontWeight="500" fill={MOSS} style={HALO}>{fK(A[year])}</text>
+      <text x={x(year)} y={y(B[year]) + (aHigh ? 16 : -9)} textAnchor={anchor} fontSize="11" fontWeight="500" fill={CORAL} style={HALO}>{fK(B[year])}</text>
       {[1, 5, 10, 15, 20, 25].map((k) => (
         <text key={k} x={x(k)} y={H - 4} fontSize="10" textAnchor="middle" fill="var(--text-faint)">
           {k}
@@ -170,8 +181,10 @@ export default function CompareView({ onClose, seed = {} }) {
                 type="button"
                 onClick={() => setScenario(sc.id)}
                 className={
-                  'flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition ' +
-                  (on ? 'border-teal-600 bg-teal-50 text-teal-800' : 'border-line bg-white text-muted hover:border-stone-400')
+                  'flex items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-3.5 text-sm transition ' +
+                  (on
+                    ? 'border-teal-600 bg-teal-50 font-medium text-teal-800 shadow-sm'
+                    : 'border-line bg-white text-muted hover:border-stone-400 hover:text-body')
                 }
               >
                 <span className={'flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold ' + (on ? 'bg-teal-700 text-white' : 'bg-surface text-faint')}>{i + 1}</span>
@@ -303,27 +316,28 @@ export default function CompareView({ onClose, seed = {} }) {
           <div className="mt-3 overflow-x-auto">
             <table className="w-full border-collapse text-xs">
               <thead>
-                <tr className="border-b border-line text-muted">
-                  <th className="py-1.5 pr-2 text-left font-medium">{t('compare.colYear')}</th>
-                  {s.incCol && <th className="px-2 py-1.5 text-right font-medium">{t('compare.colIncome')}</th>}
-                  <th className="px-2 py-1.5 text-right font-medium">{labelA}</th>
-                  <th className="px-2 py-1.5 text-right font-medium">{labelB}</th>
-                  <th className="px-2 py-1.5 text-right font-medium">{t('compare.diff')}</th>
+                <tr className="ds-eyebrow border-b border-line text-[10px] text-faint">
+                  <th className="py-2 pr-2 text-left font-medium">{t('compare.colYear')}</th>
+                  {s.incCol && <th className="px-2 py-2 text-right font-medium">{t('compare.colIncome')}</th>}
+                  <th className="px-2 py-2 text-right font-medium">{labelA}</th>
+                  <th className="px-2 py-2 text-right font-medium">{labelB}</th>
+                  <th className="px-2 py-2 text-right font-medium">{t('compare.diff')}</th>
                 </tr>
               </thead>
               <tbody className="ds-figure">
                 {Array.from({ length: year }, (_, i) => i + 1).map((k) => {
                   const d = s.A[k] - s.B[k]
                   const w = Math.max(2, (Math.abs(d) / maxAbs) * 48)
+                  const hl = k === year
                   return (
-                    <tr key={k} className={'border-b border-line/60 ' + (k === year ? 'bg-teal-50' : '')}>
-                      <td className="py-1.5 pr-2 text-left">{k}</td>
-                      {s.incCol && <td className="px-2 py-1.5 text-right">{chf(inputs.income * Math.pow(1 + inputs.incomeGrowthPct / 100, k - 1))}</td>}
-                      <td className="px-2 py-1.5 text-right">{chf(s.A[k])}</td>
-                      <td className="px-2 py-1.5 text-right">{chf(s.B[k])}</td>
+                    <tr key={k} className={'border-b border-line/60 ' + (hl ? 'bg-teal-50/70' : '')}>
+                      <td className={'py-1.5 pr-2 text-left ' + (hl ? 'border-l-2 border-teal-600 pl-2 font-semibold text-ink' : 'text-muted')}>{k}</td>
+                      {s.incCol && <td className="px-2 py-1.5 text-right text-body">{chf(inputs.income * Math.pow(1 + inputs.incomeGrowthPct / 100, k - 1))}</td>}
+                      <td className="px-2 py-1.5 text-right text-ink">{chf(s.A[k])}</td>
+                      <td className="px-2 py-1.5 text-right text-ink">{chf(s.B[k])}</td>
                       <td className="px-2 py-1.5 text-right">
                         <span className="inline-flex items-center justify-end gap-1.5">
-                          {fK(d)}
+                          <span className={d >= 0 ? 'text-success-ink' : 'text-danger-ink'}>{fK(d)}</span>
                           <span className="inline-block h-2 rounded" style={{ width: w, background: d >= 0 ? MOSS : CORAL }} />
                         </span>
                       </td>
