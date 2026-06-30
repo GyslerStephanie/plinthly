@@ -181,13 +181,38 @@ export default function CompareView({ onClose, seed = {} }) {
           })}
         </div>
 
-        {/* Scrubber */}
-        <div className="mt-4 rounded-xl border border-line bg-surface px-4 py-3">
+        {/* Time horizon — the scrubber (signature "explore over time" control) */}
+        <div className="mt-4 rounded-xl border border-line bg-surface px-5 py-4">
           <div className="flex items-baseline justify-between">
-            <span className="text-sm text-muted">{t('compare.horizon')}</span>
-            <span className="ds-figure text-xl text-ink">{t('compare.years', { n: year })}</span>
+            <span className="ds-eyebrow text-xs text-muted">{t('compare.horizon')}</span>
+            <span className="ds-figure text-2xl text-ink">{t('compare.years', { n: year })}</span>
           </div>
-          <input type="range" min="5" max="25" step="1" value={year} onChange={(e) => setYear(Number(e.target.value))} className="mt-1 w-full" />
+          <input
+            type="range"
+            min="5"
+            max="25"
+            step="1"
+            value={year}
+            onChange={(e) => setYear(Number(e.target.value))}
+            className="ds-range mt-3"
+            style={{ '--val': `${((year - 5) / 20) * 100}%` }}
+            aria-label={t('compare.horizon')}
+          />
+          <div className="mt-2 flex justify-between">
+            {[5, 10, 15, 20, 25].map((y) => (
+              <button
+                key={y}
+                type="button"
+                onClick={() => setYear(y)}
+                className={
+                  'ds-figure text-[11px] tabular-nums transition ' +
+                  (year === y ? 'font-semibold text-ink' : 'text-faint hover:text-muted')
+                }
+              >
+                {y}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Key takeaway */}

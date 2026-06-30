@@ -205,6 +205,25 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
   /* Affordability meter. */
   .ds-meter-track { height: 10px; border-radius: var(--radius-full); background: var(--surface-sunken); overflow: hidden; }
   .ds-meter-fill { height: 100%; border-radius: var(--radius-full); background: linear-gradient(90deg, var(--moss-400), var(--moss-500)); transition: width .32s var(--ease-out); }
+
+  /* Branded range slider — moss-filled track + moss thumb. Drive the fill with
+     an inline `--val:<pct>%` set from the current value. */
+  .ds-range {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 6px;
+    border-radius: var(--radius-full); cursor: pointer; outline: none;
+    background: linear-gradient(to right, var(--moss-500) 0 var(--val,50%), var(--line) var(--val,50%) 100%);
+  }
+  .ds-range::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--moss-600); border: 3px solid var(--paper-100);
+    box-shadow: var(--shadow-sm); cursor: pointer;
+  }
+  .ds-range::-moz-range-track { background: transparent; }
+  .ds-range::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--moss-600);
+    border: 3px solid var(--paper-100); box-shadow: var(--shadow-sm); cursor: pointer;
+  }
+  .ds-range:focus-visible { box-shadow: var(--ring); }
 }
 
 /* Print: keep only the action-plan summary, drop chrome and controls. */
