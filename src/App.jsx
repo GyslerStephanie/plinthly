@@ -15,6 +15,7 @@ import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
+import CompareView from './components/Compare/CompareView'
 import { buildAdvisorContext } from './lib/advisorContext'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
@@ -58,6 +59,7 @@ export default function App() {
   const [explore, setExplore] = useState(DEFAULT_EXPLORE)
   const [feedback, setFeedback] = useState(null) // session-only (Feature 6)
   const [showWithoutEquity, setShowWithoutEquity] = useState(false) // CTA: compute with income only
+  const [showCompare, setShowCompare] = useState(false) // Compare parallel surface
   const [dreamContext, setDreamContext] = useState(null) // dream-price gap for the AI advisor
   const [dreamPrice, setDreamPrice] = useState('') // Phase 2 dream price (persisted in hash)
   const restored = useRef(false)
@@ -320,6 +322,7 @@ export default function App() {
                   result={previewResult}
                   renovation={renovation}
                   onNavigate={goToPhase}
+                  onCompare={() => setShowCompare(true)}
                 />
               ) : (
                 <EmptyResult
@@ -333,7 +336,7 @@ export default function App() {
 
         {/* Phase 2 — Calculate dream price */}
         {phase === 2 && phase1 && (
-          <DreamPricePhase result={phase1} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} />
+          <DreamPricePhase result={phase1} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => setShowCompare(true)} />
         )}
 
         {/* Phase 3 — exploration */}
@@ -435,6 +438,19 @@ export default function App() {
       {/* AI advisor — available once a result exists */}
       {previewResult && (
         <AdvisorFab context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)} />
+      )}
+
+      {/* Compare — a parallel surface reached from the Phase 1 / Phase 2 results;
+          seeded from the user's real numbers so it doesn't re-ask. */}
+      {showCompare && (
+        <CompareView
+          onClose={() => setShowCompare(false)}
+          seed={{
+            income: Number(String(values.grossIncome).replace(/[^0-9.]/g, '')) || undefined,
+            cash: phase1?.inputs?.hardEquity || undefined,
+            price: phase1?.maxPrice || undefined,
+          }}
+        />
       )}
 
       {/* Vercel Speed Insights — anonymous Web Vitals, no PII */}

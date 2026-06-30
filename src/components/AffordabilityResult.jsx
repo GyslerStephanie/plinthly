@@ -14,6 +14,7 @@ import Collapsible from './Collapsible'
 import PathToGoal from './PathToGoal'
 import Levers from './Levers'
 import NextSteps from './NextSteps'
+import CompareCta from './CompareCta'
 
 const roundK = (v) => Math.round(v / 1000) * 1000
 
@@ -256,7 +257,7 @@ function editNumbers() {
   setTimeout(() => el.focus({ preventScroll: true }), 350)
 }
 
-export default function AffordabilityResult({ result, renovation, isPreview = false, onNavigate }) {
+export default function AffordabilityResult({ result, renovation, isPreview = false, onNavigate, onCompare }) {
   const { t } = useI18n()
   const canton = getCanton(result.inputs.canton)
   const { downPaymentBreakdown: dp, annualCosts: ac, constraints } = result
@@ -370,6 +371,9 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
 
       {/* Key takeaways — TL;DR summary of the detail cards below */}
       <KeyTakeaways result={result} rate={rate} />
+
+      {/* Doubt-moment hook → Compare surface (rent vs buy, invest, …) */}
+      {onCompare && <CompareCta onCompare={onCompare} />}
 
       {/* Effective budget after a modelled renovation (Phase 3 feeds this) */}
       {renovation && result.maxPrice > 0 && (
