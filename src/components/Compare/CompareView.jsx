@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
   computeSeries,
   SCENARIOS,
@@ -46,8 +46,44 @@ function TrajectoryChart({ A, B, year, labelA, labelB }) {
   )
 }
 
-const FIELD = 'flex items-center rounded-lg border border-line bg-white focus-within:border-teal-500'
+const FIELD =
+  'flex items-center rounded-lg border border-line bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100'
 const numFrom = (v) => Number(String(v).replace(/[^0-9.]/g, '')) || 0
+
+/**
+ * Percent input field matching the app's down-payment field. Keeps a local
+ * string while editing so decimals ("1.5") and a leading "−" type cleanly,
+ * and re-syncs when the numeric value changes externally (e.g. a preset click).
+ */
+function PctField({ label, sub, value, onChange }) {
+  const [txt, setTxt] = useState(String(value))
+  useEffect(() => {
+    setTxt((prev) => (parseFloat(prev) === value ? prev : String(value)))
+  }, [value])
+  return (
+    <label className="block text-xs text-muted">
+      <span>
+        {label}
+        {sub && <span className="ml-1 text-faint">— {sub}</span>}
+      </span>
+      <div className={`mt-1 ${FIELD}`}>
+        <input
+          inputMode="decimal"
+          value={txt}
+          onChange={(e) => {
+            const v = e.target.value
+            if (!/^-?\d*\.?\d*$/.test(v)) return
+            setTxt(v)
+            const n = parseFloat(v)
+            if (!Number.isNaN(n)) onChange(n)
+          }}
+          className="ds-figure w-full bg-transparent py-2 pl-3 text-right text-sm text-ink focus:outline-none"
+        />
+        <span className="select-none px-3 text-sm text-faint">%</span>
+      </div>
+    </label>
+  )
+}
 
 export default function CompareView({ onClose, seed = {} }) {
   const { t } = useI18n()
@@ -90,7 +126,7 @@ export default function CompareView({ onClose, seed = {} }) {
   let maxAbs = 1
   for (let k = 1; k <= year; k++) maxAbs = Math.max(maxAbs, Math.abs(s.A[k] - s.B[k]))
 
-  const setNum = (key) => (e) => setInputs((p) => ({ ...p, [key]: Number(e.target.value) }))
+  const setVal = (key, n) => setInputs((p) => ({ ...p, [key]: n }))
   const setCash = (key) => (e) => setInputs((p) => ({ ...p, [key]: numFrom(e.target.value) }))
   const cashField = (key, label) => (
     <label className="block text-xs text-muted">
@@ -106,14 +142,8 @@ export default function CompareView({ onClose, seed = {} }) {
       </div>
     </label>
   )
-  const slider = (key, label, min, max, step, sub) => (
-    <div>
-      <div className="flex items-baseline justify-between text-xs text-muted">
-        <span>{label}{sub && <span className="ml-1 text-faint">— {sub}</span>}</span>
-        <span className="ds-figure text-sm text-ink">{inputs[key]}%</span>
-      </div>
-      <input type="range" min={min} max={max} step={step} value={inputs[key]} onChange={setNum(key)} className="mt-1 w-full" />
-    </div>
+  const pct = (key, label, sub) => (
+    <PctField label={label} sub={sub} value={inputs[key]} onChange={(n) => setVal(key, n)} />
   )
 
   return (
@@ -189,7 +219,7 @@ export default function CompareView({ onClose, seed = {} }) {
             {t('compare.grpFuture')} <span className="ml-1 font-normal normal-case tracking-normal text-faint">{t('compare.grpFutureTag')}</span>
           </p>
           <div className={'mt-3 rounded-lg bg-surface p-3 ' + (scnMeta.usesInvest ? '' : 'opacity-50')}>
-            {slider('investReturnPct', t('compare.sInvest'), 0, 8, 0.5, t('compare.sInvestSub'))}
+            {pct('investReturnPct', t('compare.sInvest'), t('compare.sInvestSub'))}
             {scnMeta.usesInvest ? (
               <>
                 <div className="mt-2 flex flex-wrap gap-1.5">
@@ -210,11 +240,11 @@ export default function CompareView({ onClose, seed = {} }) {
               <p className="mt-2 text-xs italic text-faint">{t('compare.investOff')}</p>
             )}
           </div>
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {slider('mortgageRatePct', t('compare.sRate'), 0.5, 5, 0.1)}
-            <div>{slider('appreciationPct', t('compare.sAppr'), -1, 4, 0.5)}<p className="mt-0.5 text-xs text-faint">{t('compare.apprHint')}</p></div>
-            {slider('rentInflationPct', t('compare.sInfl'), 0, 4, 0.5)}
-            {slider('incomeGrowthPct', t('compare.sIncg'), 0, 4, 0.5)}
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {pct('mortgageRatePct', t('compare.sRate'))}
+            <div>{pct('appreciationPct', t('compare.sAppr'))}<p className="mt-0.5 text-xs text-faint">{t('compare.apprHint')}</p></div>
+            {pct('rentInflationPct', t('compare.sInfl'))}
+            {pct('incomeGrowthPct', t('compare.sIncg'))}
           </div>
 
           <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpTax')}</p>
@@ -229,7 +259,7 @@ export default function CompareView({ onClose, seed = {} }) {
                 {t(`compare.${k}`)}
               </button>
             ))}
-            <div className="min-w-[180px] flex-1">{slider('marginalTaxPct', t('compare.sTax'), 10, 40, 1)}</div>
+            <div className="min-w-[140px]">{pct('marginalTaxPct', t('compare.sTax'))}</div>
           </div>
         </details>
 
@@ -280,10 +310,17 @@ export default function CompareView({ onClose, seed = {} }) {
           </div>
 
           {scenario === 'buy_later' && (
-            <div className="mt-3 flex items-center gap-3">
+            <div className="mt-3 flex items-center gap-2">
               <span className="text-xs text-muted">{t('compare.buyIn')}</span>
-              <input type="range" min="3" max="20" value={inputs.buyInYear} onChange={setNum('buyInYear')} className="flex-1" />
-              <span className="ds-figure min-w-[60px] text-sm text-ink">{t('compare.yearN', { n: inputs.buyInYear })}</span>
+              <div className={`${FIELD} w-24`}>
+                <input
+                  inputMode="numeric"
+                  value={inputs.buyInYear}
+                  onChange={(e) => setVal('buyInYear', Number(String(e.target.value).replace(/[^0-9]/g, '')) || 0)}
+                  className="ds-figure w-full bg-transparent py-2 pl-3 text-right text-sm text-ink focus:outline-none"
+                />
+                <span className="select-none px-2 text-xs text-faint">yr</span>
+              </div>
             </div>
           )}
         </details>
