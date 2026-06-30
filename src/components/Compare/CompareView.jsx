@@ -113,13 +113,19 @@ export default function CompareView({ onClose, seed = {} }) {
   const diff = a - b
   const labelA = t(`compare.h.${s.hA}`)
   const labelB = t(`compare.h.${s.hB}`)
+  // Plain-language verb phrases for the headline, plus full (rounded) figures.
+  const winA = t(`compare.win.${s.hA}`)
+  const winB = t(`compare.win.${s.hB}`)
+  const round1k = (v) => chf(Math.round(Math.abs(v) / 1000) * 1000)
 
   let story
   if (s.costLens) {
+    const rentCheaper = a < b
     story = t('compare.storyCost', {
-      winner: a < b ? labelA : labelB,
+      winner: rentCheaper ? winA : winB,
+      loser: rentCheaper ? winB : winA,
       n: year,
-      amount: fK(Math.abs(a - b)),
+      amount: round1k(a - b),
     })
   } else {
     let cross = t('compare.noCross')
@@ -130,7 +136,14 @@ export default function CompareView({ onClose, seed = {} }) {
         break
       }
     }
-    story = t('compare.storyWealth', { winner: diff >= 0 ? labelA : labelB, amount: fK(Math.abs(diff)), n: year, cross })
+    const aAhead = diff >= 0
+    story = t('compare.storyWealth', {
+      winner: aAhead ? winA : winB,
+      loser: aAhead ? winB : winA,
+      amount: round1k(diff),
+      n: year,
+      cross,
+    })
   }
 
   // breakdown table rows 1..year
