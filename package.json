@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --import ./scripts/register-json.mjs scripts/affordability.conformance.mjs"
+    "test": "node --import ./scripts/register-json.mjs scripts/affordability.conformance.mjs",
+    "test:compare": "node scripts/compare.conformance.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

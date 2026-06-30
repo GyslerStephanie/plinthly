@@ -12,6 +12,7 @@ import Collapsible from './Collapsible'
 import PathToGoal from './PathToGoal'
 import Levers from './Levers'
 import NextSteps from './NextSteps'
+import CompareCta from './CompareCta'
 import { GapChart, TrajectoryChart, MilestoneTable } from './DreamPriceCharts'
 
 const roundK = (v) => Math.round(v / 1000) * 1000
@@ -51,7 +52,7 @@ function TierBadge({ labelKey }) {
  * Runs the full spec calculation — Niederstwertprinzip, existing obligations,
  * property type adjustments — and shows a line-by-line breakdown of both tests.
  */
-export default function DreamPricePhase({ result, onNavigate, onDreamContext, dreamPrice, onDreamPriceChange }) {
+export default function DreamPricePhase({ result, onNavigate, onDreamContext, dreamPrice, onDreamPriceChange, onCompare }) {
   const { t } = useI18n()
 
   // Own the market-rate used for the "what you'd actually pay" lines.
@@ -500,6 +501,9 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext, dr
               advisorContext="dream_price"
             />
           )}
+
+          {/* Doubt re-triggers here — the dream-vs-max gap. Same Compare hook. */}
+          {onCompare && <div className="mt-6"><CompareCta onCompare={onCompare} /></div>}
 
         </div>
       )}
