@@ -17,6 +17,7 @@ import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
 import Onboarding from './components/Onboarding/Onboarding'
+import Landing from './components/Landing/Landing'
 import { buildAdvisorContext } from './lib/advisorContext'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
@@ -77,7 +78,8 @@ export default function App() {
   const [showCompare, setShowCompare] = useState(false) // Compare parallel surface
   const [dreamContext, setDreamContext] = useState(null) // dream-price gap for the AI advisor
   const [dreamPrice, setDreamPrice] = useState('') // Phase 2 dream price (persisted in hash)
-  const [showOnboarding, setShowOnboarding] = useState(coldFirstVisit) // front door
+  const [showLanding, setShowLanding] = useState(coldFirstVisit) // landing = front door
+  const [showOnboarding, setShowOnboarding] = useState(false) // opened from landing / start over
   const [compareHorizon, setCompareHorizon] = useState(undefined) // seeded Compare years
   const [residentStatus, setResidentStatus] = useState('') // 'expat' | 'national' | ''
   const [routeIntent, setRouteIntent] = useState(null) // 'dream' | 'looking' — nudge until phase1
@@ -282,9 +284,23 @@ export default function App() {
     goToPhase(1)
   }
 
+  // Landing → onboarding (the CTA) or straight to the calculator (skip).
+  const startFromLanding = () => {
+    setShowLanding(false)
+    setShowOnboarding(true)
+  }
+  const skipFromLanding = () => {
+    markOnboarded()
+    track('onboarding_skipped')
+    setShowLanding(false)
+    goToPhase(1)
+  }
+
+  // "Start over" re-opens the whole front door from the top (landing first).
   const startOver = () => {
     setRouteIntent(null)
-    setShowOnboarding(true)
+    setShowOnboarding(false)
+    setShowLanding(true)
   }
 
   // Once a Phase-1 result exists the nudge has served its purpose.
@@ -549,8 +565,14 @@ export default function App() {
         />
       )}
 
-      {/* Onboarding — the front door on a cold first visit (spec §2). Rendered
-          last so it overlays the app; skippable and shown-once. */}
+      {/* Landing — top-of-funnel hero on a cold first visit. Its CTA opens the
+          onboarding; skipping (here or on the onboarding) goes to the app. */}
+      {showLanding && (
+        <Landing onStart={startFromLanding} onSkip={skipFromLanding} />
+      )}
+
+      {/* Onboarding — the 5-question front door, opened from the landing.
+          Rendered last so it overlays the app; skippable and shown-once. */}
       {showOnboarding && (
         <Onboarding onComplete={completeOnboarding} onSkip={skipOnboarding} />
       )}
