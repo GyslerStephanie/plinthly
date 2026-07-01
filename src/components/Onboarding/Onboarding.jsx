@@ -133,9 +133,12 @@ export default function Onboarding({ onComplete, onSkip }) {
   const reflect = useMemo(() => (focus ? buildReflect(answers, t) : ''), [answers, focus, t])
 
   const hasCity = answers.city === 'area' || answers.city === 'region'
+  // Every question must be answered before routing (the canton sub-picker stays
+  // optional — it only refines the city answer).
+  const allAnswered = !!(answers.age && answers.dur && focus && answers.who && answers.city)
 
   const handleGo = () => {
-    if (!focus) return
+    if (!allAnswered) return
     onComplete({
       focus,
       persona: personaKey,
@@ -306,10 +309,16 @@ export default function Onboarding({ onComplete, onSkip }) {
             <button
               type="button"
               onClick={handleGo}
-              className="mt-5 w-full rounded-full bg-teal-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
+              disabled={!allAnswered}
+              className="mt-5 w-full rounded-full bg-teal-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition enabled:hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-stone-300"
             >
               {t('onboarding.cta', { dest: t(`onboarding.dest.${focus}.target`) })}
             </button>
+            {!allAnswered && (
+              <p className="mt-2 text-center text-xs text-muted">
+                {t('onboarding.completeAll')}
+              </p>
+            )}
           </div>
         ) : (
           <p className="mt-8 rounded-xl border border-dashed border-line bg-white/60 p-5 text-center text-sm text-muted">

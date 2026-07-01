@@ -107,6 +107,7 @@ export const translations = {
       summary: { eyebrow: 'Here’s where I’d start you', whyTitle: 'Why this fits you' },
       recommendedStart: 'Recommended start',
       cta: 'Take me to {dest} →',
+      completeAll: 'Answer all five to continue.',
       feedback: {
         label: 'Anything specific you’re trying to figure out? (optional)',
         placeholder: 'e.g. can we afford a place near Zug on one income?',
@@ -710,6 +711,7 @@ export const translations = {
       summary: { eyebrow: 'Hier würde ich Sie starten', whyTitle: 'Warum das zu Ihnen passt' },
       recommendedStart: 'Empfohlener Start',
       cta: 'Bring mich {dest} →',
+      completeAll: 'Beantworten Sie alle fünf Fragen, um fortzufahren.',
       feedback: {
         label: 'Gibt es etwas Konkretes, das Sie herausfinden möchten? (optional)',
         placeholder: 'z. B. Können wir uns mit einem Einkommen etwas bei Zug leisten?',
@@ -1314,6 +1316,7 @@ export const translations = {
       summary: { eyebrow: 'Voici où je vous ferais commencer', whyTitle: 'Pourquoi cela vous correspond' },
       recommendedStart: 'Départ recommandé',
       cta: 'Emmenez-moi {dest} →',
+      completeAll: 'Répondez aux cinq questions pour continuer.',
       feedback: {
         label: 'Quelque chose de précis à comprendre ? (facultatif)',
         placeholder: 'p. ex. pouvons-nous nous offrir un bien près de Zoug avec un seul revenu ?',
@@ -1917,6 +1920,7 @@ export const translations = {
       summary: { eyebrow: 'Ecco da dove ti farei partire', whyTitle: 'Perché fa al caso tuo' },
       recommendedStart: 'Partenza consigliata',
       cta: 'Portami {dest} →',
+      completeAll: 'Rispondi a tutte e cinque le domande per continuare.',
       feedback: {
         label: 'C’è qualcosa di specifico che vuoi capire? (facoltativo)',
         placeholder: 'es. possiamo permetterci una casa vicino a Zugo con un solo reddito?',
