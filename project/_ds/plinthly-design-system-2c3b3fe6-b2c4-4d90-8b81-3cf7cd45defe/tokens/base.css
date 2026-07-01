@@ -1,0 +1,63 @@
+/* ============================================================
+   PLINTHLY — BASE / RESET
+   Light, opinionated normalization. Sets page defaults so
+   any consumer page inherits the Plinthly look from <body>.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-body);
+  background-color: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  color: var(--text-strong);
+  font-weight: var(--weight-semibold);
+}
+
+p { margin: 0; text-wrap: pretty; }
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  text-underline-offset: 2px;
+  transition: var(--transition-color);
+}
+a:hover { text-decoration: underline; }
+
+/* Tabular numbers wherever figures appear */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Selection */
+::selection {
+  background: color-mix(in oklab, var(--moss-300) 55%, transparent);
+  color: var(--ink-900);
+}
+
+/* Focus-visible baseline */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--radius-sm);
+}
+
+/* Hairline divider */
+hr {
+  border: 0;
+  border-top: var(--border-width) solid var(--border-default);
+  margin: var(--space-6) 0;
+}
+
+/* Voxel motif helper: a crisp pixel-edge rendering for blocky art */
+.pixelated { image-rendering: pixelated; }

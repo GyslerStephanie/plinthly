@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/tokens/elevation.css">
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/tokens/base.css">
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/components/recipes.css">
+  <link rel="stylesheet" href="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/styles.css">
+  <script src="_ds/plinthly-design-system-2c3b3fe6-b2c4-4d90-8b81-3cf7cd45defe/_ds_bundle.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: var(--sky-100); }
+    button.plly-btn { -webkit-appearance: none; appearance: none; }
+    @keyframes cloud-drift { from { transform: translateX(-22vw); } to { transform: translateX(122vw); } }
+    @keyframes recede {
+      0%   { transform: translate(var(--nx), var(--ny)) scale(var(--s0)); opacity: 0; }
+      7%   { opacity: 1; }
+      66%  { opacity: 1; }
+      100% { transform: translate(0px, 0px) scale(0.045); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cloud-layer { animation: none !important; }
+    }
+  </style>
+</helmet>
+<div data-screen-label="Onward hero" style="position:relative; width:100%; height:100vh; min-height:600px; overflow:hidden; font-family:var(--font-body); background:linear-gradient(180deg, #bfd7d8 0%, #dbe9e8 34%, #eef4f3 58%, #fbfaf4 100%);">
+
+  <!-- sun / horizon glow near the vanishing point -->
+  <div style="position:absolute; left:50%; top:26%; width:900px; height:900px; transform:translate(-50%,-50%); background:radial-gradient(circle, rgba(255,251,240,0.85) 0%, rgba(251,250,244,0.35) 34%, rgba(251,250,244,0) 62%); z-index:2; pointer-events:none;"></div>
+
+  <!-- far clouds -->
+  <div class="cloud-layer" style="position:absolute; top:12%; left:0; width:150px; z-index:3; opacity:0.9; animation:cloud-drift 62s linear infinite; animation-delay:-8s; pointer-events:none;">
+    <svg viewBox="0 0 180 80" width="100%" height="100%"><rect x="24" y="50" width="132" height="22" rx="8" fill="#ffffff"/><rect x="40" y="38" width="100" height="28" rx="10" fill="#ffffff"/><rect x="60" y="24" width="60" height="24" rx="9" fill="#ffffff"/><rect x="94" y="32" width="54" height="24" rx="9" fill="#ffffff"/><rect x="24" y="64" width="132" height="10" rx="5" fill="#dbe9e8"/></svg>
+  </div>
+  <div class="cloud-layer" style="position:absolute; top:40%; left:0; width:110px; z-index:3; opacity:0.85; animation:cloud-drift 84s linear infinite; animation-delay:-46s; pointer-events:none;">
+    <svg viewBox="0 0 180 80" width="100%" height="100%"><rect x="24" y="50" width="132" height="22" rx="8" fill="#ffffff"/><rect x="40" y="38" width="100" height="28" rx="10" fill="#ffffff"/><rect x="60" y="24" width="60" height="24" rx="9" fill="#ffffff"/><rect x="94" y="32" width="54" height="24" rx="9" fill="#ffffff"/><rect x="24" y="64" width="132" height="10" rx="5" fill="#dbe9e8"/></svg>
+  </div>
+  <div class="cloud-layer" style="position:absolute; top:6%; left:0; width:96px; z-index:3; opacity:0.8; animation:cloud-drift 96s linear infinite; animation-delay:-30s; pointer-events:none;">
+    <svg viewBox="0 0 180 80" width="100%" height="100%"><rect x="24" y="50" width="132" height="22" rx="8" fill="#ffffff"/><rect x="40" y="38" width="100" height="28" rx="10" fill="#ffffff"/><rect x="60" y="24" width="60" height="24" rx="9" fill="#ffffff"/><rect x="94" y="32" width="54" height="24" rx="9" fill="#ffffff"/><rect x="24" y="64" width="132" height="10" rx="5" fill="#dbe9e8"/></svg>
+  </div>
+
+  <!-- houses stage (populated imperatively) -->
+  <div ref="{{ stageRef }}" style="position:absolute; inset:0; z-index:10; pointer-events:none;"></div>
+
+  <!-- near / foreground clouds (parallax, faint so text stays legible) -->
+  <div class="cloud-layer" style="position:absolute; top:70%; left:0; width:280px; z-index:200; opacity:0.55; animation:cloud-drift 40s linear infinite; animation-delay:-24s; pointer-events:none;">
+    <svg viewBox="0 0 180 80" width="100%" height="100%"><rect x="24" y="50" width="132" height="22" rx="8" fill="#ffffff"/><rect x="40" y="38" width="100" height="28" rx="10" fill="#ffffff"/><rect x="60" y="24" width="60" height="24" rx="9" fill="#ffffff"/><rect x="94" y="32" width="54" height="24" rx="9" fill="#ffffff"/><rect x="24" y="64" width="132" height="10" rx="5" fill="#eef4f3"/></svg>
+  </div>
+  <div class="cloud-layer" style="position:absolute; top:84%; left:0; width:340px; z-index:200; opacity:0.5; animation:cloud-drift 52s linear infinite; animation-delay:-4s; pointer-events:none;">
+    <svg viewBox="0 0 180 80" width="100%" height="100%"><rect x="24" y="50" width="132" height="22" rx="8" fill="#ffffff"/><rect x="40" y="38" width="100" height="28" rx="10" fill="#ffffff"/><rect x="60" y="24" width="60" height="24" rx="9" fill="#ffffff"/><rect x="94" y="32" width="54" height="24" rx="9" fill="#ffffff"/><rect x="24" y="64" width="132" height="10" rx="5" fill="#eef4f3"/></svg>
+  </div>
+
+  <!-- centered content -->
+  <div class="hero-content" style="position:absolute; inset:0; z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 24px; pointer-events:none;">
+    <!-- legibility scrim -->
+    <div style="position:absolute; left:50%; top:52%; width:min(760px,92vw); height:440px; transform:translate(-50%,-50%); background:radial-gradient(ellipse at center, rgba(251,250,244,0.82) 0%, rgba(251,250,244,0.55) 42%, rgba(251,250,244,0) 72%); z-index:-1; pointer-events:none;"></div>
+
+    <div style="font-family:var(--font-mono); font-weight:500; font-size:clamp(11px,1.5vw,14px); letter-spacing:0.22em; text-transform:uppercase; color:var(--moss-600); margin-bottom:20px;">Onward &middot; upward</div>
+
+    <h1 style="font-family:var(--font-serif); font-weight:600; font-size:clamp(56px,11vw,132px); line-height:0.95; letter-spacing:-0.02em; color:var(--ink-900); margin:0;">Plinthly</h1>
+
+    <p style="font-family:var(--font-serif); font-style:italic; font-size:clamp(18px,2.4vw,27px); line-height:1.3; color:var(--ink-700); margin:20px 0 0; max-width:34ch;">Honest numbers, grounded in nature.</p>
+
+    <p style="font-family:var(--font-body); font-size:clamp(14px,1.7vw,17px); line-height:1.5; color:var(--ink-500); margin:12px 0 0; max-width:40ch;">See what you can buy, build, or renovate in Switzerland &mdash; before you talk to a bank.</p>
+
+    <div style="margin-top:34px; pointer-events:auto;">
+      <div role="button" tabindex="0" style="display:inline-flex; align-items:center; gap:10px; font-family:var(--font-sans); font-weight:600; font-size:19px; line-height:1; padding:17px 36px; border-radius:var(--radius-md,10px); background-image:linear-gradient(#6f8a35,#6f8a35); color:var(--color-on-primary); border:1px solid transparent; box-shadow:var(--shadow-md); cursor:pointer; transition:background-image 140ms ease, transform 140ms ease, box-shadow 140ms ease;" style-hover="background-image:linear-gradient(#566d29,#566d29); box-shadow:var(--shadow-lg);" style-active="background-image:linear-gradient(#42541f,#42541f); transform:translateY(1px);">Start<span style="font-family:var(--font-mono); font-weight:400; font-size:20px; line-height:1; transform:translateY(-1px);">&rarr;</span></div>
+    </div>
+
+    <div style="font-family:var(--font-mono); font-size:12px; letter-spacing:0.06em; color:var(--ink-400); margin-top:22px;">No account &middot; nothing saved &middot; nothing sold</div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;pace&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.3,&quot;max&quot;:2.5,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;,&quot;unit&quot;:&quot;×&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:12,&quot;min&quot;:4,&quot;max&quot;:24,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;coralRoofs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Style&quot;}}">
+class Component extends DCLogic {
+  stageRef = React.createRef();
+
+  componentDidMount() { this.maybeInit(); }
+
+  componentDidUpdate() {
+    this.maybeInit();
+    if (!this._started) return;
+    if (this.density() !== this._n
+      || (this.props.coralRoofs ?? false) !== this._coral
+      || (this.props.pace ?? 1) !== this._pace) {
+      this.buildHouses(this.density());
+    }
+  }
+
+  maybeInit() {
+    if (this._started) return;
+    if (!this.stageRef.current) return;
+    this._reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    this._started = true;
+    this.buildHouses(this.density());
+  }
+
+  density() { return Math.max(4, Math.min(24, Math.round(this.props.density ?? 12))); }
+
+  rng(seed) {
+    let t = seed >>> 0;
+    return function () {
+      t += 0x6D2B79F5;
+      let x = Math.imul(t ^ (t >>> 15), 1 | t);
+      x ^= x + Math.imul(x ^ (x >>> 7), 61 | x);
+      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  houseSVG(seed) {
+    const r = this.rng(seed);
+    const walls = ['#f1e3c6', '#f3f3ee', '#faf4e6', '#e6d0a2'];
+    const coral = '#dd5c47';
+    const roofs = [coral, '#566d29', '#7e5f3d', '#a9803a', '#4f7d88'];
+    const wall = walls[(r() * walls.length) | 0];
+    const roof = (this.props.coralRoofs ?? false) ? coral : roofs[(r() * roofs.length) | 0];
+    const win = '#cfe0e0';
+    const door = '#5e451d';
+
+    const tree = (cx, by, sc) => {
+      const tw = 7 * sc, th = 15 * sc, c1 = 24 * sc, c2 = 15 * sc;
+      const cTop = by - th;
+      return (
+        '<rect x="' + (cx - tw / 2) + '" y="' + cTop + '" width="' + tw + '" height="' + th + '" fill="#5e451d"/>' +
+        '<rect x="' + (cx - c1 / 2) + '" y="' + (cTop - c1) + '" width="' + c1 + '" height="' + c1 + '" fill="#6f8a35"/>' +
+        '<rect x="' + (cx - c1 / 2) + '" y="' + (cTop - c1) + '" width="' + c1 + '" height="' + (c1 * 0.34) + '" fill="#93ad48"/>' +
+        '<rect x="' + (cx - c2 / 2) + '" y="' + (cTop - c1 - c2) + '" width="' + c2 + '" height="' + c2 + '" fill="#566d29"/>' +
+        '<rect x="' + (cx - c2 / 2) + '" y="' + (cTop - c1 - c2) + '" width="' + c2 + '" height="' + (c2 * 0.4) + '" fill="#6f8a35"/>'
+      );
+    };
+
+    // grass-topped plinth block (echoes the brand mark)
+    const block =
+      '<polygon points="120,110 216,152 120,194 24,152" fill="#93ad48"/>' +
+      '<polygon points="24,152 120,194 120,205 24,163" fill="#566d29"/>' +
+      '<polygon points="24,163 120,205 120,231 24,189" fill="#7e5f3d"/>' +
+      '<polygon points="120,194 216,152 216,163 120,205" fill="#42541f"/>' +
+      '<polygon points="120,205 216,163 216,189 120,231" fill="#4f3a23"/>';
+
+    // front-facing pixel house standing on the block
+    const house =
+      '<polygon points="120,96 156,132 84,132" fill="' + roof + '"/>' +
+      '<polygon points="120,96 156,132 138,132 120,110" fill="rgba(0,0,0,0.12)"/>' +
+      '<rect x="94" y="132" width="52" height="46" fill="' + wall + '"/>' +
+      '<rect x="94" y="132" width="52" height="46" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>' +
+      '<rect x="100" y="140" width="13" height="13" fill="' + win + '"/>' +
+      '<rect x="127" y="140" width="13" height="13" fill="' + win + '"/>' +
+      '<rect x="112" y="160" width="16" height="18" fill="' + door + '"/>';
+
+    const backTree = r() > 0.45 ? tree(120 + (r() * 40 - 20), 150, 0.72) : '';
+    const leftTree = tree(58 + (r() * 10 - 5), 168 + (r() * 6), 0.92 + r() * 0.2);
+    const rightTree = tree(182 + (r() * 10 - 5), 166 + (r() * 6), 0.9 + r() * 0.2);
+
+    return (
+      '<svg viewBox="0 0 240 250" width="100%" height="100%" style="display:block;overflow:visible">' +
+      '<ellipse cx="120" cy="222" rx="98" ry="15" fill="#3d3f35" opacity="0.12"/>' +
+      block + backTree + house + leftTree + rightTree +
+      '</svg>'
+    );
+  }
+
+  buildHouses(n) {
+    const stage = this.stageRef.current;
+    if (!stage) return;
+    this._n = n;
+    this._coral = this.props.coralRoofs ?? false;
+    this._pace = this.props.pace ?? 1;
+    const dur = 24 / Math.max(0.2, this._pace);
+    stage.innerHTML = '';
+    this.houses = [];
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement('div');
+      const a = Math.random() * 2 - 1;               // horizontal lane (-1..1)
+      const s0 = (0.82 + Math.random() * 0.42).toFixed(3); // near size variety
+      const nx = (a * 47).toFixed(2);                // near horizontal offset from vanishing point
+      const ny = (44 + Math.random() * 14).toFixed(2);     // near vertical drop toward the ground
+      const delay = -(((i + Math.random() * 0.5) / n) * dur).toFixed(2);
+      el.style.cssText =
+        'position:absolute;left:50%;top:30%;width:280px;height:290px;' +
+        'margin-left:-140px;margin-top:-150px;transform-origin:center;' +
+        'will-change:transform,opacity;opacity:0;' +
+        '--nx:' + nx + 'vw;--ny:' + ny + 'vh;--s0:' + s0 + ';';
+      el.style.animation = 'recede ' + dur.toFixed(2) + 's cubic-bezier(0.33,0,0.4,1) infinite';
+      el.style.animationDelay = delay + 's';
+      el.innerHTML = this.houseSVG((Math.random() * 1e9) | 0);
+      stage.appendChild(el);
+      this.houses.push(el);
+    }
+    if (this._reduce) this.placeStatic();
+  }
+
+  // Static fallback for reduced-motion: freeze houses along the path, no animation.
+  placeStatic() {
+    if (!this.houses) return;
+    const n = this.houses.length;
+    this.houses.forEach((el, i) => {
+      el.style.animation = 'none';
+      const d = (i + 0.5) / n;
+      const near = 1 - d;
+      const nx = parseFloat(el.style.getPropertyValue('--nx'));
+      const ny = parseFloat(el.style.getPropertyValue('--ny'));
+      const s0 = parseFloat(el.style.getPropertyValue('--s0'));
+      const s = (0.045 + (s0 - 0.045) * Math.pow(near, 1.5)).toFixed(3);
+      el.style.transform =
+        'translate(' + (nx * near).toFixed(2) + 'vw,' + (ny * near).toFixed(2) + 'vh) scale(' + s + ')';
+      el.style.opacity = (near > 0.06 ? Math.min(1, near * 1.5) : near * 16).toFixed(2);
+    });
+  }
+
+  renderVals() {
+    return { stageRef: this.stageRef };
+  }
+}
+</script>
+</body>
+</html>
