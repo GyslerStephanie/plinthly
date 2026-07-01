@@ -16,6 +16,7 @@ import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
+import Hero from './components/hero/Hero'
 import { buildAdvisorContext } from './lib/advisorContext'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
@@ -62,6 +63,13 @@ export default function App() {
   const [showCompare, setShowCompare] = useState(false) // Compare parallel surface
   const [dreamContext, setDreamContext] = useState(null) // dream-price gap for the AI advisor
   const [dreamPrice, setDreamPrice] = useState('') // Phase 2 dream price (persisted in hash)
+  // Onward Hero landing: shown only on a truly fresh visit. When the URL
+  // carries shared/deep-link state (Compare, a shared result, a phase), we skip
+  // straight into the tool so those links land where they should.
+  const [showHero, setShowHero] = useState(() => {
+    const s = decodeState()
+    return !s || Object.keys(s).length === 0
+  })
   const restored = useRef(false)
 
   // Record end-of-journey feedback. Show the thank-you optimistically (so a
@@ -227,6 +235,12 @@ export default function App() {
     const led = computeLedger(size, budget, measures)
     return led.netCost > 0 ? { netCost: led.netCost, newClass: led.newClass } : null
   })()
+
+  // Onward Hero landing screen — the CTA drops the visitor into the tool.
+  // Copy is English-only for now (see PR notes); i18n is a follow-up.
+  if (showHero) {
+    return <Hero onCtaClick={() => setShowHero(false)} />
+  }
 
   return (
     <AppStateProvider value={appState}>
