@@ -1,0 +1,56 @@
+/* ============================================================
+   PLINTHLY — ELEVATION & MOTION
+   Cards float gently over the voxel landscape: soft, warm,
+   low-contrast shadows (never harsh/black). Motion is calm
+   and grounded — short fades and small lifts, no bounce.
+   ============================================================ */
+
+:root {
+  /* ---- Shadows (warm-tinted, never pure black) ------------ */
+  --shadow-xs:
+    0 1px 2px color-mix(in oklab, var(--moss-900) 8%, transparent);
+  --shadow-sm:
+    0 1px 2px color-mix(in oklab, var(--moss-900) 7%, transparent),
+    0 2px 6px color-mix(in oklab, var(--moss-900) 6%, transparent);
+  --shadow-md:
+    0 2px 4px color-mix(in oklab, var(--moss-900) 6%, transparent),
+    0 8px 20px color-mix(in oklab, var(--moss-900) 9%, transparent);
+  --shadow-lg:
+    0 4px 8px color-mix(in oklab, var(--moss-900) 7%, transparent),
+    0 18px 40px color-mix(in oklab, var(--moss-900) 12%, transparent);
+  --shadow-xl:
+    0 8px 16px color-mix(in oklab, var(--moss-900) 9%, transparent),
+    0 32px 64px color-mix(in oklab, var(--moss-900) 16%, transparent);
+
+  /* Floating card over landscape (signature) */
+  --shadow-float:
+    0 2px 4px color-mix(in oklab, var(--moss-900) 6%, transparent),
+    0 14px 36px color-mix(in oklab, var(--stone-500) 18%, transparent);
+
+  /* Inset for sunken inputs */
+  --shadow-inset: inset 0 1px 2px color-mix(in oklab, var(--moss-900) 7%, transparent);
+
+  /* ---- Motion --------------------------------------------- */
+  --ease-out:   cubic-bezier(0.22, 0.61, 0.36, 1);   /* @kind other */
+  --ease-in-out: cubic-bezier(0.45, 0.05, 0.25, 1);  /* @kind other */
+  --ease-soft:  cubic-bezier(0.33, 0, 0.2, 1);       /* @kind other */
+
+  --dur-fast:   120ms;   /* @kind other */
+  --dur-base:   200ms;   /* @kind other */
+  --dur-slow:   320ms;   /* @kind other */
+  --dur-slower: 480ms;   /* @kind other */
+
+  --transition-base: all var(--dur-base) var(--ease-out);
+  --transition-color: color var(--dur-fast) var(--ease-out),
+                      background-color var(--dur-fast) var(--ease-out),
+                      border-color var(--dur-fast) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;    /* @kind other */
+    --dur-base: 0ms;    /* @kind other */
+    --dur-slow: 0ms;    /* @kind other */
+    --dur-slower: 0ms;  /* @kind other */
+  }
+}

@@ -1,0 +1,134 @@
+/* ============================================================
+   PLINTHLY — COLOR TOKENS
+   Palette sampled from the voxel-landscape brand motif:
+   grass greens, warm sand, alpine stone, sky, earth, coral.
+   "Digital Naturalism" — pixelated nature, honest numbers.
+   ============================================================ */
+
+:root {
+  /* ---- Base scale: Moss / Grass (primary brand) ---------- */
+  --moss-50:  #f1f5e6;
+  --moss-100: #e2ebc9;
+  --moss-200: #cbdc9c;
+  --moss-300: #b0c86c;
+  --moss-400: #93ad48;   /* grass highlight */
+  --moss-500: #6f8a35;   /* PRIMARY brand green */
+  --moss-600: #566d29;
+  --moss-700: #42541f;   /* forest */
+  --moss-800: #313f18;
+  --moss-900: #222c11;   /* deep canopy */
+
+  /* ---- Base scale: Sand / Loam (warm secondary) ---------- */
+  --sand-50:  #faf4e6;
+  --sand-100: #f1e3c6;
+  --sand-200: #e6d0a2;
+  --sand-300: #d8ba79;   /* sand */
+  --sand-400: #c79f54;
+  --sand-500: #a9803a;
+  --sand-600: #836129;
+  --sand-700: #5e451d;
+
+  /* ---- Base scale: Earth (dirt / timber) ----------------- */
+  --earth-300: #ab8a64;
+  --earth-500: #7e5f3d;
+  --earth-700: #4f3a23;
+
+  /* ---- Base scale: Sky (ambient / atmosphere) ------------ */
+  --sky-50:  #eef4f3;
+  --sky-100: #dbe9e8;
+  --sky-200: #bfd7d8;   /* clear sky */
+  --sky-300: #9cc0c6;
+  --sky-400: #74a2ab;
+  --sky-500: #4f7d88;
+
+  /* ---- Base scale: Stone (alpine cool neutral) ----------- */
+  --stone-50:  #f3f3ee;
+  --stone-100: #e6e5dc;
+  --stone-200: #cecbbf;
+  --stone-300: #aca99b;
+  --stone-400: #847f70;
+  --stone-500: #5f5b4f;
+
+  /* ---- Base scale: Coral (accent / "affordable") --------- */
+  --coral-50:  #fceae4;
+  --coral-100: #f8d2c8;
+  --coral-200: #f0a896;
+  --coral-300: #e67d65;
+  --coral-400: #dd5c47;   /* ACCENT coral */
+  --coral-500: #c4452f;
+  --coral-600: #9e3422;
+
+  /* ---- Ink & Paper (warm near-neutrals) ------------------ */
+  --ink-900: #1b1c17;   /* warm near-black — headings */
+  --ink-800: #2c2e26;
+  --ink-700: #3d3f35;   /* body text */
+  --ink-500: #6a6c5f;   /* muted text */
+  --ink-400: #8d8f80;
+  --ink-300: #b4b5a8;   /* placeholder / disabled */
+  --ink-200: #d6d6cc;
+
+  --paper-100: #ffffff;   /* card surface */
+  --paper-200: #fbfaf4;   /* page background (warm cream) */
+  --paper-300: #f4f2e8;   /* sunken / subtle fill */
+  --paper-400: #ece9da;   /* hover fill */
+
+  --line-soft: #efece0;   /* hairline on cream */
+  --line:      #e3e0d2;   /* default border */
+  --line-strong: #d2cebd; /* emphasised border */
+
+  /* ====================================================== */
+  /* SEMANTIC ALIASES — reference these in components        */
+  /* ====================================================== */
+
+  /* Brand */
+  --color-primary:        var(--moss-500);
+  --color-primary-hover:  var(--moss-600);
+  --color-primary-press:  var(--moss-700);
+  --color-primary-soft:   var(--moss-100);
+  --color-primary-tint:   var(--moss-50);
+  --color-on-primary:     #f7faef;
+
+  --color-accent:         var(--coral-400);
+  --color-accent-hover:   var(--coral-500);
+  --color-accent-soft:    var(--coral-50);
+  --color-on-accent:      #fff7f4;
+
+  /* Status */
+  --color-success:        var(--moss-500);
+  --color-success-soft:   var(--moss-50);
+  --color-success-ink:    var(--moss-700);
+  --color-warning:        var(--sand-400);
+  --color-warning-soft:   var(--sand-50);
+  --color-warning-ink:    var(--sand-700);
+  --color-danger:         var(--coral-500);
+  --color-danger-soft:    var(--coral-50);
+  --color-danger-ink:     var(--coral-600);
+  --color-info:           var(--sky-500);
+  --color-info-soft:      var(--sky-50);
+
+  /* Text */
+  --text-strong:   var(--ink-900);
+  --text-body:     var(--ink-700);
+  --text-muted:    var(--ink-500);
+  --text-faint:    var(--ink-400);
+  --text-placeholder: var(--ink-300);
+  --text-on-dark:  #f3f3ea;
+  --text-link:     var(--moss-600);
+
+  /* Surfaces */
+  --surface-page:   var(--paper-200);
+  --surface-card:   var(--paper-100);
+  --surface-sunken: var(--paper-300);
+  --surface-hover:  var(--paper-400);
+  --surface-ink:    var(--ink-900);   /* dark sections */
+  --surface-moss:   var(--moss-700);  /* brand-dark sections */
+
+  /* Borders */
+  --border-soft:    var(--line-soft);
+  --border-default: var(--line);
+  --border-strong:  var(--line-strong);
+  --border-focus:   var(--moss-400);
+
+  /* Focus ring */
+  --ring: 0 0 0 3px color-mix(in oklab, var(--moss-400) 45%, transparent);
+}

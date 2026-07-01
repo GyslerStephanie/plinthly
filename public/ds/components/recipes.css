@@ -1,0 +1,180 @@
+/* ============================================================
+   PLINTHLY — COMPONENT RECIPES
+   Class-based styles for the React primitives. Co-located with
+   the components; imported from the root styles.css so every
+   consumer that links styles.css gets working hover/focus/press.
+   Prefix: .plly-
+   ============================================================ */
+
+/* ---------------- Button ---------------------------------- */
+.plly-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--gap-inline);
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.plly-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+.plly-btn[disabled], .plly-btn[aria-disabled="true"] {
+  opacity: .5; cursor: not-allowed; pointer-events: none;
+}
+.plly-btn--sm { font-size: 13px; padding: 8px 13px; border-radius: var(--radius-sm); }
+.plly-btn--md { font-size: 14px; padding: 11px 18px; }
+.plly-btn--lg { font-size: 16px; padding: 14px 24px; }
+.plly-btn--full { width: 100%; }
+
+.plly-btn--primary { background: var(--color-primary); color: var(--color-on-primary); }
+.plly-btn--primary:hover { background: var(--color-primary-hover); }
+.plly-btn--primary:active { background: var(--color-primary-press); transform: translateY(1px); }
+
+.plly-btn--secondary {
+  background: var(--surface-card); color: var(--text-strong);
+  border-color: var(--border-strong); box-shadow: var(--shadow-xs);
+}
+.plly-btn--secondary:hover { background: var(--surface-hover); border-color: var(--ink-300); }
+.plly-btn--secondary:active { background: var(--paper-300); transform: translateY(1px); }
+
+.plly-btn--ghost { background: transparent; color: var(--text-body); }
+.plly-btn--ghost:hover { background: var(--surface-hover); color: var(--text-strong); }
+.plly-btn--ghost:active { background: var(--paper-300); }
+
+.plly-btn--danger { background: var(--color-danger); color: var(--color-on-accent); }
+.plly-btn--danger:hover { background: var(--coral-600); }
+.plly-btn--danger:active { transform: translateY(1px); }
+
+/* IconButton */
+.plly-iconbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; cursor: pointer; color: var(--text-body);
+  background: transparent; border-radius: var(--radius-md);
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
+}
+.plly-iconbtn:hover { background: var(--surface-hover); color: var(--text-strong); }
+.plly-iconbtn:active { background: var(--paper-300); }
+.plly-iconbtn:focus-visible { outline: none; box-shadow: var(--ring); }
+.plly-iconbtn--bordered { border-color: var(--border-default); background: var(--surface-card); }
+.plly-iconbtn--sm { width: 32px; height: 32px; }
+.plly-iconbtn--md { width: 40px; height: 40px; }
+.plly-iconbtn--lg { width: 48px; height: 48px; border-radius: var(--radius-full); }
+
+/* ---------------- Input ----------------------------------- */
+.plly-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
+.plly-input {
+  width: 100%; font-family: var(--font-sans); font-size: 15px;
+  color: var(--text-strong); background: var(--surface-card);
+  border: 1px solid var(--border-strong); border-radius: var(--radius-md);
+  padding: 12px 14px;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.plly-input::placeholder { color: var(--text-placeholder); }
+.plly-input:hover { border-color: var(--ink-300); }
+.plly-input:focus { outline: none; border-color: var(--border-focus); box-shadow: var(--ring); }
+.plly-input[disabled] { background: var(--paper-300); color: var(--text-muted); cursor: not-allowed; }
+.plly-input--has-prefix { padding-left: 48px; }
+.plly-input--has-suffix { padding-right: 48px; text-align: right; }
+.plly-input--invalid { border-color: var(--color-danger); }
+.plly-input--invalid:focus { box-shadow: 0 0 0 3px color-mix(in oklab, var(--coral-400) 35%, transparent); }
+.plly-input-prefix, .plly-input-suffix {
+  position: absolute; font-family: var(--font-mono); font-size: 13px;
+  color: var(--text-muted); pointer-events: none; font-variant-numeric: tabular-nums;
+}
+.plly-input-prefix { left: 14px; }
+.plly-input-suffix { right: 14px; }
+.plly-input--figure { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Field row (label + helper) */
+.plly-field { display: flex; flex-direction: column; gap: 7px; }
+.plly-field-label { font-family: var(--font-sans); font-size: 14px; font-weight: 600; color: var(--text-strong); }
+.plly-field-optional { font-weight: 400; color: var(--text-faint); }
+.plly-field-help { font-family: var(--font-sans); font-size: 12.5px; line-height: 1.45; color: var(--text-muted); }
+.plly-field-help--error { color: var(--color-danger-ink); }
+
+/* ---------------- Card ------------------------------------ */
+.plly-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--pad-card);
+}
+.plly-card--lg { border-radius: var(--radius-xl); padding: var(--pad-card-lg); }
+.plly-card--flat { box-shadow: none; }
+.plly-card--raised { box-shadow: var(--shadow-md); }
+.plly-card--float { box-shadow: var(--shadow-float); border-color: var(--border-soft); }
+.plly-card--sunken { background: var(--surface-sunken); border-color: transparent; }
+
+/* ---------------- Badge ----------------------------------- */
+.plly-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-sans); font-weight: 600; font-size: 12px; line-height: 1;
+  padding: 5px 10px; border-radius: var(--radius-full); white-space: nowrap;
+}
+.plly-badge--neutral { background: var(--paper-300); color: var(--text-body); }
+.plly-badge--success { background: var(--color-success-soft); color: var(--color-success-ink); }
+.plly-badge--accent  { background: var(--color-accent); color: var(--color-on-accent); }
+.plly-badge--cost    { background: var(--color-danger-soft); color: var(--color-danger-ink); }
+.plly-badge--info    { background: var(--color-info-soft); color: var(--sky-500); }
+.plly-badge--warning { background: var(--color-warning-soft); color: var(--color-warning-ink); }
+.plly-badge--outline { background: transparent; border: 1px solid var(--border-strong); color: var(--text-body); }
+
+/* ---------------- Eyebrow --------------------------------- */
+.plly-eyebrow {
+  font-family: var(--font-mono); font-weight: 500; font-size: 12px;
+  letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---------------- StatBlock ------------------------------- */
+.plly-stat { display: flex; flex-direction: column; gap: 6px; }
+.plly-stat-figure {
+  font-family: var(--font-mono); font-weight: 500; letter-spacing: -.02em;
+  color: var(--text-strong); font-variant-numeric: tabular-nums; line-height: 1;
+}
+.plly-stat-figure--sm { font-size: 18px; }
+.plly-stat-figure--md { font-size: 28px; }
+.plly-stat-figure--lg { font-size: 52px; }
+.plly-stat-caption { font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); }
+
+/* ---------------- Takeaway -------------------------------- */
+.plly-takeaway { display: flex; align-items: flex-start; gap: 11px; }
+.plly-takeaway-icon {
+  flex: none; width: 22px; height: 22px; margin-top: 1px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-full);
+}
+.plly-takeaway-icon--success { background: var(--color-success-soft); color: var(--color-success); }
+.plly-takeaway-icon--cost { background: var(--color-danger-soft); color: var(--color-danger); }
+.plly-takeaway-icon--info { background: var(--color-info-soft); color: var(--sky-500); }
+.plly-takeaway-text { font-family: var(--font-sans); font-size: 14.5px; line-height: 1.5; color: var(--text-body); }
+.plly-takeaway-text b, .plly-takeaway-text strong { color: var(--text-strong); font-weight: 600; }
+
+/* ---------------- Segmented control ----------------------- */
+.plly-segmented {
+  display: inline-flex; padding: 3px; gap: 2px;
+  background: var(--surface-sunken); border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+}
+.plly-segmented-opt {
+  font-family: var(--font-sans); font-size: 13.5px; font-weight: 500;
+  color: var(--text-muted); background: transparent; border: 0; cursor: pointer;
+  padding: 7px 14px; border-radius: var(--radius-sm);
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.plly-segmented-opt:hover { color: var(--text-strong); }
+.plly-segmented-opt[aria-selected="true"] {
+  background: var(--surface-card); color: var(--text-strong); box-shadow: var(--shadow-xs);
+}
+.plly-segmented-opt:focus-visible { outline: none; box-shadow: var(--ring); }
