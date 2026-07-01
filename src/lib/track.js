@@ -13,6 +13,8 @@ import { track as vercelTrack } from '@vercel/analytics'
  * - advisor_opened          opened the advisor drawer (once/load)
  * - advisor_message_sent    { mode: 'chat' | 'plan' }
  * - result_shared           { method: 'link' | 'pdf' }
+ * - onboarding_completed    { persona, focus }  categorical segmentation
+ * - onboarding_skipped      skipped the front door
  */
 const fired = new Set()
 

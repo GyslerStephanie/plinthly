@@ -48,6 +48,7 @@ export function deriveAppState({
   phase,
   maxVisited,
   dreamContext = null,
+  residentStatus = '',
   marketRate = DEFAULT_MARKET_RATE,
 }) {
   const cantonCode = explore?.canton || values?.canton || ''
@@ -70,6 +71,10 @@ export function deriveAppState({
     explore,
     phase,
     maxVisited,
+
+    // Onboarding: resident status ('expat' | 'national' | '') drives which tax
+    // framing (eigenmietwert / permit) surfaces downstream.
+    residentStatus,
 
     // Convenience flags
     hasResult: !!phase1,

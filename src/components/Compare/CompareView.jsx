@@ -96,10 +96,13 @@ function PctField({ label, sub, value, onChange }) {
   )
 }
 
-export default function CompareView({ onClose, seed = {} }) {
+export default function CompareView({ onClose, seed = {}, seedYear }) {
   const { t } = useI18n()
   const [scenario, setScenario] = useState('rent_vs_buy')
-  const [year, setYear] = useState(10)
+  // Onboarding can seed the default time horizon from the user's duration answer.
+  const [year, setYear] = useState(() =>
+    seedYear ? Math.max(5, Math.min(MAX_YEARS, seedYear)) : 10,
+  )
   const [inputs, setInputs] = useState({
     ...COMPARE_DEFAULTS,
     ...Object.fromEntries(Object.entries(seed).filter(([, v]) => v != null)),
