@@ -27,7 +27,9 @@ const FOCUS = {
 }
 
 const AGE_OPTS = ['18_29', '30_39', '40_49', '50_64', '65_plus']
-const DUR_OPTS = ['few', '5_10', 'long', 'home']
+// Lead with the settled case — most visitors here are (or see themselves as)
+// long-term, so "This is home" first keeps the question from feeling loaded.
+const DUR_OPTS = ['home', 'long', '5_10', 'few']
 const FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking']
 const WHO_OPTS = ['national', 'expat']
 const CITY_OPTS = ['area', 'region', 'notyet']
@@ -71,47 +73,37 @@ function buildReflect(a, t) {
   return `${t('onboarding.reflect.leadNoDesc')} ${tail}.`
 }
 
-function Question({ n, legend, options, name, value, onChange, tOpt, required }) {
-  const { t } = useI18n()
+function Question({ n, legend, options, name, value, onChange, tOpt }) {
   return (
     <fieldset className="rounded-xl border border-line bg-white p-5 shadow-sm">
       <legend className="flex items-baseline gap-2 px-1">
         <span className="ds-figure text-sm font-semibold text-teal-700">{n}</span>
         <span className="text-sm font-semibold text-ink">{legend}</span>
-        <span className="ds-eyebrow ml-1 text-[10px] text-faint">
-          {required ? t('onboarding.required') : t('onboarding.optional')}
-        </span>
       </legend>
-      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <ol className="mt-3 space-y-0.5">
         {options.map((opt, i) => {
           const on = value === opt
           return (
-            <label
-              key={opt}
-              className={
-                'flex cursor-pointer items-start gap-2.5 rounded-lg border px-3 py-2.5 text-sm transition ' +
-                (on
-                  ? 'border-teal-600 bg-teal-50 text-ink'
-                  : 'border-line bg-white text-body hover:border-stone-400')
-              }
-            >
-              <input
-                type="radio"
-                name={name}
-                value={opt}
-                checked={on}
-                onChange={() => onChange(opt)}
-                className="mt-0.5"
-                style={{ accentColor: 'var(--moss-600, #566d29)' }}
-              />
-              <span>
-                <span className="mr-1.5 font-semibold text-muted">{LETTERS[i]}</span>
-                {tOpt(opt)}
-              </span>
-            </label>
+            <li key={opt}>
+              <label className="group flex cursor-pointer items-center gap-3 rounded-md px-1 py-1.5 text-sm transition hover:bg-teal-50/50">
+                <input
+                  type="radio"
+                  name={name}
+                  value={opt}
+                  checked={on}
+                  onChange={() => onChange(opt)}
+                  className="h-4 w-4 shrink-0"
+                  style={{ accentColor: 'var(--moss-600, #566d29)' }}
+                />
+                <span className={on ? 'font-medium text-ink' : 'text-body'}>
+                  <span className="mr-2 font-semibold text-faint">{LETTERS[i]}</span>
+                  {tOpt(opt)}
+                </span>
+              </label>
+            </li>
           )
         })}
-      </div>
+      </ol>
     </fieldset>
   )
 }
@@ -217,7 +209,6 @@ export default function Onboarding({ onComplete, onSkip }) {
             value={answers.focus}
             onChange={set('focus')}
             tOpt={(o) => t(`onboarding.q3.opt.${o}`)}
-            required
           />
           <Question
             n="4"

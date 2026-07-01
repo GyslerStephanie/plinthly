@@ -33,11 +33,9 @@ export const translations = {
       eyebrow: 'Before we start',
       title: 'Where are you right now?',
       intro:
-        'Five quick questions so we can drop you at the right place — with your context already filled in. Only the third one is required.',
+        'Five quick questions so we can drop you at the right place — with your context already filled in.',
       skip: 'Skip → take me to the calculator',
       startOver: 'Start over',
-      required: 'required',
-      optional: 'optional',
       hint: 'Answer question 3 to see where we’d start you.',
       q1: {
         label: 'What’s your age range?',
@@ -638,11 +636,9 @@ export const translations = {
       eyebrow: 'Bevor wir starten',
       title: 'Wo stehen Sie gerade?',
       intro:
-        'Fünf kurze Fragen, damit wir Sie an der richtigen Stelle abholen – mit bereits ausgefülltem Kontext. Nur die dritte Frage ist erforderlich.',
+        'Fünf kurze Fragen, damit wir Sie an der richtigen Stelle abholen – mit bereits ausgefülltem Kontext.',
       skip: 'Überspringen → zum Rechner',
       startOver: 'Neu starten',
-      required: 'erforderlich',
-      optional: 'optional',
       hint: 'Beantworten Sie Frage 3, um zu sehen, wo wir Sie starten würden.',
       q1: {
         label: 'Wie alt sind Sie?',
@@ -1244,11 +1240,9 @@ export const translations = {
       eyebrow: 'Avant de commencer',
       title: 'Où en êtes-vous ?',
       intro:
-        'Cinq questions rapides pour vous orienter au bon endroit – avec votre contexte déjà rempli. Seule la troisième est obligatoire.',
+        'Cinq questions rapides pour vous orienter au bon endroit – avec votre contexte déjà rempli.',
       skip: 'Passer → aller au calculateur',
       startOver: 'Recommencer',
-      required: 'obligatoire',
-      optional: 'facultatif',
       hint: 'Répondez à la question 3 pour voir où nous vous ferions commencer.',
       q1: {
         label: 'Quelle est votre tranche d’âge ?',
@@ -1849,11 +1843,9 @@ export const translations = {
       eyebrow: 'Prima di iniziare',
       title: 'A che punto sei?',
       intro:
-        'Cinque domande veloci per indirizzarti al posto giusto – con il tuo contesto già compilato. Solo la terza è obbligatoria.',
+        'Cinque domande veloci per indirizzarti al posto giusto – con il tuo contesto già compilato.',
       skip: 'Salta → vai al calcolatore',
       startOver: 'Ricomincia',
-      required: 'obbligatoria',
-      optional: 'facoltativa',
       hint: 'Rispondi alla domanda 3 per vedere da dove ti faremmo partire.',
       q1: {
         label: 'Qual è la tua fascia d’età?',
