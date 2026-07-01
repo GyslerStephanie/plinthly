@@ -29,6 +29,95 @@ export const translations = {
   /* ===================================================================== EN */
   en: {
     meta: { mtNotice: '' },
+    onboarding: {
+      eyebrow: 'Before we start',
+      title: 'Where are you right now?',
+      intro:
+        'Five quick questions so we can drop you at the right place — with your context already filled in. Only the third one is required.',
+      skip: 'Skip → take me to the calculator',
+      startOver: 'Start over',
+      required: 'required',
+      optional: 'optional',
+      hint: 'Answer question 3 to see where we’d start you.',
+      q1: {
+        label: 'What’s your age range?',
+        opt: { '18_29': '18–29', '30_39': '30–39', '40_49': '40–49', '50_64': '50–64', '65_plus': '65+' },
+      },
+      q2: {
+        label: 'How long do you see yourself in Switzerland?',
+        opt: { few: 'A few years', '5_10': '5–10 years', long: 'Long-term', home: 'This is home' },
+      },
+      q3: {
+        label: 'What’s your main focus right now?',
+        opt: {
+          learn: 'Just learning how buying works here',
+          compare: 'Deciding whether to buy at all (rent vs buy)',
+          afford: 'Seeing what I can afford',
+          dream: 'I have a home / price in mind — how do I reach it?',
+          looking: 'Actively looking / ready — options, subsidies, renovations & energy',
+        },
+      },
+      q4: {
+        label: 'Are you an expat or Swiss national?',
+        opt: { national: 'Swiss national', expat: 'Expat in Switzerland' },
+      },
+      q5: {
+        label: 'Do you know where you’d buy?',
+        opt: { area: 'A specific area', region: 'A region / canton', notyet: 'Not yet' },
+        cantonLabel: 'Which canton? (optional)',
+        cantonPlaceholder: 'Select a canton',
+      },
+      persona: {
+        newcomer: 'Curious Newcomer',
+        fenceSitter: 'Fence-Sitter',
+        planner: 'Aspiring Planner',
+        dreamer: 'The Dreamer',
+        explorer: 'Ready Explorer',
+        mover: 'The Mover',
+      },
+      dest: {
+        learn: { phase: 'Phase 1 · Your budget', copy: 'Learn the basics and see what you could afford.', target: 'the calculator' },
+        compare: { phase: 'Compare', copy: 'Compare renting, buying and investing over time.', target: 'Compare' },
+        afford: { phase: 'Phase 1 · Your budget', copy: 'Your maximum purchase price, honestly.', target: 'the calculator' },
+        dream: { phase: 'Phase 2 · Dream price', copy: 'Reverse-engineer your dream price, plus a savings path and a reality check.', target: 'your dream price' },
+        looking: { phase: 'Phases 3–4 · Options & action plan', copy: 'Options, subsidies and energy — then your action plan.', target: 'your options' },
+      },
+      why: {
+        dream: 'We’ll show the gap to your target and how much to save — or an honest reality check if it’s a stretch.',
+        durFew: 'A stay of only a few years often tips the maths toward renting — worth comparing first.',
+        expat: 'As an expat, your permit type shapes what you can buy and your mortgage terms.',
+        age: 'At your stage, using your 2nd pillar / Pillar 3a and amortising by retirement matter most.',
+        looking: 'You’ll see energy-class running costs and the Gebäudeprogramm / cantonal subsidies you qualify for.',
+        afford: 'From there you can stretch to a dream price or layer in sustainability & subsidies.',
+        cityArea: 'With an area in mind, you can pressure-test a specific property right away.',
+      },
+      reflect: {
+        youre: 'You’re',
+        leadNoDesc: 'Right now you’re',
+        who: { national: 'a Swiss national', expat: 'an expat' },
+        age: { '18_29': 'in your 20s', '30_39': 'in your 30s', '40_49': 'in your 40s', '50_64': 'in your 50s–60s', '65_plus': '65 or older' },
+        dur: { few: 'here a few years', '5_10': 'here 5–10 years', long: 'here for the long term', home: 'settled here' },
+        focus: {
+          learn: 'getting to know how buying works here',
+          compare: 'weighing whether to buy at all',
+          afford: 'seeing what you can afford',
+          dream: 'working toward a price you have in mind',
+          looking: 'actively looking',
+        },
+        city: { area: 'with a specific area in mind', region: 'with a region in mind', notyet: 'still open on where' },
+      },
+      summary: { eyebrow: 'Here’s where I’d start you', whyTitle: 'Why this fits you' },
+      recommendedStart: 'Recommended start',
+      cta: 'Take me to {dest} →',
+      feedback: {
+        label: 'Anything specific you’re trying to figure out? (optional)',
+        placeholder: 'e.g. can we afford a place near Zug on one income?',
+      },
+      nudge: {
+        dream: 'First, enter your situation below — then we’ll reverse-engineer your dream price and show the gap.',
+        looking: 'First, enter your situation below — then we’ll open up options, subsidies and energy for your budget.',
+      },
+    },
     context: {
       banner: 'Based on your {budget} budget in {canton}.',
       banner3: 'Based on your {budget} budget and {mortgage} mortgage in {canton}.',
@@ -545,6 +634,95 @@ export const translations = {
   /* ===================================================================== DE */
   de: {
     meta: { mtNotice: 'Automatische Übersetzung – fachliche Prüfung empfohlen.' },
+    onboarding: {
+      eyebrow: 'Bevor wir starten',
+      title: 'Wo stehen Sie gerade?',
+      intro:
+        'Fünf kurze Fragen, damit wir Sie an der richtigen Stelle abholen – mit bereits ausgefülltem Kontext. Nur die dritte Frage ist erforderlich.',
+      skip: 'Überspringen → zum Rechner',
+      startOver: 'Neu starten',
+      required: 'erforderlich',
+      optional: 'optional',
+      hint: 'Beantworten Sie Frage 3, um zu sehen, wo wir Sie starten würden.',
+      q1: {
+        label: 'Wie alt sind Sie?',
+        opt: { '18_29': '18–29', '30_39': '30–39', '40_49': '40–49', '50_64': '50–64', '65_plus': '65+' },
+      },
+      q2: {
+        label: 'Wie lange sehen Sie sich in der Schweiz?',
+        opt: { few: 'Ein paar Jahre', '5_10': '5–10 Jahre', long: 'Langfristig', home: 'Das ist mein Zuhause' },
+      },
+      q3: {
+        label: 'Was ist Ihr Hauptfokus gerade?',
+        opt: {
+          learn: 'Ich lerne erst, wie Kaufen hier funktioniert',
+          compare: 'Ich entscheide, ob ich überhaupt kaufen soll (mieten vs. kaufen)',
+          afford: 'Ich schaue, was ich mir leisten kann',
+          dream: 'Ich habe eine Immobilie / einen Preis im Kopf – wie erreiche ich sie?',
+          looking: 'Aktiv auf der Suche / bereit – Optionen, Förderungen, Sanierungen & Energie',
+        },
+      },
+      q4: {
+        label: 'Sind Sie Expat oder Schweizer Staatsangehörige:r?',
+        opt: { national: 'Schweizer Staatsangehörige:r', expat: 'Expat in der Schweiz' },
+      },
+      q5: {
+        label: 'Wissen Sie, wo Sie kaufen würden?',
+        opt: { area: 'Eine bestimmte Gegend', region: 'Eine Region / ein Kanton', notyet: 'Noch nicht' },
+        cantonLabel: 'Welcher Kanton? (optional)',
+        cantonPlaceholder: 'Kanton wählen',
+      },
+      persona: {
+        newcomer: 'Neugierige:r Neuankömmling',
+        fenceSitter: 'Unentschlossene:r',
+        planner: 'Angehende:r Planer:in',
+        dreamer: 'Der/die Träumer:in',
+        explorer: 'Bereite:r Erkunder:in',
+        mover: 'Der/die Umziehende',
+      },
+      dest: {
+        learn: { phase: 'Phase 1 · Ihr Budget', copy: 'Lernen Sie die Grundlagen und sehen Sie, was Sie sich leisten könnten.', target: 'zum Rechner' },
+        compare: { phase: 'Vergleich', copy: 'Vergleichen Sie Mieten, Kaufen und Investieren über die Zeit.', target: 'zum Vergleich' },
+        afford: { phase: 'Phase 1 · Ihr Budget', copy: 'Ihr maximaler Kaufpreis – ehrlich gerechnet.', target: 'zum Rechner' },
+        dream: { phase: 'Phase 2 · Wunschpreis', copy: 'Rechnen Sie Ihren Wunschpreis rückwärts – mit Sparplan und Realitätscheck.', target: 'zu Ihrem Wunschpreis' },
+        looking: { phase: 'Phasen 3–4 · Optionen & Aktionsplan', copy: 'Optionen, Förderungen und Energie – dann Ihr Aktionsplan.', target: 'zu Ihren Optionen' },
+      },
+      why: {
+        dream: 'Wir zeigen die Lücke zu Ihrem Ziel und wie viel Sie sparen müssen – oder einen ehrlichen Realitätscheck, wenn es knapp wird.',
+        durFew: 'Ein Aufenthalt von nur wenigen Jahren spricht oft eher fürs Mieten – ein Vergleich lohnt sich zuerst.',
+        expat: 'Als Expat prägt Ihr Bewilligungstyp, was Sie kaufen können und Ihre Hypothekenkonditionen.',
+        age: 'In Ihrer Lebensphase zählen die Nutzung von 2. Säule / Säule 3a und die Amortisation bis zur Pensionierung am meisten.',
+        looking: 'Sie sehen die Betriebskosten nach Energieklasse und die Förderungen (Gebäudeprogramm / kantonal), für die Sie in Frage kommen.',
+        afford: 'Von dort können Sie zu einem Wunschpreis strecken oder Nachhaltigkeit & Förderungen ergänzen.',
+        cityArea: 'Mit einer Gegend im Kopf können Sie sofort eine konkrete Immobilie durchrechnen.',
+      },
+      reflect: {
+        youre: 'Sie sind',
+        leadNoDesc: 'Gerade',
+        who: { national: 'Schweizer Staatsangehörige:r', expat: 'Expat' },
+        age: { '18_29': 'in Ihren 20ern', '30_39': 'in Ihren 30ern', '40_49': 'in Ihren 40ern', '50_64': 'in Ihren 50ern–60ern', '65_plus': '65 oder älter' },
+        dur: { few: 'für ein paar Jahre hier', '5_10': '5–10 Jahre hier', long: 'langfristig hier', home: 'hier zu Hause' },
+        focus: {
+          learn: 'lernen gerade, wie Kaufen hier funktioniert',
+          compare: 'wägen ab, ob Sie überhaupt kaufen sollen',
+          afford: 'schauen, was Sie sich leisten können',
+          dream: 'arbeiten auf einen Preis hin, den Sie im Kopf haben',
+          looking: 'aktiv auf der Suche',
+        },
+        city: { area: 'mit einer bestimmten Gegend im Kopf', region: 'mit einer Region im Kopf', notyet: 'noch offen, wo' },
+      },
+      summary: { eyebrow: 'Hier würde ich Sie starten', whyTitle: 'Warum das zu Ihnen passt' },
+      recommendedStart: 'Empfohlener Start',
+      cta: 'Bring mich {dest} →',
+      feedback: {
+        label: 'Gibt es etwas Konkretes, das Sie herausfinden möchten? (optional)',
+        placeholder: 'z. B. Können wir uns mit einem Einkommen etwas bei Zug leisten?',
+      },
+      nudge: {
+        dream: 'Geben Sie zuerst unten Ihre Situation ein – dann rechnen wir Ihren Wunschpreis rückwärts und zeigen die Lücke.',
+        looking: 'Geben Sie zuerst unten Ihre Situation ein – dann öffnen wir Optionen, Förderungen und Energie für Ihr Budget.',
+      },
+    },
     context: {
       banner: 'Basierend auf Ihrem Budget von {budget} im Kanton {canton}.',
       banner3: 'Basierend auf Ihrem Budget von {budget} und einer Hypothek von {mortgage} im Kanton {canton}.',
@@ -1062,6 +1240,95 @@ export const translations = {
   /* ===================================================================== FR */
   fr: {
     meta: { mtNotice: 'Traduction automatique – relecture professionnelle recommandée.' },
+    onboarding: {
+      eyebrow: 'Avant de commencer',
+      title: 'Où en êtes-vous ?',
+      intro:
+        'Cinq questions rapides pour vous orienter au bon endroit – avec votre contexte déjà rempli. Seule la troisième est obligatoire.',
+      skip: 'Passer → aller au calculateur',
+      startOver: 'Recommencer',
+      required: 'obligatoire',
+      optional: 'facultatif',
+      hint: 'Répondez à la question 3 pour voir où nous vous ferions commencer.',
+      q1: {
+        label: 'Quelle est votre tranche d’âge ?',
+        opt: { '18_29': '18–29', '30_39': '30–39', '40_49': '40–49', '50_64': '50–64', '65_plus': '65+' },
+      },
+      q2: {
+        label: 'Combien de temps vous voyez-vous en Suisse ?',
+        opt: { few: 'Quelques années', '5_10': '5–10 ans', long: 'Long terme', home: 'C’est chez moi' },
+      },
+      q3: {
+        label: 'Quel est votre objectif principal en ce moment ?',
+        opt: {
+          learn: 'J’apprends simplement comment l’achat fonctionne ici',
+          compare: 'Je décide si je dois acheter (louer vs acheter)',
+          afford: 'Je regarde ce que je peux me permettre',
+          dream: 'J’ai un bien / un prix en tête – comment l’atteindre ?',
+          looking: 'Je cherche activement / prêt·e – options, subventions, rénovations & énergie',
+        },
+      },
+      q4: {
+        label: 'Êtes-vous expatrié·e ou ressortissant·e suisse ?',
+        opt: { national: 'Ressortissant·e suisse', expat: 'Expatrié·e en Suisse' },
+      },
+      q5: {
+        label: 'Savez-vous où vous achèteriez ?',
+        opt: { area: 'Un endroit précis', region: 'Une région / un canton', notyet: 'Pas encore' },
+        cantonLabel: 'Quel canton ? (facultatif)',
+        cantonPlaceholder: 'Choisir un canton',
+      },
+      persona: {
+        newcomer: 'Nouveau·elle venu·e curieux·se',
+        fenceSitter: 'Indécis·e',
+        planner: 'Planificateur·rice en devenir',
+        dreamer: 'Le·la Rêveur·se',
+        explorer: 'Explorateur·rice prêt·e',
+        mover: 'Celui·celle qui déménage',
+      },
+      dest: {
+        learn: { phase: 'Phase 1 · Votre budget', copy: 'Apprenez les bases et voyez ce que vous pourriez vous permettre.', target: 'au calculateur' },
+        compare: { phase: 'Comparer', copy: 'Comparez louer, acheter et investir dans le temps.', target: 'au comparateur' },
+        afford: { phase: 'Phase 1 · Votre budget', copy: 'Votre prix d’achat maximum, honnêtement.', target: 'au calculateur' },
+        dream: { phase: 'Phase 2 · Prix de rêve', copy: 'Rétro-ingénierez votre prix de rêve, avec un plan d’épargne et un test de réalité.', target: 'à votre prix de rêve' },
+        looking: { phase: 'Phases 3–4 · Options & plan d’action', copy: 'Options, subventions et énergie – puis votre plan d’action.', target: 'à vos options' },
+      },
+      why: {
+        dream: 'Nous montrerons l’écart avec votre objectif et combien épargner – ou un test de réalité honnête si c’est ambitieux.',
+        durFew: 'Un séjour de quelques années seulement fait souvent pencher les calculs vers la location – à comparer d’abord.',
+        expat: 'En tant qu’expatrié·e, votre type de permis façonne ce que vous pouvez acheter et vos conditions hypothécaires.',
+        age: 'À votre étape, l’utilisation du 2e pilier / pilier 3a et l’amortissement d’ici la retraite comptent le plus.',
+        looking: 'Vous verrez les coûts d’exploitation par classe énergétique et les subventions (Programme Bâtiments / cantonales) auxquelles vous avez droit.',
+        afford: 'De là, vous pouvez viser un prix de rêve ou ajouter durabilité & subventions.',
+        cityArea: 'Avec un endroit en tête, vous pouvez tester un bien précis tout de suite.',
+      },
+      reflect: {
+        youre: 'Vous êtes',
+        leadNoDesc: 'En ce moment, vous êtes',
+        who: { national: 'ressortissant·e suisse', expat: 'expatrié·e' },
+        age: { '18_29': 'dans la vingtaine', '30_39': 'dans la trentaine', '40_49': 'dans la quarantaine', '50_64': 'dans la cinquantaine–soixantaine', '65_plus': '65 ans ou plus' },
+        dur: { few: 'ici pour quelques années', '5_10': 'ici 5–10 ans', long: 'ici sur le long terme', home: 'ici chez vous' },
+        focus: {
+          learn: 'en train d’apprendre comment l’achat fonctionne ici',
+          compare: 'en train de peser si acheter',
+          afford: 'en train de voir ce que vous pouvez vous permettre',
+          dream: 'en train de viser un prix que vous avez en tête',
+          looking: 'en recherche active',
+        },
+        city: { area: 'avec un endroit précis en tête', region: 'avec une région en tête', notyet: 'encore ouvert·e sur le où' },
+      },
+      summary: { eyebrow: 'Voici où je vous ferais commencer', whyTitle: 'Pourquoi cela vous correspond' },
+      recommendedStart: 'Départ recommandé',
+      cta: 'Emmenez-moi {dest} →',
+      feedback: {
+        label: 'Quelque chose de précis à comprendre ? (facultatif)',
+        placeholder: 'p. ex. pouvons-nous nous offrir un bien près de Zoug avec un seul revenu ?',
+      },
+      nudge: {
+        dream: 'Entrez d’abord votre situation ci-dessous – puis nous rétro-ingénierons votre prix de rêve et montrerons l’écart.',
+        looking: 'Entrez d’abord votre situation ci-dessous – puis nous ouvrirons options, subventions et énergie pour votre budget.',
+      },
+    },
     context: {
       banner: 'Sur la base de votre budget de {budget} dans le canton de {canton}.',
       banner3: 'Sur la base de votre budget de {budget} et d’une hypothèque de {mortgage} dans le canton de {canton}.',
@@ -1578,6 +1845,95 @@ export const translations = {
   /* ===================================================================== IT */
   it: {
     meta: { mtNotice: 'Traduzione automatica – si consiglia una revisione professionale.' },
+    onboarding: {
+      eyebrow: 'Prima di iniziare',
+      title: 'A che punto sei?',
+      intro:
+        'Cinque domande veloci per indirizzarti al posto giusto – con il tuo contesto già compilato. Solo la terza è obbligatoria.',
+      skip: 'Salta → vai al calcolatore',
+      startOver: 'Ricomincia',
+      required: 'obbligatoria',
+      optional: 'facoltativa',
+      hint: 'Rispondi alla domanda 3 per vedere da dove ti faremmo partire.',
+      q1: {
+        label: 'Qual è la tua fascia d’età?',
+        opt: { '18_29': '18–29', '30_39': '30–39', '40_49': '40–49', '50_64': '50–64', '65_plus': '65+' },
+      },
+      q2: {
+        label: 'Per quanto tempo ti vedi in Svizzera?',
+        opt: { few: 'Qualche anno', '5_10': '5–10 anni', long: 'A lungo termine', home: 'Questa è casa' },
+      },
+      q3: {
+        label: 'Qual è il tuo obiettivo principale in questo momento?',
+        opt: {
+          learn: 'Sto solo imparando come funziona l’acquisto qui',
+          compare: 'Sto decidendo se comprare o no (affitto vs acquisto)',
+          afford: 'Voglio vedere cosa posso permettermi',
+          dream: 'Ho una casa / un prezzo in mente – come lo raggiungo?',
+          looking: 'Cerco attivamente / pronto·a – opzioni, sussidi, ristrutturazioni & energia',
+        },
+      },
+      q4: {
+        label: 'Sei un·a expat o cittadino·a svizzero·a?',
+        opt: { national: 'Cittadino·a svizzero·a', expat: 'Expat in Svizzera' },
+      },
+      q5: {
+        label: 'Sai dove compreresti?',
+        opt: { area: 'Una zona precisa', region: 'Una regione / un cantone', notyet: 'Non ancora' },
+        cantonLabel: 'Quale cantone? (facoltativo)',
+        cantonPlaceholder: 'Scegli un cantone',
+      },
+      persona: {
+        newcomer: 'Nuovo·a arrivato·a curioso·a',
+        fenceSitter: 'Indeciso·a',
+        planner: 'Aspirante pianificatore·trice',
+        dreamer: 'Il·la Sognatore·trice',
+        explorer: 'Esploratore·trice pronto·a',
+        mover: 'Chi trasloca',
+      },
+      dest: {
+        learn: { phase: 'Fase 1 · Il tuo budget', copy: 'Impara le basi e vedi cosa potresti permetterti.', target: 'al calcolatore' },
+        compare: { phase: 'Confronta', copy: 'Confronta affittare, comprare e investire nel tempo.', target: 'al confronto' },
+        afford: { phase: 'Fase 1 · Il tuo budget', copy: 'Il tuo prezzo d’acquisto massimo, onestamente.', target: 'al calcolatore' },
+        dream: { phase: 'Fase 2 · Prezzo dei sogni', copy: 'Ricostruisci a ritroso il prezzo dei sogni, con un piano di risparmio e un controllo di realtà.', target: 'al tuo prezzo dei sogni' },
+        looking: { phase: 'Fasi 3–4 · Opzioni & piano d’azione', copy: 'Opzioni, sussidi ed energia – poi il tuo piano d’azione.', target: 'alle tue opzioni' },
+      },
+      why: {
+        dream: 'Ti mostreremo il divario rispetto al tuo obiettivo e quanto risparmiare – o un onesto controllo di realtà se è ambizioso.',
+        durFew: 'Una permanenza di pochi anni spesso fa pendere i conti verso l’affitto – meglio confrontare prima.',
+        expat: 'Da expat, il tipo di permesso determina cosa puoi comprare e le tue condizioni ipotecarie.',
+        age: 'Nella tua fase, usare il 2° pilastro / pilastro 3a e ammortizzare entro la pensione contano di più.',
+        looking: 'Vedrai i costi di gestione per classe energetica e i sussidi (Programma Edifici / cantonali) a cui hai diritto.',
+        afford: 'Da lì puoi puntare a un prezzo dei sogni o aggiungere sostenibilità & sussidi.',
+        cityArea: 'Con una zona in mente, puoi testare subito un immobile specifico.',
+      },
+      reflect: {
+        youre: 'Sei',
+        leadNoDesc: 'In questo momento sei',
+        who: { national: 'cittadino·a svizzero·a', expat: 'un·a expat' },
+        age: { '18_29': 'sui vent’anni', '30_39': 'sui trent’anni', '40_49': 'sui quarant’anni', '50_64': 'sui cinquanta–sessant’anni', '65_plus': 'a 65 anni o più' },
+        dur: { few: 'qui per qualche anno', '5_10': 'qui 5–10 anni', long: 'qui a lungo termine', home: 'qui a casa' },
+        focus: {
+          learn: 'stai imparando come funziona l’acquisto qui',
+          compare: 'stai valutando se comprare',
+          afford: 'stai vedendo cosa puoi permetterti',
+          dream: 'stai puntando a un prezzo che hai in mente',
+          looking: 'in ricerca attiva',
+        },
+        city: { area: 'con una zona precisa in mente', region: 'con una regione in mente', notyet: 'ancora aperto·a sul dove' },
+      },
+      summary: { eyebrow: 'Ecco da dove ti farei partire', whyTitle: 'Perché fa al caso tuo' },
+      recommendedStart: 'Partenza consigliata',
+      cta: 'Portami {dest} →',
+      feedback: {
+        label: 'C’è qualcosa di specifico che vuoi capire? (facoltativo)',
+        placeholder: 'es. possiamo permetterci una casa vicino a Zugo con un solo reddito?',
+      },
+      nudge: {
+        dream: 'Inserisci prima la tua situazione qui sotto – poi ricostruiremo a ritroso il prezzo dei sogni e mostreremo il divario.',
+        looking: 'Inserisci prima la tua situazione qui sotto – poi apriremo opzioni, sussidi ed energia per il tuo budget.',
+      },
+    },
     context: {
       banner: 'In base al tuo budget di {budget} nel cantone {canton}.',
       banner3: 'In base al tuo budget di {budget} e a un mutuo di {mortgage} nel cantone {canton}.',

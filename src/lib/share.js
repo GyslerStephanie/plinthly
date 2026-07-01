@@ -23,6 +23,7 @@ const KEYS = [
   ['ms', 'measures'],
   ['dp', 'dreamPrice'],
   ['ph', 'phase'],
+  ['rs', 'residentStatus'], // onboarding: 'expat' | 'national' (drives tax notes)
 ]
 
 // Numeric inputs are displayed with thousands separators (e.g. "1,250,000").

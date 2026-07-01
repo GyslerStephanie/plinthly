@@ -16,6 +16,7 @@ import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
+import Onboarding from './components/Onboarding/Onboarding'
 import { buildAdvisorContext } from './lib/advisorContext'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
@@ -23,6 +24,20 @@ import { track } from './lib/track'
 
 const PHASE_NUMBERS = [1, 2, 3, 4, 5]
 const LAST_PHASE = 5
+const ONBOARDED_KEY = 'plinthly.onboarded'
+
+/** Whether to show the onboarding front door: only on a cold first visit —
+ *  not once dismissed, and never over a deep link that already carries state. */
+function coldFirstVisit() {
+  try {
+    if (localStorage.getItem(ONBOARDED_KEY)) return false
+    const s = decodeState()
+    if (s && Object.keys(s).length > 0) return false
+    return true
+  } catch {
+    return false
+  }
+}
 
 const DEFAULT_VALUES = {
   grossIncome: '',
@@ -62,6 +77,10 @@ export default function App() {
   const [showCompare, setShowCompare] = useState(false) // Compare parallel surface
   const [dreamContext, setDreamContext] = useState(null) // dream-price gap for the AI advisor
   const [dreamPrice, setDreamPrice] = useState('') // Phase 2 dream price (persisted in hash)
+  const [showOnboarding, setShowOnboarding] = useState(coldFirstVisit) // front door
+  const [compareHorizon, setCompareHorizon] = useState(undefined) // seeded Compare years
+  const [residentStatus, setResidentStatus] = useState('') // 'expat' | 'national' | ''
+  const [routeIntent, setRouteIntent] = useState(null) // 'dream' | 'looking' — nudge until phase1
   const restored = useRef(false)
 
   // Record end-of-journey feedback. Show the thank-you optimistically (so a
@@ -107,6 +126,7 @@ export default function App() {
       measures: s.measures, // undefined → configurator default
     })
     if (s.dreamPrice) setDreamPrice(s.dreamPrice)
+    if (s.residentStatus) setResidentStatus(s.residentStatus)
 
     const restoredEquity =
       Number(String(nextValues.savings).replace(/[^0-9.]/g, '')) +
@@ -136,8 +156,9 @@ export default function App() {
       measures: explore.measures,
       dreamPrice,
       phase,
+      residentStatus,
     })
-  }, [values, explore, phase, dreamPrice])
+  }, [values, explore, phase, dreamPrice, residentStatus])
 
   const flatState = {
     ...values,
@@ -150,6 +171,7 @@ export default function App() {
     measures: explore.measures,
     dreamPrice,
     phase,
+    residentStatus,
   }
 
   // Fully live: the result reflects the current inputs continuously (no "run"
@@ -210,11 +232,69 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  // --- Onboarding front door -------------------------------------------------
+  const markOnboarded = () => {
+    try {
+      localStorage.setItem(ONBOARDED_KEY, '1')
+    } catch {
+      /* ignore */
+    }
+  }
+
+  // Apply the onboarding answers as seed state, fire analytics, then route to
+  // the mapped destination (spec §4/§7). Phases 2–5 need a Phase-1 result; on a
+  // cold entry there is none yet, so Dreamer/Ready-Explorer land on Phase 1 with
+  // a nudge (spec §9) instead of a dead phase.
+  const completeOnboarding = ({ focus, persona, dest, seed }) => {
+    markOnboarded()
+    if (seed?.residentStatus) setResidentStatus(seed.residentStatus)
+    if (seed?.horizon) setCompareHorizon(seed.horizon)
+    if (seed?.canton) {
+      setValues((v) => ({ ...v, canton: seed.canton }))
+      setExplore((e) => ({ ...e, canton: seed.canton }))
+    }
+    track('onboarding_completed', { persona, focus })
+    setShowOnboarding(false)
+
+    if (dest === 'compare') {
+      setShowCompare(true)
+      return
+    }
+    if (dest === 'dream') {
+      setRouteIntent(phase1 ? null : 'dream')
+      goToPhase(phase1 ? 2 : 1)
+      return
+    }
+    if (dest === 'looking') {
+      setRouteIntent(phase1 ? null : 'looking')
+      goToPhase(phase1 ? 3 : 1)
+      return
+    }
+    // learn / afford → Phase 1
+    setRouteIntent(null)
+    goToPhase(1)
+  }
+
+  const skipOnboarding = () => {
+    markOnboarded()
+    track('onboarding_skipped')
+    setShowOnboarding(false)
+    goToPhase(1)
+  }
+
+  const startOver = () => {
+    setRouteIntent(null)
+    setShowOnboarding(true)
+  }
+
+  // Once a Phase-1 result exists the nudge has served its purpose.
+  const showRouteNudge = phase === 1 && !phase1 && !!routeIntent
+
   const canContinue = phase < LAST_PHASE && (phase > 1 || !!phase1)
   const mtNotice = t('meta.mtNotice')
 
   // Derived, read-only view of state shared with descendants via context.
-  const appState = deriveAppState({ values, phase1, explore, phase, maxVisited, dreamContext })
+  const appState = deriveAppState({ values, phase1, explore, phase, maxVisited, dreamContext, residentStatus })
 
   // If the buyer has modelled a renovation (Phase 3, Option A), surface its net
   // cost back in Phase 1 as an "effective property budget".
@@ -251,6 +331,13 @@ export default function App() {
             <span className="hidden rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500 lg:inline">
               {t('header.badge')}
             </span>
+            <button
+              type="button"
+              onClick={startOver}
+              className="hidden text-xs font-medium text-muted underline-offset-4 transition hover:text-ink hover:underline sm:inline"
+            >
+              {t('onboarding.startOver')}
+            </button>
             <LanguageSwitcher
               lang={lang}
               setLang={setLang}
@@ -277,6 +364,14 @@ export default function App() {
             onJump={goToPhase}
           />
         </div>
+
+        {showRouteNudge && (
+          <div className="mb-6 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900 no-print">
+            {routeIntent === 'dream'
+              ? t('onboarding.nudge.dream')
+              : t('onboarding.nudge.looking')}
+          </div>
+        )}
 
         {phase === 1 ? (
           <div className="ds-hero relative mb-8 overflow-hidden rounded-2xl border border-line shadow-sm no-print">
@@ -445,12 +540,19 @@ export default function App() {
       {showCompare && (
         <CompareView
           onClose={() => setShowCompare(false)}
+          seedYear={compareHorizon}
           seed={{
             income: Number(String(values.grossIncome).replace(/[^0-9.]/g, '')) || undefined,
             cash: phase1?.inputs?.hardEquity || undefined,
             price: phase1?.maxPrice || undefined,
           }}
         />
+      )}
+
+      {/* Onboarding — the front door on a cold first visit (spec §2). Rendered
+          last so it overlays the app; skippable and shown-once. */}
+      {showOnboarding && (
+        <Onboarding onComplete={completeOnboarding} onSkip={skipOnboarding} />
       )}
 
       {/* Vercel Speed Insights — anonymous Web Vitals, no PII */}
