@@ -11,6 +11,7 @@ import { getCanton, eigenmietwert } from '../lib/cantons'
 import { useI18n } from '../i18n/I18nContext'
 import { T, renderRich } from './Trans'
 import Collapsible from './Collapsible'
+import MortgagePayoffPanel from './MortgagePayoffPanel'
 import PathToGoal from './PathToGoal'
 import Levers from './Levers'
 import NextSteps from './NextSteps'
@@ -521,6 +522,15 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           notionalPct={notionalPct}
           maintenancePct={pct(result.rules.maintenancePct / 100)}
           showing={t('result.monthlyForAfford', { price: chf(result.maxPrice) })}
+        />
+      )}
+
+      {/* Mortgage over time — payoff timeline, interest, retirement re-test */}
+      {result.maxPrice > 0 && (
+        <MortgagePayoffPanel
+          price={result.maxPrice}
+          mortgage={dp.mortgage}
+          income={result.inputs.grossIncome}
         />
       )}
 

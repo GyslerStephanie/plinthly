@@ -9,6 +9,7 @@ import {
 import { useI18n } from '../i18n/I18nContext'
 import { Card, Row } from './ui'
 import Collapsible from './Collapsible'
+import MortgagePayoffPanel from './MortgagePayoffPanel'
 import PathToGoal from './PathToGoal'
 import Levers from './Levers'
 import NextSteps from './NextSteps'
@@ -492,6 +493,15 @@ export default function DreamPricePhase({ result, onNavigate, onDreamContext, dr
           </div>
 
           </Collapsible>
+
+          {/* Mortgage over time — payoff timeline, interest, retirement re-test */}
+          {check.mortgage > 0 && (
+            <MortgagePayoffPanel
+              price={check.purchasePrice}
+              mortgage={check.mortgage}
+              income={result.inputs.grossIncome}
+            />
+          )}
 
           {/* ── Choose your next step (CTAs last, §6b) ── */}
           {!check.qualifies && (
