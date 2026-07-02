@@ -15,8 +15,8 @@ export default function Hero({
   // without touching the component.
   eyebrow = 'Onward · upward',
   wordmark = 'Plinthly',
-  tagline = 'Honest numbers, grounded in nature.',
-  sub = 'See what you can buy, build, or renovate in Switzerland — before you talk to a bank.',
+  tagline = 'Helping you climb the stairs for planning a future home',
+  sub = 'Compare different scenarios or see what you can buy, build, renovate in Switzerland',
   ctaLabel = 'Start',
   // The built-in arrow — turn off when ctaLabel already ends in one (e.g. an
   // i18n string like "Get started →").

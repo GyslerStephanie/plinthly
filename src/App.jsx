@@ -350,7 +350,7 @@ export default function App() {
             <button
               type="button"
               onClick={startOver}
-              className="hidden text-xs font-medium text-muted underline-offset-4 transition hover:text-ink hover:underline sm:inline"
+              className="whitespace-nowrap text-xs font-medium text-muted underline-offset-4 transition hover:text-ink hover:underline"
             >
               {t('onboarding.startOver')}
             </button>
