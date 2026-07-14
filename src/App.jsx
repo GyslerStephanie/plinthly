@@ -431,7 +431,7 @@ export default function App() {
 
         {/* Phase 2 — Calculate dream price */}
         {phase === 2 && phase1 && (
-          <DreamPricePhase result={phase1} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => setShowCompare(true)} />
+          <DreamPricePhase result={phase1} values={values} onValuesChange={handleValuesChange} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => setShowCompare(true)} />
         )}
 
         {/* Phase 3 — exploration */}

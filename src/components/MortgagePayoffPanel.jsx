@@ -41,11 +41,11 @@ function CashField({ label, sub, value, onChange, suffix }) {
 function BalanceChart({ model, displayYears }) {
   const { t } = useI18n()
   const W = 600
-  const H = 200
-  const padL = 8
-  const padR = 8
-  const padT = 18
-  const padB = 22
+  const H = 216
+  const padL = 46 // room for the CHF balance scale on the y-axis
+  const padR = 12
+  const padT = 20
+  const padB = 36 // room for year ticks + the "Years" axis title
   const N = Math.max(1, displayYears)
   const sched = model.schedule
   const balanceAt = (k) => (k < sched.length ? sched[k].balance : 0)
@@ -59,11 +59,22 @@ function BalanceChart({ model, displayYears }) {
   const retIn = ret && ret.year <= N
   const payIn = model.payoffYear != null && model.payoffYear <= N
   const ticks = [0, Math.round(N / 4), Math.round(N / 2), Math.round((3 * N) / 4), N]
+  const hasFloor = model.mTarget < max
+  // Compact CHF scale label, e.g. 960000 → "960k".
+  const kfmt = (v) => (v >= 1000 ? `${int(Math.round(v / 1000))}k` : int(Math.round(v)))
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={t('payoff.chartLabel')}>
+      {/* y-axis: outstanding balance scale (CHF) */}
+      <text x={padL - 6} y={padT - 7} fontSize="9" textAnchor="end" fill="var(--text-muted)">CHF</text>
+      <text x={padL - 6} y={y(max) + 3} fontSize="10" textAnchor="end" fill="var(--text-faint)">{kfmt(max)}</text>
+      {hasFloor && (
+        <text x={padL - 6} y={y(model.mTarget) + 3} fontSize="10" textAnchor="end" fill="var(--text-faint)">{kfmt(model.mTarget)}</text>
+      )}
+      <text x={padL - 6} y={y(0) + 3} fontSize="10" textAnchor="end" fill="var(--text-faint)">0</text>
+
       {/* 66.7% amortization floor */}
-      {model.mTarget < max && (
+      {hasFloor && (
         <>
           <line x1={padL} y1={y(model.mTarget)} x2={W - padR} y2={y(model.mTarget)} stroke="var(--line-strong)" strokeWidth="1" strokeDasharray="4 4" opacity="0.6" />
           <text x={W - padR} y={y(model.mTarget) - 4} fontSize="10" textAnchor="end" fill="var(--text-faint)">
@@ -93,11 +104,15 @@ function BalanceChart({ model, displayYears }) {
           </text>
         </>
       )}
+      {/* x-axis: year ticks + unit title */}
       {ticks.map((k, i) => (
-        <text key={i} x={x(k)} y={H - 5} fontSize="10" textAnchor="middle" fill="var(--text-faint)">
+        <text key={i} x={x(k)} y={H - padB + 15} fontSize="10" textAnchor="middle" fill="var(--text-faint)">
           {k}
         </text>
       ))}
+      <text x={(padL + (W - padR)) / 2} y={H - 4} fontSize="10" textAnchor="middle" fill="var(--text-muted)">
+        {t('payoff.axisYears')}
+      </text>
     </svg>
   )
 }

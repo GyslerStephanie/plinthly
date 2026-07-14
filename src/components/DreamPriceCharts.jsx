@@ -217,9 +217,8 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
             </g>
           ))}
 
-          {/* "today" baseline */}
+          {/* "today" baseline (its label is drawn last, below — see trajToday) */}
           <line x1={padL} y1={startY} x2={W - padR} y2={startY} stroke="#e3e0d2" strokeWidth="1" strokeDasharray="2 3" />
-          <text x={padL} y={startY - 5} fontSize="10" fill="#847f70">{t('dream.trajToday', { value: chf(startEquity) })}</text>
 
           {/* focal area fill under the user's pace */}
           <path d={`M ${x(0)} ${startY} L ${more.endX} ${more.endY} L ${more.endX} ${baseY} L ${x(0)} ${baseY} Z`} fill="url(#trajMoreFill)" />
@@ -243,6 +242,22 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
               )}
             </g>
           ))}
+
+          {/* Today's-equity label — drawn AFTER the lines and white-haloed so no
+              scenario line can cross or hide it; sits just below the baseline,
+              which is always clear (every line rises upward from it). */}
+          <text
+            x={padL}
+            y={startY + 15 <= baseY - 2 ? startY + 15 : startY - 6}
+            fontSize="10"
+            fontWeight="500"
+            fill="#5c5848"
+            style={{ paintOrder: 'stroke' }}
+            stroke="#ffffff"
+            strokeWidth="3.5"
+          >
+            {t('dream.trajToday', { value: chf(startEquity) })}
+          </text>
 
           {/* hover guide + per-line dots */}
           {hover && (
