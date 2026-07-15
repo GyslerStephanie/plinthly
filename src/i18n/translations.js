@@ -29,6 +29,16 @@ export const translations = {
   /* ===================================================================== EN */
   en: {
     meta: { mtNotice: '' },
+    landing: {
+      eyebrow: 'No selling · No sign-up · Just honest numbers',
+      title: 'Your onward move — Swiss homes, honest numbers.',
+      blurb:
+        'Plinthly reads your situation and shows what you could really buy under Swiss mortgage rules — before you talk to a bank, broker, or builder.',
+      cta: 'Get started →',
+      skip: 'Skip onboarding →',
+      skipInline: 'Skip the questions — take me to the calculator',
+      trust: 'No account · Nothing saved · Nothing sold to you',
+    },
     onboarding: {
       eyebrow: 'Before we start',
       title: 'Where are you right now?',
@@ -693,6 +703,16 @@ export const translations = {
   /* ===================================================================== DE */
   de: {
     meta: { mtNotice: 'Automatische Übersetzung – fachliche Prüfung empfohlen.' },
+    landing: {
+      eyebrow: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
+      title: 'Ihr nächster Schritt – Schweizer Immobilien, ehrliche Zahlen.',
+      blurb:
+        'Plinthly liest Ihre Situation und zeigt, was Sie unter Schweizer Hypothekenregeln wirklich kaufen könnten – bevor Sie mit Bank, Makler oder Bauträger sprechen.',
+      cta: 'Loslegen →',
+      skip: 'Onboarding überspringen →',
+      skipInline: 'Fragen überspringen – zum Rechner',
+      trust: 'Kein Konto · Nichts gespeichert · Nichts verkauft',
+    },
     onboarding: {
       eyebrow: 'Bevor wir starten',
       title: 'Wo stehen Sie gerade?',
@@ -1357,6 +1377,16 @@ export const translations = {
   /* ===================================================================== FR */
   fr: {
     meta: { mtNotice: 'Traduction automatique – relecture professionnelle recommandée.' },
+    landing: {
+      eyebrow: 'Sans vente · Sans inscription · Juste des chiffres honnêtes',
+      title: 'Votre prochaine étape – l’immobilier suisse, sans détour.',
+      blurb:
+        'Plinthly lit votre situation et montre ce que vous pourriez vraiment acheter selon les règles hypothécaires suisses – avant de parler à une banque, un courtier ou un constructeur.',
+      cta: 'Commencer →',
+      skip: 'Passer l’intro →',
+      skipInline: 'Passer les questions – aller au calculateur',
+      trust: 'Pas de compte · Rien d’enregistré · Rien à vous vendre',
+    },
     onboarding: {
       eyebrow: 'Avant de commencer',
       title: 'Où en êtes-vous ?',
@@ -2020,6 +2050,16 @@ export const translations = {
   /* ===================================================================== IT */
   it: {
     meta: { mtNotice: 'Traduzione automatica – si consiglia una revisione professionale.' },
+    landing: {
+      eyebrow: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',
+      title: 'Il tuo prossimo passo – case svizzere, numeri onesti.',
+      blurb:
+        'Plinthly legge la tua situazione e mostra cosa potresti davvero comprare secondo le regole ipotecarie svizzere – prima di parlare con banca, agente o costruttore.',
+      cta: 'Inizia →',
+      skip: 'Salta l’introduzione →',
+      skipInline: 'Salta le domande – vai al calcolatore',
+      trust: 'Nessun account · Niente salvato · Niente in vendita',
+    },
     onboarding: {
       eyebrow: 'Prima di iniziare',
       title: 'A che punto sei?',
