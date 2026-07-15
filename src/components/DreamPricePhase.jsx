@@ -14,7 +14,7 @@ import PathToGoal from './PathToGoal'
 import Levers from './Levers'
 import NextSteps from './NextSteps'
 import CompareCta from './CompareCta'
-import { GapChart, TrajectoryChart, MilestoneTable } from './DreamPriceCharts'
+import { GoalColumns, TrajectoryChart, MilestoneTable } from './DreamPriceCharts'
 
 const roundK = (v) => Math.round(v / 1000) * 1000
 
@@ -127,20 +127,51 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
 
   return (
     <div className="space-y-5">
-      {/* Plain-language gap banner — names the single binding constraint (#1/#7) */}
-      {check && !check.qualifies && (
-        <GapBanner
-          check={check}
-          equityGap={dreamEquityGap}
-          incomeGap={dreamIncomeGap}
-          eqShort={eqShort}
-          affShort={affShort}
-        />
+      {/* Verdict styled as a soft banner (tinted box + icon, no white card).
+          Sits under the phase heading, above the summary/form row. */}
+      {check && (
+        check.qualifies ? (
+          <div className="flex items-start gap-3 rounded-xl border border-line bg-positive-light px-5 py-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-positive" aria-hidden>
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            <div>
+              <p className="text-base font-semibold text-positive">{t('check.qualifies')}</p>
+              <p className="mt-1 text-sm leading-relaxed text-body">{t('check.qualifiesNote')}</p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-amber-600" aria-hidden>
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <div>
+              <p className="text-base font-semibold text-amber-900">{t('check.outOfReach', { price: chf(check.purchasePrice) })}</p>
+              <p className="mt-1 text-sm leading-relaxed text-amber-800">{t('check.outOfReachNote')}</p>
+              <p className="mt-1 text-sm font-medium text-amber-900">{t(`check.${blockerKey}`)}</p>
+
+              {/* How to close the gap — the concrete levers */}
+              <p id="close-the-gap" className="mt-3 scroll-mt-24 text-xs font-semibold uppercase tracking-wide text-amber-800">
+                {t('check.closeGapTitle')}
+              </p>
+              <ul className="mt-1.5 space-y-1.5">
+                {closeGapLevers.map((lever) => (
+                  <li key={lever.key} className="flex items-start gap-2 text-sm text-amber-900">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" aria-hidden />
+                    <span>{t(lever.key, lever.vars)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )
       )}
 
       {/* Two-column top: situation summary (left) + price check (right) */}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:items-start">
-        <SituationCard result={result} values={values} onValuesChange={onValuesChange} />
+        <SituationCard result={result} values={values} onValuesChange={onValuesChange} check={check} />
 
         <Card title={t('check.title')}>
         <div className="dream-input-step">
@@ -256,50 +287,6 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
 
       {check && (
         <div id="dream-results" className="space-y-5">
-          {/* Overall verdict. Qualifying = a clean positive panel. Not yet =
-              a NEUTRAL "out of reach right now" panel that names the blocker and
-              lists how to close the gap — an invitation to explore, not a fail. */}
-          {check.qualifies ? (
-            <div className="rounded-xl border border-line bg-white p-4 border-l-4 border-l-positive">
-              <p className="flex items-center gap-2 text-base font-semibold text-positive">
-                <span className="inline-block h-2 w-2 rounded-full bg-positive" aria-hidden />
-                {t('check.qualifies')}
-              </p>
-              <p className="mt-1 text-sm leading-relaxed text-body">{t('check.qualifiesNote')}</p>
-            </div>
-          ) : (
-            <div className="rounded-xl border border-line bg-white p-4 border-l-4 border-l-ink">
-              <p className="flex items-center gap-2 text-base font-semibold text-ink">
-                <span className="inline-block h-2 w-2 rounded-full bg-ink" aria-hidden />
-                {t('check.outOfReach', { price: chf(check.purchasePrice) })}
-              </p>
-              <p className="mt-1 text-sm leading-relaxed text-body">{t('check.outOfReachNote')}</p>
-              <p className="mt-1 text-sm font-medium text-ink">{t(`check.${blockerKey}`)}</p>
-
-              {/* How to close the gap — the concrete levers */}
-              <p id="close-the-gap" className="mt-3 scroll-mt-24 text-xs font-semibold uppercase tracking-wide text-muted">
-                {t('check.closeGapTitle')}
-              </p>
-              <ul className="mt-1.5 space-y-1.5">
-                {closeGapLevers.map((lever) => (
-                  <li key={lever.key} className="flex items-start gap-2 text-sm text-body">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" aria-hidden />
-                    <span>{t(lever.key, lever.vars)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Gap chart — price + hard equity + equity-with-pillar-2, vs the dream */}
-          <GapChart
-            currentMax={result.maxPrice}
-            dreamPrice={check.purchasePrice}
-            hardEquity={check.hardEquity}
-            totalEquity={check.totalAvailable}
-            needEquity={check.effectiveDown}
-          />
-
           {/* Actionable path + levers stay visible (the answer up top) */}
           {!check.qualifies && (
             <>
@@ -530,42 +517,6 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
   )
 }
 
-/**
- * Plain-language banner naming the single binding constraint (equity vs income)
- * and the exact franc gap — the fast "here's the one thing" read above the fold.
- */
-function GapBanner({ check, equityGap, incomeGap, eqShort, affShort }) {
-  const { t } = useI18n()
-  let title, body
-  if (affShort && !eqShort) {
-    title = t('dream.bannerIncomeTitle', { gap: chf(roundK(incomeGap)) })
-    body = t('dream.bannerIncomeBody')
-  } else if (eqShort && !affShort) {
-    title = t('dream.bannerEquityTitle', { gap: chf(roundK(equityGap)) })
-    body = t('dream.bannerEquityBody')
-  } else {
-    title = t('dream.bannerBothTitle')
-    body = t('dream.bannerBothBody', { price: chf(check.purchasePrice) })
-  }
-  return (
-    <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
-      <svg
-        width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        className="mt-0.5 shrink-0 text-amber-600" aria-hidden
-      >
-        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-        <line x1="12" y1="9" x2="12" y2="13" />
-        <line x1="12" y1="17" x2="12.01" y2="17" />
-      </svg>
-      <div>
-        <p className="text-sm font-semibold text-amber-900">{title}</p>
-        <p className="mt-0.5 text-sm leading-relaxed text-amber-800">{body}</p>
-      </div>
-    </div>
-  )
-}
-
 /** Compact CHF field used by the inline situation editor. */
 function MiniField({ label, value, onChange, suffix }) {
   return (
@@ -587,12 +538,13 @@ function MiniField({ label, value, onChange, suffix }) {
 }
 
 /**
- * Left-hand summary: the current max price as a hero figure + qualify pill, and
- * the per-source equity breakdown. "Edit numbers" flips the breakdown into an
- * inline editor — changing a field recomputes the max price live, right here,
- * without leaving Phase 2 (the numbers stay in sync with Phase 1 / the URL).
+ * Combined "where you stand" card: the current max price as a hero figure +
+ * qualify pill, then — once a dream price is entered — the goal-columns visual
+ * (purchase price and equity, each filling toward its goal line) *replaces* the
+ * equity row-list, since the columns already show cash+3a, Pillar 2 and total.
+ * "Edit numbers" flips into an inline editor that recomputes the max price live.
  */
-function SituationCard({ result, values, onValuesChange }) {
+function SituationCard({ result, values, onValuesChange, check }) {
   const { t } = useI18n()
   const [editing, setEditing] = useState(false)
   const inp = result.inputs
@@ -619,10 +571,13 @@ function SituationCard({ result, values, onValuesChange }) {
           ● {result.viable ? t('dream.pillQualifies') : t('dream.pillNotYet')}
         </Pill>
       </div>
-      <div className="mt-4 border-t border-line pt-3">
-        <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
-          {t('dream.contextTitle')}
-        </h4>
+      {!editing && (
+        <p className="mt-1 text-xs text-muted">
+          {t('dream.yourIncome')} · <span className="ds-figure">{chf(inp.grossIncome)}/yr</span>
+        </p>
+      )}
+
+      <div className="mt-4 border-t border-line pt-4">
         {editing ? (
           <div className="space-y-2.5">
             <MiniField label={t('dream.yourIncome')} value={values.grossIncome} onChange={setField('grossIncome')} suffix="/yr" />
@@ -631,9 +586,22 @@ function SituationCard({ result, values, onValuesChange }) {
             <MiniField label={t('dream.rowPillar2')} value={values.pillar2} onChange={setField('pillar2')} />
             <p className="pt-0.5 text-xs text-faint">{t('dream.editLiveNote')}</p>
           </div>
+        ) : check ? (
+          <>
+            <p className="mb-4 text-sm leading-relaxed text-slate-600">{t('dream.gapIntro')}</p>
+            <GoalColumns
+              currentMax={result.maxPrice}
+              dreamPrice={check.purchasePrice}
+              hardEquity={check.hardEquity}
+              totalEquity={check.totalAvailable}
+              needEquity={check.effectiveDown}
+            />
+          </>
         ) : (
           <>
-            <Row label={t('dream.yourIncome')} value={`${chf(inp.grossIncome)}/yr`} />
+            <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
+              {t('dream.contextTitle')}
+            </h4>
             <Row label={t('dream.rowCash')} value={chf(inp.savings)} />
             <Row label={t('form.pillar3aLabel')} value={chf(inp.pillar3a)} />
             <Row label={t('dream.rowPillar2')} value={chf(inp.pillar2)} />

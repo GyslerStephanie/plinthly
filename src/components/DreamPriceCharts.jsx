@@ -2,100 +2,99 @@ import { useState } from 'react'
 import { chf, pct, groupDigits } from '../lib/format'
 import { RULE_CONSTANTS } from '../lib/affordability'
 import { useI18n } from '../i18n/I18nContext'
-import { Card } from './ui'
 
 const PILLAR3A_MONTHLY = Math.round(RULE_CONSTANTS.PILLAR3A_MAX / 12) // ≈ 605/mo
 
 /* ──────────────────────────────────────────────────────────────────────────
- * GapChart — "where you are vs your goal", as three labelled bars: price, hard
- * equity (cash + Pillar 3a), and equity once Pillar 2 (BVG) is added. Each bar
- * fills the "have" portion with a diagonal hatch and shows the exact gap below
- * — or a "Covered ✓" marker when the buyer is already there (no >100% bars).
- * Framed as evidence under the reframed "out of reach" verdict, not a verdict
- * itself, so the styling stays neutral (no red fills).
+ * GapChart — "where you are vs your goal" as two vertical columns that fill
+ * from the bottom toward a dark goal line at the top. Left column: the price
+ * you can reach vs the dream price. Right column: the equity you have — cash +
+ * Pillar 3a, then Pillar 2 (BVG) stacked on — vs the equity the down-payment
+ * needs. Neutral evidence under the verdict, not a verdict itself.
  * ────────────────────────────────────────────────────────────────────────── */
 
-// Solid moss fill for the "have" portion of a bar — accessible mid-green
-// (matches the affordability meter), not a low-contrast hatch.
-const FILL = {
-  backgroundImage: 'linear-gradient(90deg, var(--moss-400), var(--moss-500))',
-}
+const COL_H = 232 // column height in px; a value of `goal` fills the whole tube
 
-/**
- * One progress bar. `have` fills toward `goal`; the remainder is the gap.
- * Optional `startMarker`/`endMarker` label the fill boundary and the goal end
- * (used by the price bar for "Max purchase price" / "Dream price").
- */
-function HatchBar({ label, sub, have, goal, startMarker, endMarker }) {
-  const { t } = useI18n()
-  const covered = have >= goal
-  const haveW = goal > 0 ? Math.min(100, (have / goal) * 100) : 0
-  const gap = Math.max(0, goal - have)
+/** A filling "tube": light background, dark goal-line cap, filled from the
+ *  bottom by one or more stacked segments (each labelled inside when it fits). */
+function GapColumn({ title, sub, segments, goalLabel }) {
   return (
-    <div>
-      <div className="mb-1 flex items-baseline justify-between gap-2 text-sm">
-        <span className="font-medium text-slate-700">
-          {label}
-          {sub && <span className="ml-1.5 text-xs font-normal text-muted">{sub}</span>}
-        </span>
-        <span className="shrink-0 tabular-nums text-slate-700">
-          {chf(have)} <span className="text-xs text-muted">/ {chf(goal)}{covered ? '' : ` · ${pct(have / (goal || 1))}`}</span>
-        </span>
-      </div>
-      <div className="h-5 w-full overflow-hidden rounded border border-line bg-surface">
-        <div className="h-full" style={{ ...FILL, width: `${haveW}%` }} />
-      </div>
-      {(startMarker || endMarker) && (
-        <div className="relative mt-1 h-4 text-[11px] text-muted">
-          {startMarker && (
-            <span
-              className="absolute -translate-x-1/2 whitespace-nowrap"
-              style={{ left: `${Math.min(88, Math.max(12, haveW))}%` }}
-            >
-              ▲ {startMarker}
-            </span>
-          )}
-          {endMarker && <span className="absolute right-0 whitespace-nowrap">{endMarker} ▲</span>}
+    <div className="flex flex-1 flex-col items-center gap-3" style={{ maxWidth: 128 }}>
+      <div
+        className="relative w-full overflow-hidden rounded-xl"
+        style={{ height: COL_H, background: 'var(--surface-sunken)', borderTop: '3px solid var(--ink-900)' }}
+      >
+        {goalLabel && (
+          <div className="absolute inset-x-0 top-0 z-10 pt-1.5 text-center">
+            <span className="ds-figure text-[11px] font-medium text-ink">{goalLabel}</span>
+          </div>
+        )}
+        <div className="absolute inset-x-0 bottom-0 flex flex-col-reverse">
+          {segments.map((s, i) => {
+            const h = Math.round(Math.min(1, Math.max(0, s.frac)) * COL_H)
+            return (
+              <div key={i} className="flex items-center justify-center" style={{ height: h, background: s.color }}>
+                {h >= 22 && (
+                  <span className="ds-figure text-sm" style={{ color: 'var(--color-on-primary)' }}>{s.label}</span>
+                )}
+              </div>
+            )
+          })}
         </div>
-      )}
-      {covered ? (
-        <p className="mt-1 text-xs font-medium text-positive">{t('dream.barCovered')}</p>
-      ) : (
-        <p className="mt-1 text-xs font-medium text-body">{t('dream.barGap', { value: chf(gap) })}</p>
-      )}
+      </div>
+      <div className="text-center">
+        <p className="text-base font-semibold text-ink">{title}</p>
+        <p className="ds-figure mt-0.5 text-xs text-muted">{sub}</p>
+      </div>
     </div>
   )
 }
 
-export function GapChart({ currentMax, dreamPrice, hardEquity, totalEquity, needEquity }) {
-  const { t } = useI18n()
+function GapLegendItem({ color, label }) {
   return (
-    <Card title={t('dream.gapTitle')}>
-      <p className="mb-4 text-sm leading-relaxed text-slate-600">
-        {t('dream.gapIntro', { price: chf(dreamPrice) })}
-      </p>
-      <div className="space-y-5">
-        <HatchBar
-          label={t('dream.gapPriceLabel')}
-          have={currentMax}
-          goal={dreamPrice}
-          startMarker={t('dream.barMaxPrice')}
-          endMarker={t('dream.barDreamPrice')}
+    <span className="inline-flex items-center gap-2">
+      <span className="inline-block h-3 w-3 rounded-sm" style={{ background: color }} />
+      {label}
+    </span>
+  )
+}
+
+export function GoalColumns({ currentMax, dreamPrice, hardEquity, totalEquity, needEquity }) {
+  const { t } = useI18n()
+  const num = (v) => chf(v).replace(/CHF\s*/, '')
+  const pillar2Add = Math.max(0, totalEquity - hardEquity)
+
+  return (
+    <>
+      <div className="flex items-end justify-center gap-10 sm:gap-16">
+        <GapColumn
+          title={t('dream.gapPriceLabel')}
+          goalLabel={num(dreamPrice)}
+          sub={t('dream.gapOfDream', { pct: pct(Math.min(1, dreamPrice > 0 ? currentMax / dreamPrice : 0)) })}
+          segments={[{ frac: dreamPrice > 0 ? currentMax / dreamPrice : 0, color: 'var(--moss-500)', label: num(currentMax) }]}
         />
-        <HatchBar
-          label={t('dream.gapEquityHard')}
-          sub={t('dream.gapEquityHardSub')}
-          have={hardEquity}
-          goal={needEquity}
-        />
-        <HatchBar
-          label={t('dream.gapEquityPillar')}
-          sub={t('dream.gapEquityPillarSub')}
-          have={totalEquity}
-          goal={needEquity}
+        <GapColumn
+          title={t('dream.gapEquityNeeded')}
+          goalLabel={num(needEquity)}
+          sub={t('dream.gapOfGoal', { pct: pct(Math.min(1, needEquity > 0 ? totalEquity / needEquity : 0)), goal: num(needEquity) })}
+          segments={[
+            { frac: needEquity > 0 ? hardEquity / needEquity : 0, color: 'var(--moss-600)', label: num(hardEquity) },
+            ...(pillar2Add > 0
+              ? [{ frac: needEquity > 0 ? pillar2Add / needEquity : 0, color: 'var(--moss-400)', label: `+${num(pillar2Add)}` }]
+              : []),
+          ]}
         />
       </div>
-    </Card>
+
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-line pt-4 text-xs text-muted">
+        <GapLegendItem color="var(--moss-600)" label={t('dream.gapLegHard')} />
+        <GapLegendItem color="var(--moss-400)" label={t('dream.gapLegPillar2')} />
+        <span className="inline-flex items-center gap-2">
+          <span className="inline-block h-[3px] w-5 rounded" style={{ background: 'var(--ink-900)' }} />
+          {t('dream.gapLegGoal')}
+        </span>
+      </div>
+    </>
   )
 }
 
