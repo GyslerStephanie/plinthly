@@ -181,6 +181,15 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
   /* CHF figures / data in mono tabular. */
   .ds-figure { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
 
+  /* ---- Type roles (consolidated hierarchy) --------------------------------
+     Four reusable roles; hierarchy within a role comes from COLOUR utilities
+     (text-strong / text-muted / text-faint), never extra sizes or weights.
+     Rolled out on "Your stake" first. -------------------------------------- */
+  .t-label   { font-family: var(--font-mono); font-weight: 500; font-size: 11px; line-height: 1.3; letter-spacing: 0.09em; text-transform: uppercase; }
+  .t-body    { font-family: var(--font-sans); font-weight: 400; font-size: 14px; line-height: 1.5; }
+  .t-figure  { font-family: var(--font-mono); font-weight: 400; font-size: 14px; line-height: 1.3; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .t-caption { font-family: var(--font-sans); font-weight: 400; font-size: 12px; line-height: 1.45; }
+
   /* Hero band: sky gradient with the voxel landscape resting in the corner. */
   .ds-hero {
     position: relative; overflow: hidden;

@@ -11,6 +11,7 @@ import { getCanton, eigenmietwert } from '../lib/cantons'
 import { useI18n } from '../i18n/I18nContext'
 import { T, renderRich } from './Trans'
 import Collapsible from './Collapsible'
+import MortgagePayoffPanel from './MortgagePayoffPanel'
 import PathToGoal from './PathToGoal'
 import Levers from './Levers'
 import NextSteps from './NextSteps'
@@ -97,6 +98,23 @@ function Row({ label, value, sub, strong }) {
       >
         {value}
       </span>
+    </div>
+  )
+}
+
+/**
+ * Stake-card row on the consolidated 4-role type system: a `t-body` label, a
+ * `t-figure` value, and a `t-caption` sub. Totals vs. components are told apart
+ * by COLOUR only (text-ink vs text-muted) — no extra font sizes or weights.
+ */
+function StakeRow({ label, value, sub, strong }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 py-1.5">
+      <span className={'t-body ' + (strong ? 'text-ink' : 'text-muted')}>
+        {label}
+        {sub && <span className="t-caption ml-1.5 text-faint">{sub}</span>}
+      </span>
+      <span className={'t-figure ' + (strong ? 'text-ink' : 'text-body')}>{value}</span>
     </div>
   )
 }
@@ -407,7 +425,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
 
       {/* Down payment breakdown */}
       <Collapsible title={t('result.stakeTitle')}>
-        <Row label={t('result.purchasePrice')} value={chf(result.maxPrice)} strong />
+        <StakeRow label={t('result.purchasePrice')} value={chf(result.maxPrice)} strong />
         <div className="my-3">
           <Bar
             segments={[
@@ -416,34 +434,35 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
               { label: t('result.mortgage'), value: dp.mortgage, color: 'bg-slate-300' },
             ]}
           />
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+          <div className="t-caption mt-2 flex flex-wrap gap-x-4 gap-y-1 text-muted">
             <Legend color="bg-teal-600" label={t('result.cashSavings')} />
             <Legend color="bg-teal-300" label={t('result.pillarPension')} />
             <Legend color="bg-slate-300" label={t('result.mortgageDebt')} />
           </div>
         </div>
-        <Row
+        <StakeRow
           label={t('result.cashSavings')}
           value={chf(dp.fromSavings)}
           sub={t('result.ofPrice', { pct: pct(cashPctOfPrice) })}
         />
-        <Row
+        <StakeRow
           label={t('result.pillarPension')}
           value={chf(dp.fromPillar2)}
           sub={dp.fromPillar2 > 0 ? t('result.pillarSub') : undefined}
         />
         <div className="my-1 border-t border-slate-100" />
-        <Row
+        <StakeRow
           label={t('result.downPayment')}
           value={chf(dp.total)}
           sub={t('result.ofPrice', { pct: pct(result.rules.downPct / 100) })}
+          strong
         />
-        <Row
+        <StakeRow
           label={t('result.mortgage')}
           value={chf(dp.mortgage)}
           sub={t('result.ltv', { pct: pct(dp.ltv) })}
         />
-        <p className="mt-3 text-xs leading-relaxed text-slate-400">
+        <p className="t-caption mt-3 text-faint">
           {t('result.stakeNote', {
             liquid: pct(result.rules.minLiquidPct / 100),
             pillar: pct(result.rules.maxPillar2Pct / 100),
@@ -452,7 +471,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         {result.inputs.pillar2 > dp.fromPillar2 + 1 && (
           <T
             as="div"
-            className="mt-3 rounded-lg bg-amber-50 p-3 text-xs leading-relaxed text-amber-900"
+            className="t-caption mt-3 rounded-lg bg-amber-50 p-3 text-amber-900"
             k="result.pensionLimit"
             vars={{ entered: chf(result.inputs.pillar2), used: chf(dp.fromPillar2) }}
           />
@@ -521,6 +540,15 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           notionalPct={notionalPct}
           maintenancePct={pct(result.rules.maintenancePct / 100)}
           showing={t('result.monthlyForAfford', { price: chf(result.maxPrice) })}
+        />
+      )}
+
+      {/* Mortgage over time — payoff timeline, interest, retirement re-test */}
+      {result.maxPrice > 0 && (
+        <MortgagePayoffPanel
+          price={result.maxPrice}
+          mortgage={dp.mortgage}
+          income={result.inputs.grossIncome}
         />
       )}
 
