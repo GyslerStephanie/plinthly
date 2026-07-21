@@ -100,13 +100,16 @@ export function minergieStandards() {
 export function subsidyOverview(cantonCode) {
   const c = getCanton(cantonCode)
   if (!c) return null
-  const fed = data.gebaeueprogramm_federal
+  const fed = data.gebaeudeprogramm_federal
+  // A canton row can in principle be added without its programme block; the
+  // federal baseline is still useful on its own, so degrade rather than throw.
+  const g = c.gebaeudeprogramm
   return {
     cantonal: {
-      available: c.gebaeueprogramm.available,
-      url: c.gebaeueprogramm.url,
-      measures: c.gebaeueprogramm.key_measures,
-      notes: c.gebaeueprogramm.notes,
+      available: g?.available ?? false,
+      url: g?.url ?? null,
+      measures: g?.key_measures ?? [],
+      notes: g?.notes ?? null,
     },
     federal: {
       url: fed.url,

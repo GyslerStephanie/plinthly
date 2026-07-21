@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useI18n } from '../../i18n/I18nContext'
 import { cantonOptions } from '../../lib/cantons'
+import { useDialogFocus } from '../../lib/useDialogFocus'
 
 /**
  * Onboarding — the "where are you?" front door.
@@ -109,6 +110,10 @@ function Question({ n, legend, options, name, value, onChange, tOpt }) {
 }
 
 export default function Onboarding({ onComplete, onSkip }) {
+  // No Escape-to-close: the visitor may have answered several questions by now,
+  // and a stray Escape silently discarding them is worse than requiring the
+  // explicit "skip" affordance, which is always visible in the header.
+  const dialogRef = useDialogFocus()
   const { t } = useI18n()
   const [answers, setAnswers] = useState({
     age: '',
@@ -154,6 +159,10 @@ export default function Onboarding({ onComplete, onSkip }) {
 
   return (
     <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboarding-title"
       className="fixed inset-0 z-50 overflow-y-auto"
       style={{ background: 'var(--surface-page)' }}
     >
@@ -179,7 +188,7 @@ export default function Onboarding({ onComplete, onSkip }) {
         </div>
 
         <p className="ds-eyebrow text-xs text-teal-700">{t('onboarding.eyebrow')}</p>
-        <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-ink">
+        <h1 id="onboarding-title" className="mt-1 font-display text-3xl font-semibold tracking-tight text-ink">
           {t('onboarding.title')}
         </h1>
         <p className="mt-2 text-sm text-muted">{t('onboarding.intro')}</p>

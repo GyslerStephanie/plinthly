@@ -48,7 +48,7 @@ export function optionRenovate(cantonCode, sizeM2, propertyType) {
 
   // Federal subsidy baseline: insulation per m2 (treated area ≈ living area as a
   // rough proxy) + a heat-pump replacement grant. Cantonal top-ups extend this.
-  const fed = data.gebaeueprogramm_federal.typical_subsidy_ranges
+  const fed = data.gebaeudeprogramm_federal.typical_subsidy_ranges
   const subsidy = {
     low: Math.round(fed.insulation_chf_per_m2.low * size + fed.heat_pump_replacement_chf.low),
     high: Math.round(fed.insulation_chf_per_m2.high * size + fed.heat_pump_replacement_chf.high),
@@ -148,7 +148,7 @@ export function optionBuild(cantonCode, sizeM2) {
     // A rough land-price signal from the canton's per-m2 *built* price band,
     // explicitly flagged as a proxy, not a land valuation.
     landProxy: priceBand(cantonCode, 'house'),
-    planningPortal: getCanton(cantonCode)?.gebaeueprogramm.url,
+    planningPortal: getCanton(cantonCode)?.gebaeudeprogramm?.url ?? null,
     notes: b.notes,
   }
 }
