@@ -8,6 +8,7 @@ import {
 } from '../../lib/compare/model'
 import { chf, groupDigits } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
+import { useDialogFocus } from '../../lib/useDialogFocus'
 
 const MOSS = '#566d29' // path A — rent / rent+invest
 const CORAL = '#c4452f' // path B — own / buy
@@ -98,6 +99,8 @@ function PctField({ label, sub, value, onChange }) {
 
 export default function CompareView({ onClose, seed = {}, seedYear }) {
   const { t } = useI18n()
+  // Read-only view with a visible back button — Escape has nothing to discard.
+  const dialogRef = useDialogFocus({ onClose })
   const [scenario, setScenario] = useState('rent_vs_buy')
   // Onboarding can seed the default time horizon from the user's duration answer.
   const [year, setYear] = useState(() =>
@@ -174,7 +177,14 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
   )
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-surface-page" style={{ background: 'var(--surface-page)' }}>
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="compare-title"
+      className="fixed inset-0 z-50 overflow-y-auto bg-surface-page"
+      style={{ background: 'var(--surface-page)' }}
+    >
       <div className="mx-auto max-w-3xl px-5 py-8 md:px-8">
         <button
           type="button"
@@ -184,7 +194,7 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
           ← {t('compare.back')}
         </button>
 
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">{t('compare.title')}</h1>
+        <h1 id="compare-title" className="font-display text-3xl font-semibold tracking-tight text-ink">{t('compare.title')}</h1>
         <p className="mt-2 text-sm text-muted">{t('compare.intro')}</p>
 
         {/* Scenario tabs */}

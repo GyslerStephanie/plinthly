@@ -589,49 +589,55 @@ export default function App() {
 function PhaseNav({ current, maxVisited, onJump }) {
   const { t } = useI18n()
   return (
-    <ol className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
-      {PHASE_NUMBERS.map((n, i) => {
-        const active = n === current
-        const done = n < current
-        const reachable = n <= maxVisited
-        return (
-          <li key={n} className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => reachable && onJump(n)}
-              disabled={!reachable}
-              className={
-                'flex items-center gap-2 rounded-full py-0.5 pr-2 ' +
-                (reachable ? 'cursor-pointer' : 'cursor-not-allowed')
-              }
-            >
-              <span
+    <nav aria-label={t('nav.label')}>
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
+        {PHASE_NUMBERS.map((n, i) => {
+          const active = n === current
+          const done = n < current
+          const reachable = n <= maxVisited
+          return (
+            <li key={n} className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => reachable && onJump(n)}
+                disabled={!reachable}
+                // Without this the current step is conveyed by colour alone.
+                aria-current={active ? 'step' : undefined}
                 className={
-                  'flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ' +
-                  (active
-                    ? 'bg-teal-700 text-white'
-                    : done
-                    ? 'bg-teal-100 text-teal-700'
-                    : 'bg-slate-100 text-slate-400')
+                  'flex items-center gap-2 rounded-full py-0.5 pr-2 ' +
+                  (reachable ? 'cursor-pointer' : 'cursor-not-allowed')
                 }
               >
-                {n}
-              </span>
-              <span
-                className={
-                  active ? 'font-medium text-slate-900' : 'text-slate-400'
-                }
-              >
-                {t(`nav.${n}`)}
-              </span>
-            </button>
-            {i < PHASE_NUMBERS.length - 1 && (
-              <span className="mx-1 hidden text-slate-300 sm:inline">→</span>
-            )}
-          </li>
-        )
-      })}
-    </ol>
+                <span
+                  className={
+                    'flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ' +
+                    (active
+                      ? 'bg-teal-700 text-white'
+                      : done
+                      ? 'bg-teal-100 text-teal-700'
+                      : 'bg-slate-100 text-slate-400')
+                  }
+                >
+                  {n}
+                </span>
+                <span
+                  className={
+                    active ? 'font-medium text-slate-900' : 'text-slate-400'
+                  }
+                >
+                  {t(`nav.${n}`)}
+                </span>
+              </button>
+              {i < PHASE_NUMBERS.length - 1 && (
+                <span aria-hidden="true" className="mx-1 hidden text-slate-300 sm:inline">
+                  →
+                </span>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
   )
 }
 

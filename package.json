@@ -9,7 +9,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --import ./scripts/register-json.mjs scripts/affordability.conformance.mjs",
-    "test:compare": "node scripts/compare.conformance.mjs"
+    "test:compare": "node scripts/compare.conformance.mjs",
+    "test:data": "node scripts/data.conformance.mjs",
+    "test:all": "npm test && npm run test:compare && npm run test:data"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

@@ -1,5 +1,6 @@
 import { useI18n } from '../../i18n/I18nContext'
 import Hero from '../hero/Hero'
+import { useDialogFocus } from '../../lib/useDialogFocus'
 
 /**
  * Landing — the top-of-funnel front door (before onboarding).
@@ -14,8 +15,13 @@ import Hero from '../hero/Hero'
  */
 export default function Landing({ onStart, onSkip }) {
   const { t } = useI18n()
+  // Trapped, but deliberately NOT role="dialog": this is the front door, a page
+  // in its own right, not a modal layered over content the visitor was reading.
+  // The trap is still needed because the phase-1 form sits behind it, invisible
+  // but focusable. No Escape — there is nothing to dismiss back to.
+  const landingRef = useDialogFocus()
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div ref={landingRef} className="fixed inset-0 z-50 overflow-y-auto">
       <Hero
         onCtaClick={onStart}
         ctaLabel={t('landing.cta')}

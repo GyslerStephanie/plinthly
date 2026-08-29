@@ -5,5 +5,9 @@ dist-ssr
 .DS_Store
 .vite
 
-# local tooling
-.claude/
+# local tooling — ignore .claude/ except the shared, committed bits.
+# Uses .claude/* rather than .claude/ so the negations below can re-include:
+# git cannot re-include a path whose parent directory is excluded.
+.claude/*
+!.claude/skills/
+!.claude/launch.json
