@@ -31,20 +31,23 @@
   --paper-100:#ffffff; --paper-200:#fbfaf4; --paper-300:#f4f2e8; --paper-400:#ece9da;
   --line-soft:#efece0; --line:#e3e0d2; --line-strong:#d2cebd;
 
-  /* ---- Semantic aliases ---- */
-  --color-primary:#6f8a35; --color-primary-hover:#566d29; --color-primary-press:#42541f;
-  --color-primary-soft:#e2ebc9; --color-primary-tint:#f1f5e6; --color-on-primary:#f7faef;
-  --color-accent:#dd5c47; --color-accent-hover:#c4452f; --color-accent-soft:#fceae4; --color-on-accent:#fff7f4;
-  --color-success:#6f8a35; --color-success-soft:#f1f5e6; --color-success-ink:#42541f;
-  --color-warning:#c79f54; --color-warning-soft:#faf4e6; --color-warning-ink:#5e451d;
-  --color-danger:#c4452f; --color-danger-soft:#fceae4; --color-danger-ink:#9e3422;
-  --color-info:#4f7d88; --color-info-soft:#eef4f3;
-  --text-strong:#1b1c17; --text-body:#3d3f35; --text-muted:#6a6c5f; --text-faint:#8d8f80;
-  --text-placeholder:#b4b5a8; --text-on-dark:#f3f3ea; --text-link:#566d29;
-  --surface-page:#fbfaf4; --surface-card:#ffffff; --surface-sunken:#f4f2e8; --surface-hover:#ece9da;
-  --surface-ink:#1b1c17; --surface-moss:#42541f;
-  --border-soft:#efece0; --border-default:#e3e0d2; --border-strong:#d2cebd; --border-focus:#93ad48;
-  --ring:0 0 0 3px rgba(147,173,72,.45);
+  /* ---- Semantic tokens — now alias the primitives above (single source of
+     truth). Only genuine one-offs keep a literal value, flagged inline:
+     the near-white "on-colour" tints, and the focus ring (rgba can't wrap a
+     hex var). Change a colour once, in its primitive, and every role follows. */
+  --color-primary:var(--moss-500); --color-primary-hover:var(--moss-600); --color-primary-press:var(--moss-700);
+  --color-primary-soft:var(--moss-100); --color-primary-tint:var(--moss-50); --color-on-primary:#f7faef; /* one-off tint */
+  --color-accent:var(--coral-400); --color-accent-hover:var(--coral-500); --color-accent-soft:var(--coral-50); --color-on-accent:#fff7f4; /* one-off tint */
+  --color-success:var(--moss-500); --color-success-soft:var(--moss-50); --color-success-ink:var(--moss-700);
+  --color-warning:var(--sand-400); --color-warning-soft:var(--sand-50); --color-warning-ink:var(--sand-700);
+  --color-danger:var(--coral-500); --color-danger-soft:var(--coral-50); --color-danger-ink:var(--coral-600);
+  --color-info:var(--sky-500); --color-info-soft:var(--sky-50);
+  --text-strong:var(--ink-900); --text-body:var(--ink-700); --text-muted:var(--ink-500); --text-faint:var(--ink-400);
+  --text-placeholder:var(--ink-300); --text-on-dark:#f3f3ea; --text-link:var(--moss-600); /* on-dark: one-off tint */
+  --surface-page:var(--paper-200); --surface-card:var(--paper-100); --surface-sunken:var(--paper-300); --surface-hover:var(--paper-400);
+  --surface-ink:var(--ink-900); --surface-moss:var(--moss-700);
+  --border-soft:var(--line-soft); --border-default:var(--line); --border-strong:var(--line-strong); --border-focus:var(--moss-400);
+  --ring:0 0 0 3px rgba(147,173,72,.45); /* moss-400 @ 45% */
 
   /* ---- Type ---- */
   --font-serif:'Spectral', Georgia, 'Times New Roman', serif;
@@ -92,58 +95,60 @@
   --text-4xl:56px;  --text-4xl--line-height:1.05;
   --text-5xl:64px;  --text-5xl--line-height:1;
 
-  /* Semantic palette */
-  --color-ink:#1b1c17;
-  --color-body:#3d3f35;
-  --color-muted:#6a6c5f;
-  --color-line:#e3e0d2;
-  --color-surface:#f4f2e8;
-  --color-positive:#6f8a35;      --color-positive-light:#f1f5e6;
-  --color-info:#4f7d88;          --color-info-light:#eef4f3;
-  --color-warning:#c79f54;       --color-warning-light:#faf4e6;
-  --color-error:#c4452f;         --color-error-light:#fceae4;
-  --color-accent:#dd5c47;        --color-accent-light:#fceae4;
+  /* Semantic palette — Tailwind utility colours; alias the :root primitives.
+     No hex here: every value points back to one primitive, same as the :root
+     semantic layer, so the two surfaces share a single source of truth. */
+  --color-ink:var(--ink-900);
+  --color-body:var(--ink-700);
+  --color-muted:var(--ink-500);
+  --color-line:var(--line);
+  --color-surface:var(--paper-300);
+  --color-positive:var(--moss-500);      --color-positive-light:var(--moss-50);
+  --color-info:var(--sky-500);           --color-info-light:var(--sky-50);
+  --color-warning:var(--sand-400);       --color-warning-light:var(--sand-50);
+  --color-error:var(--coral-500);        --color-error-light:var(--coral-50);
+  --color-accent:var(--coral-400);       --color-accent-light:var(--coral-50);
 
   /* Neutral scale -> warm stone/ink */
-  --color-slate-50:#ffffff;  --color-slate-100:#f4f2e8; --color-slate-200:#e3e0d2;
-  --color-slate-300:#d2cebd; --color-slate-400:#8d8f80; --color-slate-500:#6a6c5f;
-  --color-slate-600:#3d3f35; --color-slate-700:#2c2e26; --color-slate-800:#1b1c17;
-  --color-slate-900:#1b1c17;
+  --color-slate-50:var(--paper-100);  --color-slate-100:var(--paper-300); --color-slate-200:var(--line);
+  --color-slate-300:var(--line-strong); --color-slate-400:var(--ink-400); --color-slate-500:var(--ink-500);
+  --color-slate-600:var(--ink-700); --color-slate-700:var(--ink-800); --color-slate-800:var(--ink-900);
+  --color-slate-900:var(--ink-900);
 
   /* teal -> moss (primary) */
-  --color-teal-50:#f1f5e6;  --color-teal-100:#e2ebc9; --color-teal-200:#cbdc9c;
-  --color-teal-300:#b0c86c; --color-teal-400:#93ad48; --color-teal-500:#6f8a35;
-  --color-teal-600:#566d29; --color-teal-700:#42541f; --color-teal-800:#313f18;
-  --color-teal-900:#222c11;
+  --color-teal-50:var(--moss-50);  --color-teal-100:var(--moss-100); --color-teal-200:var(--moss-200);
+  --color-teal-300:var(--moss-300); --color-teal-400:var(--moss-400); --color-teal-500:var(--moss-500);
+  --color-teal-600:var(--moss-600); --color-teal-700:var(--moss-700); --color-teal-800:var(--moss-800);
+  --color-teal-900:var(--moss-900);
 
   /* green -> moss (stragglers) */
-  --color-green-50:#f1f5e6;  --color-green-100:#e2ebc9; --color-green-200:#cbdc9c;
-  --color-green-300:#b0c86c; --color-green-400:#93ad48; --color-green-500:#6f8a35;
-  --color-green-600:#566d29; --color-green-700:#42541f; --color-green-800:#313f18;
-  --color-green-900:#222c11;
+  --color-green-50:var(--moss-50);  --color-green-100:var(--moss-100); --color-green-200:var(--moss-200);
+  --color-green-300:var(--moss-300); --color-green-400:var(--moss-400); --color-green-500:var(--moss-500);
+  --color-green-600:var(--moss-600); --color-green-700:var(--moss-700); --color-green-800:var(--moss-800);
+  --color-green-900:var(--moss-900);
 
   /* amber -> sand (warning) */
-  --color-amber-50:#faf4e6;  --color-amber-100:#f1e3c6; --color-amber-200:#e6d0a2;
-  --color-amber-500:#c79f54; --color-amber-600:#a9803a; --color-amber-700:#5e451d;
-  --color-amber-800:#5e451d; --color-amber-900:#4f3a23;
+  --color-amber-50:var(--sand-50);  --color-amber-100:var(--sand-100); --color-amber-200:var(--sand-200);
+  --color-amber-500:var(--sand-400); --color-amber-600:var(--sand-500); --color-amber-700:var(--sand-700);
+  --color-amber-800:var(--sand-700); --color-amber-900:var(--earth-700);
 
   /* red -> coral (cost / danger) */
-  --color-red-50:#fceae4;  --color-red-100:#f8d2c8; --color-red-200:#f0a896;
-  --color-red-300:#e67d65; --color-red-400:#dd5c47; --color-red-500:#c4452f;
-  --color-red-600:#9e3422; --color-red-700:#9e3422; --color-red-800:#9e3422;
-  --color-red-900:#7a2818;
+  --color-red-50:var(--coral-50);  --color-red-100:var(--coral-100); --color-red-200:var(--coral-200);
+  --color-red-300:var(--coral-300); --color-red-400:var(--coral-400); --color-red-500:var(--coral-500);
+  --color-red-600:var(--coral-600); --color-red-700:var(--coral-600); --color-red-800:var(--coral-600);
+  --color-red-900:#7a2818; /* one-off: darker than coral-600 */
 
   /* coral scale (accent) — bg-coral-NNN / text-coral-NNN */
-  --color-coral-50:#fceae4;  --color-coral-100:#f8d2c8; --color-coral-200:#f0a896;
-  --color-coral-300:#e67d65; --color-coral-400:#dd5c47; --color-coral-500:#c4452f;
-  --color-coral-600:#9e3422;
+  --color-coral-50:var(--coral-50);  --color-coral-100:var(--coral-100); --color-coral-200:var(--coral-200);
+  --color-coral-300:var(--coral-300); --color-coral-400:var(--coral-400); --color-coral-500:var(--coral-500);
+  --color-coral-600:var(--coral-600);
 
   /* moss scale — bg-moss-NNN / text-moss-NNN */
-  --color-moss-50:#f1f5e6;  --color-moss-100:#e2ebc9; --color-moss-200:#cbdc9c;
-  --color-moss-300:#b0c86c; --color-moss-400:#93ad48; --color-moss-500:#6f8a35;
-  --color-moss-600:#566d29; --color-moss-700:#42541f; --color-moss-800:#313f18;
-  --color-moss-900:#222c11;
-  --color-sand-400:#c79f54; --color-sky-500:#4f7d88; --color-stone-500:#5f5b4f;
+  --color-moss-50:var(--moss-50);  --color-moss-100:var(--moss-100); --color-moss-200:var(--moss-200);
+  --color-moss-300:var(--moss-300); --color-moss-400:var(--moss-400); --color-moss-500:var(--moss-500);
+  --color-moss-600:var(--moss-600); --color-moss-700:var(--moss-700); --color-moss-800:var(--moss-800);
+  --color-moss-900:var(--moss-900);
+  --color-sand-400:var(--sand-400); --color-sky-500:var(--sky-500); --color-stone-500:var(--stone-500);
 
   /* Warm-tinted shadow scale (re-skins shadow-sm / shadow-lg …) */
   --shadow-xs:0 1px 2px rgba(34,44,17,.08);

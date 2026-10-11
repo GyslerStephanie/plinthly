@@ -13,14 +13,27 @@
  * silent drift. Surface this version in the UI so a shared/screenshotted result
  * is traceable to the formulas that produced it.
  *
- * Known v0.1.0 simplifications (tracked, to refine in later versions):
+ * OPPORTUNITY COST OF THE DOWN PAYMENT
+ * ------------------------------------
+ * The cost of money "blocked" in the home (returns it would have earned if
+ * invested) is modelled in TWO places:
+ *  - `save_invest`: implicitly, as a net-worth head-to-head (the renter invests
+ *    the same cash the buyer sinks into equity — the gap IS the opportunity cost).
+ *  - `rent_vs_buy` with `trueCost: true`: explicitly, as a per-year line added to
+ *    the owning cost = running equity × (investReturn − appreciation), i.e. the
+ *    market return foregone, NET of the appreciation that equity already earns.
+ * The plain `rent_vs_buy` cash lens (trueCost off) omits it by design.
+ *
+ * Known simplifications (tracked, to refine in later versions):
  *  - Property gains tax on exit (Grundstückgewinnsteuer) is NOT modelled.
  *  - Scenarios `buy_abroad` and `buy_later` are approximations.
  *  - Investment return is a flat net rate (no dividend vs. capital-gains split,
  *    no wealth tax). CH has no private capital-gains tax, modelled as net.
+ *  - True-cost opportunity charge nets appreciation only on the owner's equity,
+ *    not the leveraged full-value appreciation (that upside lives in save_invest).
  */
 
-export const COMPARE_METHODOLOGY = '0.1.0'
+export const COMPARE_METHODOLOGY = '0.2.0'
 export const MAX_YEARS = 25
 
 /** Swiss rule constants for the real-cost model. */
@@ -48,6 +61,9 @@ export const COMPARE_DEFAULTS = {
   savingMonthly: 1500,
   regime: 'old', // 'old' (eigenmietwert) | 'new' (post-2025 referendum)
   buyInYear: 10, // only used by buy_later
+  downPaymentPct: 20, // % of price put down (Swiss minimum 20); user-adjustable
+  maintenancePct: 1, // % of value / yr for maintenance + ancillary; user-adjustable
+  trueCost: false, // rent_vs_buy: include opportunity cost of blocked money
 }
 
 /** Scenario registry. `usesInvest` drives whether the investment-return input
@@ -64,7 +80,9 @@ const pow = (pct, k) => Math.pow(1 + pct / 100, k)
 /** Per-year owner cash flows + net worth for buying the home now. */
 function ownerPath(a) {
   const P = a.price
-  const down = P * RULES.downPct
+  const downPct = a.downPaymentPct != null ? a.downPaymentPct / 100 : RULES.downPct
+  const maintPct = a.maintenancePct != null ? a.maintenancePct / 100 : RULES.maintenancePct
+  const down = P * downPct
   const purchase = P * RULES.purchaseCostPct
   const M0 = P - down
   const mTarget = P * RULES.amortTargetLTV
@@ -79,13 +97,15 @@ function ownerPath(a) {
   for (let k = 1; k <= MAX_YEARS; k++) {
     const interest = M * rate
     const value = P * Math.pow(1 + g, k)
-    const maint = value * RULES.maintenancePct
+    const maint = value * maintPct
     const amort = M > mTarget ? Math.min(annualAmort, M - mTarget) : 0
     const tax = a.regime === 'old' ? (imputed - interest - maint) * mtax : 0
     const ownerCash = interest + maint + amort + tax
     const nonRecov = interest + maint + tax // excludes amortization (it's equity)
     M -= amort
-    path.push({ value, ownerCash, nonRecov, buyNW: value - M - value * RULES.sellCostPct })
+    // equity = owner capital tied up in the home (before selling costs); the
+    // base the true-cost opportunity charge is applied to.
+    path.push({ value, ownerCash, nonRecov, equity: value - M, buyNW: value - M - value * RULES.sellCostPct })
   }
   return { path, down, purchase }
 }
@@ -105,6 +125,7 @@ export function computeSeries(scenarioId, inputs) {
 
   const A = [null]
   const B = [null]
+  const opp = [null] // cumulative net opportunity cost of blocked money (rent_vs_buy)
   let hA
   let hB
   let costLens = false
@@ -115,13 +136,17 @@ export function computeSeries(scenarioId, inputs) {
     hB = 'own'
     costLens = true
     incCol = true
+    const spread = (a.investReturnPct - a.appreciationPct) / 100 // market return foregone, net of appreciation
     let cumRent = 0
     let cumOwn = purchase
+    let cumOpp = 0
     for (let k = 1; k <= MAX_YEARS; k++) {
       cumRent += rentAt(a, k)
+      cumOpp += path[k].equity * spread
       cumOwn += path[k].nonRecov
       A.push(cumRent)
-      B.push(cumOwn)
+      B.push(a.trueCost ? cumOwn + cumOpp : cumOwn)
+      opp.push(cumOpp)
     }
   } else if (scenarioId === 'save_invest') {
     hA = 'rentInvest'
@@ -166,7 +191,7 @@ export function computeSeries(scenarioId, inputs) {
     }
   }
 
-  return { A, B, hA, hB, costLens, incCol, methodology: COMPARE_METHODOLOGY }
+  return { A, B, opp, hA, hB, costLens, incCol, methodology: COMPARE_METHODOLOGY }
 }
 
 /** Headline summary for a scenario at a given horizon. */
