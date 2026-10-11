@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { track } from '../lib/track'
 import { runAdvisorTool } from '../lib/advisorTools'
@@ -37,7 +37,10 @@ import { mockAgentTurn } from '../lib/advisorMock'
  */
 const MAX_TOOL_ROUNDTRIPS = 3
 
-export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false }) {
+// How long the "Ask Plinthly AI" tooltip stays up after a page load or phase change.
+const TIP_MS = 8000
+
+export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false, tipKey }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [consented, setConsented] = useState(false)
@@ -46,6 +49,17 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
   const [busy, setBusy] = useState(false)
   const [mock, setMock] = useState(false)
   const [scenario, setScenario] = useState(null) // {label, overrides, maxPrice} — preview only
+  const [showTip, setShowTip] = useState(false)
+
+  // Re-show the tooltip on every page load and whenever `tipKey` changes (the
+  // App passes the phase), for TIP_MS. Instances without a tipKey (Compare)
+  // never show it.
+  useEffect(() => {
+    if (tipKey === undefined) return undefined
+    setShowTip(true)
+    const id = setTimeout(() => setShowTip(false), TIP_MS)
+    return () => clearTimeout(id)
+  }, [tipKey])
 
   if (!context) return null
 
@@ -272,14 +286,28 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
         </div>
       )}
 
+      {/* "Ask Plinthly AI" tooltip — up for 8 s after each load / phase change */}
+      {showTip && !open && (
+        <div
+          id="advisor-tip"
+          role="tooltip"
+          className="advisor-tip absolute bottom-[4.5rem] right-0 whitespace-nowrap rounded-xl bg-ink px-3.5 py-2 text-sm font-semibold text-on-dark shadow-lg"
+        >
+          {t('advisorTip')}
+          <span aria-hidden="true" className="absolute -bottom-1.5 right-5 h-3 w-3 rotate-45 bg-ink" />
+        </div>
+      )}
+
       {/* FAB */}
       <button
         type="button"
         onClick={() => {
           if (!open) track('advisor_opened', undefined, { once: true })
+          setShowTip(false)
           setOpen(!open)
         }}
         aria-label={t('advisor.fabLabel')}
+        aria-describedby={showTip && !open ? 'advisor-tip' : undefined}
         className="ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-on-primary shadow-lg transition hover:bg-teal-700"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

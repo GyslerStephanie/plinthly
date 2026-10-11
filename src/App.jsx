@@ -666,6 +666,7 @@ export default function App() {
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
       {isUs && usRes && (
         <AdvisorFab
+          tipKey={phase}
           context={buildUsAdvisorContext(
             usRes,
             lang,
@@ -689,6 +690,7 @@ export default function App() {
 
       {previewResult && !showCompare && !isUs && (
         <AdvisorFab
+          tipKey={phase}
           context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
           values={values}
           onApplyScenario={(overrides) => {
