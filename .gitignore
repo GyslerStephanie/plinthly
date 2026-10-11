@@ -11,3 +11,8 @@ dist-ssr
 .claude/*
 !.claude/skills/
 !.claude/launch.json
+
+# Local secrets — never commit (ANTHROPIC_API_KEY lives here in dev)
+.env
+.env.*
+!.env.example

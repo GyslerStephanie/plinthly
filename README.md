@@ -1,11 +1,20 @@
 # Plinthly — Swiss Sustainable Real Estate Explorer
 
+Status: active
+
 MVP of a guided platform that gives people in Switzerland an honest picture of
 what they can buy, build, or renovate — sustainably and affordably — before
 they engage with brokers, banks, or builders.
 
 **Stack:** React 19 + Vite 6 + Tailwind CSS 4. No backend — all logic runs
 client-side against static JSON (`src/data/swiss-cantonal-data.json`).
+
+## Project docs (start here)
+
+- **[plinthly.md](plinthly.md)** — how the project works: structure, rules, conventions.
+- **[FEATURES.md](FEATURES.md)** — what's built, in progress, and next.
+- **[docs/WORKING-WITH-AI.md](docs/WORKING-WITH-AI.md)** — the repeatable loop for adding features.
+- **[docs/](docs/)** — specs, research, and archived notes.
 
 ## Running
 

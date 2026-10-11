@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plinthly — Interview-Driven Feature Analysis (Zita &amp; Jonas)</title>
+<style>
+  :root{
+    --ink:#0D0D0D; --body:#3f4651; --muted:#737b86; --line:#E7EAEE; --surface:#F5F7F9;
+    --paper:#fff; --teal:#0f766e; --teal-50:#e6f3f1; --teal-100:#cfe8e4;
+    --amber:#b45309; --amber-50:#fef6e7; --amber-200:#fadfa3;
+    --rose:#9f1239; --rose-50:#fdeef1; --rose-200:#f6c9d3;
+    --blue:#1d4ed8; --blue-50:#eaf0fe; --blue-200:#c3d4fb;
+    --green:#047857; --green-50:#e6f5ee; --green-200:#bfe3cf;
+    --violet:#7c3aed; --violet-50:#f1eafe; --violet-200:#ddc9fb;
+    --shadow:0 1px 2px rgba(13,13,13,.04),0 8px 24px rgba(13,13,13,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--surface);color:var(--body);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px 96px}
+  h1,h2,h3,h4{color:var(--ink);line-height:1.2;letter-spacing:-.01em;margin:0}
+  h2{font-size:26px;font-weight:800} h3{font-size:19px;font-weight:750} h4{font-size:15px;font-weight:700}
+  p{margin:.6em 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;background:#eef1f4;color:#243;padding:1px 6px;border-radius:5px}
+  a{color:var(--teal)}
+  blockquote{margin:10px 0;padding:10px 16px;border-left:3px solid var(--teal-100);background:var(--teal-50);
+    border-radius:0 10px 10px 0;color:#0b554f;font-size:14.5px;font-style:italic}
+
+  header.hero{background:linear-gradient(135deg,#0b3b37 0%,#114f49 48%,#0f766e 100%);color:#fff;padding:54px 0 46px;position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(900px 280px at 88% -10%,rgba(255,255,255,.14),transparent 60%)}
+  .hero .wrap{padding-bottom:0;position:relative}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7e3da;margin:0 0 12px}
+  header.hero h1{color:#fff;font-size:38px;font-weight:850;max-width:20ch}
+  header.hero p.sub{color:#d6efeb;font-size:18px;max-width:64ch;margin-top:14px}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#eafaf7;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 0}
+  .tag{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;padding:7px 12px;border-radius:999px;border:1px solid}
+  .tag .dot{width:9px;height:9px;border-radius:50%}
+  .tag.val{background:var(--green-50);color:#055f43;border-color:var(--green-200)} .tag.val .dot{background:var(--green)}
+  .tag.sig{background:var(--amber-50);color:#7c4408;border-color:var(--amber-200)} .tag.sig .dot{background:var(--amber)}
+  .tag.risk{background:var(--rose-50);color:#7a1330;border-color:var(--rose-200)} .tag.risk .dot{background:var(--rose)}
+
+  section{margin-top:42px}
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .sec-num{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--ink);color:#fff;font-weight:800;font-size:16px}
+  .lede{color:var(--muted);font-size:15.5px;margin:2px 0 18px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);margin:16px 0}
+  .card h3{margin-bottom:6px}
+
+  /* evidence pills inline */
+  .e{font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:2px 7px;border-radius:6px;vertical-align:middle;white-space:nowrap;text-transform:uppercase}
+  .e.val{background:var(--green-50);color:#055f43} .e.sig{background:var(--amber-50);color:#7c4408} .e.risk{background:var(--rose-50);color:#7a1330}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--surface);font-weight:700}
+  tbody tr:last-child td{border-bottom:none}
+  td.good{color:var(--green);font-weight:700} td.bad{color:var(--rose);font-weight:700} td.partial{color:var(--amber);font-weight:700}
+
+  .callout{border-radius:13px;padding:14px 16px;margin:14px 0;border:1px solid;font-size:14.5px}
+  .callout h4{margin-bottom:3px;display:flex;align-items:center;gap:8px}
+  .callout.gap{background:var(--rose-50);border-color:var(--rose-200);color:#7a1330} .callout.gap h4{color:var(--rose)}
+  .callout.win{background:var(--green-50);border-color:var(--green-200);color:#055f43} .callout.win h4{color:var(--green)}
+  .callout.info{background:var(--blue-50);border-color:var(--blue-200);color:#1c3b8f} .callout.info h4{color:var(--blue)}
+  .callout.warn{background:var(--amber-50);border-color:var(--amber-200);color:#7c4408} .callout.warn h4{color:var(--amber)}
+
+  .diagram{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin:16px 0;overflow-x:auto}
+  .diagram .cap{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center}
+  svg{display:block;max-width:100%;height:auto;margin:0 auto}
+
+  /* ranked pain bars */
+  .pain{display:flex;align-items:center;gap:12px;margin:9px 0}
+  .pain .lbl{flex:1;font-size:14px}
+  .pain .bar{flex:none;width:160px;height:9px;border-radius:999px;background:var(--line);overflow:hidden}
+  .pain .bar i{display:block;height:100%;border-radius:999px}
+  .pain .pct{flex:none;width:54px;font-size:11.5px;font-weight:700;color:var(--muted);text-align:right}
+
+  /* feature board */
+  .feat{border:1px solid var(--line);border-radius:16px;padding:18px 20px;background:var(--paper);box-shadow:var(--shadow);margin:14px 0;border-left:5px solid var(--teal)}
+  .feat.p1{border-left-color:var(--teal)} .feat.p2{border-left-color:var(--blue)} .feat.p3{border-left-color:var(--amber)}
+  .feat .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .feat .rank{font-size:12px;font-weight:800;color:#fff;background:var(--ink);border-radius:8px;padding:3px 9px}
+  .feat h4{font-size:16.5px}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:4px 14px;font-size:13.5px;margin-top:10px}
+  .kv dt{color:var(--muted);font-weight:600} .kv dd{margin:0}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .b{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .b.eff-lo{background:var(--green-50);color:#055f43} .b.eff-md{background:var(--amber-50);color:#7c4408} .b.eff-hi{background:var(--rose-50);color:#7a1330}
+  .b.exist{background:var(--teal-50);color:#0b554f} .b.data{background:var(--violet-50);color:#5b21b6}
+
+  ul.clean{margin:.5em 0;padding-left:1.15em} ul.clean li{margin:.35em 0}
+  .summary{background:linear-gradient(135deg,#0b3b37,#0f766e);color:#eafaf7;border-radius:18px;padding:26px 28px;margin-top:34px}
+  .summary h3{color:#fff} .summary p{color:#d6efeb}
+  .foot{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+  @media print{body{background:#fff}.card,.diagram,.feat{box-shadow:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    header.hero{background:#0f766e!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Plinthly · Research → Product</p>
+    <h1>What the Zita &amp; Jonas interview tells us to build</h1>
+    <p class="sub">Synthesis of the first real discovery interview, mapped against the live codebase — what's already there, what's missing, and a prioritized feature roadmap.</p>
+    <div class="meta-row">
+      <span class="chip">🗣️ 1 couple · Zurich renters · architect + federal</span>
+      <span class="chip">📅 Synthesis 2026‑06‑22</span>
+      <span class="chip">⚠️ n=1 · directional, biased sample</span>
+    </div>
+    <div class="legend">
+      <span class="tag val"><span class="dot"></span>VALIDATED — said unprompted, in their own words</span>
+      <span class="tag sig"><span class="dot"></span>SIGNAL — said, but single biased source</span>
+      <span class="tag risk"><span class="dot"></span>FEASIBILITY RISK — need real, data may not exist</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="card" style="margin-top:26px">
+    <h3>Read this with the sample in mind</h3>
+    <p>This is <strong>one interview with one couple</strong>, and an unusually well‑equipped one: Zita is an architect (understands construction + subsidy rules), Jonas works in the federal sector (predictable salary). Their pain points likely <em>understate</em> what a less‑informed buyer feels. They're also self‑described pessimists about ever affording what they want. So: strong signals to test, not proven facts. The single biggest shift from my prior analysis is that one claim I'd marked <em>INFER</em> — rent‑vs‑buy / invest‑the‑difference — is now <strong>spoken evidence</strong>, in almost exactly the framing I'd hypothesized.</p>
+  </div>
+
+  <!-- ============ 1. WHAT THEY ASKED FOR ============ -->
+  <section id="findings">
+    <div class="sec-head"><div class="sec-num">1</div><h2>What they actually asked for</h2></div>
+    <p class="lede">Nine themes condensed to the five that carry a product implication, each tagged by evidence strength.</p>
+
+    <div class="card">
+      <h3>The headline need — invert the calculator <em>and add time</em> <span class="e val">Validated</span></h3>
+      <p>The clearest, most repeated, <em>unprompted</em> frustration: existing tools take a price and return a binary yes/no. They want the opposite — affordability computed from their means, <strong>projected over years</strong>.</p>
+      <blockquote>"I do not want to know if I can afford this right now or not. I want to know in 5 years or 10 years or 20 years."</blockquote>
+      <blockquote>"My salary is going to increase like this, we save this much per year. When would we be able to afford it — in one, two, three, five years?"</blockquote>
+      <p>They even solved the hard part themselves: price growth can't be predicted, so make it a <em>user‑set assumption</em> (they floated 1–2%/yr), and watching it play out might reveal the target is never reachable — which is itself useful.</p>
+    </div>
+
+    <div class="card">
+      <h3>The sustainability wedge — opacity, rationally abandoned <span class="e val">Validated</span> <span class="e risk">Feasibility risk</span></h3>
+      <p>They <em>know</em> subsidies / tax deductions / energy savings exist and could be decisive — and have written them off, because the info is fragmented to Gemeinde level and needs a concrete plan for a specific house.</p>
+      <blockquote>"It is such a jungle… easier to make people pessimistic and say this is the price, assume you get no subsidies — even though the subsidies would in some cases be what makes it affordable."</blockquote>
+      <p>But the bar for usefulness is low — directional advice is enough: <em>"It does not even have to be accurate… many people do not realize you can save money this or that way."</em> Zita (in the field) believes the rules will <em>never</em> standardize — that's the feasibility risk on this wedge.</p>
+    </div>
+
+    <div class="card">
+      <h3>Three more, briefly</h3>
+      <ul class="clean">
+        <li><strong>Honesty, not positivity</strong> <span class="e val">Validated</span> — <em>"Typically ChatGPT is always on your side… I want the cons also."</em> Matches Plinthly's existing voice exactly.</li>
+        <li><strong>"Surface the questions I don't know to ask"</strong> <span class="e sig">Signal</span> — schools by Gemeinde, commute/car dependency, canton taxes, hidden maintenance. They called it <em>"automatic prompt engineering."</em></li>
+        <li><strong>An entry point for the blind newcomer</strong> <span class="e sig">Signal</span> — <em>"if you don't know what to study, you cannot self‑study"</em>; existing foreigner guides have <em>"horrible SEO"</em> and are too long. Someone might <em>"not even know what a second pillar is."</em></li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:24px">Pain points, ranked (their intensity)</h3>
+    <div class="card">
+      <div class="pain"><span class="lbl"><strong>1.</strong> Calculators give price→yes/no, not means→price &amp; <em>timeline</em></span><span class="bar"><i style="width:100%;background:var(--rose)"></i></span><span class="pct">central</span></div>
+      <div class="pain"><span class="lbl"><strong>2.</strong> Subsidy / tax / energy savings too opaque to budget with → ignored</span><span class="bar"><i style="width:92%;background:var(--rose)"></i></span><span class="pct">high</span></div>
+      <div class="pain"><span class="lbl"><strong>3.</strong> No entry point — you don't know what to research</span><span class="bar"><i style="width:88%;background:var(--amber)"></i></span><span class="pct">high</span></div>
+      <div class="pain"><span class="lbl"><strong>4.</strong> Tools &amp; AI are dishonestly positive</span><span class="bar"><i style="width:70%;background:var(--amber)"></i></span><span class="pct">med‑hi</span></div>
+      <div class="pain"><span class="lbl"><strong>5.</strong> Non‑financial factors (school, commute) invisible &amp; uncollected</span><span class="bar"><i style="width:58%;background:var(--amber)"></i></span><span class="pct">med</span></div>
+      <div class="pain"><span class="lbl"><strong>6.</strong> Hidden costs — esp. maintenance — not surfaced</span><span class="bar"><i style="width:52%;background:var(--blue)"></i></span><span class="pct">med</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 2. GAP ANALYSIS ============ -->
+  <section id="gap">
+    <div class="sec-head"><div class="sec-num">2</div><h2>The headline need vs. what Plinthly already does</h2></div>
+    <p class="lede">Good news: Plinthly is ~40% of the way to the inverted‑time calculator. It already inverts (Phase 1) and already shows a savings→timeline (<code>PathToGoal</code>). It's missing the two things that make it honest over a 5–20 yr horizon.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 980 360" role="img" aria-label="Inverted time-aware calculator: built vs missing">
+        <text x="490" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#0D0D0D">"When could we afford our target?" — the user's mental model</text>
+
+        <!-- BUILT column -->
+        <rect x="14" y="48" width="300" height="290" rx="14" fill="#e6f5ee" stroke="#bfe3cf"/>
+        <text x="164" y="74" text-anchor="middle" font-size="13" font-weight="800" fill="#055f43">✓ ALREADY BUILT</text>
+        <g font-size="12.5" fill="#0D0D0D">
+          <rect x="32" y="90" width="264" height="46" rx="9" fill="#fff" stroke="#bfe3cf"/>
+          <text x="46" y="110" font-weight="700">Means → max price (inverted)</text>
+          <text x="46" y="127" fill="#737b86" font-size="11">affordability.js · calculateAffordability</text>
+
+          <rect x="32" y="144" width="264" height="46" rx="9" fill="#fff" stroke="#bfe3cf"/>
+          <text x="46" y="164" font-weight="700">Savings rate → timeline to target</text>
+          <text x="46" y="181" fill="#737b86" font-size="11">PathToGoal · slider → months</text>
+
+          <rect x="32" y="198" width="264" height="46" rx="9" fill="#fff" stroke="#bfe3cf"/>
+          <text x="46" y="218" font-weight="700">Honest preset scenarios</text>
+          <text x="46" y="235" fill="#737b86" font-size="11">steady / save‑more / +Pillar 3a</text>
+
+          <rect x="32" y="252" width="264" height="46" rx="9" fill="#fff" stroke="#bfe3cf"/>
+          <text x="46" y="272" font-weight="700">Annualized maintenance</text>
+          <text x="46" y="289" fill="#737b86" font-size="11">monthlyCostsAtRate · the "praised" behaviour</text>
+
+          <rect x="32" y="306" width="264" height="24" rx="7" fill="#fff" stroke="#bfe3cf"/>
+          <text x="46" y="322" font-weight="700" fill="#055f43">Pillar 3a as equity lever</text>
+        </g>
+
+        <!-- MISSING column -->
+        <rect x="338" y="48" width="318" height="290" rx="14" fill="#fdeef1" stroke="#f6c9d3"/>
+        <text x="497" y="74" text-anchor="middle" font-size="13" font-weight="800" fill="#9f1239">✕ MISSING — the honesty gap</text>
+        <g font-size="12.5" fill="#0D0D0D">
+          <rect x="356" y="90" width="282" height="50" rx="9" fill="#fff" stroke="#f6c9d3"/>
+          <text x="370" y="110" font-weight="700">Price appreciation assumption</text>
+          <text x="370" y="127" fill="#9f1239" font-size="11">target is STATIC → goalpost can't move (1–2%/yr)</text>
+
+          <rect x="356" y="148" width="282" height="50" rx="9" fill="#fff" stroke="#f6c9d3"/>
+          <text x="370" y="168" font-weight="700">Salary‑growth trajectory</text>
+          <text x="370" y="185" fill="#9f1239" font-size="11">income gap shown as STATIC text — saving can't close it</text>
+
+          <rect x="356" y="206" width="282" height="50" rx="9" fill="#fff" stroke="#f6c9d3"/>
+          <text x="370" y="226" font-weight="700">Lifestyle tradeoffs by category</text>
+          <text x="370" y="243" fill="#9f1239" font-size="11">"sacrifice vacations, not eating out" — no category model</text>
+
+          <rect x="356" y="264" width="282" height="50" rx="9" fill="#fff" stroke="#f6c9d3"/>
+          <text x="370" y="284" font-weight="700">Two‑lives scenario compare</text>
+          <text x="370" y="301" fill="#9f1239" font-size="11">"a short movie of my life" — save‑hard vs live‑now, side by side</text>
+        </g>
+
+        <!-- OUTCOME -->
+        <rect x="680" y="48" width="286" height="290" rx="14" fill="#f6f1fb" stroke="#ddc9fb"/>
+        <text x="823" y="74" text-anchor="middle" font-size="13" font-weight="800" fill="#5b21b6">→ THE FIX</text>
+        <foreignObject x="694" y="86" width="258" height="244">
+          <div xmlns="http://www.w3.org/1999/xhtml" style="font:12.5px/1.5 -apple-system,Inter,sans-serif;color:#3f4651">
+            <p style="margin:0 0 8px"><strong style="color:#5b21b6">Today</strong> the timeline = "months to save the equity gap" against a frozen price — so it <em>understates the wait</em> and <em>can't help income‑bound buyers at all.</em></p>
+            <p style="margin:0 0 8px"><strong style="color:#5b21b6">Add three inputs</strong> (appreciation %, salary growth %, category sliders) and the existing <code>PathToGoal</code> becomes the validated "when can we afford it?" spine.</p>
+            <p style="margin:0"><strong style="color:#5b21b6">Mostly an extension</strong>, not a rebuild — the inversion &amp; timeline scaffolding already exist.</p>
+          </div>
+        </foreignObject>
+      </svg>
+      <div class="cap">Citations: <code>affordability.js</code>, <code>src/components/PathToGoal.jsx</code> (<code>monthsFor = equityGap / perMonth</code>, fixed target), <code>monthlyCostsAtRate</code>.</div>
+    </div>
+
+    <div class="callout warn">
+      <h4>⚠︎ Why this matters for honesty</h4>
+      The current timeline quietly cheats in <em>two opposite directions</em>: it ignores appreciation (so the target looks closer than it is) and ignores salary growth (so income‑bound buyers are told "saving won't help," when over 10 years it might). Adding both isn't feature‑creep — it's what makes the projection <em>true</em>, which is the whole brand.
+    </div>
+  </section>
+
+  <!-- ============ 3. FEATURE ROADMAP ============ -->
+  <section id="roadmap">
+    <div class="sec-head"><div class="sec-num">3</div><h2>Feature recommendations, prioritized</h2></div>
+    <p class="lede">Each mapped to its research evidence, the existing code asset it can reuse, the gap, build effort, and data/feasibility risk.</p>
+
+    <div class="feat p1">
+      <div class="top"><span class="rank">P0 · spine</span><h4>F1 — Time‑aware projection: salary growth × appreciation × savings</h4></div>
+      <p>Extend Phase 1 + <code>PathToGoal</code> into a real "when could we afford our target?" projection. New inputs: capital, monthly savings, income <em>growth</em>, risk‑buffer preference, and a user‑set price‑appreciation %. Output: affordable price now + a year‑by‑year timeline to the target.</p>
+      <dl class="kv">
+        <dt>Evidence</dt><dd><span class="e val">Validated</span> the single strongest, unprompted insight — stated in their words</dd>
+        <dt>Reuses</dt><dd><code>calculateAffordability</code>, <code>PathToGoal</code> scenarios, <code>requirementsForPrice</code></dd>
+        <dt>Gap</dt><dd>No appreciation, no salary‑growth, timeline only counts equity gap (static target)</dd>
+      </dl>
+      <div class="badges"><span class="b eff-hi">Effort: high (engine math)</span><span class="b exist">~40% built</span><span class="b data">Data: none new (user assumptions)</span></div>
+    </div>
+
+    <div class="feat p1">
+      <div class="top"><span class="rank">P0 · pairs with F1</span><h4>F2 — "Two‑lives" tradeoff scenarios by spending category</h4></div>
+      <p>Let users dial saving up/down by category (vacations, eating out, car) and compare two futures side by side — "sacrifice 5 years &amp; get it" vs "live now." Feeds the F1 savings rate.</p>
+      <dl class="kv">
+        <dt>Evidence</dt><dd><span class="e val">Validated</span> — "a short movie of my life… then I pick which one I want"</dd>
+        <dt>Reuses</dt><dd>The <code>PathToGoal</code> slider/preset pattern, generalized to N categories</dd>
+        <dt>Gap</dt><dd>Single global savings slider today; no category breakdown, no A/B scenario view</dd>
+      </dl>
+      <div class="badges"><span class="b eff-md">Effort: medium</span><span class="b exist">pattern exists</span><span class="b data">Data: none new</span></div>
+    </div>
+
+    <div class="feat p3">
+      <div class="top"><span class="rank">P1 · on‑mission, test first</span><h4>F3 — Make sustainability legible: "you could save ~CHF X" (directional)</h4></div>
+      <p>Surface the retrofit/subsidy economics <em>earlier and lighter</em> — directional advice ("a heat‑pump here likely saves ~CHF X over 10 yrs; subsidies may cover ~Y") without requiring a full plan. Plinthly already computes most of this.</p>
+      <dl class="kv">
+        <dt>Evidence</dt><dd><span class="e val">Validated</span> need · <span class="e risk">Feasibility risk</span> at Gemeinde granularity (Zita: "never standardizes")</dd>
+        <dt>Reuses</dt><dd><code>retrofit.js</code> configurator (net cost, payback, 10‑yr saving), <code>subsidyOverview</code></dd>
+        <dt>Gap</dt><dd>Buried at Phase 3/4; canton‑level only; framed as precise, needs full inputs</dd>
+      </dl>
+      <div class="badges"><span class="b eff-md">Effort: medium (mostly surfacing)</span><span class="b exist">engine exists</span><span class="b data">Data risk: high if precise</span></div>
+      <div class="callout gap" style="margin:12px 0 0"><h4>Test before building heavy</h4>Try to assemble subsidy data for <em>one or two cantons</em> first. Ship canton‑level + directional, loudly flagged — never promise Gemeinde precision the data can't support.</div>
+    </div>
+
+    <div class="feat p2">
+      <div class="top"><span class="rank">P1 · validated, my prior rec</span><h4>F4 — Rent‑vs‑buy with the invest‑the‑difference opportunity cost</h4></div>
+      <p>Show full cost of ownership next to current rent, plus the stock/bond return on the down payment you'd otherwise invest. The interview validated this in almost exactly the framing my prior IA analysis hypothesized.</p>
+      <blockquote style="margin:8px 0">"The ~250,000 you'd sink into a 1.2M house could be invested in stocks or bonds at a comparable return… renting is not pure waste."</blockquote>
+      <dl class="kv">
+        <dt>Evidence</dt><dd><span class="e val">Validated</span> (upgraded from INFER) — sophisticated users want it; also serves the un‑decided browser</dd>
+        <dt>Reuses</dt><dd><code>monthlyCostsAtRate</code> (buy side already annualizes maintenance — "praised")</dd>
+        <dt>Gap</dt><dd>No rent figure in dataset; no investment‑return model</dd>
+      </dl>
+      <div class="badges"><span class="b eff-md">Effort: medium</span><span class="b exist">buy side exists</span><span class="b data">Data: needs rent benchmark</span></div>
+    </div>
+
+    <div class="feat p2">
+      <div class="top"><span class="rank">P1 · widens audience</span><h4>F5 — "Surface the questions" layer (schools · commute · canton taxes · maintenance)</h4></div>
+      <p>Auto‑raise the non‑financial factors a first‑timer wouldn't know to ask — the user's "automatic prompt engineering." Start with what the data supports (canton taxes are in the dataset; maintenance already annualized) and honestly flag what isn't.</p>
+      <dl class="kv">
+        <dt>Evidence</dt><dd><span class="e sig">Signal</span> — repeated, but n=1; "this data is somewhere, nobody collects it"</dd>
+        <dt>Reuses</dt><dd><code>swiss-cantonal-data.json</code> tax/Eigenmietwert; <code>PhaseContextBanner</code> pattern</dd>
+        <dt>Gap</dt><dd>School quality &amp; commute/car data not in dataset (hard to source)</dd>
+      </dl>
+      <div class="badges"><span class="b eff-hi">Effort: med‑high (data sourcing)</span><span class="b data">Data risk: schools/commute</span></div>
+    </div>
+
+    <div class="feat p2">
+      <div class="top"><span class="rank">P1 · cheap win</span><h4>F6 — Newcomer on‑ramp: TL;DR onboarding + expanded glossary</h4></div>
+      <p>A summary‑first entry ("you have no idea where to start? read this in 60 seconds"), plain‑language explainers (what a 2nd/3rd pillar is, amortization), beating the "horrible SEO" of foreigner guides. Plinthly already has a 10‑term glossary to build on.</p>
+      <dl class="kv">
+        <dt>Evidence</dt><dd><span class="e sig">Signal</span> — "if you don't know what to study, you cannot self‑study"; serves the blind‑newcomer persona</dd>
+        <dt>Reuses</dt><dd><code>glossary.json</code>, <code>GlossaryTerm</code>/<code>InfoTerm</code> components</dd>
+        <dt>Gap</dt><dd>No TL;DR onboarding; glossary is in‑context only, not a learnable entry point</dd>
+      </dl>
+      <div class="badges"><span class="b eff-lo">Effort: low‑med</span><span class="b exist">glossary exists</span><span class="b data">Data: none new</span></div>
+    </div>
+
+    <div class="feat p1">
+      <div class="top"><span class="rank">P0 · cheap, on‑brand</span><h4>F7 — Formalize honesty: a "the catch" line in every output</h4></div>
+      <p>Make the balanced, cons‑included voice an explicit output pattern — a short "what this flips on / the downside here" line on each result, not just tone. Directly requested, and a sharp contrast to default‑positive chatbots.</p>
+      <dl class="kv">
+        <dt>Evidence</dt><dd><span class="e val">Validated</span> — "I don't want positivity, I want the cons"; matches founder's validation‑first stance</dd>
+        <dt>Reuses</dt><dd>Existing <code>Indicative</code> labels &amp; honest‑grading copy</dd>
+        <dt>Gap</dt><dd>Honesty is tone, not a guaranteed structural element of each output</dd>
+      </dl>
+      <div class="badges"><span class="b eff-lo">Effort: low (copy/pattern)</span><span class="b exist">voice exists</span><span class="b data">Data: none new</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 4. PRIORITY MATRIX ============ -->
+  <section id="matrix">
+    <div class="sec-head"><div class="sec-num">4</div><h2>Impact × feasibility</h2></div>
+    <p class="lede">Where to point the next build. Top‑right = do now (high impact, deliverable). Bottom‑right = high impact but gated on a feasibility test.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 760 470" role="img" aria-label="Impact vs feasibility matrix">
+        <!-- axes -->
+        <line x1="80" y1="40" x2="80" y2="410" stroke="#cdd4db" stroke-width="2"/>
+        <line x1="80" y1="410" x2="720" y2="410" stroke="#cdd4db" stroke-width="2"/>
+        <text x="40" y="230" transform="rotate(-90 40 230)" text-anchor="middle" font-size="12.5" font-weight="700" fill="#737b86">USER IMPACT →</text>
+        <text x="400" y="445" text-anchor="middle" font-size="12.5" font-weight="700" fill="#737b86">FEASIBILITY / READINESS →</text>
+        <!-- quadrant tints -->
+        <rect x="400" y="40" width="320" height="185" fill="#e6f5ee" opacity=".5"/>
+        <text x="560" y="60" text-anchor="middle" font-size="11.5" font-weight="800" fill="#055f43">DO NOW</text>
+        <rect x="400" y="225" width="320" height="185" fill="#fef6e7" opacity=".5"/>
+        <text x="560" y="402" text-anchor="middle" font-size="11.5" font-weight="800" fill="#7c4408">HIGH VALUE · TEST FIRST</text>
+        <rect x="80" y="40" width="320" height="185" fill="#eaf0fe" opacity=".4"/>
+        <text x="240" y="60" text-anchor="middle" font-size="11.5" font-weight="800" fill="#1c3b8f">QUICK WINS</text>
+
+        <!-- bubbles: cx,cy -->
+        <g font-size="12" font-weight="800" fill="#fff">
+          <!-- F1 high impact, high feasibility (mostly built) -->
+          <circle cx="610" cy="95" r="30" fill="#0f766e"/><text x="610" y="100" text-anchor="middle">F1</text>
+          <!-- F2 -->
+          <circle cx="560" cy="150" r="24" fill="#0f766e"/><text x="560" y="155" text-anchor="middle">F2</text>
+          <!-- F7 quick + high -->
+          <circle cx="650" cy="135" r="20" fill="#1d4ed8"/><text x="650" y="140" text-anchor="middle">F7</text>
+          <!-- F4 rent-vs-buy: high impact, mid feasibility (needs rent data) -->
+          <circle cx="470" cy="120" r="24" fill="#1d4ed8"/><text x="470" y="125" text-anchor="middle">F4</text>
+          <!-- F6 quick win, med impact -->
+          <circle cx="610" cy="300" r="20" fill="#1d4ed8"/><text x="610" y="305" text-anchor="middle">F6</text>
+          <!-- F5 med impact, lower feasibility (data) -->
+          <circle cx="300" cy="250" r="22" fill="#b45309"/><text x="300" y="255" text-anchor="middle">F5</text>
+          <!-- F3 high impact, low feasibility -->
+          <circle cx="250" cy="150" r="28" fill="#b45309"/><text x="250" y="155" text-anchor="middle">F3</text>
+        </g>
+        <!-- legend -->
+        <g font-size="11.5" fill="#3f4651">
+          <text x="95" y="430">F1 time‑aware projection · F2 tradeoff scenarios · F3 sustainability legibility · F4 rent‑vs‑buy · F5 surface‑the‑questions · F6 newcomer on‑ramp · F7 honesty pattern</text>
+        </g>
+      </svg>
+      <div class="cap">Bubble size ≈ relative impact. F3 (sustainability wedge) is the highest‑value differentiator but sits left — gated on the subsidy‑data feasibility test before heavy build.</div>
+    </div>
+
+    <div class="callout win">
+      <h4>✓ Recommended sequence</h4>
+      <strong>Now:</strong> F1 + F2 (the validated spine — and largely an extension of what's built) and the cheap, on‑brand F7. <strong>Next:</strong> F4 (validated, needs a rent benchmark) and F6 (cheap audience‑widener). <strong>Gated:</strong> run the subsidy‑data feasibility probe before committing to F3; layer F5 as data allows.
+    </div>
+  </section>
+
+  <!-- ============ 5. CAVEATS ============ -->
+  <section id="caveats">
+    <div class="sec-head"><div class="sec-num">5</div><h2>What to test next &amp; what to hold loosely</h2></div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Open question</th><th>Cheapest test</th><th>Why it's make‑or‑break</th></tr></thead>
+        <tbody>
+          <tr><td>Does the inverted+timeline flow change behaviour, or just <em>feel</em> nice?</td><td>Clickable prototype of F1; watch for unprompted return / willingness to pay</td><td>It's the spine — if it doesn't pull, nothing downstream matters</td></tr>
+          <tr><td>Is subsidy/energy concreteness <em>deliverable</em> given Gemeinde fragmentation?</td><td>Try to assemble the data for 1–2 cantons before promising it</td><td class="bad">Make‑or‑break for the sustainability wedge (F3)</td></tr>
+          <tr><td>Who actually <em>pays</em>? Buyers buy rarely &amp; once.</td><td>Probe bank / Pensionskasse / realtor / solar‑firm as the real customer</td><td>Consumer SaaS on a once‑a‑decade purchase is hard</td></tr>
+          <tr><td>Do the needs hold beyond this biased sample?</td><td>Interview the blind newcomer &amp; the committed never‑buyer next</td><td>This couple is unusually informed — pains likely understated</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout info">
+      <h4>◇ Personas this surfaced (for targeting the next interviews)</h4>
+      <strong>The patient pessimist</strong> (Zita &amp; Jonas) — primed to own, blocked by the gap &amp; opacity, long 15–20yr horizon. <strong>The blind newcomer</strong> — no finance/architecture network; for them the basics <em>are</em> the product. <strong>The investor‑only owner</strong> — buys abroad as a rental, never to live in; a different job entirely.
+    </div>
+  </section>
+
+  <div class="summary">
+    <h3>The honest read</h3>
+    <p>The strongest, cleanest signal is the <strong>inverted, time‑aware calculator</strong> — a real unmet need, stated unprompted, in the user's own words — and Plinthly is already partway there: it inverts (Phase 1) and shows a savings timeline (<code>PathToGoal</code>), but against a <em>static</em> target and ignoring salary growth, which is exactly what makes a 5–20 year projection honest. Build that (F1/F2) first; it's an extension, not a rebuild. The <strong>sustainability wedge</strong> (F3) is genuinely needed and on‑mission but carries the heaviest feasibility risk (Gemeinde opacity) — treat it as a hypothesis to test, not a promise to build. <strong>Rent‑vs‑buy</strong> (F4) graduated from my prior <em>inferred</em> recommendation to <em>spoken evidence</em>. And the <strong>honesty‑as‑structure</strong> move (F7) is nearly free and already your voice. Verdict, in the synthesis's own words: a <strong>strong yellow</strong> — a real need worth a proper prototype, with two unknowns (subsidy feasibility, willingness to pay) to probe cheaply before committing more. And remember: this is n=1.</p>
+  </div>
+
+  <p class="foot">Source: <code>uploads/…Zita‑Jonas Interview — Research Synthesis.docx</code> (synthesis 2026‑06‑22). Code citations: <code>src/lib/affordability.js</code>, <code>src/components/PathToGoal.jsx</code>, <code>src/lib/retrofit.js</code>, <code>src/lib/exploration.js</code>, <code>src/data/swiss-cantonal-data.json</code>, <code>src/data/glossary.json</code>. Companion documents: <code>COMPARISON_IA_ANALYSIS.html</code> / <code>.md</code>.</p>
+
+</div>
+</body>
+</html>

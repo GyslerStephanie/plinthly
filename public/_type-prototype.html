@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plinthly — Type system prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --serif:'Spectral',Georgia,serif; --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --page:#fbfaf4; --card:#fff; --sunken:#f4f2e8; --moss:#6f8a35; --moss6:#566d29; --moss-soft:#f1f5e6; --moss-ink:#42541f;
+    --coral:#c4452f; --coral-soft:#fceae4; --sand-soft:#faf4e6; --sand-ink:#5e451d;
+    --strong:#1b1c17; --body:#3d3f35; --muted:#6a6c5f; --faint:#8d8f80; --line:#e3e0d2; --line-soft:#efece0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--page);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:40px 20px 80px}
+  .wrap{max-width:1080px;margin:0 auto}
+
+  /* ─── THE 6 ROLES ─────────────────────────────────────────── */
+  .t-display   {font-family:var(--serif);font-weight:600;font-size:40px;line-height:1.08;letter-spacing:-.015em;color:var(--strong)}
+  .t-display-sm{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.15;letter-spacing:-.01em;color:var(--strong)}
+  .t-heading   {font-family:var(--sans);font-weight:600;font-size:18px;line-height:1.35;letter-spacing:-.004em;color:var(--strong)}
+  .t-body      {font-family:var(--sans);font-weight:400;font-size:15px;line-height:1.55;color:var(--body)}
+  .t-body-med  {font-family:var(--sans);font-weight:500;font-size:15px;line-height:1.55;color:var(--strong)}
+  .t-caption   {font-family:var(--sans);font-weight:400;font-size:13px;line-height:1.45;color:var(--muted)}
+  .t-label     {font-family:var(--mono);font-weight:500;font-size:11px;line-height:1.3;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  .t-figure    {font-family:var(--mono);font-weight:400;font-size:18px;line-height:1.2;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--strong)}
+  .t-figure-lg {font-family:var(--mono);font-weight:400;font-size:30px;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--strong)}
+  .t-figure-sm {font-family:var(--mono);font-weight:400;font-size:13px;line-height:1.3;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--body)}
+
+  /* ─── page scaffolding ───────────────────────────────────── */
+  .kicker{font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--moss6)}
+  .lede{max-width:640px;margin-top:10px}
+  h2.sec{font-family:var(--serif);font-weight:600;font-size:22px;color:var(--strong);margin:56px 0 6px;letter-spacing:-.01em}
+  .sec-sub{font-size:14px;color:var(--muted);margin-bottom:22px;max-width:640px}
+
+  .grid{display:grid;gap:14px}
+  @media(min-width:720px){.two{grid-template-columns:1fr 1fr}}
+
+  .spec{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:20px 22px;box-shadow:0 1px 2px rgba(34,44,17,.05)}
+  .spec .role{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;border-bottom:1px solid var(--line-soft);padding-bottom:10px}
+  .spec .rname{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.04em;color:var(--moss6);text-transform:uppercase}
+  .spec .rmeta{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:right}
+  .num{color:var(--muted)}
+
+  /* mock screen */
+  .screen{background:var(--sunken);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .mcard{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:20px 22px;box-shadow:0 1px 2px rgba(34,44,17,.06);margin-top:14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:4px 0}
+  .pill{display:inline-block;background:var(--moss-soft);color:var(--moss-ink);border-radius:999px;padding:3px 10px;font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.09em;text-transform:uppercase}
+  .rule{height:1px;background:var(--line-soft);margin:8px 0}
+  .banner{display:flex;gap:10px;background:var(--sand-soft);border:1px solid #eADFc0;border-radius:11px;padding:14px 16px;margin-top:14px}
+  .tri{color:#c79f54;flex:none;font-size:16px;line-height:1.2}
+  .toprow{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+  .flagtag{font-family:var(--mono);font-size:10px;color:var(--moss);border:1px solid var(--moss-soft);background:var(--moss-soft);border-radius:4px;padding:1px 6px;letter-spacing:.02em;vertical-align:middle}
+
+  /* mapping table */
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:9px;overflow:hidden;font-size:13.5px}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line-soft)}
+  th{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--sunken)}
+  td.old{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  td.arrow{color:var(--faint);text-align:center;width:36px}
+  td.new{font-family:var(--mono);font-size:12px;color:var(--moss6);font-weight:500}
+  tr:last-child td{border-bottom:0}
+
+  .stat-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+  .stat{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:9px;padding:14px 16px}
+  .stat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font-family:var(--mono);font-size:15px;color:var(--strong);margin-top:4px}
+  .stat .v b{color:var(--coral)}
+  .stat .v .to{color:var(--faint);margin:0 6px}
+  .stat .v .now{color:var(--moss6);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Plinthly · Type system</p>
+  <h1 class="t-display" style="margin-top:8px">Six roles, one voice.</h1>
+  <p class="lede t-body">A prototype for the consolidated text hierarchy — before we roll it across the product. Every piece of text on Plinthly maps to one of <strong>six roles</strong>, built from <strong>three families</strong> (Spectral · IBM Plex Sans · IBM Plex Mono) and just <strong>three weights</strong> (Regular&nbsp;400 · Medium&nbsp;500 · SemiBold&nbsp;600).</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="k">Text sizes</div><div class="v"><b>11</b><span class="to">→</span><span class="now">8</span> (in 6 roles)</div></div>
+    <div class="stat"><div class="k">Weights</div><div class="v"><b>4</b><span class="to">→</span><span class="now">3</span></div></div>
+    <div class="stat"><div class="k">Families</div><div class="v">3 <span class="to">·</span> unchanged</div></div>
+    <div class="stat"><div class="k">Ad-hoc [px] sizes</div><div class="v"><b>2</b><span class="to">→</span><span class="now">0</span></div></div>
+  </div>
+
+  <!-- ─── THE ROLES ─── -->
+  <h2 class="sec">The six roles</h2>
+  <p class="sec-sub">Each role fixes its family, size, weight, case and tracking — so the same intent always looks the same.</p>
+
+  <div class="grid two">
+    <div class="spec">
+      <div class="role"><span class="rname">1 · Display</span><span class="rmeta">Spectral · 600<br>40/26 px · −1.5% tracking</span></div>
+      <div class="t-display">Can I buy?</div>
+      <div class="t-display-sm" style="margin-top:10px">Calculate your dream price</div>
+    </div>
+    <div class="spec">
+      <div class="role"><span class="rname">2 · Heading</span><span class="rmeta">IBM Plex Sans · 600<br>18 px</span></div>
+      <div class="t-heading">Mortgage over time</div>
+      <div class="t-heading" style="margin-top:10px">What you can responsibly aim for</div>
+    </div>
+    <div class="spec">
+      <div class="role"><span class="rname">3 · Body</span><span class="rmeta">IBM Plex Sans · 400/500<br>15 px</span></div>
+      <div class="t-body">You qualify comfortably — this is a responsible ceiling. Aim at or below it and keep a cash buffer.</div>
+      <div class="t-body-med" style="margin-top:8px">Medium 500 for in-line emphasis.</div>
+    </div>
+    <div class="spec">
+      <div class="role"><span class="rname">4 · Caption</span><span class="rmeta">IBM Plex Sans · 400<br>13 px</span></div>
+      <div class="t-caption">Indicative ranges only — not live listings or a quote. Rounded down, honest before optimistic.</div>
+    </div>
+    <div class="spec">
+      <div class="role"><span class="rname">5 · Label</span><span class="rmeta">IBM Plex Mono · 500<br>11 px · UPPER · +9% track</span></div>
+      <div class="t-label">Your situation today</div>
+      <div style="margin-top:10px"><span class="pill">● Qualifies</span></div>
+    </div>
+    <div class="spec">
+      <div class="role"><span class="rname">6 · Figure</span><span class="rmeta">IBM Plex Mono · tabular<br>30/18/13 px · −2% track</span></div>
+      <div class="t-figure-lg">CHF 1'180'000</div>
+      <div class="t-figure" style="margin-top:8px">CHF 3'737 / mo</div>
+    </div>
+  </div>
+
+  <!-- ─── IN CONTEXT ─── -->
+  <h2 class="sec">In context — a Phase 2 result</h2>
+  <p class="sec-sub">The same six roles assembled into a real screen. Small green tags mark which role each block uses.</p>
+
+  <div class="screen">
+    <div class="t-label" style="margin-bottom:2px">Phase 2 <span class="flagtag">Label</span></div>
+    <div class="t-display-sm">Calculate your dream price <span class="flagtag">Display</span></div>
+    <p class="t-caption" style="margin-top:6px;max-width:520px">Type a listing price and we'll check it honestly against the same Swiss rules. <span class="flagtag">Caption</span></p>
+
+    <div class="banner">
+      <span class="tri">⚠</span>
+      <div>
+        <div class="t-body-med" style="color:var(--sand-ink)">Close — about CHF 100'000 short on equity <span class="flagtag">Body·med</span></div>
+        <div class="t-caption" style="color:#7a6636;margin-top:2px">You qualify on income at this price, but you're short on the down-payment.</div>
+      </div>
+    </div>
+
+    <div class="mcard">
+      <div class="toprow">
+        <span class="t-label">What you can responsibly aim for <span class="flagtag">Label</span></span>
+        <span class="pill">● Qualifies</span>
+      </div>
+      <div class="t-figure-lg" style="margin-top:6px">CHF 1'180'000 <span class="flagtag">Figure·lg</span></div>
+      <p class="t-body" style="margin-top:6px">You qualify comfortably. This is a responsible ceiling — aim at or below it, and keep a cash buffer.</p>
+    </div>
+
+    <div class="mcard">
+      <div class="t-label" style="margin-bottom:10px">Your stake</div>
+      <div class="row"><span class="t-body-med">Purchase price</span><span class="t-figure">CHF 1'180'000 <span class="flagtag">Figure</span></span></div>
+      <div class="row"><span class="t-body" style="color:var(--muted)">Cash &amp; securities <span class="flagtag">Body</span></span><span class="t-figure-sm">CHF 230'000 <span class="flagtag">Figure·sm</span></span></div>
+      <div class="row"><span class="t-body" style="color:var(--muted)">Pillar 2 / pension</span><span class="t-figure-sm">CHF 40'000</span></div>
+      <div class="rule"></div>
+      <div class="row"><span class="t-body-med">Down-payment (20%)</span><span class="t-figure">CHF 236'000</span></div>
+    </div>
+
+    <div class="mcard">
+      <div class="t-heading" style="margin-bottom:2px">Mortgage over time <span class="flagtag">Heading</span></div>
+      <p class="t-caption">How your balance shrinks under Swiss rules — and when it could reach zero.</p>
+    </div>
+  </div>
+
+  <!-- ─── MAPPING ─── -->
+  <h2 class="sec">How today's styles collapse in</h2>
+  <p class="sec-sub">Every current text treatment maps to one role — no orphans, no one-off sizes.</p>
+  <table>
+    <thead><tr><th>Today (ad-hoc)</th><th></th><th>New role</th></tr></thead>
+    <tbody>
+      <tr><td class="old">text-5xl / 4xl · font-display</td><td class="arrow">→</td><td class="new">Display</td></tr>
+      <tr><td class="old">text-3xl / 2xl (serif)</td><td class="arrow">→</td><td class="new">Display (26)</td></tr>
+      <tr><td class="old">text-2xl / xl / lg · font-semibold</td><td class="arrow">→</td><td class="new">Heading</td></tr>
+      <tr><td class="old">text-base / text-sm (paragraphs)</td><td class="arrow">→</td><td class="new">Body</td></tr>
+      <tr><td class="old">text-sm · font-medium/bold</td><td class="arrow">→</td><td class="new">Body (500)</td></tr>
+      <tr><td class="old">text-xs · text-[11px]</td><td class="arrow">→</td><td class="new">Caption</td></tr>
+      <tr><td class="old">text-[10px] · uppercase · tracking-wide · ds-eyebrow</td><td class="arrow">→</td><td class="new">Label</td></tr>
+      <tr><td class="old">ds-figure (all sizes) · tabular-nums</td><td class="arrow">→</td><td class="new">Figure L/M/S</td></tr>
+      <tr><td class="old">font-bold (700)</td><td class="arrow">→</td><td class="new">SemiBold 600</td></tr>
+    </tbody>
+  </table>
+
+  <p class="t-caption" style="margin-top:40px;text-align:center">Prototype · real Spectral / IBM Plex fonts · Plinthly palette · not yet rolled into the app</p>
+
+</div>
+</body>
+</html>

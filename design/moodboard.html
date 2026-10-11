@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plinthly — Branding Direction Moodboard</title>
+
+<!-- Live specimen faces -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=general-sans@600,500,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Archivo:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --ink:#15171a; --body:#5a5f66; --muted:#9298a0; --line:#e7e4dd; --paper:#faf8f3;
+  --maxw:1180px;
+  --mono:"IBM Plex Mono", ui-monospace, monospace;
+}
+*{box-sizing:border-box;}
+html{-webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;}
+body{
+  margin:0; background:#f3f1ea; color:var(--ink);
+  font-family:"Inter", system-ui, sans-serif; font-size:15px; line-height:1.6;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);}
+section{padding:64px 0; border-top:1px solid #e2dfd6;}
+section:first-of-type{border-top:none;}
+h2.shead{font-family:"Space Grotesk", sans-serif; font-weight:600; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink); margin:0 0 4px;}
+.shead-rule{display:flex; align-items:baseline; gap:14px; margin-bottom:34px;}
+.shead-rule .n{font-family:var(--mono); font-size:12px; color:var(--muted);}
+.shead-rule .ln{flex:1; height:1px; background:#e2dfd6;}
+p{margin:0 0 14px; max-width:62ch;}
+small{color:var(--muted);}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr;}}
+
+/* ---------- HERO ---------- */
+.hero{background:#15171a; color:#f3f1ea; padding:0;}
+.hero .wrap{padding-top:78px; padding-bottom:70px;}
+.hero .kicker{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:#8b9aa0;}
+.hero h1{font-family:"Fraunces", serif; font-weight:400; font-size:clamp(40px,7vw,78px); line-height:1.02; letter-spacing:-.015em; margin:18px 0 22px; max-width:16ch;}
+.hero h1 em{font-style:italic; color:#cdb89a;}
+.hero p.lede{color:#c5c8cc; font-size:18px; line-height:1.55; max-width:54ch; margin:0;}
+.hero .meta{margin-top:42px; display:flex; gap:40px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:#8b9aa0;}
+.hero .meta b{display:block; color:#f3f1ea; font-family:"Inter"; font-weight:500; font-size:14px; margin-top:3px;}
+
+/* ---------- diagnosis ---------- */
+.diag{display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid #e2dfd6; border-radius:14px; overflow:hidden; background:#fff;}
+@media(max-width:860px){.diag{grid-template-columns:1fr;}}
+.diag>div{padding:26px 28px;}
+.diag .tells{background:#fbfaf6;}
+.diag .intent{border-left:1px solid #e2dfd6;}
+.diag h3{font-size:12px; text-transform:uppercase; letter-spacing:.08em; margin:0 0 14px; font-family:var(--mono);}
+.diag .tells h3{color:#b4533e;}
+.diag .intent h3{color:#3a6b52;}
+.diag ul{margin:0; padding:0; list-style:none;}
+.diag li{padding:7px 0 7px 22px; position:relative; font-size:14px; color:var(--body); border-top:1px dashed #ece8df;}
+.diag li:first-child{border-top:none;}
+.diag li::before{position:absolute; left:0; top:7px; font-family:var(--mono); font-size:13px;}
+.diag .tells li::before{content:"\00d7"; color:#b4533e;}
+.diag .intent li::before{content:"\2713"; color:#3a6b52;}
+
+/* ---------- direction panels ---------- */
+.dir{border-radius:18px; overflow:hidden; border:1px solid rgba(0,0,0,.06); box-shadow:0 1px 0 rgba(0,0,0,.03), 0 18px 40px -28px rgba(0,0,0,.35);}
+.dir + .dir{margin-top:30px;}
+.dir-head{padding:22px 30px; display:flex; align-items:baseline; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+.dir-head .name{font-size:13px; letter-spacing:.04em; text-transform:uppercase;}
+.dir-head .tag{font-size:13px; opacity:.7;}
+.dir-body{padding:0 30px 30px;}
+.specimen{padding:34px 30px 30px;}
+.spec-display{line-height:.98; letter-spacing:-.02em; margin:0 0 8px;}
+.spec-sub{font-size:13px; opacity:.65; font-family:var(--mono); letter-spacing:.02em;}
+.spec-para{margin-top:18px; font-size:15px; line-height:1.65; max-width:58ch;}
+.row-label{font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; opacity:.55; margin:0 0 10px;}
+.chips{display:flex; gap:0; border-radius:10px; overflow:hidden; border:1px solid rgba(0,0,0,.08);}
+.chip{flex:1; height:58px; display:flex; align-items:flex-end; padding:6px 8px; font-family:var(--mono); font-size:9.5px; letter-spacing:.02em;}
+.metarow{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:26px;}
+@media(max-width:680px){.metarow{grid-template-columns:1fr;}}
+
+/* signature number card */
+.numcard{border-radius:12px; padding:20px 22px;}
+.numcard .cap{font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; opacity:.6;}
+.numcard .big{font-feature-settings:"tnum" 1; letter-spacing:-.02em; line-height:1; margin:10px 0 4px;}
+.numcard .delta{font-size:12px; font-family:var(--mono);}
+.bar{height:18px; border-radius:5px; overflow:hidden; position:relative; margin-top:14px;}
+.bar .fill{height:100%;}
+
+/* tells of each direction */
+.notes{margin-top:24px; font-size:13.5px; line-height:1.6;}
+.notes b{font-weight:600;}
+.use{display:inline-block; font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:999px; margin-top:6px;}
+
+/* ---------- system structure (thumbprint-inspired) ---------- */
+.sys{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+@media(max-width:860px){.sys{grid-template-columns:1fr 1fr;}}
+@media(max-width:520px){.sys{grid-template-columns:1fr;}}
+.sys .cell{background:#fff; border:1px solid #e7e4dd; border-radius:12px; padding:16px 16px 18px;}
+.sys .cell .k{font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted);}
+.sys .cell h4{font-family:"Space Grotesk"; font-weight:600; font-size:15px; margin:8px 0 6px;}
+.sys .cell p{font-size:13px; color:var(--body); margin:0; max-width:none;}
+.codebox{background:#15171a; color:#e8e4db; border-radius:12px; padding:18px 20px; font-family:var(--mono); font-size:12.5px; line-height:1.7; overflow-x:auto; margin-top:18px;}
+.codebox .c{color:#8b9aa0;} .codebox .v{color:#cdb89a;} .codebox .k{color:#9fc3b0;}
+
+/* principles */
+.princ{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+@media(max-width:860px){.princ{grid-template-columns:1fr;}}
+.princ .p{border-top:2px solid var(--ink); padding-top:14px;}
+.princ .p .num{font-family:var(--mono); font-size:11px; color:var(--muted);}
+.princ .p h4{font-family:"Fraunces"; font-weight:500; font-size:21px; margin:6px 0 8px; letter-spacing:-.01em;}
+.princ .p p{font-size:13.5px; color:var(--body); margin:0; max-width:none;}
+
+/* recommendation */
+.rec{background:#15171a; color:#f3f1ea; border-radius:18px; padding:38px 40px;}
+.rec h3{font-family:"Fraunces"; font-weight:400; font-size:30px; letter-spacing:-.01em; margin:0 0 14px;}
+.rec p{color:#c5c8cc; max-width:64ch;}
+.rec .pickrow{display:flex; gap:14px; flex-wrap:wrap; margin-top:22px;}
+.rec .pick{border:1px solid #34383d; border-radius:10px; padding:14px 18px; flex:1; min-width:200px;}
+.rec .pick .l{font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8b9aa0;}
+.rec .pick .v{font-size:15px; margin-top:5px;}
+.footer{padding:30px 0 70px; color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:.04em;}
+.qmark{display:inline-block; padding:2px 7px; border:1px solid currentColor; border-radius:5px; font-family:var(--mono); font-size:11px;}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Plinthly · Branding & Design-System Direction · June 2026</div>
+    <h1>Honest numbers deserve a <em>face that earns trust.</em></h1>
+    <p class="lede">A moodboard, not a verdict. Three coherent directions for taking Plinthly from competent-minimal to <em>intentionally Swiss</em> — each shown with live type, real palette, and the signature surface that carries the product: the number.</p>
+    <div class="meta">
+      <div>Product<b>Swiss home-affordability + sustainability explorer</b></div>
+      <div>Voice<b>No selling · No sign-up · Just honest numbers</b></div>
+      <div>Today's stack<b>Satoshi + Inter, monochrome, status-only colour</b></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ WHERE PLINTHLY ACTUALLY IS ============ -->
+<section>
+  <div class="wrap">
+    <div class="shead-rule"><span class="n">01</span><h2 class="shead">Where Plinthly actually is</h2><span class="ln"></span></div>
+    <div class="grid2" style="align-items:start; gap:36px;">
+      <div>
+        <p>The honest read: Plinthly is <b>not</b> in the generic AI state. A prior pass already did the hard, high-leverage work — a real Satoshi/Inter pairing, a functional px type scale, a monochrome neutral ramp where colour is functional not decorative, no colour fills larger than a badge, and a genuine signature move on the gap chart (diagonal hatch fills, no red "you failed" bars).</p>
+        <p>The real risk is the <b>opposite</b> problem: monochrome-austere has its own generic register — the Linear / Vercel minimalist clone. Restraint without a point of view reads as absence, not maturity.</p>
+        <p style="color:var(--ink)"><b>So "less generic" here means adding intentional character — warmth, one confident accent, texture, a typographic stance — not stripping more away.</b></p>
+      </div>
+      <div class="diag">
+        <div class="tells">
+          <h3>AI tells &nbsp;(already avoided ✓)</h3>
+          <ul>
+            <li>Purple→blue gradients</li>
+            <li>Drop shadows everywhere</li>
+            <li>Emoji in headers</li>
+            <li>Rainbow status colour</li>
+            <li>Untouched Tailwind defaults</li>
+            <li>Centered, symmetric hero</li>
+          </ul>
+        </div>
+        <div class="intent">
+          <h3>Still missing &nbsp;(the work ahead)</h3>
+          <ul>
+            <li>A real point of view on colour</li>
+            <li>Warmth / paper, not clinical white</li>
+            <li>Texture &amp; material specificity</li>
+            <li>A headline face with a stance</li>
+            <li>Considered focus &amp; hover states</li>
+            <li>Microcopy that sounds human</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BRAND NORTH STAR ============ -->
+<section style="background:#fbfaf6;">
+  <div class="wrap">
+    <div class="shead-rule"><span class="n">02</span><h2 class="shead">Brand north star</h2><span class="ln"></span></div>
+    <p style="font-family:'Fraunces'; font-weight:400; font-size:clamp(22px,3vw,30px); line-height:1.3; letter-spacing:-.01em; max-width:24ch; color:var(--ink);">Plinthly is the <em>neutral pre-step</em> — the trustworthy minute before the bank, the broker, the builder.</p>
+    <div class="princ" style="margin-top:34px;">
+      <div class="p"><div class="num">A</div><h4>Trust over persuasion</h4><p>It must look like a public utility or a notary, not a lead-gen funnel. Calm, factual, never pushy. The design's job is to be believed.</p></div>
+      <div class="p"><div class="num">B</div><h4>The number is the hero</h4><p>CHF figures, ranges and gaps are the product. Typography, tabular alignment and chart language should make the numbers the most beautiful, legible thing on screen.</p></div>
+      <div class="p"><div class="num">C</div><h4>Swiss, and sustainable</h4><p>Credible claim to Swiss design heritage (grotesques, grid, restraint) plus a material, earthy register that signals the sustainability lens without going "eco-green-cliché".</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIRECTIONS ============ -->
+<section>
+  <div class="wrap">
+    <div class="shead-rule"><span class="n">03</span><h2 class="shead">Three directions</h2><span class="ln"></span></div>
+    <p style="margin-bottom:32px;">Each is a complete, internally consistent stance — type, colour, texture and the signature number treatment together. They are mutually exclusive moods, not a menu to mix. Live fonts; real Plinthly numbers (CHF 1.04M dream price vs CHF 820k current max).</p>
+
+    <!-- ===== DIRECTION A : ALPINE PAPER ===== -->
+    <div class="dir" style="background:#f7f3ea;">
+      <div class="dir-head" style="background:#1c2b24; color:#ede7d8;">
+        <div class="name" style="font-family:'Space Grotesk';">Direction A — Alpine Paper</div>
+        <div class="tag" style="font-family:'IBM Plex Mono';">Warm · trust-forward · lowest risk</div>
+      </div>
+      <div class="specimen" style="color:#1c2b24;">
+        <div class="spec-display" style="font-family:'Space Grotesk'; font-weight:600; font-size:clamp(38px,6vw,64px); color:#1c2b24;">What you can<br>actually afford.</div>
+        <div class="spec-sub">Display · Space Grotesk 600, tightened tracking &nbsp;/&nbsp; Body · Inter</div>
+        <p class="spec-para" style="color:#43413a;">Keeps the restraint but trades clinical white for a warm paper ground and a deep forest-ink. One confident clay accent does all the persuading — used on the single most important number and nothing else. Reads like a well-made Swiss financial broadsheet.</p>
+
+        <div class="metarow">
+          <div>
+            <p class="row-label">Palette — warm paper + forest ink + one clay accent</p>
+            <div class="chips">
+              <div class="chip" style="background:#f7f3ea; color:#1c2b24;">#F7F3EA<br>paper</div>
+              <div class="chip" style="background:#e8e0cf; color:#1c2b24;">#E8E0CF<br>sand</div>
+              <div class="chip" style="background:#1c2b24; color:#ede7d8;">#1C2B24<br>ink</div>
+              <div class="chip" style="background:#3a5a48; color:#eef0e9;">#3A5A48<br>moss</div>
+              <div class="chip" style="background:#bd6a45; color:#fbf3ec;">#BD6A45<br>clay</div>
+            </div>
+            <p class="notes" style="color:#43413a;"><b>Texture:</b> a 3–4% paper grain over the ground; hairline 1px moss rules. <b>Type:</b> Space Grotesk has just enough character (the open counters, the angled terminals) to not be Inter, while staying grotesque-credible. <span class="use" style="background:#e8e0cf; color:#1c2b24;">Recommended starting point</span></p>
+          </div>
+          <div>
+            <p class="row-label">Signature surface — the number</p>
+            <div class="numcard" style="background:#fff; border:1px solid #e0d8c6;">
+              <div class="cap" style="color:#8a8576;">Your honest maximum</div>
+              <div class="big" style="font-family:'Space Grotesk'; font-weight:600; font-size:50px; color:#1c2b24;">CHF 820,000</div>
+              <div class="delta" style="color:#bd6a45;">▲ CHF 220,000 below your CHF 1.04M dream</div>
+              <p class="row-label" style="margin:16px 0 6px;">Gap to goal</p>
+              <div class="bar" style="background:#ece4d4;">
+                <div class="fill" style="width:79%; background:repeating-linear-gradient(45deg,#1c2b24 0,#1c2b24 1.5px,transparent 1.5px,transparent 6px), #d8cdb6;"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:10px; color:#8a8576; margin-top:6px;"><span>▲ max 820k</span><span>dream 1.04M ▲</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DIRECTION B : SWISS EDITORIAL ===== -->
+    <div class="dir" style="background:#ffffff;">
+      <div class="dir-head" style="background:#0a0a0a; color:#fff;">
+        <div class="name" style="font-family:'Archivo';">Direction B — Swiss Editorial</div>
+        <div class="tag" style="font-family:'IBM Plex Mono';">Mono pushed · International Typographic Style</div>
+      </div>
+      <div class="specimen" style="color:#0a0a0a;">
+        <div class="spec-display" style="font-family:'Archivo'; font-weight:800; font-size:clamp(40px,6.4vw,68px); letter-spacing:-.025em;">CHF&nbsp;820,000.</div>
+        <div class="spec-sub" style="color:#666;">Display · Archivo 800 (Neue-Haas register) &nbsp;/&nbsp; Body · Inter &nbsp;/&nbsp; Numerals · the headline</div>
+        <p class="spec-para" style="color:#444;">Stays black / white / grey, but commits hard to Swiss heritage: a tight grotesque, a strong baseline grid, hairline rules, oversized numerals as the headline itself, and exactly one accent — Swiss red — for the single live moment per view. Austere, confident, editorial.</p>
+
+        <div class="metarow">
+          <div>
+            <p class="row-label" style="opacity:.5;">Palette — monochrome + one Swiss red</p>
+            <div class="chips" style="border-color:#e3e3e3;">
+              <div class="chip" style="background:#ffffff; color:#0a0a0a; box-shadow:inset 0 0 0 1px #eee;">#FFFFFF<br>page</div>
+              <div class="chip" style="background:#f2f2f0; color:#0a0a0a;">#F2F2F0<br>surface</div>
+              <div class="chip" style="background:#9a9a96; color:#fff;">#9A9A96<br>muted</div>
+              <div class="chip" style="background:#0a0a0a; color:#fff;">#0A0A0A<br>ink</div>
+              <div class="chip" style="background:#e2231a; color:#fff;">#E2231A<br>signal</div>
+            </div>
+            <p class="notes" style="color:#444;"><b>Texture:</b> none — the grid and whitespace are the texture. <b>Move:</b> the numeral is the hero typographically, not just semantically. <b>Risk:</b> closest to the "minimalist clone" trap; lives or dies on grid discipline and the red being truly rare.</p>
+          </div>
+          <div>
+            <p class="row-label" style="opacity:.5;">Signature surface — the number</p>
+            <div class="numcard" style="background:#f2f2f0; border-radius:0; border-left:3px solid #e2231a;">
+              <div class="cap" style="color:#7a7a76;">Affordability test · notional 5.0%</div>
+              <div class="big" style="font-family:'Archivo'; font-weight:800; font-size:50px; color:#0a0a0a;">820,000</div>
+              <div class="delta" style="color:#e2231a;">−220,000 vs target · 79% of goal</div>
+              <p class="row-label" style="margin:16px 0 6px; opacity:.5;">Equity coverage</p>
+              <div class="bar" style="background:#e2dfd9; border-radius:0;">
+                <div class="fill" style="width:79%; background:#0a0a0a;"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:10px; color:#7a7a76; margin-top:6px;"><span>0</span><span>CHF 1.04M</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DIRECTION C : MATERIAL WARMTH ===== -->
+    <div class="dir" style="background:#efe9df;">
+      <div class="dir-head" style="background:#2a241d; color:#efe3d2;">
+        <div class="name" style="font-family:'Fraunces';">Direction C — Material Warmth</div>
+        <div class="tag" style="font-family:'IBM Plex Mono';">Sustainability-forward · most distinctive</div>
+      </div>
+      <div class="specimen" style="color:#2a241d;">
+        <div class="spec-display" style="font-family:'Fraunces'; font-weight:400; font-size:clamp(40px,6.6vw,70px); letter-spacing:-.015em;">The honest <span style="font-style:italic;">number</span>,<br>before the bank.</div>
+        <div class="spec-sub">Display · Fraunces (opsz) 400 + italic &nbsp;/&nbsp; Body · Hanken Grotesk &nbsp;/&nbsp; Data · IBM Plex Mono</div>
+        <p class="spec-para" style="color:#5a5042;">Pulls the palette from real materials — limestone, oak, weathered copper, a muted slate-green — to make the sustainability lens feel physical rather than badge-deep. A high-contrast optical serif (Fraunces) for headlines gives genuine editorial character; a humanist grotesque keeps the UI warm and calm.</p>
+
+        <div class="metarow">
+          <div>
+            <p class="row-label" style="opacity:.6;">Palette — limestone, oak, slate-green, copper</p>
+            <div class="chips" style="border-color:#ddd2bf;">
+              <div class="chip" style="background:#efe9df; color:#2a241d;">#EFE9DF<br>limestone</div>
+              <div class="chip" style="background:#d9c9ab; color:#2a241d;">#D9C9AB<br>oak</div>
+              <div class="chip" style="background:#2a241d; color:#efe3d2;">#2A241D<br>bark</div>
+              <div class="chip" style="background:#445248; color:#eef0e9;">#445248<br>slate-green</div>
+              <div class="chip" style="background:#a8623a; color:#fbf1e9;">#A8623A<br>copper</div>
+            </div>
+            <p class="notes" style="color:#5a5042;"><b>Texture:</b> subtle limestone/paper grain + warm oak surface for alternation. <b>Where green belongs:</b> slate-green is reserved for the sustainability/energy moments only — it earns meaning by being scarce. <b>Risk:</b> Fraunces must be set carefully (optical size, tight tracking) or it tips decorative. <span class="use" style="background:#d9c9ab; color:#2a241d;">Most character, most craft to maintain</span></p>
+          </div>
+          <div>
+            <p class="row-label" style="opacity:.6;">Signature surface — the number</p>
+            <div class="numcard" style="background:#fbf7ef; border:1px solid #e1d6c2;">
+              <div class="cap" style="color:#8f8369;">Your honest maximum</div>
+              <div class="big" style="font-family:'Fraunces'; font-weight:500; font-size:52px; color:#2a241d;">CHF 820,000</div>
+              <div class="delta" style="color:#a8623a;">CHF 220k short — but an energy retrofit shifts the math</div>
+              <p class="row-label" style="margin:16px 0 6px; opacity:.6;">Path to goal</p>
+              <div class="bar" style="background:#e9ddc8;">
+                <div class="fill" style="width:79%; background:#445248;"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:10px; color:#8f8369; margin-top:6px;"><span>now 820k</span><span>dream 1.04M</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ WHAT A REAL SYSTEM DOCUMENTS (Thumbprint-informed) ============ -->
+<section style="background:#fbfaf6;">
+  <div class="wrap">
+    <div class="shead-rule"><span class="n">04</span><h2 class="shead">From moodboard to system — the Thumbprint discipline</h2><span class="ln"></span></div>
+    <p>Thumbtack's <b>Thumbprint</b> is the reference for what turns a look into a <em>system</em>. Three things to steal: tokens as a single source of truth with strict naming, a deliberately <em>small</em> number of type options, and principles written down before pixels. Whatever direction wins, it should land as named tokens — not screens.</p>
+
+    <div class="sys" style="margin-top:24px;">
+      <div class="cell"><div class="k">Token</div><h4>Single source of truth</h4><p>Colour, type, spacing, radii stored once as named objects, transformed per platform. Change in one place, propagate everywhere.</p></div>
+      <div class="cell"><div class="k">Type</div><h4>A small menu</h4><p>Thumbprint: 1 brand font, 2 weights, ~8 titles + 3 text sizes. Constraint is the point. Plinthly already has this shape.</p></div>
+      <div class="cell"><div class="k">Icon</div><h4>One family only</h4><p>Pick Lucide (already available) or Phosphor and never mix. Consistent stroke, corner, and metrics across every glyph.</p></div>
+      <div class="cell"><div class="k">Motion</div><h4>Documented, not ad-hoc</h4><p>Define the hover/focus/transition curves and durations once as tokens so micro-interactions feel like one hand made them.</p></div>
+    </div>
+
+    <div class="codebox" aria-label="Example token naming">
+<span class="c">// One token, transformed per platform — the discipline that makes it a system</span>
+{ <span class="k">"name"</span>: <span class="v">"Clay"</span>, <span class="k">"id"</span>: <span class="v">"plinthly-color__accent"</span>, <span class="k">"value"</span>: <span class="v">"#BD6A45"</span>, <span class="k">"type"</span>: <span class="v">"color"</span> }
+
+<span class="c">CSS  →</span>  --plinthly-color__accent: #BD6A45;     <span class="c">(Tailwind v4 @theme, already your setup)</span>
+<span class="c">React→</span>  plinthlyColorAccent = "#BD6A45";
+    </div>
+    <p style="margin-top:18px; font-size:13.5px; color:var(--body);"><b>Plinthly's head start:</b> your <span class="qmark">index.css</span> already uses Tailwind v4 <span class="qmark">@theme</span> tokens with semantic names (<span class="qmark">--color-ink</span>, <span class="qmark">--color-positive</span>). Adopting a direction = swapping values + adding an accent + a texture layer + a motion scale. The architecture is already correct.</p>
+  </div>
+</section>
+
+<!-- ============ CRAFT DETAILS ============ -->
+<section>
+  <div class="wrap">
+    <div class="shead-rule"><span class="n">05</span><h2 class="shead">The micro-details that read as "human"</h2><span class="ln"></span></div>
+    <div class="grid3">
+      <div>
+        <p class="row-label">Focus &amp; hover</p>
+        <p style="font-size:13.5px; color:var(--body); max-width:none;">A 2px accent ring with a soft offset, not the browser default. Hover transitions on a documented curve (≈150ms ease-out), never the Tailwind reflex. These two things alone separate "shipped" from "considered".</p>
+      </div>
+      <div>
+        <p class="row-label">Radius logic</p>
+        <p style="font-size:13.5px; color:var(--body); max-width:none;">Not 8px on everything by reflex. A small scale with intent: inputs &amp; pills share one radius, cards a larger one, the number card sharper or softer to signal hierarchy.</p>
+      </div>
+      <div>
+        <p class="row-label">Favicon &amp; mark</p>
+        <p style="font-size:13.5px; color:var(--body); max-width:none;">Today's favicon is a teal house — it predates the monochrome system and will clash with any chosen accent. The wordmark "Plinthly" set in the display face <em>is</em> the logo; refresh the mark to match.</p>
+      </div>
+      <div>
+        <p class="row-label">Microcopy voice</p>
+        <p style="font-size:13.5px; color:var(--body); max-width:none;">"No selling · No sign-up · Just honest numbers" is already sharp. Keep that register everywhere — specific, plain, slightly opinionated. Generic copy is as much an AI tell as a gradient.</p>
+      </div>
+      <div>
+        <p class="row-label">Number presentation</p>
+        <p style="font-size:13.5px; color:var(--body); max-width:none;">Tabular numerals everywhere (already in use), CHF grouping, and a consistent range syntax ("820k – 1.04M ≈ 920k"). This is the signature surface — invest the most polish here.</p>
+      </div>
+      <div>
+        <p class="row-label">Texture, used sparingly</p>
+        <p style="font-size:13.5px; color:var(--body); max-width:none;">A 3–4% grain on the paper ground and hairline rules add the "made by a person" quality. The discipline is restraint — texture should be felt, not seen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RECOMMENDATION ============ -->
+<section>
+  <div class="wrap">
+    <div class="rec">
+      <div class="eyebrow" style="color:#8b9aa0;">My read, for you to push on</div>
+      <h3>Start from <em>Alpine Paper</em>, borrow the numeral-as-hero from Editorial.</h3>
+      <p>It's the lowest-risk, highest-payoff move: keeps everything good about the current restraint, adds the warmth and the single confident accent that "honest, trustworthy, Swiss" needs, and leaves room to bring in slate-green only on the sustainability moments. Material Warmth is the more ambitious, more ownable end state if you want to invest in maintaining Fraunces well — a strong "phase two".</p>
+      <div class="pickrow">
+        <div class="pick"><div class="l">Type</div><div class="v">Space Grotesk display · Inter body · Plex Mono for data</div></div>
+        <div class="pick"><div class="l">Colour</div><div class="v">Warm paper + forest ink + one clay accent</div></div>
+        <div class="pick"><div class="l">Signature</div><div class="v">Oversized tabular CHF number + hatch gap bar</div></div>
+      </div>
+      <p style="margin-top:24px; color:#e8e4db;"><b>Next step, your call:</b> react to these directions — which mood feels like Plinthly? Once you pick (or remix), I'll turn it into a real token set in <span style="font-family:var(--mono); font-size:12px;">index.css</span> and re-skin the calculator/result view to high fidelity before propagating across all phases.</p>
+    </div>
+    <div class="footer">Plinthly · branding direction moodboard · live specimens (Space Grotesk · Archivo · Fraunces · Hanken Grotesk · Inter · Satoshi · IBM Plex Mono) · references: Swiss International Typographic Style, Thumbprint design system</div>
+  </div>
+</section>
+
+</body>
+</html>
