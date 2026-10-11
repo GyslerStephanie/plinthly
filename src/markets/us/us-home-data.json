@@ -1,0 +1,907 @@
+{
+  "meta": {
+    "version": "1.0",
+    "last_updated": "2026-10-11",
+    "notes": "Data for US Phases 3–5 (what to look for, options, action plan). Energy: EIA Electric Power Monthly (Jul 2026, preliminary) and EIA natural gas annual 2025; household energy cost per sq ft from EIA RECS 2020 (2020 dollars), escalated to today with one national factor. HERS reference points from RESNET / EPA / DOE. Upgrade costs are national ranges from contractor/marketplace data (regional labour varies ±30%). Incentive statuses change fast — every one links to the official page and is shown as 'check before relying on it'."
+  },
+  "energy": {
+    "recs_to_today_factor": 1.39,
+    "recs_to_today_note": "RECS 2020 expenditures are in 2020 dollars. US average residential electricity rose from ~13.2¢/kWh (2020) to 18.31¢ (Jul 2026) and gas from ~$10.8/Mcf (2020) to $15.34 (2025 annual): ~1.39× on both, used as one national factor.",
+    "heating_share_of_energy_cost": 0.35,
+    "heating_share_note": "Space heating's approximate share of a household energy bill (EIA RECS end-use split, rounded). Used only to size heat-pump and envelope savings.",
+    "heat_pump_seasonal_cop": 2.8,
+    "gas_furnace_efficiency": 0.95,
+    "mmbtu_per_mcf": 1.037,
+    "kwh_per_mmbtu": 293.07,
+    "sources": [
+      "https://www.eia.gov/electricity/monthly/epm_table_grapher.php?t=epmt_5_6_a",
+      "https://www.eia.gov/dnav/ng/ng_pri_sum_a_EPG0_PRS_DMcf_a.htm",
+      "https://www.eia.gov/consumption/residential/data/2020/state/pdf/ce1.1.st.pdf",
+      "https://www.eia.gov/consumption/residential/data/2020/state/pdf/State%20Square%20Footage.pdf"
+    ]
+  },
+  "hers": {
+    "typical_existing": 130,
+    "tiers": [
+      {
+        "id": "existing",
+        "hers": 130,
+        "label": "Typical existing home"
+      },
+      {
+        "id": "code2006",
+        "hers": 100,
+        "label": "Built to 2006 code (HERS reference home)"
+      },
+      {
+        "id": "newAvg",
+        "hers": 53,
+        "label": "Average new home (2025)"
+      },
+      {
+        "id": "energyStar",
+        "hers": 49,
+        "label": "ENERGY STAR certified"
+      },
+      {
+        "id": "zerh",
+        "hers": 45,
+        "label": "DOE Zero Energy Ready"
+      }
+    ],
+    "notes": "Each HERS point ≈ 1% energy use vs the 2006-code reference home (100); 0 = net-zero. 130 for a typical existing home is a long-standing RESNET benchmark (approximate). 53 = average HERS of homes rated in 2025 (RESNET 2026 Trends). ENERGY STAR v3.2 homes model at 44–54 (mid 49); ZERH v2 'low- to upper-40s' without solar. The model assumes a state's average home behaves like the typical existing home.",
+    "sources": [
+      "https://www.hersindex.com/hers-index/what-is-the-hers-index/",
+      "https://www.resnet.us/articles/the-2026-trends-in-hers-rated-homes-report/",
+      "https://www.energystar.gov/sites/default/files/asset/document/ENERGY%20STAR%20Version%203.2%20Cost%20%20Savings%20Summary.pdf",
+      "https://www.energy.gov/cmei/articles/doe-releases-new-national-requirements-zero-energy-ready-single-family-homes"
+    ]
+  },
+  "certified_homes": {
+    "build_premium_pct": {
+      "low": 0.3,
+      "high": 3
+    },
+    "resale_premium_pct": {
+      "low": 2.7,
+      "high": 9
+    },
+    "notes": "Build premium: EPA ENERGY STAR v3.2 analysis ($1,010–$2,815 over a 2021-code home, ~0.3–0.7% of price) up to RMI's <3% for Zero Energy Ready. Resale: Freddie Mac 2019 (HERS-rated homes +2.7%), Kok & Kahn 2012 (green-labelled CA homes +9%) — correlation, not a guarantee. The federal 45L builder credit ended for homes acquired after 2026-06-30.",
+    "sources": [
+      "https://www.energystar.gov/sites/default/files/asset/document/ENERGY%20STAR%20Version%203.2%20Cost%20%20Savings%20Summary.pdf",
+      "https://rmi.org/zero-energy-homes-are-ready-for-mainstream-markets/",
+      "https://nationalmortgageprofessional.com/news/72887/freddie-hers-rated-homes-sell-more",
+      "https://www.tias.edu/docs/default-source/documentlibrary_fsinsight/kok-kahn-greenlabel-homes.pdf"
+    ]
+  },
+  "measures": {
+    "reference_sqft": 1900,
+    "items": [
+      {
+        "id": "attic",
+        "group": "envelope",
+        "cost_usd": {
+          "low": 2000,
+          "high": 6000
+        },
+        "scales_with_size": true,
+        "savings_pct_of_total": 11,
+        "hear_cap_group": "insulation",
+        "note": "Air sealing + attic insulation (ENERGY STAR: ~15% of heating/cooling, ~11% of total energy)."
+      },
+      {
+        "id": "walls",
+        "group": "envelope",
+        "cost_usd": {
+          "low": 3500,
+          "high": 7000
+        },
+        "scales_with_size": true,
+        "savings_pct_of_total": 4,
+        "hear_cap_group": "insulation",
+        "note": "Dense-pack wall insulation; worthwhile mainly when walls are empty. ~10% of heating/cooling (conservative)."
+      },
+      {
+        "id": "heatpump",
+        "group": "systems",
+        "cost_usd": {
+          "low": 8000,
+          "high": 20000
+        },
+        "scales_with_size": false,
+        "savings": "heat_pump_vs_gas",
+        "hear_cap_group": "heatPump",
+        "note": "Ducted air-source heat pump replacing a gas furnace. Bill effect computed per state from local electricity and gas prices."
+      },
+      {
+        "id": "hpwh",
+        "group": "systems",
+        "cost_usd": {
+          "low": 2000,
+          "high": 5500
+        },
+        "scales_with_size": false,
+        "savings_kwh_per_year": 2750,
+        "hear_cap_group": "hpwh",
+        "note": "Heat-pump water heater replacing an electric tank (ENERGY STAR ~$330/yr at 12¢ ≈ 2,750 kWh); much less if the current heater is gas."
+      },
+      {
+        "id": "windows",
+        "group": "envelope",
+        "cost_usd": {
+          "low": 8000,
+          "high": 20000
+        },
+        "scales_with_size": true,
+        "savings_usd_per_year": {
+          "low": 101,
+          "high": 583
+        },
+        "hear_cap_group": null,
+        "note": "Whole-house window replacement (ENERGY STAR range, replacing single-pane). Longest payback."
+      },
+      {
+        "id": "solar",
+        "group": "systems",
+        "cost_usd_per_watt": 3.0,
+        "system_kw": 8,
+        "scales_with_size": false,
+        "self_consumption_share": 0.5,
+        "hear_cap_group": null,
+        "note": "8 kW rooftop solar at $3.00/W (LBNL 2025 cash median). Homeowner solar lost the 30% federal credit after 2025."
+      },
+      {
+        "id": "thermostat",
+        "group": "systems",
+        "cost_usd": {
+          "low": 100,
+          "high": 300
+        },
+        "scales_with_size": false,
+        "savings_pct_of_total": 4,
+        "hear_cap_group": null,
+        "note": "ENERGY STAR smart thermostat: ~8% of heating/cooling."
+      }
+    ],
+    "default_selection": [
+      "attic",
+      "heatpump",
+      "hpwh",
+      "thermostat"
+    ],
+    "hear_caps_usd": {
+      "insulation": 1600,
+      "heatPump": 8000,
+      "hpwh": 1750,
+      "household_total": 14000
+    },
+    "hear_note": "IRA HEEHR (HEAR) caps: up to 100% of cost for households at or below 80% of area median income, 50% for 80–150%; heat pump $8,000, heat-pump water heater $1,750, insulation/air sealing $1,600, household total $14,000. Only where the state program is open.",
+    "sources": [
+      "https://www.energystar.gov/saveathome/seal_insulate/methodology",
+      "https://web.archive.org/web/2025/https://www.energy.gov/energysaver/electric-resistance-heating",
+      "https://www.energysage.com/heat-pumps/costs-and-benefits-air-source-heat-pumps",
+      "https://emp.lbl.gov/research-areas/tracking-sun",
+      "https://developer.nrel.gov/docs/solar/pvwatts/v8",
+      "https://building-performance.org/wp-content/uploads/2026/06/06.2026-State-Home-Energy-Rebates-Factsheet.pdf"
+    ]
+  },
+  "federal_incentives": {
+    "summary": "No federal tax credits for homeowner energy upgrades in 2026: 25C (efficiency) and 25D (solar, batteries, geothermal) ended for work placed in service after 2025-12-31; 45L (builder credit for efficient new homes) ended for homes acquired after 2026-06-30; 30C (EV chargers) ended after 2026-06-30. What remains: state-run IRA Home Energy Rebates (income-limited, status varies by state) and utility programs.",
+    "sources": [
+      "https://www.bakerdonelson.com/one-big-beautiful-bill-act-estate-and-energy-tax-overhaul",
+      "https://stinson.com/newsroom-publications-one-big-beautiful-bill-explained"
+    ]
+  },
+  "states": {
+    "CA": {
+      "electricity_cents_per_kwh": 33.61,
+      "gas_usd_per_mcf": 22.01,
+      "energy_usd_per_sqft_2020": 1.1,
+      "solar_kwh_per_kw": 1677,
+      "solar_export_value_pct": 25,
+      "ira_rebates": {
+        "status": "waitlist",
+        "program": "HEEHRA via TECH Clean California",
+        "url": "https://techcleanca.com/heehra/",
+        "note": "Single-family funds fully reserved since early 2026; waitlist only."
+      },
+      "programs": [
+        {
+          "name": "TECH Clean California",
+          "url": "https://techcleanca.com/",
+          "gist": "Heat pump incentives through contractors; single-family funds on a waitlist."
+        },
+        {
+          "name": "Municipal utility rebates (e.g. SMUD, LADWP)",
+          "url": "https://www.smud.org/en/Rebates-and-Savings-Tips",
+          "gist": "Often the best live offers, e.g. SMUD ~$3,000–$4,000 for heat pump HVAC."
+        }
+      ],
+      "net_metering": "Net billing (\"NEM 3.0\") since 2023: exports earn far less than retail, so batteries and using your own power matter.",
+      "build_cost_per_sqft": {
+        "low": 175,
+        "mid": 225,
+        "high": 350
+      },
+      "buyer_programs": [
+        {
+          "name": "CalHFA MyHome Assistance Program",
+          "offer": "Deferred second loan for down payment / closing costs, up to 3.5% (FHA) or 3% (conventional) of the price; income limits by county.",
+          "url": "https://www.calhfa.ca.gov/homebuyer/programs/myhome.htm"
+        },
+        {
+          "name": "CalHFA Dream For All",
+          "offer": "Shared-appreciation loan up to 20% of the price ($150,000 max) for first-generation buyers; lottery rounds.",
+          "url": "https://www.calhfa.ca.gov/dream/"
+        }
+      ]
+    },
+    "NY": {
+      "electricity_cents_per_kwh": 29.9,
+      "gas_usd_per_mcf": 17.58,
+      "energy_usd_per_sqft_2020": 1.44,
+      "solar_kwh_per_kw": 1291,
+      "solar_export_value_pct": 100,
+      "ira_rebates": {
+        "status": "open",
+        "program": "HEAR through NYSERDA EmPower+ (≤80% AMI)",
+        "url": "https://www.nyserda.ny.gov/Residents-and-Homeowners/Inflation-Reduction-Act",
+        "note": "Open for households at or below 80% of area median income."
+      },
+      "programs": [
+        {
+          "name": "NYS Clean Heat",
+          "url": "https://cleanheat.ny.gov/",
+          "gist": "Utility heat pump incentives (roughly $5k–$12k by territory); higher tier for weatherized homes."
+        },
+        {
+          "name": "NYSERDA Comfort Home",
+          "url": "https://www.nyserda.ny.gov/All-Programs/comfort-home-program",
+          "gist": "$2,000–$3,000 per insulation and air-sealing package."
+        }
+      ],
+      "net_metering": "Full retail net metering, with a small monthly charge per kW for newer systems.",
+      "build_cost_per_sqft": {
+        "low": 160,
+        "mid": 200,
+        "high": 320
+      },
+      "buyer_programs": [
+        {
+          "name": "SONYMA Down Payment Assistance Loan",
+          "offer": "0% second loan, forgiven after 10 years: the greater of $3,000 or 3% of the price (up to $15,000; DPAL PLUS up to $30,000 while funds last).",
+          "url": "https://hcr.ny.gov/down-payment-assistant-loan-dpal-0"
+        }
+      ]
+    },
+    "TX": {
+      "electricity_cents_per_kwh": 15.88,
+      "gas_usd_per_mcf": 19.42,
+      "energy_usd_per_sqft_2020": 1.04,
+      "solar_kwh_per_kw": 1506,
+      "solar_export_value_pct": 50,
+      "ira_rebates": {
+        "status": "not_launched",
+        "program": "Texas HOMES & HEAR (State Energy Conservation Office)",
+        "url": "https://comptroller.texas.gov/programs/seco/",
+        "note": "Expected to launch in late 2026; not open yet."
+      },
+      "programs": [
+        {
+          "name": "Austin Energy Home Energy Savings",
+          "url": "https://savings.austinenergy.com/",
+          "gist": "About $1,000–$1,600 for a heat pump (Austin Energy customers)."
+        },
+        {
+          "name": "Oncor Take A Load Off Texas",
+          "url": "https://www.takealoadofftexas.com/",
+          "gist": "HVAC, insulation and air-sealing incentives through approved contractors; no statewide program."
+        }
+      ],
+      "net_metering": "No statewide net metering; what exports earn depends on your retail plan or utility.",
+      "build_cost_per_sqft": {
+        "low": 120,
+        "mid": 145,
+        "high": 190
+      },
+      "buyer_programs": [
+        {
+          "name": "TDHCA My First Texas Home",
+          "offer": "30-year fixed mortgage plus up to 5% of the loan as a 0% second lien; income limits by county.",
+          "url": "https://www.tdhca.texas.gov/homeownership-programs"
+        },
+        {
+          "name": "TSAHC Home Sweet Texas / Homes for Texas Heroes",
+          "offer": "Down payment grant or forgivable second, up to about 5% of the loan.",
+          "url": "https://www.tsahc.org/homebuyers-renters/homes-for-texas-heroes-program"
+        }
+      ]
+    },
+    "FL": {
+      "electricity_cents_per_kwh": 15.03,
+      "gas_usd_per_mcf": 25.48,
+      "energy_usd_per_sqft_2020": 1.02,
+      "solar_kwh_per_kw": 1544,
+      "solar_export_value_pct": 100,
+      "ira_rebates": {
+        "status": "not_launched",
+        "program": "Florida Energy Saver Program (FDACS)",
+        "url": "https://floridaenergysaverprogram.fdacs.gov",
+        "note": "Not launched; no launch date."
+      },
+      "programs": [
+        {
+          "name": "FPL residential rebates",
+          "url": "https://www.fpl.com/save/programs.html",
+          "gist": "~$200 instant rebate on an efficient heat pump/AC; ceiling insulation rebate."
+        },
+        {
+          "name": "Duke Energy Florida Home Energy Improvement",
+          "url": "https://www.duke-energy.com/home/products/home-energy-improvement",
+          "gist": "HVAC and attic insulation rebates after a Home Energy Check."
+        }
+      ],
+      "net_metering": "Full retail net metering with monthly rollover.",
+      "build_cost_per_sqft": {
+        "low": 135,
+        "mid": 165,
+        "high": 225
+      },
+      "buyer_programs": [
+        {
+          "name": "Florida Housing Hometown Heroes",
+          "offer": "0% deferred second of 5% of the loan ($10,000–$35,000) for full-time Florida workers buying their first home; funding comes in rounds.",
+          "url": "https://www.floridahousing.org/live-local-act/hometown-heroes-program"
+        },
+        {
+          "name": "Florida Assist",
+          "offer": "Up to $10,000 as a 0% deferred second loan.",
+          "url": "https://www.floridahousing.org/programs/homebuyer-overview-page"
+        }
+      ]
+    },
+    "WA": {
+      "electricity_cents_per_kwh": 14.71,
+      "gas_usd_per_mcf": 17.62,
+      "energy_usd_per_sqft_2020": 0.87,
+      "solar_kwh_per_kw": 1088,
+      "solar_export_value_pct": 100,
+      "ira_rebates": {
+        "status": "unclear",
+        "program": "WA HOMES & HEAR (Dept. of Commerce); separate state-funded HEAR is open",
+        "url": "https://www.commerce.wa.gov/program-index/home-electrification-and-appliance-rebate-hear-program/",
+        "note": "Federal program status unconfirmed; the state-funded HEAR (≤150% AMI) is open through local administrators."
+      },
+      "programs": [
+        {
+          "name": "WA State HEAR",
+          "url": "https://www.commerce.wa.gov/program-index/home-electrification-and-appliance-rebate-hear-program/",
+          "gist": "Heat pumps, water heaters, panels and wiring for households at or below 150% AMI."
+        },
+        {
+          "name": "Puget Sound Energy rebates",
+          "url": "https://www.pse.com/en/rebates",
+          "gist": "Utility heat pump rebates (roughly $1,200–$3,000)."
+        }
+      ],
+      "net_metering": "Full retail net metering, at least until mid-2029 or the utility's cap.",
+      "build_cost_per_sqft": {
+        "low": 165,
+        "mid": 200,
+        "high": 290
+      },
+      "buyer_programs": [
+        {
+          "name": "WSHFC Home Advantage Down Payment Assistance",
+          "offer": "0% deferred second of 3–5% of the loan, or up to $10,000 at 1%; homebuyer education required.",
+          "url": "https://heretohome.org/"
+        }
+      ]
+    },
+    "MA": {
+      "electricity_cents_per_kwh": 30.49,
+      "gas_usd_per_mcf": 25.06,
+      "energy_usd_per_sqft_2020": 1.32,
+      "solar_kwh_per_kw": 1302,
+      "solar_export_value_pct": 100,
+      "ira_rebates": {
+        "status": "unclear",
+        "program": "HEAR through Mass Save income-eligible programs (DOER)",
+        "url": "https://www.mass.gov/news/healey-driscoll-administration-submits-applications-for-146-million-ira-home-energy-rebate-programs",
+        "note": "Delivered through Mass Save's income-eligible channel; full launch status unconfirmed."
+      },
+      "programs": [
+        {
+          "name": "Mass Save heat pump rebates",
+          "url": "https://www.masssave.com/residential/rebates-and-incentives/heating-and-cooling/heat-pumps",
+          "gist": "Whole-home $2,650/ton up to $8,500; income-eligible up to $16,000 or no cost."
+        },
+        {
+          "name": "Mass Save insulation + 0% HEAT Loan",
+          "url": "https://www.masssave.com/residential/programs-and-services/financing/heat-loan-program",
+          "gist": "Insulation 75–100% off after a free assessment; 0% loan up to $25,000."
+        }
+      ],
+      "net_metering": "Retail-rate net metering for home systems with the big utilities, plus the SMART incentive.",
+      "build_cost_per_sqft": {
+        "low": 185,
+        "mid": 220,
+        "high": 300
+      },
+      "buyer_programs": [
+        {
+          "name": "MassHousing Down Payment Assistance",
+          "offer": "Deferred 0% second up to $30,000 with a MassHousing mortgage; income and price limits by area.",
+          "url": "https://www.masshousing.com/buy-a-home/programs/downpayment-assistance/"
+        }
+      ]
+    },
+    "CO": {
+      "electricity_cents_per_kwh": 17.0,
+      "gas_usd_per_mcf": 11.17,
+      "energy_usd_per_sqft_2020": 0.67,
+      "solar_kwh_per_kw": 1595,
+      "solar_export_value_pct": 100,
+      "ira_rebates": {
+        "status": "open",
+        "program": "Colorado Home Energy Rebate Program",
+        "url": "https://energyoffice.colorado.gov/home-energy-rebates",
+        "note": "Open for households at or below 150% AMI; Denver-metro single-family funds fully reserved since spring 2026."
+      },
+      "programs": [
+        {
+          "name": "Colorado heat pump tax credit",
+          "url": "https://energyoffice.colorado.gov/hptc",
+          "gist": "$1,000 air-source / $250 water heater, claimed by the contractor (at least a third passed to you)."
+        },
+        {
+          "name": "Xcel Energy rebates",
+          "url": "https://co.my.xcelenergy.com/s/residential/heating-cooling",
+          "gist": "Per-ton heat pump rebates, higher for cold-climate units."
+        }
+      ],
+      "net_metering": "Full retail net metering for Xcel customers.",
+      "build_cost_per_sqft": {
+        "low": 150,
+        "mid": 180,
+        "high": 250
+      },
+      "buyer_programs": [
+        {
+          "name": "CHFA Down Payment Assistance",
+          "offer": "Grant up to 3% of the loan or a 0% second up to 4% (each max $25,000) with a CHFA mortgage; 620+ credit and homebuyer education.",
+          "url": "https://www.chfainfo.com/homeownership"
+        }
+      ]
+    },
+    "IL": {
+      "electricity_cents_per_kwh": 19.22,
+      "gas_usd_per_mcf": 11.25,
+      "energy_usd_per_sqft_2020": 0.89,
+      "solar_kwh_per_kw": 1308,
+      "solar_export_value_pct": 48,
+      "ira_rebates": {
+        "status": "not_launched",
+        "program": "Illinois Home Energy Rebates (Illinois EPA)",
+        "url": "https://epa.illinois.gov/topics/energy.html",
+        "note": "Not launched yet; utility programs only."
+      },
+      "programs": [
+        {
+          "name": "ComEd Energy Efficiency Program",
+          "url": "https://www.comed.com/ways-to-save/for-your-home/rebates-discounts",
+          "gist": "Heat pump rebates (roughly $1,000–$1,675), smart thermostat $75."
+        },
+        {
+          "name": "Ameren Illinois Energy Efficiency",
+          "url": "https://www.amerenillinoissavings.com/",
+          "gist": "Instant discounts up to ~$900 on heat pumps, plus weatherization."
+        }
+      ],
+      "net_metering": "New systems since 2025 earn the supply part of the rate only (about half of retail) for exports.",
+      "build_cost_per_sqft": {
+        "low": 150,
+        "mid": 190,
+        "high": 245
+      },
+      "buyer_programs": [
+        {
+          "name": "IHDA Access Forgivable / Deferred / Repayable",
+          "offer": "4% up to $6,000 forgiven over 10 years, or 5% up to $7,500 deferred, or up to $10,000 repayable at 0%.",
+          "url": "https://www.ihda.org/my-home/"
+        }
+      ]
+    },
+    "GA": {
+      "electricity_cents_per_kwh": 16.27,
+      "gas_usd_per_mcf": 20.42,
+      "energy_usd_per_sqft_2020": 1.1,
+      "solar_kwh_per_kw": 1402,
+      "solar_export_value_pct": 44,
+      "ira_rebates": {
+        "status": "paused",
+        "program": "Georgia Home Energy Rebates (GEFA)",
+        "url": "https://energyrebates.georgia.gov/",
+        "note": "HEAR paused; set to reopen with limited measures in October 2026."
+      },
+      "programs": [
+        {
+          "name": "Georgia Power Home Energy Improvement Program",
+          "url": "https://www.georgiapower.com/residential/save-money-and-energy/products-programs/home-energy-improvement-program.html",
+          "gist": "Rebates for insulation, sealing and heat pumps through certified contractors (modest amounts)."
+        },
+        {
+          "name": "GEFA Home Energy Rebates",
+          "url": "https://energyrebates.georgia.gov/",
+          "gist": "Up to $16,000 combined when open; whole-home savings-based track."
+        }
+      ],
+      "net_metering": "No retail net metering for new Georgia Power customers; exports earn roughly 7¢/kWh.",
+      "build_cost_per_sqft": {
+        "low": 130,
+        "mid": 160,
+        "high": 205
+      },
+      "buyer_programs": [
+        {
+          "name": "Georgia Dream Homeownership Program",
+          "offer": "0% deferred second: the lesser of 5% or $10,000 (up to $12,500 for public-protector, educator, health and military buyers); price cap $625,000.",
+          "url": "https://www.gadream.com"
+        }
+      ]
+    }
+  },
+  "build": {
+    "efficient_premium_pct": {
+      "energy_star": {
+        "low": 0.5,
+        "high": 2
+      },
+      "zerh": {
+        "low": 1,
+        "high": 3
+      }
+    },
+    "timeline_months": 8.8,
+    "soft_costs_pct": {
+      "low": 10,
+      "high": 20
+    },
+    "notes": "Construction cost per sq ft EXCLUDING land, builder-grade to mid-range, ±20%. Anchors: NAHB 2024 Cost of Constructing a Home (~$162/sq ft national, ~$166 escalated to 2026 with RSMeans HCI +2.4%) and NAHB 2024 Census-division contract medians, adjusted with RSMeans city housing indexes (Potter & Syverson 2025). State low/mid/high are judgement built from those anchors. Efficient-build premiums: RMI 2018 modelling, PNNL. Timeline: Census Survey of Construction 2025 (8.8 months permit to completion; custom builds often longer). Soft costs (design, permits, fees, contingency) 10–20% is a rule of thumb. Land is not in the dataset (NAHB: finished lot ≈ 13.7% of an average new-home price, but it varies by an order of magnitude).",
+    "sources": [
+      "https://eyeonhousing.org/2025/01/cost-of-constructing-a-home-in-2024/",
+      "https://eyeonhousing.org/2025/10/square-foot-prices-moderate-in-2024/",
+      "https://bfi.uchicago.edu/wp-content/uploads/2025/06/BFI_WP_2025-89.pdf",
+      "https://www.rmi.org/net-zero-homes-almost-cost-parity",
+      "https://eyeonhousing.org/2026/09/single-family-home-construction-time-declines-in-2025/"
+    ]
+  },
+  "links": {
+    "hud_counselors": "https://www.hud.gov/findacounselor",
+    "cfpb_loan_estimate": "https://www.consumerfinance.gov/owning-a-home/loan-estimate/",
+    "cfpb_buying_a_house": "https://www.consumerfinance.gov/owning-a-home/",
+    "dsire": "https://www.dsireusa.org/",
+    "home_energy_score": "https://www.energy.gov/cmei/buildings/articles/home-energy-score",
+    "energy_star_new_homes": "https://www.energystar.gov/newhomes",
+    "doe_zerh": "https://www.energy.gov/cmei/buildings/doe-efficient-new-homes-program",
+    "resnet_rater": "https://www.resnet.us/resources/find-a-hers-rater/"
+  },
+  "costs": {
+    "inspection_usd": {
+      "low": 300,
+      "high": 600
+    },
+    "energy_audit_usd": {
+      "low": 200,
+      "high": 700
+    },
+    "notes": "Consumer cost aggregators (HomeAdvisor/Angi, 2024–2026). Utilities often subsidise energy audits."
+  },
+  "sustainability": {
+    "last_checked": "2026-10-11",
+    "groups": [
+      "water",
+      "outdoors",
+      "envelope",
+      "systems"
+    ],
+    "measures": {
+      "xeriscaping": {
+        "group": "water",
+        "cost": {
+          "low": 5,
+          "high": 20,
+          "unit": "sqft"
+        },
+        "what": "Swap thirsty lawn for native or drought-tolerant plants, mulch and drip irrigation.",
+        "benefit": "Outdoor watering is over 30% of household water use, up to 60% in dry areas. Water-wise yards use about half as much outdoors.",
+        "best_in": [
+          "CA",
+          "TX",
+          "CO"
+        ],
+        "link": {
+          "label": "EPA WaterSense: outdoors",
+          "url": "https://www.epa.gov/watersense/outdoors"
+        }
+      },
+      "rainwater_capture": {
+        "group": "water",
+        "cost": {
+          "low": 100,
+          "high": 4500,
+          "unit": "total"
+        },
+        "what": "Collect roof runoff in rain barrels (40 to 100 gallons) or a larger cistern to water the garden.",
+        "benefit": "Each inch of rain on 1,000 sq ft of roof gives about 620 gallons. A barrel is about $100 to $150; above-ground cisterns $1,500 to $4,500.",
+        "best_in": [],
+        "link": {
+          "label": "University of Arizona: harvest rain",
+          "url": "https://waterwise.arizona.edu/ways-save-water/harvest-rain"
+        }
+      },
+      "watersense_fixtures": {
+        "group": "water",
+        "cost": {
+          "low": 5,
+          "high": 550,
+          "unit": "fixture"
+        },
+        "what": "WaterSense toilets, showerheads and faucet aerators use at least 20% less water with no loss in performance.",
+        "benefit": "A WaterSense toilet saves a typical family about 13,000 gallons a year; a showerhead about 2,700 gallons plus the energy to heat it. Often pays back within a year or two.",
+        "best_in": [],
+        "link": {
+          "label": "EPA WaterSense: start saving",
+          "url": "https://www.epa.gov/watersense/start-saving"
+        }
+      },
+      "smart_irrigation_controller": {
+        "group": "water",
+        "cost": {
+          "low": 150,
+          "high": 600,
+          "unit": "total"
+        },
+        "what": "A weather- or soil-moisture-based sprinkler timer that waters only when plants need it.",
+        "benefit": "Cuts irrigation water by up to 30%, up to 15,000 gallons a year. Many water utilities offer rebates of $50 to $250.",
+        "best_in": [
+          "CA",
+          "TX",
+          "CO"
+        ],
+        "link": {
+          "label": "EPA WaterSense: irrigation controllers",
+          "url": "https://www.epa.gov/watersense/watersense-labeled-controllers"
+        }
+      },
+      "shade_trees": {
+        "group": "outdoors",
+        "cost": {
+          "low": 100,
+          "high": 2000,
+          "unit": "tree"
+        },
+        "what": "Plant deciduous shade trees on the west and south sides to shade walls, windows and the AC unit.",
+        "benefit": "Well-placed trees typically cut summer AC costs 15% to 35%. Leaves drop in winter, so the sun still warms the house.",
+        "best_in": [
+          "TX",
+          "FL",
+          "GA",
+          "CA"
+        ],
+        "link": {
+          "label": "EPA: trees and vegetation",
+          "url": "https://www.epa.gov/heatislands/using-trees-and-vegetation-reduce-heat-islands"
+        }
+      },
+      "permeable_paving": {
+        "group": "outdoors",
+        "cost": {
+          "low": 6,
+          "high": 40,
+          "unit": "sqft"
+        },
+        "what": "Driveways and patios of porous pavers, pervious concrete or grid pavers that let rain soak in.",
+        "benefit": "Less runoff and puddling, cleaner stormwater, and some cities give stormwater-fee credits. Needs sweeping so it doesn't clog.",
+        "best_in": [],
+        "link": {
+          "label": "EPA Soak Up the Rain: permeable pavement",
+          "url": "https://www.epa.gov/soakuptherain/soak-rain-permeable-pavement"
+        }
+      },
+      "triple_pane_windows": {
+        "group": "envelope",
+        "cost": {
+          "low": 10,
+          "high": 15,
+          "unit": "pct"
+        },
+        "what": "Windows with three layers of glass and two gas-filled gaps: warmer, quieter and less condensation.",
+        "benefit": "ENERGY STAR windows cut heating and cooling bills up to 13%. Triple pane adds most in cold climates; in mild or hot ones the payback is long.",
+        "best_in": [
+          "CO",
+          "IL",
+          "MA",
+          "NY"
+        ],
+        "link": {
+          "label": "ENERGY STAR: windows",
+          "url": "https://www.energystar.gov/products/res_windows_doors_skylights"
+        }
+      },
+      "tight_envelope": {
+        "group": "envelope",
+        "cost": {
+          "low": 500,
+          "high": 6000,
+          "unit": "total"
+        },
+        "what": "Seal air leaks (attic, rim joists, pipes and wires) and top up attic insulation to R-38 to R-49, then confirm with a blower-door test.",
+        "benefit": "About 15% off heating and cooling on average. Older homes often leak 10 to 20 air changes an hour under test; current code asks for 3 to 5. Very tight homes need fresh-air ventilation.",
+        "best_in": [
+          "CO",
+          "IL",
+          "MA",
+          "NY"
+        ],
+        "link": {
+          "label": "ENERGY STAR: seal and insulate",
+          "url": "https://www.energystar.gov/saveathome/seal_insulate/why-seal-and-insulate"
+        }
+      },
+      "cool_roof": {
+        "group": "envelope",
+        "cost": {
+          "low": 0,
+          "high": 0.5,
+          "unit": "sqft_premium"
+        },
+        "what": "Light-colored or cool-rated roofing that reflects sunlight instead of soaking it up.",
+        "benefit": "Cuts peak cooling demand 11% to 27% in air-conditioned homes; a white roof runs about 55°F cooler than a gray one. Best when you're replacing the roof anyway.",
+        "best_in": [
+          "TX",
+          "FL",
+          "GA",
+          "CA"
+        ],
+        "link": {
+          "label": "EPA: cool roofs",
+          "url": "https://www.epa.gov/heatislands/using-cool-roofs-reduce-heat-islands"
+        }
+      },
+      "induction_cooktop": {
+        "group": "systems",
+        "cost": {
+          "low": 1225,
+          "high": 2850,
+          "unit": "total"
+        },
+        "what": "An electric cooktop that heats the pan directly: fast, precise, and the surface stays cooler.",
+        "benefit": "About 85% efficient, against roughly 32% for gas. No combustion indoors: switching from gas cut indoor NO2 by 35% to 56% in one study. Needs a 240V circuit.",
+        "best_in": [],
+        "link": {
+          "label": "ENERGY STAR: induction cooking",
+          "url": "https://www.energystar.gov/partner-resources/products_partner_resources/brand-owner/eta-consumers/res-induction-cooking-tops"
+        }
+      },
+      "battery_storage": {
+        "group": "systems",
+        "cost": {
+          "low": 990,
+          "high": 1370,
+          "unit": "kwh"
+        },
+        "what": "A home battery (usually 10 to 15 kWh) that stores solar power for evenings and outages.",
+        "benefit": "Backup for essentials and more use of your own solar, most useful with time-of-use rates or low export pay. A 13.5 kWh system is about $15,650 and rarely pays back on bills alone.",
+        "best_in": [
+          "CA"
+        ],
+        "link": {
+          "label": "EnergySage: battery costs",
+          "url": "https://www.energysage.com/energy-storage/how-much-do-batteries-cost/"
+        }
+      },
+      "ev_ready_charger": {
+        "group": "systems",
+        "cost": {
+          "low": 1100,
+          "high": 3200,
+          "unit": "total"
+        },
+        "what": "A 240V Level 2 charger, or at least a dedicated circuit or conduit (EV-ready), for overnight charging.",
+        "benefit": "Several times faster than a normal outlet. Wiring it during a renovation costs less than retrofitting later; many utilities offer rebates.",
+        "best_in": [],
+        "link": {
+          "label": "DOE AFDC: charging at home",
+          "url": "https://afdc.energy.gov/fuels/electricity-charging-home"
+        }
+      }
+    },
+    "states": {
+      "CA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal: the Rainwater Capture Act (AB 1750, 2012) lets you use barrels and cisterns for non-drinking uses without a water right.",
+        "landscape_rebate": {
+          "name": "SoCal Water$mart turf replacement",
+          "amount": "$2 per sq ft, up to 5,000 sq ft a year; reserve funds before you start; no artificial turf. Your local water agency may add more.",
+          "url": "https://socalwatersmart.com/en/residential/rebates/available-rebates/turf-replacement-program/"
+        }
+      },
+      "TX": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal and encouraged: harvesting equipment is exempt from sales tax, and HOAs can regulate placement but can't ban it.",
+        "landscape_rebate": {
+          "name": "Austin Water WaterWise Landscape Rebate and SAWS WaterSaver coupons",
+          "amount": "Austin: about $100 per 100 sq ft converted, up to $3,000. San Antonio: $125 to $150 coupons per 200 sq ft of grass removed, in seasonal windows.",
+          "url": "https://www.austintexas.gov/water/water-wise-landscaping-rebate-faqs"
+        }
+      },
+      "CO": {
+        "rainwater": "limited",
+        "rainwater_note": "Limited: a home may use at most 2 barrels totaling 110 gallons, from rooftop downspouts, for outdoor use on the same property. No permit needed.",
+        "landscape_rebate": {
+          "name": "Aurora Water Grass Replacement Incentive (GRIP)",
+          "amount": "$3 per sq ft for a water-wise landscape, $0.50 for water-wise grass; pre-approval required. Denver Water's turf discount is fully allocated for 2026.",
+          "url": "https://www.auroragov.org/Grip"
+        }
+      },
+      "FL": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal, with no statewide limit; rain barrels are widely promoted for watering landscapes.",
+        "landscape_rebate": {
+          "name": "Tampa / Hillsborough Florida-Friendly Landscaping Incentive (FLIP)",
+          "amount": "A rebate for converting up to 500 sq ft of irrigated lawn after three workshops; for Tampa and Hillsborough water customers.",
+          "url": "https://www.tampa.gov/water/conservation/how-to-water-smarter/florida-friendly-landscaping-incentive-program-flip"
+        }
+      },
+      "GA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal for outdoor, non-drinking use; the state plumbing code also allows it for toilet flushing. Some counties require covered barrels.",
+        "landscape_rebate": null,
+        "note": "No turf rebate found in metro Atlanta; Gwinnett County offers a $75 toilet rebate."
+      },
+      "WA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal: collecting rooftop rain for use on the same property needs no water-right permit.",
+        "landscape_rebate": {
+          "name": "Seattle RainWise",
+          "amount": "Can cover up to 100% of the cost of cisterns and rain gardens on eligible Seattle properties.",
+          "url": "https://seattlerainwise.org/"
+        }
+      },
+      "MA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal and encouraged by the state for garden and outdoor use.",
+        "landscape_rebate": null,
+        "note": "No statewide turf rebate found."
+      },
+      "NY": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal with no state restriction; NYC and other towns run rain-barrel giveaways.",
+        "landscape_rebate": null,
+        "note": "No turf rebate found."
+      },
+      "IL": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal for outdoor use. A system connected to indoor plumbing needs a plumbing permit and backflow protection.",
+        "landscape_rebate": null,
+        "note": "No turf rebate found."
+      }
+    },
+    "notes": "Federal tax credits for these upgrades ended for work after 2025 (EV chargers after June 2026). Look for state, city and utility rebates instead. Costs are national ranges from EPA, ENERGY STAR and contractor cost guides (2025 to 2026); local prices vary a lot.",
+    "sources": [
+      "https://www.epa.gov/watersense/statistics-and-facts",
+      "https://www.homeadvisor.com/cost/landscape/xeriscaping/",
+      "https://www.homeadvisor.com/cost/plumbing/rainwater-collection-system/",
+      "https://www.epa.gov/watersense/residential-toilets",
+      "https://www.epa.gov/watersense/showerheads",
+      "https://www.energystar.gov/saveathome/seal_insulate/methodology",
+      "https://basc.pnnl.gov/information/infiltration-meets-ach50-requirements",
+      "https://heatisland.lbl.gov/coolscience/cool-roofs",
+      "https://publichealth.berkeley.edu/articles/spotlight/research/switching-from-gas-to-electric-stoves-cuts-indoor-air-pollution",
+      "https://www.irs.gov/newsroom/faqs-for-modification-of-sections-25c-25d-25e-30c-30d-45l-45w-and-179d-under-public-law-119-21-139-stat-72-july-4-2025-commonly-known-as-the-one-big-beautiful-bill-obbb",
+      "https://dwr.colorado.gov/services/water-administration/rainwater-storm-water-graywater",
+      "https://ecology.wa.gov/water-shorelines/water-supply/water-recovery-solutions/rainwater-collection"
+    ]
+  }
+}

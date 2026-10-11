@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { chf, groupDigits } from '../lib/format'
+import { money, groupDigits, currencySymbol } from '../lib/format'
 import { RULE_CONSTANTS } from '../lib/affordability'
 import { useI18n } from '../i18n/I18nContext'
 import { renderRich } from './Trans'
@@ -46,22 +46,22 @@ export default function PathToGoal({
       key: 'max3a',
       perMonth: monthly + PILLAR3A_MONTHLY,
       subKey: 'path.scen.max3aNote',
-      subVars: { save: chf(monthly), p3a: chf(PILLAR3A_MONTHLY), max: chf(RULE_CONSTANTS.PILLAR3A_MAX) },
+      subVars: { save: money(monthly), p3a: money(PILLAR3A_MONTHLY), max: money(RULE_CONSTANTS.PILLAR3A_MAX) },
     },
   ]
 
   return (
     <div className="rounded-xl border border-line bg-surface p-5">
       <h4 className="font-display text-base font-bold text-ink">
-        {t('path.title', { target: chf(targetPrice) })}
+        {t('path.title', { target: money(targetPrice) })}
       </h4>
       <p className="mt-1 text-sm leading-relaxed text-body">{t('path.intro')}</p>
 
       {/* Progress bar: current max → goal */}
       <div className="mt-4">
         <div className="flex items-center justify-between text-xs font-medium text-muted">
-          <span>{t('path.current', { value: chf(currentMax) })}</span>
-          <span>{t('path.goal', { value: chf(targetPrice) })}</span>
+          <span>{t('path.current', { value: money(currentMax) })}</span>
+          <span>{t('path.goal', { value: money(targetPrice) })}</span>
         </div>
         <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-line">
           <div className="h-full rounded-full bg-ink" style={{ width: `${progress}%` }} />
@@ -71,7 +71,7 @@ export default function PathToGoal({
       {/* Equity gap + interactive savings slider */}
       {equityGap > 0 && (
         <div className="mt-5">
-          <p className="text-sm text-body">{renderRich(t('path.saveGap', { gap: chf(roundK(equityGap)) }))}</p>
+          <p className="text-sm text-body">{renderRich(t('path.saveGap', { gap: money(roundK(equityGap)) }))}</p>
           <div className="mt-2 flex items-center gap-3">
             <span className="shrink-0 text-xs text-muted">{t('path.saveLabel')}</span>
             <input
@@ -82,7 +82,7 @@ export default function PathToGoal({
               aria-label={t('path.saveLabel')}
             />
             <div className="flex w-28 shrink-0 items-center rounded-lg border border-line bg-white">
-              <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
+              <span className="select-none pl-2 pr-1 text-xs text-muted">{currencySymbol()}</span>
               <input
                 type="text" inputMode="numeric"
                 value={groupDigits(String(monthly))}
@@ -109,7 +109,7 @@ export default function PathToGoal({
             {scenarios.map((s) => (
               <div key={s.key} className="rounded-lg border border-line bg-white p-3">
                 <p className="text-xs font-semibold text-ink">{t(`path.scen.${s.key}`)}</p>
-                <p className="mt-1 text-sm font-semibold tabular-nums text-ink">{chf(s.perMonth)}/mo</p>
+                <p className="mt-1 text-sm font-semibold tabular-nums text-ink">{money(s.perMonth)}/mo</p>
                 <p className="mt-0.5 text-xs text-body">{t('path.scen.reachIn', { time: fmtDuration(monthsFor(s.perMonth)) })}</p>
                 <p className="mt-1.5 border-t border-line pt-1.5 text-[11px] leading-snug text-muted">
                   {t(s.subKey, s.subVars)}
@@ -123,7 +123,7 @@ export default function PathToGoal({
       {/* Income gap, if the affordability rule (not equity) is the blocker */}
       {incomeGapAnnual > 0 && (
         <p className="mt-4 text-sm text-body">
-          {renderRich(t('path.incomeGap', { gap: chf(roundK(incomeGapAnnual)) }))}
+          {renderRich(t('path.incomeGap', { gap: money(roundK(incomeGapAnnual)) }))}
         </p>
       )}
     </div>

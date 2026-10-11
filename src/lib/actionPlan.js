@@ -7,7 +7,7 @@
  */
 
 import { getCanton } from './cantons'
-import { chf } from './format'
+import { money } from './format'
 import { impliedSize } from './exploration'
 import { computeLedger, selectedMeasures } from './retrofit'
 
@@ -31,14 +31,14 @@ export function buildActionPlan(profile) {
       steps.push({
         titleKey: 'actionPlan.closeEquityTitle',
         bodyKey: months ? 'actionPlan.closeEquityBody' : 'actionPlan.closeEquityBodyNoTime',
-        vars: { gap: chf(gap), monthly: chf(monthly), months },
+        vars: { gap: money(gap), monthly: money(monthly), months },
         tone: 'amber',
       })
     } else {
       steps.push({
         titleKey: 'actionPlan.growIncomeTitle',
         bodyKey: 'actionPlan.growIncomeBody',
-        vars: { gap: chf(phase1.shortfall.incomeGap) },
+        vars: { gap: money(phase1.shortfall.incomeGap) },
         tone: 'amber',
       })
     }
@@ -46,7 +46,7 @@ export function buildActionPlan(profile) {
     steps.push({
       titleKey: 'actionPlan.mortgageTitle',
       bodyKey: 'actionPlan.mortgageBody',
-      vars: { max: chf(phase1.maxPrice) },
+      vars: { max: money(phase1.maxPrice) },
       tone: 'teal',
     })
   }
@@ -75,7 +75,7 @@ export function buildActionPlan(profile) {
     steps.push({
       titleKey: 'actionPlan.renovateTitle',
       bodyKey: 'actionPlan.renovateBody',
-      vars: { cls: ledger.newClass, net: chf(ledger.netCost), monthly: chf(ledger.monthlySaving) },
+      vars: { cls: ledger.newClass, net: money(ledger.netCost), monthly: money(ledger.monthlySaving) },
       tone: 'default',
     })
   } else if (explore.chosenOption === 'new') {

@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { track } from '../lib/track'
 import { runAdvisorTool } from '../lib/advisorTools'
+import { money } from '../lib/format'
+import { ut } from '../markets/us/copy'
+import { mockAgentTurn } from '../lib/advisorMock'
 
 /**
  * Floating "Ask the advisor" button + chat drawer (Push 2).
@@ -34,7 +37,10 @@ import { runAdvisorTool } from '../lib/advisorTools'
  */
 const MAX_TOOL_ROUNDTRIPS = 3
 
-export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false }) {
+// How long the "Ask Plinthly AI" tooltip stays up after a page load or phase change.
+const TIP_MS = 8000
+
+export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false, tipKey }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const [consented, setConsented] = useState(false)
@@ -43,12 +49,44 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
   const [busy, setBusy] = useState(false)
   const [mock, setMock] = useState(false)
   const [scenario, setScenario] = useState(null) // {label, overrides, maxPrice} — preview only
+  const [showTip, setShowTip] = useState(false)
+
+  // "Ask Plinthly AI" from a glossary tooltip: open the chat with the question
+  // filled in (the consent gate still applies; nothing is sent until the user does).
+  useEffect(() => {
+    if (tipKey === undefined) return undefined
+    const onAsk = (e) => {
+      setOpen(true)
+      setShowTip(false)
+      setInput(e.detail?.question || '')
+    }
+    window.addEventListener('plinthly:ask', onAsk)
+    return () => window.removeEventListener('plinthly:ask', onAsk)
+  }, [tipKey])
+
+  // Re-show the tooltip on every page load and whenever `tipKey` changes (the
+  // App passes the phase), for TIP_MS. Instances without a tipKey (Compare)
+  // never show it.
+  useEffect(() => {
+    if (tipKey === undefined) return undefined
+    setShowTip(true)
+    const id = setTimeout(() => setShowTip(false), TIP_MS)
+    return () => clearTimeout(id)
+  }, [tipKey])
 
   if (!context) return null
 
-  const chf = (n) => 'CHF ' + Math.round(Number(n) || 0).toLocaleString('de-CH')
-  /** Human label for a Compare side key ("own" → "owning"). */
-  const sideLabel = (key) => (key ? t(`compare.win.${key}`) : '')
+  const isUs = context.market === 'us'
+  /** Human label for a Compare side key ("own" → "owning"). US copy first: the
+   *  US model has its own sides (cheaper, buyPrice) that only US copy names. */
+  const sideLabel = (key) => {
+    if (!key) return ''
+    if (isUs) {
+      const us = ut(`compare.win.${key}`)
+      if (us !== `compare.win.${key}`) return us
+    }
+    return t(`compare.win.${key}`)
+  }
   /** Attach readable labels to a Compare tool result before the model sees it. */
   const withLabels = (content) => {
     if (!content || !content.result) return content
@@ -63,30 +101,52 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
   }
   const clientMock = (mode) => {
     const d = context.dream
+    if (isUs) {
+      if (surface === 'compare') return ut('advisor.mockCompare')
+      return d
+        ? ut('advisor.mockDream', { max: money(context.maxPrice), price: money(d.price) })
+        : ut('advisor.mock', { max: money(context.maxPrice) })
+    }
     if (mode === 'plan') {
       return d
-        ? `(Preview) Illustrative roadmap to ${chf(d.price)}: close the ~${chf(d.equityGap)} equity gap by saving steadily, max your Pillar 3a (counts as hard equity), and revisit the affordability ratio. Connect an API key for a tailored plan.`
+        ? `(Preview) Illustrative roadmap to ${money(d.price)}: close the ~${money(d.equityGap)} equity gap by saving steadily, max your Pillar 3a (counts as hard equity), and revisit the affordability ratio. Connect an API key for a tailored plan.`
         : '(Preview) Enter a dream price and I\'ll outline a savings roadmap.'
     }
     return d
-      ? `(Preview) Your max today is ${chf(context.maxPrice)} vs a ${chf(d.price)} goal — a ~${chf(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
-      : `(Preview) Your current max is ${chf(context.maxPrice)}. Connect an API key for live answers.`
+      ? `(Preview) Your max today is ${money(context.maxPrice)} vs a ${money(d.price)} goal — a ~${money(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
+      : `(Preview) Your current max is ${money(context.maxPrice)}. Connect an API key for live answers.`
   }
 
-  /** POST one leg of the conversation. Throws to trigger the offline fallback. */
+  /**
+   * POST one leg of the conversation. When no server answers (local `vite`
+   * without the API bridge, or the claude.ai prototype, which has no /api), run
+   * the same preview mock the server uses, in the browser — so the tool loop
+   * still works on the real engine. Nothing leaves the device in that case.
+   */
+  // The preview mock stands in only when there is no advisor API at all (no
+  // server, a 404, or a non-JSON page). A real API that refuses (rate limit,
+  // daily cap, upstream error) says so: a made-up answer would hide it.
   async function post(history, mode) {
-    const res = await fetch('/api/advisor', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ context, messages: history, mode, surface }),
-    })
+    const mock = () => ({ mock: true, ...mockAgentTurn(context, history, mode, surface) })
+    let res
+    try {
+      res = await fetch('/api/advisor', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ context, messages: history, mode, surface }),
+      })
+    } catch {
+      return mock()
+    }
     const ct = res.headers.get('content-type') || ''
-    if (!res.ok || !ct.includes('application/json')) throw new Error('no-api')
+    if (res.status === 404 || !ct.includes('application/json')) return mock()
+    if (!res.ok) return { reply: t('advisor.errorNote'), error: true }
     return res.json()
   }
 
   async function send(text, mode) {
-    const userMsg = mode === 'plan' ? { role: 'user', content: t('advisor.planButton') } : { role: 'user', content: text }
+    const planLabel = isUs ? ut('advisor.planButton') : t('advisor.planButton')
+    const userMsg = mode === 'plan' ? { role: 'user', content: planLabel } : { role: 'user', content: text }
     const next = [...messages, userMsg]
     setMessages(next)
     setInput('')
@@ -107,7 +167,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
         const results = []
         for (const call of data.toolUse || []) {
           // The engine runs HERE, in the browser, on the user's own numbers.
-          const outcome = runAdvisorTool(call.name, call.input, { values: values || {}, compare })
+          const outcome = runAdvisorTool(call.name, call.input, { values: values || {}, compare, market: context.market === 'us' ? 'us' : 'ch' })
           track('advisor_tool_run', { tool: call.name, ok: outcome.ok })
           if (outcome.ok && outcome.scenario) setScenario(outcome.scenario)
           results.push({
@@ -137,8 +197,9 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
 
   // Starters are surface-specific: on Compare, the useful openers are about the
   // scenarios on screen, not about the Phase 1 equity gap.
-  const starters =
-    surface === 'compare'
+  const starters = isUs
+    ? ut(surface === 'compare' ? 'advisor.cStarters' : 'advisor.starters')
+    : surface === 'compare'
       ? [t('advisor.cStarter1'), t('advisor.cStarter2'), t('advisor.cStarter3')]
       : [t('advisor.starter1'), t('advisor.starter2'), t('advisor.starter3')]
 
@@ -186,7 +247,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
                     ))}
                     {context.dream && (
                       <button type="button" onClick={() => send(null, 'plan')} className="block w-full rounded-lg bg-teal-600 px-3 py-2 text-left text-sm font-semibold text-on-primary transition hover:bg-teal-700">
-                        {t('advisor.planButton')}
+                        {isUs ? ut('advisor.planButton') : t('advisor.planButton')}
                       </button>
                     )}
                   </div>
@@ -208,7 +269,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
                   <p className="text-xs font-semibold text-ink">
                     {scenario.label || t('advisor.scenarioLabel')} →{' '}
                     {scenario.target === 'compare'
-                      ? t('advisor.scenarioAhead', { who: sideLabel(scenario.aheadKey), amount: chf(scenario.gap) })
+                      ? t('advisor.scenarioAhead', { who: sideLabel(scenario.aheadKey), amount: money(scenario.gap) })
                       : scenario.headline}
                   </p>
                   <p className="mt-0.5 text-[11px] leading-snug text-muted">{t('advisor.scenarioNote')}</p>
@@ -253,14 +314,28 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
         </div>
       )}
 
+      {/* "Ask Plinthly AI" tooltip — up for 8 s after each load / phase change */}
+      {showTip && !open && (
+        <div
+          id="advisor-tip"
+          role="tooltip"
+          className="advisor-tip absolute bottom-[4.5rem] right-0 whitespace-nowrap rounded-xl bg-ink px-3.5 py-2 text-sm font-semibold text-on-dark shadow-lg"
+        >
+          {t('advisorTip')}
+          <span aria-hidden="true" className="absolute -bottom-1.5 right-5 h-3 w-3 rotate-45 bg-ink" />
+        </div>
+      )}
+
       {/* FAB */}
       <button
         type="button"
         onClick={() => {
           if (!open) track('advisor_opened', undefined, { once: true })
+          setShowTip(false)
           setOpen(!open)
         }}
         aria-label={t('advisor.fabLabel')}
+        aria-describedby={showTip && !open ? 'advisor-tip' : undefined}
         className="ml-auto flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-on-primary shadow-lg transition hover:bg-teal-700"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

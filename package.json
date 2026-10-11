@@ -9,10 +9,14 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --import ./scripts/register-json.mjs scripts/affordability.conformance.mjs",
-    "test:compare": "node scripts/compare.conformance.mjs",
+    "test:compare": "node --import ./scripts/register-json.mjs scripts/compare.conformance.mjs",
     "test:data": "node scripts/data.conformance.mjs",
     "test:agent": "node --import ./scripts/register-json.mjs scripts/agent.conformance.mjs",
-    "test:all": "npm test && npm run test:compare && npm run test:data && npm run test:agent"
+    "test:market": "node --import ./scripts/register-json.mjs scripts/market.conformance.mjs",
+    "test:us": "node --import ./scripts/register-json.mjs scripts/us-affordability.conformance.mjs",
+    "test:us-home": "node --import ./scripts/register-json.mjs scripts/us-home.conformance.mjs",
+    "test:learn": "node --import ./scripts/register-json.mjs scripts/learn.conformance.mjs",
+    "test:all": "npm test && npm run test:compare && npm run test:data && npm run test:agent && npm run test:market && npm run test:us && npm run test:us-home && npm run test:learn"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

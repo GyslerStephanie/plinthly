@@ -1,0 +1,711 @@
+{
+  "de": {
+    "eigenmietwert": {
+      "term": "Eigenmietwert",
+      "definition": "Eine fiktive «Miete», die das Schweizer Steuersystem zu Ihrem steuerbaren Einkommen hinzurechnet, weil Sie im eigenen Zuhause wohnen. Sie zahlen Einkommenssteuer darauf, können aber Hypothekarzinsen und Unterhaltskosten abziehen. Das Stimmvolk hat 2025 die Abschaffung angenommen, der Zeitpunkt ist aber je nach Kanton noch unterschiedlich.",
+      "aliases": [
+        "eigenmietwert",
+        "mietwert",
+        "fiktive miete",
+        "eigenmiete"
+      ]
+    },
+    "tragbarkeit": {
+      "term": "Tragbarkeit",
+      "definition": "Die Schweizer Prüfung, ob Sie sich das Eigenheim leisten können, die eine Bank vor der Kreditvergabe macht. Ihre berechneten jährlichen Wohnkosten, also Zinsen zu einem kalkulatorischen Satz von 5%, Amortisation und rund 1% Unterhalt, müssen unter einem Drittel Ihres Bruttoeinkommens bleiben.",
+      "aliases": [
+        "tragbarkeit",
+        "tragbarkeitsrechnung",
+        "drittelsregel",
+        "1/3 regel"
+      ]
+    },
+    "belehnungswert": {
+      "term": "Belehnungswert",
+      "definition": "Der Wert, auf den eine Bank tatsächlich einen Kredit gibt. Er kann tiefer sein als der Preis, den Sie bezahlen. Banken nehmen den tieferen Wert aus Kaufpreis und eigener Schätzung, und eine allfällige Differenz müssen Sie mit eigenem Geld decken.",
+      "aliases": [
+        "belehnungswert",
+        "belehnung",
+        "belehnungsgrenze"
+      ]
+    },
+    "minergie": {
+      "term": "Minergie",
+      "definition": "Ein Schweizer Nachhaltigkeitsstandard für Gebäude mit tiefem Energieverbrauch. Minergie-zertifizierte Häuser sind teurer im Bau, brauchen aber viel weniger Energie und behalten ihren Wiederverkaufswert meist besser. Manche Banken bieten dafür günstigere Hypothekarkonditionen an.",
+      "aliases": [
+        "minergie",
+        "minergie standard",
+        "minergie haus"
+      ]
+    },
+    "gebaeudeprogramm": {
+      "term": "Gebäudeprogramm",
+      "definition": "Ein gemeinsames Förderprogramm von Bund und Kantonen, das Beiträge an energetische Sanierungen wie Dämmung, Wärmepumpen und Solaranlagen zahlt. Beträge und Regeln sind je nach Kanton verschieden, und meistens müssen Sie das Gesuch stellen, bevor die Arbeiten beginnen.",
+      "aliases": [
+        "gebäudeprogramm",
+        "förderbeiträge",
+        "subventionen",
+        "fördergelder"
+      ]
+    },
+    "pillar2": {
+      "term": "2. Säule (BVG)",
+      "definition": "Ihre Pensionskasse. Sie können einen Teil davon für den Kauf eines Eigenheims beziehen oder verpfänden, er zählt aber als «weiche» Eigenmittel: Mindestens 10% des Preises müssen trotzdem aus echtem Erspartem kommen.",
+      "aliases": [
+        "2. säule",
+        "zweite säule",
+        "pensionskasse",
+        "bvg"
+      ]
+    },
+    "amortisation": {
+      "term": "Amortisation",
+      "definition": "Das schrittweise Abzahlen Ihrer Hypothek. Nach Schweizer Regeln muss der Teil über rund 67% des Immobilienwerts (die «zweite Hypothek») innerhalb von 15 Jahren oder bis zur Pensionierung zurückbezahlt werden.",
+      "aliases": [
+        "amortisation",
+        "amortisieren",
+        "abzahlung",
+        "zweite hypothek"
+      ]
+    },
+    "niederstwertprinzip": {
+      "term": "Niederstwertprinzip",
+      "definition": "Das «Niederstwertprinzip»: Eine Bank gibt den Kredit auf den tieferen Wert aus Kaufpreis und eigener Schätzung. Wenn Sie mehr bezahlen als den von der Bank geschätzten Wert, müssen Sie die Differenz selbst mit eigenem Geld finanzieren.",
+      "aliases": [
+        "niederstwertprinzip",
+        "tieferer wert",
+        "niederstwert"
+      ]
+    },
+    "geak": {
+      "term": "GEAK",
+      "definition": "Der Gebäudeenergieausweis der Kantone bewertet die Energieeffizienz eines Gebäudes von A (am besten) bis G (am schlechtesten). Die Klasse sagt direkt etwas über Ihre Heizkosten aus und zeigt, ob sich eine energetische Sanierung lohnt.",
+      "aliases": [
+        "geak",
+        "gebäudeenergieausweis",
+        "energieausweis",
+        "energieklasse"
+      ]
+    },
+    "solidarschuldnerschaft": {
+      "term": "Solidarschuldnerschaft",
+      "definition": "Solidarische Haftung. Wenn zwei Personen gemeinsam eine Hypothek aufnehmen, haftet jede für die ganze Schuld, nicht nur für ihre Hälfte. Wenn eine Person nicht zahlen kann, kann die Bank von der anderen den ganzen Betrag verlangen.",
+      "aliases": [
+        "solidarschuldnerschaft",
+        "solidarische haftung",
+        "solidarhaftung",
+        "gemeinsame haftung"
+      ]
+    },
+    "liquid_cash": {
+      "term": "Flüssige Mittel",
+      "definition": "Geld, das Sie sofort brauchen können: Privat- und Sparkonten sowie Anlagen, die Sie schnell und ohne Strafgebühr verkaufen können. Vorsorgekonten zählen meist nicht dazu, und es ist klug, zusätzlich zu dem, was Sie für den Kauf ausgeben wollen, eine Notreserve zu behalten.",
+      "aliases": [
+        "flüssige mittel",
+        "liquide mittel",
+        "erspartes",
+        "bargeld"
+      ]
+    },
+    "down_payment": {
+      "term": "Eigenmittel (Anzahlung)",
+      "definition": "Der Teil des Preises, den Sie selbst bezahlen, den Rest deckt die Hypothek. Mehr Eigenmittel bedeuten einen kleineren Kredit und tiefere monatliche Kosten. In den USA können Erstkäufer schon mit 3% Anzahlung kaufen, in der Schweiz liegt das Minimum bei 20%.",
+      "aliases": [
+        "eigenmittel",
+        "anzahlung",
+        "eigenkapital",
+        "eigene mittel"
+      ]
+    },
+    "home_equity": {
+      "term": "Eigenkapital im Eigenheim",
+      "definition": "Der Teil Ihres Zuhauses, der Ihnen tatsächlich gehört: sein Wert minus das, was Sie der Bank auf der Hypothek noch schulden. Er wächst, wenn Sie den Kredit abzahlen und wenn der Wert des Hauses steigt.",
+      "aliases": [
+        "eigenkapital",
+        "eigenkapital im eigenheim",
+        "nettowert",
+        "abbezahlter anteil"
+      ]
+    },
+    "heat_pump": {
+      "term": "Wärmepumpe",
+      "definition": "Ein elektrisches System, das Wärme verschiebt statt sie zu erzeugen. So heizt es im Winter und kühlt im Sommer. Es braucht viel weniger Energie als eine Elektroheizung. Ob es bei den Kosten eine Gasheizung schlägt, hängt von den lokalen Strom- und Gaspreisen ab.",
+      "aliases": [
+        "wärmepumpe",
+        "wärmepumpen",
+        "luft-wasser-wärmepumpe"
+      ]
+    },
+    "hard_equity": {
+      "term": "Harte Eigenmittel",
+      "definition": "Der Teil Ihrer Eigenmittel, der aus Ihrem eigenen Geld oder der Säule 3a kommen muss, nicht aus Ihrer Pensionskasse. Schweizer Banken wollen mindestens 10% des Preises als harte Eigenmittel.",
+      "aliases": [
+        "harte eigenmittel",
+        "hartes eigenkapital",
+        "echtes erspartes"
+      ]
+    },
+    "pillar3a": {
+      "term": "Säule 3a",
+      "definition": "Ein steuerbegünstigtes privates Vorsorgekonto. Sie können die jährlichen Einzahlungen (2026 bis CHF 7'258 für Angestellte mit Pensionskasse) vom steuerbaren Einkommen abziehen und das Geld für den Kauf eines eigenen Zuhauses verwenden.",
+      "aliases": [
+        "säule 3a",
+        "3a",
+        "dritte säule",
+        "3. säule"
+      ]
+    },
+    "notional_rate": {
+      "term": "Kalkulatorischer Zinssatz",
+      "definition": "Der bewusst hohe Zinssatz (5%), mit dem Schweizer Banken prüfen, ob Sie sich das Eigenheim auch bei steigenden Zinsen noch leisten könnten. Es ist nicht der Zins, den Sie tatsächlich bezahlen würden.",
+      "aliases": [
+        "kalkulatorischer zins",
+        "kalkulatorischer zinssatz",
+        "stresszins",
+        "5% zins"
+      ]
+    },
+    "mortgage_types_ch": {
+      "term": "Festhypothek und SARON-Hypothek",
+      "definition": "Eine Festhypothek fixiert den Zins für eine bestimmte Laufzeit, oft 5 bis 10 Jahre. Eine SARON-Hypothek folgt dem Schweizer Referenzzinssatz und ändert sich alle paar Monate. Sie ist günstiger, wenn die Zinsen tief sind, aber weniger gut planbar.",
+      "aliases": [
+        "saron",
+        "festhypothek",
+        "saron hypothek",
+        "variable hypothek"
+      ]
+    },
+    "property_appreciation": {
+      "term": "Wertsteigerung der Immobilie",
+      "definition": "Wie stark der Wert eines Hauses oder einer Wohnung jedes Jahr steigt. Das ist je nach Gegend und Zeitraum sehr unterschiedlich, und Werte können auch sinken. In «Optionen vergleichen» ist es Ihre eigene Annahme für die Zukunft, keine Prognose.",
+      "aliases": [
+        "wertsteigerung",
+        "immobilienpreise",
+        "wertzuwachs",
+        "preissteigerung"
+      ]
+    },
+    "investment_return": {
+      "term": "Anlagerendite",
+      "definition": "Wie stark Geld, das Sie anlegen, jedes Jahr wächst, zum Beispiel in einem breiten Aktienindexfonds. Langfristig lagen die Durchschnitte bei einigen Prozent pro Jahr nach Abzug der Teuerung, aber die Renditen schwanken von Jahr zu Jahr und sind nicht garantiert.",
+      "aliases": [
+        "rendite",
+        "anlagerendite",
+        "börsenrendite",
+        "etf rendite"
+      ]
+    },
+    "rent_inflation": {
+      "term": "Mietzinsanstieg",
+      "definition": "Wie stark Ihre Miete jedes Jahr steigt. Über viele Jahre summieren sich auch kleine jährliche Erhöhungen, was ein Grund ist, warum Kaufen langfristig besser abschneiden kann.",
+      "aliases": [
+        "mietzinsanstieg",
+        "mieterhöhung",
+        "mietzinserhöhung",
+        "steigende miete"
+      ]
+    },
+    "opportunity_cost": {
+      "term": "Opportunitätskosten",
+      "definition": "Was Sie aufgeben, wenn Sie sich für eine Option statt einer anderen entscheiden. Geld, das in den Eigenmitteln steckt, kann nicht gleichzeitig in Anlagen wachsen. Die Ansicht «Echte Kosten» in «Optionen vergleichen» rechnet dieses entgangene Wachstum dazu.",
+      "aliases": [
+        "opportunitätskosten",
+        "entgangener gewinn",
+        "echte kosten"
+      ]
+    },
+    "break_even": {
+      "term": "Break-even-Punkt",
+      "definition": "Das Jahr, in dem zwei Entscheidungen, zum Beispiel Mieten und Kaufen, Sie gleich gut dastehen lassen. Davor liegt die eine vorne, danach die andere.",
+      "aliases": [
+        "break-even",
+        "break even",
+        "gewinnschwelle",
+        "ausgleichspunkt"
+      ]
+    },
+    "net_worth": {
+      "term": "Nettovermögen",
+      "definition": "Alles, was Sie besitzen, minus alles, was Sie schulden. In «Optionen vergleichen» sind das Ihre angelegten Ersparnisse plus Ihr Eigenkapital im Eigenheim nach Abzug der Verkaufskosten.",
+      "aliases": [
+        "nettovermögen",
+        "vermögen",
+        "reinvermögen"
+      ]
+    }
+  },
+  "fr": {
+    "eigenmietwert": {
+      "term": "Valeur locative",
+      "definition": "Un «loyer» fictif que le système fiscal suisse ajoute à votre revenu imposable parce que vous habitez votre propre logement. Vous payez l'impôt sur le revenu sur ce montant, mais vous pouvez déduire les intérêts hypothécaires et les frais d'entretien. Le peuple suisse a accepté sa suppression en 2025, mais le calendrier varie encore selon les cantons.",
+      "aliases": [
+        "valeur locative",
+        "loyer fictif",
+        "valeur locative propre",
+        "eigenmietwert"
+      ]
+    },
+    "tragbarkeit": {
+      "term": "Capacité financière",
+      "definition": "Le test d'accessibilité suisse qu'une banque applique avant d'accorder un prêt. Vos frais de logement annuels calculés, soit les intérêts à un taux théorique de 5%, l'amortissement et environ 1% d'entretien, doivent rester inférieurs à un tiers de votre revenu brut.",
+      "aliases": [
+        "capacité financière",
+        "taux d'effort",
+        "règle du tiers",
+        "tragbarkeit"
+      ]
+    },
+    "belehnungswert": {
+      "term": "Valeur de nantissement",
+      "definition": "La valeur sur laquelle la banque prête réellement, qui peut être inférieure au prix que vous payez. Les banques retiennent la plus basse entre le prix d'achat et leur propre estimation, et tout écart entre les deux doit être couvert avec vos propres liquidités.",
+      "aliases": [
+        "valeur de nantissement",
+        "valeur d'avance",
+        "valeur de prêt"
+      ]
+    },
+    "minergie": {
+      "term": "Minergie",
+      "definition": "Un standard suisse de durabilité pour les bâtiments à faible consommation d'énergie. Les logements certifiés Minergie coûtent plus cher à construire, mais consomment beaucoup moins d'énergie et conservent généralement mieux leur valeur à la revente. Certaines banques proposent des conditions hypothécaires plus avantageuses pour ces logements.",
+      "aliases": [
+        "minergie",
+        "label minergie",
+        "maison minergie"
+      ]
+    },
+    "gebaeudeprogramm": {
+      "term": "Programme Bâtiments",
+      "definition": "Un programme de subventions commun à la Confédération et aux cantons, qui contribue aux rénovations énergétiques comme l'isolation, les pompes à chaleur et le solaire. Les montants et les règles varient selon le canton, et vous devez généralement déposer la demande avant de commencer les travaux.",
+      "aliases": [
+        "programme bâtiments",
+        "subventions",
+        "aides à la rénovation",
+        "gebäudeprogramm"
+      ]
+    },
+    "pillar2": {
+      "term": "2e pilier (LPP)",
+      "definition": "Votre caisse de pension. Vous pouvez en retirer ou en mettre en gage une partie pour acheter un logement, mais elle compte comme fonds propres «mous»: au moins 10% du prix doivent quand même provenir d'une véritable épargne en liquide.",
+      "aliases": [
+        "2e pilier",
+        "deuxième pilier",
+        "caisse de pension",
+        "lpp"
+      ]
+    },
+    "amortisation": {
+      "term": "Amortissement",
+      "definition": "Le remboursement progressif de votre hypothèque. Les règles suisses exigent que la part dépassant environ 67% de la valeur du bien (l'«hypothèque de second rang») soit remboursée en 15 ans, ou au plus tard à votre départ à la retraite.",
+      "aliases": [
+        "amortissement",
+        "amortir",
+        "hypothèque de second rang",
+        "remboursement"
+      ]
+    },
+    "niederstwertprinzip": {
+      "term": "Principe de la valeur la plus basse",
+      "definition": "Le «principe de la valeur la plus basse»: une banque prête sur la base de la plus basse entre le prix d'achat et sa propre estimation. Si vous payez plus que la valeur estimée par la banque, vous devez financer la différence vous-même avec vos liquidités.",
+      "aliases": [
+        "principe de la valeur la plus basse",
+        "valeur la plus basse",
+        "niederstwertprinzip"
+      ]
+    },
+    "geak": {
+      "term": "CECB",
+      "definition": "Le Certificat énergétique cantonal des bâtiments évalue la performance énergétique d'un bâtiment de A (meilleure) à G (moins bonne). La classe permet de prévoir directement vos frais de chauffage et indique si une rénovation énergétique en vaut la peine.",
+      "aliases": [
+        "cecb",
+        "certificat énergétique",
+        "classe énergétique",
+        "geak"
+      ]
+    },
+    "solidarschuldnerschaft": {
+      "term": "Responsabilité solidaire",
+      "definition": "La responsabilité solidaire. Lorsque deux personnes contractent une hypothèque ensemble, chacune est responsable de la totalité de la dette, et pas seulement de sa moitié. Si l'une ne peut pas payer, la banque peut exiger le montant total de l'autre.",
+      "aliases": [
+        "responsabilité solidaire",
+        "débiteurs solidaires",
+        "solidarité",
+        "dette commune"
+      ]
+    },
+    "liquid_cash": {
+      "term": "Liquidités",
+      "definition": "L'argent que vous pouvez utiliser immédiatement: comptes courants et comptes d'épargne, ainsi que les placements que vous pouvez vendre rapidement sans pénalité. Les comptes de prévoyance ne comptent généralement pas, et il est sage de garder une réserve d'urgence en plus de ce que vous prévoyez de dépenser pour l'achat.",
+      "aliases": [
+        "liquidités",
+        "épargne",
+        "argent disponible",
+        "cash"
+      ]
+    },
+    "down_payment": {
+      "term": "Fonds propres (apport)",
+      "definition": "La part du prix que vous payez vous-même, l'hypothèque couvre le reste. Un apport plus important signifie un prêt plus petit et des coûts mensuels plus bas. Aux États-Unis, les primo-accédants peuvent apporter seulement 3%, en Suisse le minimum est de 20%.",
+      "aliases": [
+        "fonds propres",
+        "apport",
+        "apport personnel",
+        "acompte"
+      ]
+    },
+    "home_equity": {
+      "term": "Valeur nette du logement",
+      "definition": "La part de votre logement qui vous appartient réellement: sa valeur moins ce que vous devez encore sur l'hypothèque. Elle augmente à mesure que vous remboursez le prêt et si la valeur du logement augmente.",
+      "aliases": [
+        "valeur nette",
+        "fonds propres dans le logement",
+        "part détenue",
+        "equity"
+      ]
+    },
+    "heat_pump": {
+      "term": "Pompe à chaleur",
+      "definition": "Un système électrique qui déplace la chaleur au lieu de la produire, ce qui lui permet de chauffer en hiver et de rafraîchir en été. Il consomme beaucoup moins d'énergie qu'un chauffage électrique. Savoir s'il revient moins cher qu'une chaudière à gaz dépend des prix locaux de l'électricité et du gaz.",
+      "aliases": [
+        "pompe à chaleur",
+        "pompes à chaleur",
+        "pac"
+      ]
+    },
+    "hard_equity": {
+      "term": "Fonds propres durs",
+      "definition": "La part de vos fonds propres qui doit provenir de vos propres liquidités ou de votre pilier 3a, et non de votre caisse de pension. Les banques suisses exigent au moins 10% du prix en fonds propres durs.",
+      "aliases": [
+        "fonds propres durs",
+        "fonds propres en liquide",
+        "vraie épargne",
+        "harte eigenmittel"
+      ]
+    },
+    "pillar3a": {
+      "term": "Pilier 3a",
+      "definition": "Un compte de prévoyance privée fiscalement avantageux. Vous pouvez déduire vos versements annuels (jusqu'à CHF 7'258 en 2026 pour les salariés affiliés à une caisse de pension) de votre revenu imposable, et vous pouvez l'utiliser pour acheter votre propre logement.",
+      "aliases": [
+        "pilier 3a",
+        "3a",
+        "troisième pilier",
+        "3e pilier"
+      ]
+    },
+    "notional_rate": {
+      "term": "Taux d'intérêt théorique",
+      "definition": "Le taux d'intérêt volontairement élevé (5%) que les banques suisses utilisent pour vérifier si vous pourriez encore vous permettre le logement si les taux augmentaient. Ce n'est pas le taux que vous paieriez réellement.",
+      "aliases": [
+        "taux théorique",
+        "taux calculatoire",
+        "taux imputé",
+        "taux de 5%"
+      ]
+    },
+    "mortgage_types_ch": {
+      "term": "Hypothèques à taux fixe et SARON",
+      "definition": "Une hypothèque à taux fixe bloque le taux pour une durée déterminée, souvent 5 à 10 ans. Une hypothèque SARON suit le taux de référence suisse et change tous les quelques mois. Elle est donc moins chère quand les taux sont bas, mais moins prévisible.",
+      "aliases": [
+        "saron",
+        "hypothèque à taux fixe",
+        "hypothèque saron",
+        "taux variable"
+      ]
+    },
+    "property_appreciation": {
+      "term": "Plus-value immobilière",
+      "definition": "De combien la valeur d'un logement augmente chaque année. Elle varie beaucoup selon la région et l'époque, et les valeurs peuvent aussi baisser. Dans Comparer vos options, c'est votre propre hypothèse pour l'avenir, pas une prévision.",
+      "aliases": [
+        "plus-value",
+        "hausse des prix immobiliers",
+        "valorisation",
+        "prix de l'immobilier"
+      ]
+    },
+    "investment_return": {
+      "term": "Rendement des placements",
+      "definition": "De combien l'argent que vous investissez progresse chaque année, par exemple dans un fonds indiciel d'actions largement diversifié. Sur le long terme, les moyennes ont été de quelques pour cent par an après inflation, mais les rendements fluctuent d'une année à l'autre et ne sont pas garantis.",
+      "aliases": [
+        "rendement",
+        "rendement des placements",
+        "rendement boursier",
+        "rendement etf"
+      ]
+    },
+    "rent_inflation": {
+      "term": "Hausse des loyers",
+      "definition": "De combien votre loyer augmente chaque année. Sur de nombreuses années, même de petites hausses annuelles s'additionnent, ce qui est l'une des raisons pour lesquelles l'achat peut s'avérer plus avantageux à long terme.",
+      "aliases": [
+        "hausse des loyers",
+        "augmentation de loyer",
+        "inflation des loyers"
+      ]
+    },
+    "opportunity_cost": {
+      "term": "Coût d'opportunité",
+      "definition": "Ce à quoi vous renoncez en choisissant une option plutôt qu'une autre. L'argent immobilisé dans l'apport ne peut pas fructifier en même temps dans des placements. La vue «Coût réel» de Comparer vos options ajoute cette croissance manquée.",
+      "aliases": [
+        "coût d'opportunité",
+        "manque à gagner",
+        "coût réel"
+      ]
+    },
+    "break_even": {
+      "term": "Point d'équilibre",
+      "definition": "L'année où deux choix, comme louer et acheter, vous laissent dans une situation équivalente. Avant ce point, l'un est en avance, après, c'est l'autre.",
+      "aliases": [
+        "point d'équilibre",
+        "seuil de rentabilité",
+        "point mort",
+        "break even"
+      ]
+    },
+    "net_worth": {
+      "term": "Patrimoine net",
+      "definition": "Tout ce que vous possédez moins tout ce que vous devez. Dans Comparer vos options, il s'agit de votre épargne placée plus la valeur nette de votre logement après les frais de vente.",
+      "aliases": [
+        "patrimoine net",
+        "patrimoine",
+        "fortune nette",
+        "fortune"
+      ]
+    }
+  },
+  "it": {
+    "eigenmietwert": {
+      "term": "Valore locativo",
+      "definition": "Un «affitto» fittizio che il sistema fiscale svizzero aggiunge al tuo reddito imponibile perché vivi in casa tua. Paghi l'imposta sul reddito su questo importo, ma puoi dedurre gli interessi ipotecari e le spese di manutenzione. Nel 2025 il popolo svizzero ha approvato la sua abolizione, ma i tempi variano ancora da cantone a cantone.",
+      "aliases": [
+        "valore locativo",
+        "affitto fittizio",
+        "valore locativo proprio",
+        "eigenmietwert"
+      ]
+    },
+    "tragbarkeit": {
+      "term": "Sostenibilità finanziaria",
+      "definition": "Il test di sostenibilità svizzero che una banca applica prima di concedere un prestito. I tuoi costi abitativi annui calcolati, cioè gli interessi a un tasso teorico del 5%, l'ammortamento e circa l'1% di manutenzione, devono restare sotto un terzo del tuo reddito lordo.",
+      "aliases": [
+        "sostenibilità",
+        "sostenibilità finanziaria",
+        "regola del terzo",
+        "tragbarkeit"
+      ]
+    },
+    "belehnungswert": {
+      "term": "Valore di anticipo",
+      "definition": "Il valore su cui la banca concede effettivamente il prestito, che può essere inferiore al prezzo che paghi. Le banche usano il più basso tra il prezzo d'acquisto e la propria stima, quindi un'eventuale differenza tra i due va coperta con i tuoi soldi.",
+      "aliases": [
+        "valore di anticipo",
+        "valore di prestito",
+        "valore di garanzia"
+      ]
+    },
+    "minergie": {
+      "term": "Minergie",
+      "definition": "Uno standard svizzero di sostenibilità per edifici a basso consumo energetico. Le case certificate Minergie costano di più da costruire, ma consumano molta meno energia e tendono a mantenere meglio il loro valore di rivendita. Alcune banche offrono condizioni ipotecarie più vantaggiose per queste case.",
+      "aliases": [
+        "minergie",
+        "standard minergie",
+        "casa minergie"
+      ]
+    },
+    "gebaeudeprogramm": {
+      "term": "Programma Edifici",
+      "definition": "Un programma di sussidi comune di Confederazione e cantoni che contribuisce ai risanamenti energetici come l'isolamento, le pompe di calore e il solare. Gli importi e le regole variano da cantone a cantone, e di solito devi presentare la domanda prima di iniziare i lavori.",
+      "aliases": [
+        "programma edifici",
+        "sussidi",
+        "incentivi",
+        "contributi per il risanamento"
+      ]
+    },
+    "pillar2": {
+      "term": "2° pilastro (LPP)",
+      "definition": "La tua cassa pensione. Puoi prelevarne o costituirne in pegno una parte per acquistare una casa, ma conta come fondi propri «morbidi»: almeno il 10% del prezzo deve comunque provenire da veri risparmi in contanti.",
+      "aliases": [
+        "2° pilastro",
+        "secondo pilastro",
+        "cassa pensione",
+        "lpp"
+      ]
+    },
+    "amortisation": {
+      "term": "Ammortamento",
+      "definition": "Il rimborso graduale della tua ipoteca. Le regole svizzere richiedono che la parte oltre circa il 67% del valore dell'immobile (la «seconda ipoteca») sia rimborsata entro 15 anni, oppure entro il tuo pensionamento.",
+      "aliases": [
+        "ammortamento",
+        "ammortizzare",
+        "seconda ipoteca",
+        "rimborso"
+      ]
+    },
+    "niederstwertprinzip": {
+      "term": "Principio del valore più basso",
+      "definition": "Il «principio del valore più basso»: la banca concede il prestito sul più basso tra il prezzo d'acquisto e la propria stima. Se paghi più del valore stimato dalla banca, devi finanziare tu la differenza con i tuoi soldi.",
+      "aliases": [
+        "principio del valore più basso",
+        "valore più basso",
+        "niederstwertprinzip"
+      ]
+    },
+    "geak": {
+      "term": "CECE",
+      "definition": "Il Certificato energetico cantonale degli edifici valuta l'efficienza energetica di un edificio da A (la migliore) a G (la peggiore). La classe indica direttamente quanto spenderai di riscaldamento e se un risanamento energetico conviene.",
+      "aliases": [
+        "cece",
+        "certificato energetico",
+        "classe energetica",
+        "geak"
+      ]
+    },
+    "solidarschuldnerschaft": {
+      "term": "Responsabilità solidale",
+      "definition": "La responsabilità solidale. Quando due persone stipulano insieme un'ipoteca, ciascuna risponde dell'intero debito, non solo della sua metà. Se una non può pagare, la banca può chiedere l'intero importo all'altra.",
+      "aliases": [
+        "responsabilità solidale",
+        "debitori solidali",
+        "solidarietà",
+        "debito comune"
+      ]
+    },
+    "liquid_cash": {
+      "term": "Liquidità",
+      "definition": "Il denaro che puoi usare subito: conti correnti e di risparmio, e investimenti che puoi vendere rapidamente senza penali. Di solito i conti di previdenza non contano, ed è saggio tenere una riserva per le emergenze oltre a quanto prevedi di spendere per l'acquisto.",
+      "aliases": [
+        "liquidità",
+        "risparmi",
+        "contanti",
+        "soldi disponibili"
+      ]
+    },
+    "down_payment": {
+      "term": "Fondi propri (acconto)",
+      "definition": "La parte del prezzo che paghi tu, il resto lo copre l'ipoteca. Più fondi propri significano un prestito più piccolo e costi mensili più bassi. Negli Stati Uniti chi compra per la prima volta può versare anche solo il 3%, in Svizzera il minimo è il 20%.",
+      "aliases": [
+        "fondi propri",
+        "acconto",
+        "capitale proprio",
+        "anticipo"
+      ]
+    },
+    "home_equity": {
+      "term": "Valore netto della casa",
+      "definition": "La parte della tua casa che ti appartiene davvero: il suo valore meno quanto devi ancora sull'ipoteca. Cresce man mano che rimborsi il prestito e se il valore della casa aumenta.",
+      "aliases": [
+        "valore netto",
+        "capitale nella casa",
+        "quota di proprietà",
+        "equity"
+      ]
+    },
+    "heat_pump": {
+      "term": "Pompa di calore",
+      "definition": "Un sistema elettrico che sposta il calore invece di produrlo, così riscalda d'inverno e raffresca d'estate. Consuma molta meno energia del riscaldamento elettrico. Se costa meno di una caldaia a gas dipende dai prezzi locali di elettricità e gas.",
+      "aliases": [
+        "pompa di calore",
+        "pompe di calore",
+        "termopompa"
+      ]
+    },
+    "hard_equity": {
+      "term": "Fondi propri «duri»",
+      "definition": "La parte dei tuoi fondi propri che deve provenire dai tuoi soldi o dal pilastro 3a, non dalla tua cassa pensione. Le banche svizzere vogliono almeno il 10% del prezzo come fondi propri duri.",
+      "aliases": [
+        "fondi propri duri",
+        "capitale proprio duro",
+        "risparmi veri",
+        "harte eigenmittel"
+      ]
+    },
+    "pillar3a": {
+      "term": "Pilastro 3a",
+      "definition": "Un conto di previdenza privata con vantaggi fiscali. Puoi dedurre i versamenti annuali (fino a CHF 7'258 nel 2026 per i dipendenti affiliati a una cassa pensione) dal reddito imponibile, e puoi usarlo per acquistare la tua casa.",
+      "aliases": [
+        "pilastro 3a",
+        "3a",
+        "terzo pilastro",
+        "3° pilastro"
+      ]
+    },
+    "notional_rate": {
+      "term": "Tasso d'interesse teorico",
+      "definition": "Il tasso d'interesse volutamente alto (5%) che le banche svizzere usano per verificare se potresti ancora permetterti la casa se i tassi salissero. Non è il tasso che pagheresti davvero.",
+      "aliases": [
+        "tasso teorico",
+        "tasso calcolatorio",
+        "tasso imputato",
+        "tasso del 5%"
+      ]
+    },
+    "mortgage_types_ch": {
+      "term": "Ipoteche a tasso fisso e SARON",
+      "definition": "Un'ipoteca a tasso fisso blocca il tasso per una durata stabilita, spesso da 5 a 10 anni. Un'ipoteca SARON segue il tasso di riferimento svizzero e cambia ogni pochi mesi, quindi è più conveniente quando i tassi sono bassi, ma meno prevedibile.",
+      "aliases": [
+        "saron",
+        "ipoteca a tasso fisso",
+        "ipoteca saron",
+        "tasso variabile"
+      ]
+    },
+    "property_appreciation": {
+      "term": "Aumento di valore dell'immobile",
+      "definition": "Di quanto aumenta ogni anno il valore di una casa. Varia molto a seconda della zona e del periodo, e i valori possono anche scendere. In Confronta le tue opzioni è una tua ipotesi per il futuro, non una previsione.",
+      "aliases": [
+        "aumento di valore",
+        "rivalutazione",
+        "prezzi immobiliari",
+        "plusvalore"
+      ]
+    },
+    "investment_return": {
+      "term": "Rendimento degli investimenti",
+      "definition": "Di quanto cresce ogni anno il denaro che investi, per esempio in un fondo indicizzato azionario ampiamente diversificato. Sul lungo periodo le medie sono state di qualche punto percentuale all'anno al netto dell'inflazione, ma i rendimenti oscillano da un anno all'altro e non sono garantiti.",
+      "aliases": [
+        "rendimento",
+        "rendimento degli investimenti",
+        "rendimento di borsa",
+        "rendimento etf"
+      ]
+    },
+    "rent_inflation": {
+      "term": "Aumento degli affitti",
+      "definition": "Di quanto sale il tuo affitto ogni anno. Nel corso di molti anni anche piccoli aumenti annuali si sommano, ed è uno dei motivi per cui comprare può risultare più vantaggioso a lungo termine.",
+      "aliases": [
+        "aumento degli affitti",
+        "aumento della pigione",
+        "rincaro dell'affitto",
+        "inflazione degli affitti"
+      ]
+    },
+    "opportunity_cost": {
+      "term": "Costo opportunità",
+      "definition": "Ciò a cui rinunci scegliendo un'opzione invece di un'altra. Il denaro bloccato nell'acconto non può crescere allo stesso tempo negli investimenti. La vista «Costo reale» di Confronta le tue opzioni aggiunge questa crescita mancata.",
+      "aliases": [
+        "costo opportunità",
+        "costo-opportunità",
+        "mancato guadagno",
+        "costo reale"
+      ]
+    },
+    "break_even": {
+      "term": "Punto di pareggio",
+      "definition": "L'anno in cui due scelte, come affittare e comprare, ti lasciano ugualmente bene. Prima di quel punto è in vantaggio l'una, dopo l'altra.",
+      "aliases": [
+        "punto di pareggio",
+        "pareggio",
+        "break even",
+        "punto di equilibrio"
+      ]
+    },
+    "net_worth": {
+      "term": "Patrimonio netto",
+      "definition": "Tutto ciò che possiedi meno tutto ciò che devi. In Confronta le tue opzioni sono i tuoi risparmi investiti più il valore netto della tua casa dopo i costi di vendita.",
+      "aliases": [
+        "patrimonio netto",
+        "patrimonio",
+        "sostanza netta",
+        "ricchezza"
+      ]
+    }
+  }
+}

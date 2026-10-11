@@ -8,7 +8,7 @@ the git branches, not the specs folder, not someone's memory.
 it merges, flip it to `✅ Shipped`. When you shelve an idea, mark it `💡 Idea` or
 delete the row. One row per feature. Link each one to its spec in `docs/specs/`.
 
-_Last synced: 2026-07-31_
+_Last synced: 2026-10-11 (US market wrap-up)_
 
 ## Status legend
 
@@ -43,7 +43,7 @@ _Last synced: 2026-07-31_
 | Analytics + Speed Insights | ✅ Shipped | `lib/track.js` | — |
 | Digital Naturalism design system | ✅ Shipped | `src/index.css` (`@theme`), `components/ui.jsx` | — |
 | Shareable / restorable URL state | ✅ Shipped | `lib/share.js` | — |
-| i18n (en / de / fr / it) | ✅ Shipped | `i18n/translations.js` | — |
+| i18n (en / de / fr / it) | ✅ Shipped | `i18n/translations.js` | US is English-only by design (`src/markets/us/copy.js`) |
 
 ## In progress
 
@@ -52,6 +52,9 @@ _Last synced: 2026-07-31_
 | QA skill suite | 🔨 Building | `chore/qa-skills` | Five `qa-*` skills + shared PROJECT_CONTEXT |
 | Repo organization + AI docs | 🔨 Building | `chore/repo-organization` | This change: /docs, plinthly.md, FEATURES.md |
 | IA audit | 🔨 Building | `docs/ia-audit` | Information-architecture review |
+| US market (country picker, all 5 phases, Compare with advisor scenarios, US advisor, sustainable-home ideas) | 🔨 Building · PR open | `feature/us-market` | [spec](docs/specs/US_MARKET_SPEC.md) — `src/markets/` (registry, detection), `src/markets/us/` (engines + sourced data for 9 states), `components/us/`; flip to ✅ on merge |
+| Learn layer v1 (glossary, explain_term, "How is this calculated?", "New to mortgages?") | 🔨 Building · PR open | `feature/us-market` | [spec](docs/specs/US_MARKET_SPEC.md) step 15 — `data/glossary.json`, `lib/learn.js`; Swiss content in en/de/fr/it (`data/*.i18n.json`), US in English |
+| Advisor agent (tool-use) | 🔨 Building | `feature/advisor-agent` | [spec](docs/specs/ADVISOR_AGENT_SPEC.md) — v1 prototype committed as WIP |
 
 ## Ideas / backlog
 
@@ -61,4 +64,4 @@ and `docs/specs/F1-F4_FEATURE_SPEC.md` for candidate features from research.
 
 | Feature | Status | Notes |
 |---|---|---|
-| Advisor agent (tool-use: recompute, don't just narrate) | 🔨 Building | [spec](docs/specs/ADVISOR_AGENT_SPEC.md) — v1 prototype working in the tree (uncommitted, no branch yet): `recompute_affordability` on Phase 1, `run_compare_scenario` on the Compare dashboard |
+| _(none tracked yet)_ | 💡 Idea | — |

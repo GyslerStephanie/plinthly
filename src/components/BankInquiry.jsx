@@ -1,4 +1,4 @@
-import { chf } from '../lib/format'
+import { money } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { useAppState } from '../state/AppStateContext'
 import banksData from '../data/banks.json'
@@ -79,12 +79,12 @@ export default function BankInquiry() {
 
   const income = toNum(values.grossIncome)
   const savings = toNum(values.savings)
-  const priceStr = chf(maxPrice)
+  const priceStr = money(maxPrice)
 
   const mailto = buildEmail({
     price: priceStr,
-    income: chf(income),
-    savings: chf(savings),
+    income: money(income),
+    savings: money(savings),
     canton: cantonName,
     viable,
   })
@@ -101,8 +101,8 @@ export default function BankInquiry() {
           {t('bank.summaryTitle')}
         </p>
         <Row label={t('bank.fPrice')} value={priceStr} strong />
-        <Row label={t('bank.fIncome')} value={chf(income)} />
-        <Row label={t('bank.fSavings')} value={chf(savings)} />
+        <Row label={t('bank.fIncome')} value={money(income)} />
+        <Row label={t('bank.fSavings')} value={money(savings)} />
         <Row label={t('bank.fCanton')} value={cantonName} />
         <Row label={t('bank.fStatus')} value={viable ? t('summary.ready') : t('summary.notYet')} />
       </div>

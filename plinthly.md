@@ -23,9 +23,12 @@ them through five phases: **can I buy → dream → explore → choose → plan.
   client-side against static JSON.
 - **Two Vercel serverless functions** in `api/` — `advisor.js` (AI narration)
   and `feedback.js` (writes to a Google Sheet). These are the *only* server code.
-- State lives in React `useState` + the URL hash + two `localStorage` keys
-  (`plinthly.onboarded`, `plinthly.lang`). Any view is a shareable, restorable
-  link.
+- State lives in React `useState` + the URL hash + three `localStorage` keys
+  (`plinthly.onboarded`, `plinthly.lang`, `plinthly.market`). Any view is a
+  shareable, restorable link.
+- **Markets.** The app is organised by country (`src/markets/`): `ch` today,
+  `us` in progress ([spec](docs/specs/US_MARKET_SPEC.md)). The market rides in
+  the hash as `mk`; a link without `mk` is a pre-market link and opens as `ch`.
 
 ## Where things live (the map)
 
@@ -36,6 +39,8 @@ src/
   lib/               PURE LOGIC. No React. All the math and rules live here.
                      affordability.js  mortgagePayoff.js  compare/model.js  …
   components/        UI ONLY. React components that render what lib/ computes.
+  markets/           One folder per country (currency, locale, units, rules).
+                     index.js = registry; MarketContext.jsx = useMarket().
   data/*.json        Static data: swiss-cantonal-data.json, banks, glossary.
   i18n/              translations.js (en/de/fr/it) + I18nContext.
   state/             AppStateContext — derived, read-only view of app state.
@@ -95,7 +100,7 @@ npm run test:all       # run ALL conformance tests — do this before every comm
 ```
 
 Narrower test commands: `npm test` (affordability), `npm run test:compare`,
-`npm run test:data`.
+`npm run test:data`, `npm run test:agent`, `npm run test:market`.
 
 ## Adding a feature (the short version)
 

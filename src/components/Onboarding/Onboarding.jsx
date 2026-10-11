@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import { useI18n } from '../../i18n/I18nContext'
 import { cantonOptions } from '../../lib/cantons'
 import { useDialogFocus } from '../../lib/useDialogFocus'
+import { stateOptions } from '../../markets/us/affordability'
+import { ut } from '../../markets/us/copy'
 
 /**
  * Onboarding — the "where are you?" front door.
@@ -35,6 +37,21 @@ const FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking']
 const WHO_OPTS = ['national', 'expat']
 const CITY_OPTS = ['area', 'region', 'notyet']
 
+// US variant: Q4 asks about first-time buying (it decides the 3% programs)
+// instead of residency, and Q5 picks a state instead of a canton.
+const US_FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking']
+const US_WHO_OPTS = ['first', 'owned']
+const US_CITY_OPTS = ['state', 'notyet']
+
+function buildWhyUs(a) {
+  const out = []
+  if (a.focus === 'dream') out.push(ut('onboarding.why.dream'))
+  if (a.who === 'first') out.push(ut('onboarding.why.firstTime'))
+  if (a.dur === 'few') out.push(ut('onboarding.why.durFew'))
+  if (a.focus === 'afford' || a.focus === 'learn') out.push(ut('onboarding.why.afford'))
+  return out.slice(0, 3)
+}
+
 // dur → Compare default horizon (spec §7).
 const DUR_HORIZON = { few: 5, '5_10': 10, long: 20, home: 25 }
 
@@ -56,15 +73,15 @@ function buildWhy(a, t) {
 }
 
 /** Mirror the answers back as a sentence (spec §6). Optional parts are skipped. */
-function buildReflect(a, t) {
+function buildReflect(a, t, isUs = false) {
   const desc = [
-    a.who && t(`onboarding.reflect.who.${a.who}`),
+    !isUs && a.who && t(`onboarding.reflect.who.${a.who}`),
     a.age && t(`onboarding.reflect.age.${a.age}`),
     a.dur && t(`onboarding.reflect.dur.${a.dur}`),
   ].filter(Boolean)
   const tail = [
     t(`onboarding.reflect.focus.${a.focus}`),
-    a.city && t(`onboarding.reflect.city.${a.city}`),
+    a.city && t(`onboarding.reflect.city.${a.city === 'state' ? 'region' : a.city}`),
   ]
     .filter(Boolean)
     .join(', ')
@@ -109,7 +126,8 @@ function Question({ n, legend, options, name, value, onChange, tOpt }) {
   )
 }
 
-export default function Onboarding({ onComplete, onSkip }) {
+export default function Onboarding({ onComplete, onSkip, marketId = 'ch' }) {
+  const isUs = marketId === 'us'
   // No Escape-to-close: the visitor may have answered several questions by now,
   // and a stray Escape silently discarding them is worse than requiring the
   // explicit "skip" affordance, which is always visible in the header.
@@ -122,6 +140,7 @@ export default function Onboarding({ onComplete, onSkip }) {
     who: '',
     city: '',
     canton: '',
+    region: '',
   })
   const [note, setNote] = useState('')
 
@@ -134,10 +153,11 @@ export default function Onboarding({ onComplete, onSkip }) {
     focus === 'looking' && (answers.city === 'area' || answers.city === 'region')
       ? 'mover'
       : meta?.personaKey
-  const why = useMemo(() => (focus ? buildWhy(answers, t) : []), [answers, focus, t])
-  const reflect = useMemo(() => (focus ? buildReflect(answers, t) : ''), [answers, focus, t])
+  const why = useMemo(() => (focus ? (isUs ? buildWhyUs(answers) : buildWhy(answers, t)) : []), [answers, focus, t, isUs])
+  const reflect = useMemo(() => (focus ? buildReflect(answers, t, isUs) : ''), [answers, focus, t, isUs])
 
   const hasCity = answers.city === 'area' || answers.city === 'region'
+  const hasState = isUs && answers.city === 'state'
   // Every question must be answered before routing (the canton sub-picker stays
   // optional — it only refines the city answer).
   const allAnswered = !!(answers.age && answers.dur && focus && answers.who && answers.city)
@@ -150,8 +170,10 @@ export default function Onboarding({ onComplete, onSkip }) {
       dest: meta.dest,
       seed: {
         horizon: answers.dur ? DUR_HORIZON[answers.dur] : undefined,
-        residentStatus: answers.who || undefined,
-        canton: answers.canton || undefined,
+        residentStatus: isUs ? undefined : answers.who || undefined,
+        canton: isUs ? undefined : answers.canton || undefined,
+        region: isUs ? answers.region || undefined : undefined,
+        firstTimeBuyer: isUs ? answers.who === 'first' : undefined,
       },
       note: note.trim() || undefined,
     })
@@ -207,7 +229,7 @@ export default function Onboarding({ onComplete, onSkip }) {
           <Question
             n="2"
             name="ob-dur"
-            legend={t('onboarding.q2.label')}
+            legend={isUs ? ut('onboarding.q2') : t('onboarding.q2.label')}
             options={DUR_OPTS}
             value={answers.dur}
             onChange={set('dur')}
@@ -217,33 +239,55 @@ export default function Onboarding({ onComplete, onSkip }) {
             n="3"
             name="ob-focus"
             legend={t('onboarding.q3.label')}
-            options={FOCUS_OPTS}
+            options={isUs ? US_FOCUS_OPTS : FOCUS_OPTS}
             value={answers.focus}
             onChange={set('focus')}
-            tOpt={(o) => t(`onboarding.q3.opt.${o}`)}
+            tOpt={(o) => (isUs ? ut(`onboarding.focusOpt.${o}`) : t(`onboarding.q3.opt.${o}`))}
           />
           <Question
             n="4"
             name="ob-who"
-            legend={t('onboarding.q4.label')}
-            options={WHO_OPTS}
+            legend={isUs ? ut('onboarding.q4') : t('onboarding.q4.label')}
+            options={isUs ? US_WHO_OPTS : WHO_OPTS}
             value={answers.who}
             onChange={set('who')}
-            tOpt={(o) => t(`onboarding.q4.opt.${o}`)}
+            tOpt={(o) => (isUs ? ut(`onboarding.q4opt.${o}`) : t(`onboarding.q4.opt.${o}`))}
           />
           <div>
             <Question
               n="5"
               name="ob-city"
-              legend={t('onboarding.q5.label')}
-              options={CITY_OPTS}
+              legend={isUs ? ut('onboarding.q5') : t('onboarding.q5.label')}
+              options={isUs ? US_CITY_OPTS : CITY_OPTS}
               value={answers.city}
               onChange={(v) =>
-                setAnswers((p) => ({ ...p, city: v, canton: v === 'notyet' ? '' : p.canton }))
+                setAnswers((p) => ({
+                  ...p,
+                  city: v,
+                  canton: v === 'notyet' ? '' : p.canton,
+                  region: v === 'notyet' ? '' : p.region,
+                }))
               }
-              tOpt={(o) => t(`onboarding.q5.opt.${o}`)}
+              tOpt={(o) => (isUs ? ut(`onboarding.q5opt.${o}`) : t(`onboarding.q5.opt.${o}`))}
             />
-            {hasCity && (
+            {hasState && (
+              <label className="mt-2 block px-1 text-xs text-muted">
+                {ut('onboarding.stateLabel')}
+                <select
+                  value={answers.region}
+                  onChange={(e) => set('region')(e.target.value)}
+                  className="mt-1 block w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+                >
+                  <option value="">{ut('onboarding.statePlaceholder')}</option>
+                  {stateOptions.map((st) => (
+                    <option key={st.code} value={st.code}>
+                      {st.name} ({st.code})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            {!isUs && hasCity && (
               <label className="mt-2 block px-1 text-xs text-muted">
                 {t('onboarding.q5.cantonLabel')}
                 <select

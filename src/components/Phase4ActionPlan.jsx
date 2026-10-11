@@ -3,7 +3,7 @@ import { buildActionPlan } from '../lib/actionPlan'
 import { getCanton } from '../lib/cantons'
 import { impliedSize } from '../lib/exploration'
 import { computeLedger, selectedMeasures } from '../lib/retrofit'
-import { chf, int } from '../lib/format'
+import { money, int } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { track } from '../lib/track'
 import { Card, Pill } from './ui'
@@ -50,13 +50,13 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, 
       {/* Recap — self-contained for the printout */}
       <Card title={t('phase4.glance')} tone={phase1.viable ? 'teal' : 'amber'}>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1 sm:grid-cols-4">
-          <Stat label={t('phase4.maxPrice')} value={chf(phase1.maxPrice)} />
+          <Stat label={t('phase4.maxPrice')} value={money(phase1.maxPrice)} />
           <Stat
             label={t('phase4.status')}
             value={phase1.viable ? t('phase4.ready') : t('phase4.notYet')}
           />
           <Stat label={t('phase4.targetCanton')} value={canton?.name_en || explore.canton} />
-          <Stat label={t('phase4.budgetExplored')} value={chf(budget)} />
+          <Stat label={t('phase4.budgetExplored')} value={money(budget)} />
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-600">
           <Pill>{t(`phase2.${explore.propertyType}`)}</Pill>
@@ -73,8 +73,8 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, 
               {t('phase4.modelledValue', {
                 baseline: ledger.baselineClass,
                 cls: ledger.newClass,
-                net: chf(ledger.netCost),
-                monthly: chf(ledger.monthlySaving),
+                net: money(ledger.netCost),
+                monthly: money(ledger.monthlySaving),
               })}
             </span>
           </div>

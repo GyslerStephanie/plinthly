@@ -1,13 +1,36 @@
-# Plinthly — Swiss Sustainable Real Estate Explorer
+# Plinthly — Sustainable Real Estate Explorer (Switzerland + US)
 
 Status: active
 
-MVP of a guided platform that gives people in Switzerland an honest picture of
-what they can buy, build, or renovate — sustainably and affordably — before
-they engage with brokers, banks, or builders.
+MVP of a guided platform that gives people an honest picture of what they can
+buy, build, or renovate — sustainably and affordably — before they engage with
+brokers, banks, or builders. Two markets: **Switzerland** (the original, in
+en/de/fr/it) and the **United States** (9 states, English).
 
-**Stack:** React 19 + Vite 6 + Tailwind CSS 4. No backend — all logic runs
-client-side against static JSON (`src/data/swiss-cantonal-data.json`).
+**Stack:** React 19 + Vite 6 + Tailwind CSS 4. No backend for app logic — all
+calculations run client-side against static, sourced JSON
+(`src/data/swiss-cantonal-data.json`, `src/markets/us/*.json`). Two Vercel
+functions in `api/` (AI advisor, feedback).
+
+## Markets
+
+The app is organised by country (`src/markets/`). The visitor's country is
+guessed from the browser and confirmed on the first screen; it rides in share
+links as `mk`, encoded first (older links without it open as Switzerland, unless
+they carry a US state code or US-only inputs) and can be changed from the
+header's country + language menu. Switching clears the inputs, because the
+rules differ.
+
+- **Switzerland** — Swiss mortgage rules (20% down / 10% hard equity, 5%
+  notional rate, ⅓ of income), 16 cantons, Minergie / GEAK / Gebäudeprogramm.
+- **United States** — conventional-loan rules (cash, 28% housing, 36% total
+  debt; 45–50% lender stretch), PMI, conforming limits, dated Freddie Mac rate;
+  HERS / ENERGY STAR, state rebate status, build costs, first-time-buyer
+  programs; a US rent-vs-buy model the advisor can run scenarios on; water,
+  yard, envelope and systems ideas with state rainwater rules and rebates. See [the spec](docs/specs/US_MARKET_SPEC.md).
+
+Both markets share the AI advisor and the learn layer (glossary, explanations,
+"How is this calculated?" cards).
 
 ## Project docs (start here)
 
@@ -22,6 +45,7 @@ client-side against static JSON (`src/data/swiss-cantonal-data.json`).
 npm install
 npm run dev      # http://localhost:5173 (or pass --port)
 npm run build    # production build to dist/
+npm run test:all # every conformance suite (finance engines, data, advisor, markets, US, learn)
 ```
 
 ## What's built — the full primary track (Phases 1–4)

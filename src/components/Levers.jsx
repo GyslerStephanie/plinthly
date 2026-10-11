@@ -1,4 +1,4 @@
-import { chf } from '../lib/format'
+import { money } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 
 /**
@@ -20,9 +20,9 @@ export default function Levers({ lever3a, hardEquityGap = 0, existingDebtMonthly
       key: '3a',
       title: t('levers.l3aTitle'),
       body: t('levers.l3aBody', {
-        gap: chf(lever3a.gap),
-        max: chf(lever3a.max),
-        saving: chf(Math.round(lever3a.taxSaving)),
+        gap: money(lever3a.gap),
+        max: money(lever3a.max),
+        saving: money(Math.round(lever3a.taxSaving)),
       }),
     })
   }
@@ -30,14 +30,14 @@ export default function Levers({ lever3a, hardEquityGap = 0, existingDebtMonthly
     items.push({
       key: 'hard',
       title: t('levers.hardTitle'),
-      body: t('levers.hardBody', { gap: chf(Math.round(hardEquityGap / 1000) * 1000) }),
+      body: t('levers.hardBody', { gap: money(Math.round(hardEquityGap / 1000) * 1000) }),
     })
   }
   if (existingDebtMonthly > 0 && debtBlocking) {
     items.push({
       key: 'debt',
       title: t('levers.debtTitle'),
-      body: t('levers.debtBody', { amount: chf(existingDebtMonthly) }),
+      body: t('levers.debtBody', { amount: money(existingDebtMonthly) }),
     })
   }
 

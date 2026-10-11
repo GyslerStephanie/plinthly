@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { chf, int, pct, groupDigits } from '../lib/format'
+import { money, int, pct, groupDigits, currencySymbol } from '../lib/format'
 import {
   checkSpecificProperty,
   monthlyCostsAtRate,
@@ -24,7 +24,7 @@ function Bar({ segments }) {
   return (
     <div className="flex h-3 w-full overflow-hidden rounded-full bg-slate-100">
       {segments.map((s, i) => (
-        <div key={i} className={s.color} style={{ width: `${(s.value / total) * 100}%` }} title={`${s.label}: ${chf(s.value)}`} />
+        <div key={i} className={s.color} style={{ width: `${(s.value / total) * 100}%` }} title={`${s.label}: ${money(s.value)}`} />
       ))}
     </div>
   )
@@ -105,10 +105,10 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
     : eqShort && !affShort ? 'blockerEquity'
     : 'blockerBoth'
   const closeGapLevers = check && !check.qualifies ? [
-    affShort && dreamIncomeGap > 0 && { key: 'check.leverIncome', vars: { amount: chf(roundK(dreamIncomeGap)) } },
-    eqShort && check.downShortfall > 0 && { key: 'check.leverEquity', vars: { amount: chf(roundK(check.downShortfall)) } },
-    { key: 'check.leverPrice', vars: { amount: chf(result.maxPrice) } },
-    affShort && check.existingObligations > 0 && { key: 'check.leverObligations', vars: { amount: chf(check.existingObligations) } },
+    affShort && dreamIncomeGap > 0 && { key: 'check.leverIncome', vars: { amount: money(roundK(dreamIncomeGap)) } },
+    eqShort && check.downShortfall > 0 && { key: 'check.leverEquity', vars: { amount: money(roundK(check.downShortfall)) } },
+    { key: 'check.leverPrice', vars: { amount: money(result.maxPrice) } },
+    affShort && check.existingObligations > 0 && { key: 'check.leverObligations', vars: { amount: money(check.existingObligations) } },
   ].filter(Boolean) : []
 
   // Report the dream gap up to App so the AI advisor can ground answers on it.
@@ -148,7 +148,7 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
               <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
             <div>
-              <p className="text-base font-semibold text-amber-900">{t('check.outOfReach', { price: chf(check.purchasePrice) })}</p>
+              <p className="text-base font-semibold text-amber-900">{t('check.outOfReach', { price: money(check.purchasePrice) })}</p>
               <p className="mt-1 text-sm leading-relaxed text-amber-800">{t('check.outOfReachNote')}</p>
               <p className="mt-1 text-sm font-medium text-amber-900">{t(`check.${blockerKey}`)}</p>
 
@@ -182,7 +182,7 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
         <div>
           <label className="block text-sm font-medium text-slate-700">{t('check.priceLabel')}</label>
           <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-            <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+            <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
             <input
               type="text" inputMode="numeric"
               value={groupDigits(price)}
@@ -207,7 +207,7 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
           {showAssessed && (
             <div className="mt-2 space-y-1">
               <div className="flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-                <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+                <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
                 <input
                   type="text" inputMode="numeric"
                   value={groupDigits(assessed)}
@@ -250,7 +250,7 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
         <div>
           <label className="block text-sm font-medium text-slate-700">{t('check.obligationsLabel')}</label>
           <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-            <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+            <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
             <input
               type="text" inputMode="numeric"
               value={groupDigits(obligations)}
@@ -363,30 +363,30 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
             <div className="space-y-0.5">
               <Row
                 label={<>{t('check.downRegMin')}<TierBadge labelKey="check.tierLocked" /></>}
-                value={chf(check.regMin)}
+                value={money(check.regMin)}
               />
               {check.valuationGap > 0 && (
                 <Row
                   label={<>{t('check.downValGap')}<TierBadge labelKey="check.tierSituation" /></>}
-                  value={chf(check.valuationGap)}
+                  value={money(check.valuationGap)}
                 />
               )}
               {check.propTypeAdj > 0 && (
                 <Row
                   label={<>{t('check.downPropType', { type: propType })}<TierBadge labelKey="check.tierSituation" /></>}
-                  value={chf(check.propTypeAdj)}
+                  value={money(check.propTypeAdj)}
                 />
               )}
               {check.bankBuffer > 0 && (
                 <Row
                   label={<>{t('check.downBank')}<TierBadge labelKey="check.tierInput" /></>}
-                  value={chf(check.bankBuffer)}
+                  value={money(check.bankBuffer)}
                 />
               )}
               <div className="my-1 border-t border-slate-200" />
               <Row
                 label={t('check.downEffective', { pct: pct(check.effectiveDownPct) })}
-                value={chf(check.effectiveDown)}
+                value={money(check.effectiveDown)}
                 strong
               />
             </div>
@@ -394,31 +394,31 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
             {/* Funds vs requirement */}
             <div className="mt-3 space-y-0.5">
               <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">{t('check.fundsTitle')}</p>
-              <Row label={t('check.fundsSavings')} value={chf(result.inputs.savings)} />
+              <Row label={t('check.fundsSavings')} value={money(result.inputs.savings)} />
               <Row
                 label={<>
                   {t('check.fundsPillar2')}
                   {check.flags.pillar2Capped &&
                     <span className="ml-1 text-xs text-amber-700">
-                      {t('check.fundsPillar2Cap', { max: chf(check.maxPillar2) })}
+                      {t('check.fundsPillar2Cap', { max: money(check.maxPillar2) })}
                     </span>}
                 </>}
-                value={chf(check.pillar2Used)}
+                value={money(check.pillar2Used)}
               />
               <div className="my-1 border-t border-slate-200" />
-              <Row label={t('check.fundsTotal')} value={chf(check.totalAvailable)} strong />
+              <Row label={t('check.fundsTotal')} value={money(check.totalAvailable)} strong />
               {check.downShortfall > 0
-                ? <Row label={t('check.fundsShortfall')} value={`−${chf(check.downShortfall)}`} />
+                ? <Row label={t('check.fundsShortfall')} value={`−${money(check.downShortfall)}`} />
                 : <p className="py-1 text-sm text-teal-700">{t('check.fundsOk')}</p>
               }
             </div>
 
             {/* Liquid requirement callout */}
             <div className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-xs leading-relaxed text-slate-600">
-              {t('check.liquidReq', { amount: chf(check.minLiquid) })}
+              {t('check.liquidReq', { amount: money(check.minLiquid) })}
               {' '}
               {check.liquidShortfall > 0
-                ? <span className="font-medium text-red-700">{t('check.liquidShort', { short: chf(check.liquidShortfall), amount: chf(check.minLiquid) })}</span>
+                ? <span className="font-medium text-red-700">{t('check.liquidShort', { short: money(check.liquidShortfall), amount: money(check.minLiquid) })}</span>
                 : <span className="font-medium text-teal-700">{t('check.liquidOk')}</span>
               }
             </div>
@@ -430,22 +430,22 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
               {t('check.affordTitle')}
             </h4>
             <div className="space-y-0.5">
-              <Row label={t('check.affordMortgage')} value={chf(check.mortgage)} sub={t('result.ltv', { pct: pct(check.ltv) })} />
+              <Row label={t('check.affordMortgage')} value={money(check.mortgage)} sub={t('result.ltv', { pct: pct(check.ltv) })} />
               {check.secondMtg > 0 && (
-                <Row label={t('check.affordSecond')} value={chf(check.secondMtg)} />
+                <Row label={t('check.affordSecond')} value={money(check.secondMtg)} />
               )}
               <div className="my-1 border-t border-slate-100" />
-              <Row label={t('check.affordInterest')} value={chf(check.monthlyNotionalInterest)} sub="/mo" />
-              <Row label={t('check.affordAmort')} value={chf(check.monthlyAmort)} sub={t('check.affordAmortSub')} />
-              <Row label={t('check.affordMaint')} value={chf(check.monthlyMaintenance)} sub="/mo" />
+              <Row label={t('check.affordInterest')} value={money(check.monthlyNotionalInterest)} sub="/mo" />
+              <Row label={t('check.affordAmort')} value={money(check.monthlyAmort)} sub={t('check.affordAmortSub')} />
+              <Row label={t('check.affordMaint')} value={money(check.monthlyMaintenance)} sub="/mo" />
               <div className="my-1 border-t border-slate-100" />
-              <Row label={t('check.affordNotionalTotal')} value={chf(check.monthlyNotionalTotal)} strong />
+              <Row label={t('check.affordNotionalTotal')} value={money(check.monthlyNotionalTotal)} strong />
               <div className="my-2 border-t border-slate-200" />
-              <Row label={t('check.affordIncome')} value={chf(check.monthlyIncome)} />
+              <Row label={t('check.affordIncome')} value={money(check.monthlyIncome)} />
               {check.existingObligations > 0 && (
-                <Row label={t('check.affordObligations')} value={`−${chf(check.existingObligations)}`} />
+                <Row label={t('check.affordObligations')} value={`−${money(check.existingObligations)}`} />
               )}
-              <Row label={t('check.affordEffective')} value={chf(check.effectiveMonthlyIncome)} strong />
+              <Row label={t('check.affordEffective')} value={money(check.effectiveMonthlyIncome)} strong />
               <div className="my-1 border-t border-slate-100" />
               <Row
                 label={t('check.affordRatio')}
@@ -480,11 +480,11 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
               ]}
             />
             <div className="mt-2 space-y-0.5">
-              <Row label={t('result.monthInterest')} value={chf(monthly.interest)} sub={t('result.monthInterestSub', { pct: pct(rate, 1) })} />
-              <Row label={t('result.amort')}         value={chf(monthly.amortization)} />
-              <Row label={t('result.maintenance')}   value={chf(monthly.maintenance)} />
+              <Row label={t('result.monthInterest')} value={money(monthly.interest)} sub={t('result.monthInterestSub', { pct: pct(rate, 1) })} />
+              <Row label={t('result.amort')}         value={money(monthly.amortization)} />
+              <Row label={t('result.maintenance')}   value={money(monthly.maintenance)} />
               <div className="my-1 border-t border-slate-100" />
-              <Row label={t('result.monthTotal')} value={chf(monthly.total)} strong />
+              <Row label={t('result.monthTotal')} value={money(monthly.total)} strong />
             </div>
           </div>
 
@@ -523,7 +523,7 @@ function MiniField({ label, value, onChange, suffix }) {
     <label className="block text-xs text-muted">
       <span>{label}</span>
       <div className="mt-1 flex items-center rounded-lg border border-line bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-        <span className="select-none pl-2.5 pr-1 text-xs text-faint">CHF</span>
+        <span className="select-none pl-2.5 pr-1 text-xs text-faint">{currencySymbol()}</span>
         <input
           inputMode="numeric"
           value={groupDigits(String(value ?? ''))}
@@ -566,14 +566,14 @@ function SituationCard({ result, values, onValuesChange, check }) {
         )}
       </div>
       <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-        <p className="ds-figure text-3xl font-medium text-ink">{chf(result.maxPrice)}</p>
+        <p className="ds-figure text-3xl font-medium text-ink">{money(result.maxPrice)}</p>
         <Pill tone={result.viable ? 'positive' : 'warning'}>
           ● {result.viable ? t('dream.pillQualifies') : t('dream.pillNotYet')}
         </Pill>
       </div>
       {!editing && (
         <p className="mt-1 text-xs text-muted">
-          {t('dream.yourIncome')} · <span className="ds-figure">{chf(inp.grossIncome)}/yr</span>
+          {t('dream.yourIncome')} · <span className="ds-figure">{money(inp.grossIncome)}/yr</span>
         </p>
       )}
 
@@ -602,11 +602,11 @@ function SituationCard({ result, values, onValuesChange, check }) {
             <h4 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
               {t('dream.contextTitle')}
             </h4>
-            <Row label={t('dream.rowCash')} value={chf(inp.savings)} />
-            <Row label={t('form.pillar3aLabel')} value={chf(inp.pillar3a)} />
-            <Row label={t('dream.rowPillar2')} value={chf(inp.pillar2)} />
+            <Row label={t('dream.rowCash')} value={money(inp.savings)} />
+            <Row label={t('form.pillar3aLabel')} value={money(inp.pillar3a)} />
+            <Row label={t('dream.rowPillar2')} value={money(inp.pillar2)} />
             <div className="my-1 border-t border-line" />
-            <Row label={t('dream.totalEquity')} value={chf(totalEquity)} strong />
+            <Row label={t('dream.totalEquity')} value={money(totalEquity)} strong />
           </>
         )}
       </div>

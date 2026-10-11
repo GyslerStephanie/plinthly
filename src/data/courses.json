@@ -1,0 +1,50 @@
+{
+  "us_how_much_house": [
+    {
+      "label": "CFPB: Buying a house",
+      "url": "https://www.consumerfinance.gov/owning-a-home/"
+    },
+    {
+      "label": "CFPB: Can I afford to buy a home?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/how-can-i-figure-out-if-i-can-afford-to-buy-a-home-and-take-out-a-mortgage-en-118/"
+    },
+    {
+      "label": "HUD: Buying a home",
+      "url": "https://www.hud.gov/topics/buying_a_home"
+    }
+  ],
+  "ch_how_much_house": [
+    {
+      "label": "moneyland.ch: How to calculate Swiss mortgages",
+      "url": "https://www.moneyland.ch/en/calculating-your-mortgage-swiss-tools"
+    },
+    {
+      "label": "ch.ch: Financing your own apartment or house",
+      "url": "https://www.ch.ch/en/housing/homeownership/buying-property/financing-homeownership/"
+    },
+    {
+      "label": "moneyland.ch: Things to consider before buying a home",
+      "url": "https://www.moneyland.ch/en/buying-a-home-in-switzerland-tips"
+    }
+  ],
+  "rent_vs_buy_us": [
+    {
+      "label": "CFPB: Making the decision to rent or buy",
+      "url": "https://www.consumerfinance.gov/archive/blog/making-decision-rent-or-buy/"
+    },
+    {
+      "label": "CFPB: Is it the right time for you to buy?",
+      "url": "https://www.consumerfinance.gov/owning-a-home/prepare/consider-whether-its-the-right-time-for-you-to-buy/"
+    }
+  ],
+  "rent_vs_buy_ch": [
+    {
+      "label": "moneyland.ch: Rent or buy calculator",
+      "url": "https://www.moneyland.ch/en/rent-or-buy-calculator"
+    },
+    {
+      "label": "moneyland.ch: Things to consider before buying a home",
+      "url": "https://www.moneyland.ch/en/buying-a-home-in-switzerland-tips"
+    }
+  ]
+}

@@ -3252,3 +3252,109 @@ const phaseKeys = {
 for (const lng of Object.keys(phaseKeys)) {
   Object.assign(translations[lng], phaseKeys[lng])
 }
+
+// Country + language menu in the header (LocaleMenu). Kept as its own block so
+// the four locales stay side by side.
+const localeKeys = {
+  en: {
+    learnMore: 'Learn more',
+    learnToast: { title: 'New to mortgages?', body: 'Not sure what all these calculations mean, or need to brush up on mortgage 101? Ask Plinthly AI your questions, or follow these guides to learn more.', dismiss: 'Dismiss' },
+    advisorTip: 'Ask Plinthly AI',
+    glossaryAsk: 'What does “{term}” mean for me?',
+    glossaryClose: 'Close',
+    locale: {
+      button: 'Country and language: {country}, {language}. Change',
+      country: 'Country',
+      language: 'Language',
+      note: 'Switching country clears your numbers, because the rules are different.',
+      confirmTitle: 'Switch to {to}?',
+      confirmBody: 'Your current numbers will be cleared so nothing mixes with the rules for {of}.',
+      confirmYes: 'Switch and start fresh',
+      confirmNo: '{stay}',
+      detailCh: 'CHF · 16 cantons',
+      detailUs: 'USD · 9 states',
+      onlyLanguage: 'Available in English only for now.',
+      // Country names with the article/preposition each template needs.
+      forms: {
+        ch: { to: 'Switzerland', of: 'Switzerland', stay: 'Stay in Switzerland' },
+        us: { to: 'the United States', of: 'the United States', stay: 'Stay in the United States' },
+      },
+    },
+  },
+  de: {
+    learnMore: 'Mehr erfahren',
+    learnToast: { title: 'Neu bei Hypotheken?', body: 'Sind Ihnen diese Berechnungen nicht ganz klar, oder möchten Sie Ihr Grundwissen zu Hypotheken auffrischen? Stellen Sie Plinthly AI Ihre Fragen oder folgen Sie diesen Leitfäden.', dismiss: 'Schliessen' },
+    advisorTip: 'Fragen Sie Plinthly AI',
+    glossaryAsk: 'Was bedeutet «{term}» für mich?',
+    glossaryClose: 'Schliessen',
+    locale: {
+      button: 'Land und Sprache: {country}, {language}. Ändern',
+      country: 'Land',
+      language: 'Sprache',
+      note: 'Beim Wechsel des Landes werden Ihre Zahlen gelöscht, weil andere Regeln gelten.',
+      confirmTitle: 'Möchten Sie {to} wechseln?',
+      confirmBody: 'Ihre aktuellen Zahlen werden gelöscht, damit nichts mit den Regeln {of} vermischt wird.',
+      confirmYes: 'Wechseln und neu beginnen',
+      confirmNo: '{stay}',
+      detailCh: 'CHF · 16 Kantone',
+      detailUs: 'USD · 9 Bundesstaaten',
+      onlyLanguage: 'Vorerst nur auf Englisch verfügbar.',
+      forms: {
+        ch: { to: 'zur Schweiz', of: 'der Schweiz', stay: 'In der Schweiz bleiben' },
+        us: { to: 'zu den USA', of: 'der USA', stay: 'In den USA bleiben' },
+      },
+    },
+  },
+  fr: {
+    learnMore: 'En savoir plus',
+    learnToast: { title: 'Nouveau dans les hypothèques ?', body: 'Vous ne savez pas ce que signifient tous ces calculs, ou voulez revoir les bases des hypothèques ? Posez vos questions à Plinthly AI ou suivez ces guides.', dismiss: 'Fermer' },
+    advisorTip: 'Demandez à Plinthly AI',
+    glossaryAsk: 'Que signifie « {term} » pour moi ?',
+    glossaryClose: 'Fermer',
+    locale: {
+      button: 'Pays et langue : {country}, {language}. Modifier',
+      country: 'Pays',
+      language: 'Langue',
+      note: 'Changer de pays efface vos chiffres, car les règles sont différentes.',
+      confirmTitle: 'Passer {to} ?',
+      confirmBody: 'Vos chiffres actuels seront effacés pour ne pas les mélanger avec les règles {of}.',
+      confirmYes: 'Changer et recommencer',
+      confirmNo: '{stay}',
+      detailCh: 'CHF · 16 cantons',
+      detailUs: 'USD · 9 États',
+      onlyLanguage: 'Disponible en anglais uniquement pour le moment.',
+      forms: {
+        ch: { to: 'à la Suisse', of: 'de la Suisse', stay: 'Rester en Suisse' },
+        us: { to: 'aux États-Unis', of: 'des États-Unis', stay: 'Rester aux États-Unis' },
+      },
+    },
+  },
+  it: {
+    learnMore: 'Scopri di più',
+    learnToast: { title: 'Nuovo ai mutui ipotecari?', body: 'Non sei sicuro di cosa significhino tutti questi calcoli, o vuoi ripassare le basi delle ipoteche? Fai le tue domande a Plinthly AI o segui queste guide.', dismiss: 'Chiudi' },
+    advisorTip: 'Chiedi a Plinthly AI',
+    glossaryAsk: 'Cosa significa «{term}» per me?',
+    glossaryClose: 'Chiudi',
+    locale: {
+      button: 'Paese e lingua: {country}, {language}. Modifica',
+      country: 'Paese',
+      language: 'Lingua',
+      note: 'Cambiando paese i tuoi numeri vengono cancellati, perché le regole sono diverse.',
+      confirmTitle: 'Passare {to}?',
+      confirmBody: 'I tuoi numeri attuali verranno cancellati per non mescolarli con le regole {of}.',
+      confirmYes: 'Cambia e ricomincia',
+      confirmNo: '{stay}',
+      detailCh: 'CHF · 16 cantoni',
+      detailUs: 'USD · 9 stati',
+      onlyLanguage: 'Per ora disponibile solo in inglese.',
+      forms: {
+        ch: { to: 'alla Svizzera', of: 'della Svizzera', stay: 'Resta in Svizzera' },
+        us: { to: 'agli Stati Uniti', of: 'degli Stati Uniti', stay: 'Resta negli Stati Uniti' },
+      },
+    },
+  },
+}
+
+for (const lng of Object.keys(localeKeys)) {
+  Object.assign(translations[lng], localeKeys[lng])
+}

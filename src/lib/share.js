@@ -7,7 +7,12 @@
  * it compact and tolerant of garbage input.
  */
 
+import usData from '../markets/us/us-data.json'
+
+// mk goes first: a chat client that cuts a long link from the end must not
+// drop the country (a US link read as Swiss shows francs for a "canton TX").
 const KEYS = [
+  ['mk', 'market'], // 'ch' | 'us'. Absent on pre-market links → read as 'ch'
   ['gi', 'grossIncome'],
   ['sv', 'savings'],
   ['p3', 'pillar3a'],
@@ -24,6 +29,10 @@ const KEYS = [
   ['dp', 'dreamPrice'],
   ['ph', 'phase'],
   ['rs', 'residentStatus'], // onboarding: 'expat' | 'national' (drives tax notes)
+  // US-only inputs (gi, sv, dn, ct and ph are shared with Switzerland)
+  ['md', 'monthlyDebts'],
+  ['rt', 'ratePct'],
+  ['ho', 'hoaMonthly'],
 ]
 
 // Numeric inputs are displayed with thousands separators (e.g. "1,250,000").
@@ -31,7 +40,7 @@ const KEYS = [
 // on display and every consumer parses with replace(/[^0-9.]/g, '').
 const NUMERIC_KEYS = new Set([
   'grossIncome', 'savings', 'pillar3a', 'pillar2', 'downPct',
-  'householdSize', 'budget', 'dreamPrice',
+  'householdSize', 'budget', 'dreamPrice', 'monthlyDebts', 'ratePct', 'hoaMonthly',
 ])
 
 /** Build a shareable URL hash from the flat state object. */
@@ -53,8 +62,14 @@ export function decodeState(hash = window.location.hash.replace(/^#/, '')) {
   for (const [short, full] of KEYS) {
     if (params.has(short)) out[full] = params.get(short)
   }
+  // A link that lost its mk is still recognisable as US by its US-only
+  // inputs or a state code in ct (no US state code is also a canton).
+  if (!out.market && (US_ONLY.some((k) => k in out) || US_STATES.has(out.canton))) out.market = 'us'
   return out
 }
+
+const US_ONLY = ['monthlyDebts', 'ratePct', 'hoaMonthly']
+const US_STATES = new Set(Object.keys(usData.states))
 
 /** Write state to the URL hash without adding a history entry. */
 export function syncHash(state) {
