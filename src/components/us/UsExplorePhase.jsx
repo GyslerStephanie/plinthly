@@ -3,6 +3,7 @@ import { sizeFromBudget, efficiencyTable, homeData } from '../../markets/us/home
 import { stateOptions, getState } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { MoneyInput } from './UsPhase1'
+import { Indicative } from '../ui'
 
 /**
  * US Phase 3 — "What should I look for?". UI only: every figure comes from
@@ -78,6 +79,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
               <p className="mt-3 text-xs text-muted">
                 {ut('explore.buysNote', { low: money(size.pricePerSqft.low), high: money(size.pricePerSqft.high), mid: money(size.pricePerSqft.mid) })}
               </p>
+              <Indicative>{ut('explore.indicative')}</Indicative>
             </Card>
           )}
 
@@ -110,6 +112,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
                 {ut('explore.energyDelta', { annual: money(table.annualSaving), ten: money(table.tenYearSaving) })}
               </p>
               <p className="mt-2 text-xs text-muted">{ut('explore.energyNote')}</p>
+              <Indicative>{ut('explore.indicative')}</Indicative>
             </Card>
           )}
 

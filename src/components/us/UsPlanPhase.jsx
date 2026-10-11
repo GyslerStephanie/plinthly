@@ -74,6 +74,11 @@ export default function UsPlanPhase({ result, explore, region, shareUrl }) {
         ))}
       </ol>
 
+      <p className="flex items-start gap-1.5 text-xs leading-relaxed text-muted">
+        <span aria-hidden>ⓘ</span>
+        <span>{ut('plan.disclaimer')}</span>
+      </p>
+
       <div className="flex flex-wrap gap-3 no-print">
         <button type="button" onClick={copy} className="rounded-lg border border-line bg-card px-4 py-2.5 text-sm font-medium text-ink transition hover:border-slate-400">
           {copied ? '✓ ' + ut('plan.copied') : ut('plan.share')}

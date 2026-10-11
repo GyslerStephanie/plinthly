@@ -216,6 +216,9 @@ function Payoff({ plan, extra, onExtra }) {
             label={ut('dream.pmiEnds')}
             value={p.pmiMonthly > 0 && p.pmiEndMonth ? ut('dream.pmiEndsValue', { years: Math.round((p.pmiEndMonth / 12) * 10) / 10 }) : ut('dream.pmiNone')}
           />
+          {p.pmiMonthly > 0 && p.pmiCancelMonth > 0 && (
+            <Row label={ut('dream.pmiCancel')} value={ut('dream.pmiEndsValue', { years: Math.round((p.pmiCancelMonth / 12) * 10) / 10 })} />
+          )}
           <div className="mt-4">
             <label htmlFor="us-extra" className="mb-1.5 block text-sm font-semibold text-ink">{ut('dream.extraLabel')}</label>
             <MoneyInput id="us-extra" value={extra} onChange={onExtra} suffix="/mo" />

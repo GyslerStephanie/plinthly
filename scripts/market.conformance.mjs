@@ -101,6 +101,12 @@ check('active market drives money()/int()', money(1250000) === '$1,250,000' && i
 setFormatMarket(MARKETS.ch)
 check('switching back restores CHF', money(1250000) === legacyChf.format(1250000))
 
+// --- Truncated links keep their country ------------------------------------
+check('mk is encoded first', encodeState({ grossIncome: '120000', phase: 3, market: 'us' }).startsWith('mk=us'))
+check('US link that lost mk: state code in ct reads as US', decodeState('gi=120000&sv=80000&ct=TX').market === 'us')
+check('US link that lost mk: US-only key reads as US', decodeState('gi=120000&rt=7.4').market === 'us')
+check('Swiss link without mk stays Swiss', decodeState('gi=150000&sv=200000&ct=ZH').market === undefined)
+
 console.log(`\nMarket conformance: ${pass} passed, ${fail} failed (${pass + fail} checks)`)
 if (fail > 0) process.exit(1)
 console.log('✓ All checks passed.')

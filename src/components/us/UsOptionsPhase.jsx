@@ -2,10 +2,11 @@ import { money, int } from '../../lib/format'
 import {
   sizeFromBudget, measureDetails, upgradeLedger, optionNewCertified, optionBuild, efficiencyTable, DEFAULT_MEASURES,
 } from '../../markets/us/home'
-import { getState } from '../../markets/us/affordability'
+import { getState, stateOptions } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { Row } from './UsPhase1'
 import { StatusPill } from './UsExplorePhase'
+import { Indicative } from '../ui'
 
 /**
  * US Phase 4 — three routes. UI only: figures come from src/markets/us/home.js.
@@ -32,6 +33,7 @@ function RouteCard({ id, letter, chosen, onChoose, children }) {
         type="button"
         onClick={() => onChoose(id)}
         aria-pressed={active}
+        aria-label={`${ut('options.choose')}: ${ut(`options.${id === 'new' ? 'newHome' : id}.title`)}`}
         className={
           'mt-5 rounded-lg px-4 py-2.5 text-sm font-bold transition ' +
           (active ? 'bg-teal-800 text-on-primary' : 'border border-line text-ink hover:border-slate-400')
@@ -43,12 +45,30 @@ function RouteCard({ id, letter, chosen, onChoose, children }) {
   )
 }
 
-export default function UsOptionsPhase({ explore, onExploreChange, region }) {
+export default function UsOptionsPhase({ explore, onExploreChange, region, onRegionChange }) {
   const budget = num(explore.budget)
   const st = region ? getState(region) : null
   const size = sizeFromBudget(region, budget)
   if (!st || !size) {
-    return <p className="max-w-3xl rounded-xl border border-dashed border-slate-300 bg-white/60 p-6 text-sm text-slate-500">{ut('explore.pickState')}</p>
+    // No dead end: pick the state right here instead of going back to step 3.
+    return (
+      <div className="max-w-3xl rounded-xl border border-dashed border-slate-300 bg-white/60 p-6">
+        <label htmlFor="us-options-state" className="block text-sm text-slate-500">{ut('explore.pickState')}</label>
+        {onRegionChange && (
+          <select
+            id="us-options-state"
+            value={region || ''}
+            onChange={(e) => onRegionChange(e.target.value)}
+            className="mt-3 w-full max-w-xs rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-ink focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+          >
+            <option value="">Select a state</option>
+            {stateOptions.map((s) => (
+              <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
+            ))}
+          </select>
+        )}
+      </div>
+    )
   }
   const sqft = size.mid
   const selected = selectedUsMeasures(explore.measures)
@@ -80,7 +100,7 @@ export default function UsOptionsPhase({ explore, onExploreChange, region }) {
               return (
                 <li key={m.id}>
                   <label className="flex cursor-pointer items-start gap-2.5 rounded-md px-1 py-1.5 text-sm hover:bg-surface">
-                    <input type="checkbox" checked={on} onChange={() => toggle(m.id)} className="mt-0.5 h-4 w-4 shrink-0" style={{ accentColor: 'var(--moss-600, #566d29)' }} />
+                    <input type="checkbox" checked={on} onChange={() => toggle(m.id)} className="mt-0.5 h-4 w-4 shrink-0" style={{ accentColor: 'var(--color-primary)' }} />
                     <span className="min-w-0 flex-1">
                       <span className={on ? 'font-medium text-ink' : 'text-body'}>{ut(`options.measure.${m.id}`)}</span>
                       <span className="block text-xs text-muted">
@@ -168,6 +188,7 @@ export default function UsOptionsPhase({ explore, onExploreChange, region }) {
             </tbody>
           </table>
         </div>
+        <Indicative>{ut('options.indicative')}</Indicative>
       </section>
     </div>
   )

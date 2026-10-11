@@ -6,14 +6,14 @@ import Phase2Exploration from './components/Phase2Exploration'
 import Phase3Options from './components/Phase3Options'
 import Phase4ActionPlan from './components/Phase4ActionPlan'
 import { calculateAffordability } from './lib/affordability'
-import { dataMeta } from './lib/cantons'
+import { dataMeta, getCanton } from './lib/cantons'
 import { impliedSize } from './lib/exploration'
 import { computeLedger, selectedMeasures } from './lib/retrofit'
 import { decodeState, syncHash, shareableUrl } from './lib/share'
 import { useI18n } from './i18n/I18nContext'
 import { useMarket } from './markets/MarketContext'
 import { ut } from './markets/us/copy'
-import { usDataMeta } from './markets/us/affordability'
+import { usDataMeta, getState } from './markets/us/affordability'
 import CountryConfirm from './components/CountryConfirm'
 import LocaleMenu from './components/LocaleMenu'
 import UsPhase1, { US_DEFAULT_VALUES, US_EXAMPLE_VALUES, usResult } from './components/us/UsPhase1'
@@ -146,7 +146,7 @@ export default function App() {
         savings: s.savings ?? base.savings,
         monthlyDebts: s.monthlyDebts ?? base.monthlyDebts,
         downPct: s.downPct ?? base.downPct,
-        region: s.canton ?? base.region,
+        region: s.canton && getState(s.canton) ? s.canton : base.region,
         ratePct: s.ratePct ?? US_DEFAULT_VALUES.ratePct,
         hoaMonthly: s.hoaMonthly ?? '',
       }
@@ -167,13 +167,13 @@ export default function App() {
       pillar3a: s.pillar3a ?? '',
       pillar2: s.pillar2 ?? '',
       downPct: s.downPct ?? DEFAULT_VALUES.downPct,
-      canton: s.canton ?? DEFAULT_VALUES.canton,
+      canton: s.canton && getCanton(s.canton) ? s.canton : DEFAULT_VALUES.canton,
       householdSize: s.householdSize ?? DEFAULT_VALUES.householdSize,
     }
     setValues(nextValues)
     setExplore({
       budget: s.budget ?? '',
-      canton: s.canton ?? DEFAULT_EXPLORE.canton,
+      canton: s.canton && getCanton(s.canton) ? s.canton : DEFAULT_EXPLORE.canton,
       propertyType: s.propertyType ?? DEFAULT_EXPLORE.propertyType,
       condition: s.condition ?? DEFAULT_EXPLORE.condition,
       sustainability: s.sustainability ?? DEFAULT_EXPLORE.sustainability,
@@ -198,9 +198,18 @@ export default function App() {
     }
   }, [])
 
-  // A market only offers its own languages (the US is English-only).
+  // A market only offers its own languages (the US is English-only). The
+  // language a visitor had is remembered, so CH → US → CH keeps their German.
+  const langBeforeSwitch = useRef(null)
   useEffect(() => {
-    if (!market.languages.includes(lang)) setLang('en')
+    if (!market.languages.includes(lang)) {
+      langBeforeSwitch.current = lang
+      setLang('en')
+    } else if (langBeforeSwitch.current && market.languages.includes(langBeforeSwitch.current)) {
+      const prev = langBeforeSwitch.current
+      langBeforeSwitch.current = null
+      if (prev !== lang) setLang(prev)
+    }
   }, [market, lang])
   const marketLanguages = languages.filter((l) => market.languages.includes(l.code))
 
@@ -340,8 +349,8 @@ export default function App() {
       return
     }
     if (dest === 'looking') {
-      setRouteIntent(phase1 ? null : 'looking')
-      goToPhase(phase1 ? 3 : 1)
+      setRouteIntent(hasResult ? null : 'looking')
+      goToPhase(hasResult ? 3 : 1)
       return
     }
     // learn / afford → Phase 1
@@ -401,6 +410,9 @@ export default function App() {
   }
 
   // Once a Phase-1 result exists the nudge has served its purpose.
+  // Landing, country confirm or onboarding covers the app: hold the toast and
+  // the advisor (and its 8 s tooltip) until the visitor can actually see them.
+  const frontDoorOpen = showLanding || showCountry || showOnboarding
   const hasResultNow = isUs ? !!usRes : !!phase1
   const showRouteNudge = phase === 1 && !hasResultNow && !!routeIntent
 
@@ -516,7 +528,12 @@ export default function App() {
           />
         )}
         {isUs && usRes && phase === 4 && (
-          <UsOptionsPhase explore={usExplore} onExploreChange={setUsExplore} region={usValues.region} />
+          <UsOptionsPhase
+            explore={usExplore}
+            onExploreChange={setUsExplore}
+            region={usValues.region}
+            onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
+          />
         )}
         {isUs && usRes && phase === 5 && (
           <UsPlanPhase
@@ -671,12 +688,12 @@ export default function App() {
           and two FABs would stack (both announced by a screen reader). */}
       {/* "New to mortgages?" — points to Ask Plinthly AI and vetted guides
           wherever the advisor is available. Re-mounts per phase. */}
-      {(isUs ? usRes : previewResult) && !showCompare && (
+      {(isUs ? usRes : previewResult) && !showCompare && !frontDoorOpen && (
         <LearnToast key={phase} links={learnLinks(marketId)} />
       )}
 
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
-      {isUs && usRes && (
+      {isUs && usRes && !showCompare && !frontDoorOpen && (
         <AdvisorFab
           tipKey={phase}
           context={buildUsAdvisorContext(
@@ -700,7 +717,7 @@ export default function App() {
         />
       )}
 
-      {previewResult && !showCompare && !isUs && (
+      {previewResult && !showCompare && !isUs && !frontDoorOpen && (
         <AdvisorFab
           tipKey={phase}
           context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
@@ -770,7 +787,8 @@ export default function App() {
       {/* Vercel Speed Insights — anonymous Web Vitals, no PII */}
       <SpeedInsights />
       {/* Vercel Web Analytics — cookieless pageviews + the 5 product events */}
-      <Analytics />
+      {/* Strip the hash: it holds the visitor's numbers, which never leave the device. */}
+      <Analytics beforeSend={(e) => ({ ...e, url: e.url.split('#')[0] })} />
     </div>
     </AppStateProvider>
   )

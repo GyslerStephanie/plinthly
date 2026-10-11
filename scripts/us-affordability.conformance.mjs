@@ -166,7 +166,9 @@ const pmiLoan = mortgagePayoff({ price: 400000, loan: 360000, rate: 0.06 })
 check('10% down: PMI charged', pmiLoan.pmiMonthly > 0)
 check('PMI cancellable (80%) before it auto-ends (78%)', pmiLoan.pmiCancelMonth < pmiLoan.pmiEndMonth)
 check('PMI auto-ends within the term', pmiLoan.pmiEndMonth > 0 && pmiLoan.pmiEndMonth < 360)
-check('extra payments end PMI sooner', mortgagePayoff({ price: 400000, loan: 360000, rate: 0.06, extraMonthly: 500 }).pmiEndMonth < pmiLoan.pmiEndMonth)
+const pmiFast = mortgagePayoff({ price: 400000, loan: 360000, rate: 0.06, extraMonthly: 500 })
+check('extra payments bring the 80% cancel request forward', pmiFast.pmiCancelMonth < pmiLoan.pmiCancelMonth)
+check('automatic PMI end follows the original schedule (HPA), not extra payments', pmiFast.pmiEndMonth === pmiLoan.pmiEndMonth)
 check('payoff: missing inputs → null', mortgagePayoff({ price: 0, loan: 0, rate: 0.06 }) === null)
 
 // ── 11b. Dream price (Phase 2) ───────────────────────────────────────────────

@@ -7,8 +7,10 @@
  * a US conventional loan is built to reach zero at the end of its term.
  *
  * PMI: under the Homeowners Protection Act it ends AUTOMATICALLY once the
- * scheduled balance reaches 78% of the home's ORIGINAL value, and the borrower
- * may ask to cancel at 80%. Extra payments reach both lines sooner.
+ * SCHEDULED balance (the original amortisation, ignoring extra payments)
+ * reaches 78% of the home's ORIGINAL value. The borrower may ask to cancel
+ * once the ACTUAL balance reaches 80%, so extra payments bring only that
+ * request date forward, not the automatic end.
  */
 import { US_RULES, paymentFactor, pmiRate } from './affordability.js'
 import data from './us-data.json'
@@ -41,6 +43,7 @@ export function mortgagePayoff({ price, loan, rate, years = US_RULES.TERM_YEARS,
   const autoBalance = P * (R.pmi.auto_terminate_ltv_pct / 100)
 
   let balance = L0
+  let scheduled = L0 // original schedule, no extras: drives automatic PMI end
   let totalInterest = 0
   let totalPmi = 0
   let pmiCancelMonth = pmiMonthly > 0 ? null : 0
@@ -54,12 +57,13 @@ export function mortgagePayoff({ price, loan, rate, years = US_RULES.TERM_YEARS,
     const interest = balance * i
     const principal = Math.min(balance, payment - interest + extra)
     balance = Math.max(0, balance - principal)
+    scheduled = Math.max(0, scheduled - (payment - scheduled * i))
     totalInterest += interest
     yInterest += interest
     yPrincipal += principal
     if (pmiEndMonth === null) totalPmi += pmiMonthly
     if (pmiCancelMonth === null && balance <= cancelBalance + 1e-6) pmiCancelMonth = m
-    if (pmiEndMonth === null && balance <= autoBalance + 1e-6) pmiEndMonth = m
+    if (pmiEndMonth === null && scheduled <= autoBalance + 1e-6) pmiEndMonth = m
     if (balance <= 1e-6 && payoffMonth === null) payoffMonth = m
     if (m % 12 === 0 || payoffMonth === m) {
       yearly.push({ year: Math.ceil(m / 12), balance, ltv: balance / P, interestPaid: yInterest, principalPaid: yPrincipal })
@@ -80,7 +84,7 @@ export function mortgagePayoff({ price, loan, rate, years = US_RULES.TERM_YEARS,
     totalPmi,
     pmiMonthly,
     pmiCancelMonth, // borrower may request cancellation (80% of original value)
-    pmiEndMonth, // automatic termination (78%)
+    pmiEndMonth, // automatic termination (78% of original value, on the original schedule)
     interestSaved: baseline ? Math.max(0, baseline.totalInterest - totalInterest) : 0,
     monthsSaved: baseline ? Math.max(0, baseline.payoffMonth - (payoffMonth ?? n)) : 0,
     yearly,

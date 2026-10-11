@@ -52,15 +52,21 @@ export function isExampleValues(v) {
   )
 }
 
+const given = (v) => String(v ?? '').trim() !== ''
+
 /** Engine input from the form's string values. */
 export function usInput(values) {
   return {
     grossIncome: num(values.grossIncome),
     savings: num(values.savings),
     monthlyDebts: num(values.monthlyDebts),
-    downPct: num(values.downPct) || undefined,
+    // A typed 0 means "as little as allowed" (3%), not "use the default";
+    // an empty field falls back to the default.
+    downPct: given(values.downPct) ? Math.max(num(values.downPct), US_RULES.MIN_DOWN * 100) : undefined,
     state: values.region || undefined,
-    rate: num(values.ratePct) ? num(values.ratePct) / 100 : undefined,
+    // Clamp like the advisor does, so half-typed values ("0.5", "74") can't
+    // flash absurd results while someone edits the rate.
+    rate: num(values.ratePct) ? Math.min(15, Math.max(1, num(values.ratePct))) / 100 : undefined,
     hoaMonthly: num(values.hoaMonthly),
   }
 }
