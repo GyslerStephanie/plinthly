@@ -13,6 +13,7 @@ import {
   DEFAULT_RATE, stateOptions, getState,
 } from '../src/markets/us/affordability.js'
 import { mortgagePayoff } from '../src/markets/us/mortgagePayoff.js'
+import { dreamPlan, payoffMilestones } from '../src/markets/us/dream.js'
 import data from '../src/markets/us/us-data.json' with { type: 'json' }
 
 let pass = 0
@@ -152,6 +153,38 @@ check('PMI cancellable (80%) before it auto-ends (78%)', pmiLoan.pmiCancelMonth 
 check('PMI auto-ends within the term', pmiLoan.pmiEndMonth > 0 && pmiLoan.pmiEndMonth < 360)
 check('extra payments end PMI sooner', mortgagePayoff({ price: 400000, loan: 360000, rate: 0.06, extraMonthly: 500 }).pmiEndMonth < pmiLoan.pmiEndMonth)
 check('payoff: missing inputs → null', mortgagePayoff({ price: 0, loan: 0, rate: 0.06 }) === null)
+
+// ── 11b. Dream price (Phase 2) ───────────────────────────────────────────────
+const inA = { grossIncome: 120000, savings: 100000, monthlyDebts: 500, downPct: 20, state: 'TX', ...FIX }
+const atMax = dreamPlan(inA, A.maxPrice)
+check('dream: today\'s max price is reachable', atMax.reachable === true)
+check('dream: reachable → no levers', Object.values(atMax.levers).every((v) => v === null))
+const far = dreamPlan(inA, 500000)
+check('dream: 500k not reachable', far.reachable === false)
+eq('dream: cash gap = 500k × 23% − 100k', far.levers.saveMore, 15000)
+check('dream: income lever offered (front-end fails at 500k)', far.levers.earnMore > 0)
+eq('dream: aim for today\'s max', far.levers.aimFor, A.maxPrice)
+eq('dream: $500/mo closes the cash gap in 30 months', far.savingsScenarios[0].months, 30)
+check('dream: price progress = max / dream', near(far.progress.price, A.maxPrice / 500000, 1e-9))
+check('dream: earning the income gap passes the ratio tests',
+  checkSpecificProperty({ ...inA, price: 500000, savings: 500000, grossIncome: 120000 + far.levers.earnMore }).passes)
+// Put-less-down lever: 450k needs 103.5k at 20%; 100k covers 19% + closing,
+// but the extra loan + PMI then breaks the 28% test — so it is offered as
+// "doesn't pass", not as a fix.
+const lower = dreamPlan(inA, 450000)
+eq('dream: lower down = 19%', lower.levers.lowerDown && lower.levers.lowerDown.downPct, 19)
+check('dream: lower down re-tests the ratios (fails here)', lower.levers.lowerDown.passes === false)
+// Cut-debt lever: back-end fails, front-end passes → the monthly cut that fixes it.
+const inB = { grossIncome: 120000, savings: 400000, monthlyDebts: 1800, downPct: 20, state: 'TX', ...FIX }
+const debt = dreamPlan(inB, 350000)
+check('dream: debt-limited 350k not reachable', debt.reachable === false && debt.check.frontEnd.ok && !debt.check.backEnd.ok)
+check('dream: cut-debt lever offered', debt.levers.cutDebt > 0 && debt.levers.cutDebt <= 1800)
+check('dream: cutting that much debt passes', checkSpecificProperty({ ...inB, price: 350000, monthlyDebts: 1800 - debt.levers.cutDebt }).passes)
+check('dream: cutting $10 less still fails', !checkSpecificProperty({ ...inB, price: 350000, monthlyDebts: 1800 - debt.levers.cutDebt + 10 }).passes)
+eq('dream: payoff runs 30 years', far.payoff.payoffMonth, 360)
+eq('dream: milestones every 5 years', payoffMilestones(far.payoff).length, 6)
+check('dream: extra payments shorten the payoff', dreamPlan(inA, 500000, { extraMonthly: 300 }).payoff.payoffMonth < 360)
+check('dream: no price → null', dreamPlan(inA, '') === null)
 
 // ── 12. Data file: every figure sourced and dated ────────────────────────────
 const STATES = ['CA', 'NY', 'TX', 'FL', 'WA', 'MA', 'CO', 'IL', 'GA']

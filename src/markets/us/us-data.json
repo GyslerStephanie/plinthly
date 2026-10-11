@@ -67,6 +67,12 @@
     ]
   },
 
+  "dream": {
+    "savings_scenarios_usd_per_month": [500, 1000, 2000],
+    "payoff_milestone_years": 5,
+    "notes": "Presentation choices for the US dream-price phase, not rules: the monthly savings amounts the savings timeline compares, and the interval of the payoff milestones table."
+  },
+
   "states": {
     "CA": {
       "name": "California", "as_of": "2026-08",

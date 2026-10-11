@@ -28,10 +28,9 @@ export const US_DEFAULT_VALUES = {
   hoaMonthly: '',
 }
 
-/** Engine input from the form's string values; null until there's enough to compute. */
-export function usResult(values) {
-  if (!num(values.grossIncome) || !num(values.savings)) return null
-  return calculateAffordability({
+/** Engine input from the form's string values. */
+export function usInput(values) {
+  return {
     grossIncome: num(values.grossIncome),
     savings: num(values.savings),
     monthlyDebts: num(values.monthlyDebts),
@@ -39,7 +38,13 @@ export function usResult(values) {
     state: values.region || undefined,
     rate: num(values.ratePct) ? num(values.ratePct) / 100 : undefined,
     hoaMonthly: num(values.hoaMonthly),
-  })
+  }
+}
+
+/** Phase 1 result; null until there's enough to compute. */
+export function usResult(values) {
+  if (!num(values.grossIncome) || !num(values.savings)) return null
+  return calculateAffordability(usInput(values))
 }
 
 export default function UsPhase1({ values, onChange }) {
@@ -75,11 +80,11 @@ function Field({ id, label, hint, children }) {
   )
 }
 
-const inputBox =
+export const inputBox =
   'flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100'
-const inputEl = 'w-full min-w-0 bg-transparent px-3 py-2.5 text-right text-sm tabular-nums text-ink outline-none'
+export const inputEl = 'w-full min-w-0 bg-transparent px-3 py-2.5 text-right text-sm tabular-nums text-ink outline-none'
 
-function MoneyInput({ id, value, onChange, suffix }) {
+export function MoneyInput({ id, value, onChange, suffix }) {
   return (
     <div className={inputBox}>
       <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
@@ -180,7 +185,7 @@ const STATUS_STYLE = {
   qualifies: 'bg-teal-50 text-teal-800',
 }
 
-function Row({ label, value, strong }) {
+export function Row({ label, value, strong }) {
   return (
     <div className={'flex items-baseline justify-between gap-4 py-1.5 text-sm ' + (strong ? 'border-t border-line pt-2.5 font-semibold text-ink' : 'text-body')}>
       <span>{label}</span>

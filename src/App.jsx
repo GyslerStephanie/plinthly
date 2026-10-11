@@ -18,6 +18,7 @@ import CountryConfirm from './components/CountryConfirm'
 import CountrySwitcher from './components/CountrySwitcher'
 import UsPhase1, { US_DEFAULT_VALUES, usResult } from './components/us/UsPhase1'
 import UsComingSoon from './components/us/UsComingSoon'
+import UsDreamPhase from './components/us/UsDreamPhase'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
@@ -133,6 +134,7 @@ export default function App() {
         hoaMonthly: s.hoaMonthly ?? '',
       }
       setUsValues(next)
+      if (s.dreamPrice) setDreamPrice(s.dreamPrice)
       if (usResult(next)) {
         const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
         setPhase(target)
@@ -189,7 +191,7 @@ export default function App() {
     if (isUs) {
       // US links carry only US inputs (ct holds the state code).
       const { region, ...rest } = usValues
-      syncHash({ ...rest, canton: region, phase, market: marketId })
+      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId })
       return
     }
     syncHash({
@@ -479,11 +481,11 @@ export default function App() {
         ) : (
           <div className="mb-8 max-w-2xl no-print">
             <h1 className="text-2xl font-semibold tracking-tight text-ink">
-              {t(`heading.${phase}.title`)}
+              {isUs && phase === 2 ? ut('dream.title') : t(`heading.${phase}.title`)}
             </h1>
-            {!isUs && (
+            {(!isUs || phase === 2) && (
               <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
-                {t(`heading.${phase}.blurb`)}
+                {isUs ? ut('dream.blurb') : t(`heading.${phase}.blurb`)}
               </p>
             )}
           </div>
@@ -491,7 +493,10 @@ export default function App() {
 
         {/* United States — Phase 1 on the US engine; later phases not built yet */}
         {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={setUsValues} />}
-        {isUs && phase > 1 && <UsComingSoon phase={phase} onBack={() => goToPhase(1)} />}
+        {isUs && phase === 2 && usRes && (
+          <UsDreamPhase values={usValues} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} />
+        )}
+        {isUs && !market.phases.includes(phase) && <UsComingSoon phase={phase} onBack={() => goToPhase(1)} />}
 
         {/* Phase 1 — two-column on desktop: inputs left, live output right */}
         {phase === 1 && !isUs && (

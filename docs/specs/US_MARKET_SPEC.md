@@ -109,9 +109,9 @@ Swiss file.
    CH-only at this point; app looks identical.
 2. **Formatting** — `money()`, `MoneyField`, area unit. Still identical for CH.
 3. **US data + engine + conformance tests** — no UI yet. ✅ Done: `src/markets/us/` (`us-data.json`, `affordability.js`, `mortgagePayoff.js`), `npm run test:us` (146 checks).
-4. **Onboarding confirm step + header switcher.**
-5. **US Phase 1** — form + result on the US engine.
-6. **US Phase 2** — Dream price + US payoff schedule.
+4. **Onboarding confirm step + header switcher.** ✅ Done.
+5. **US Phase 1** — form + result on the US engine. ✅ Done.
+6. **US Phase 2** — Dream price + US payoff schedule. ✅ Done: `src/markets/us/dream.js` (verdict per test, levers: save / earn / cut debt / lower down / aim lower, savings timeline, payoff with PMI end + extra payments), `components/us/UsDreamPhase.jsx`.
 7. **Gating** — "coming soon" for Phases 3–5, Compare, bank inquiry in US.
 8. **Advisor** — market-aware prompt.
 9. QA (`plinthly-qa`), FEATURES.md, README.
