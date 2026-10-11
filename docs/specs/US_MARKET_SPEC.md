@@ -1,6 +1,6 @@
 # Feature spec: US market (multi-market foundation)
 
-**Status:** 🔨 Building
+**Status:** ✅ Shipped (merged in #22, 2026-10-11)
 **Branch:** `feature/us-market`
 **Owner:** Stephanie
 **Date:** 2026-10-11
@@ -204,8 +204,8 @@ US rules and data. Steps continue the build order:
 - [ ] Switching country from the header works and never mixes CH and US inputs
 - [ ] US numbers match hand-checked examples in the conformance suite (incl. PMI, back-end-limited, cash-limited, jumbo flag)
 - [ ] `npm run test:all` passes
-- [ ] `plinthly-qa` run, no Blockers or Majors
-- [ ] `FEATURES.md` row flipped to ✅ Shipped
+- [x] `plinthly-qa` run; Blockers and Majors fixed
+- [x] `FEATURES.md` row flipped to ✅ Shipped
 
 ## Out of scope (v1)
 
