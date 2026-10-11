@@ -14,7 +14,8 @@
     "test:agent": "node --import ./scripts/register-json.mjs scripts/agent.conformance.mjs",
     "test:market": "node scripts/market.conformance.mjs",
     "test:us": "node --import ./scripts/register-json.mjs scripts/us-affordability.conformance.mjs",
-    "test:all": "npm test && npm run test:compare && npm run test:data && npm run test:agent && npm run test:market && npm run test:us"
+    "test:us-home": "node --import ./scripts/register-json.mjs scripts/us-home.conformance.mjs",
+    "test:all": "npm test && npm run test:compare && npm run test:data && npm run test:agent && npm run test:market && npm run test:us && npm run test:us-home"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

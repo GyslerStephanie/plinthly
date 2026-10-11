@@ -123,6 +123,38 @@ Swiss file.
 8. **Advisor** — market-aware prompt. ✅ Done: `src/markets/us/advisor.js` (US context, tools `recompute_us_affordability` + `check_home_price`, prompt from us-data), US preview mock in `src/lib/advisorMock.js` (shared by server and browser offline fallback).
 9. QA (`plinthly-qa`), FEATURES.md, README.
 
+## Phases 3–5 for the US (scope extended 2026-10-11)
+
+Originally out of scope for v1; now in. Same structure as the Swiss phases,
+US rules and data. Steps continue the build order:
+
+10. **US data for Phases 3–5** — per state: electricity and gas prices (EIA),
+    energy cost per sq ft (EIA RECS), build cost per sq ft, IRA Home Energy
+    Rebates status, state/utility programs, net metering, first-time-buyer
+    (HFA) programs; national: HERS reference points, upgrade measure costs and
+    savings, certified-home premiums. Every figure sourced and dated.
+11. **US Phase 3 — What should I look for?** What the budget buys in the state
+    (sq ft range from the $/sq ft band); what efficiency costs over 10 years by
+    **HERS Index** tier (typical existing ≈ 130 → code-built 100 → new-home
+    average → ENERGY STAR → Zero Energy Ready), modelled as state energy cost
+    per sq ft × (HERS ÷ typical-existing HERS); incentives in the state
+    (federal credits ended after 2025, IRA rebates status, state/utility
+    programs, net metering); certifications explained (HERS, ENERGY STAR,
+    ZERH, Home Energy Score).
+12. **US Phase 4 — What are my real options?** (A) Buy existing & upgrade:
+    configurator (air sealing + attic insulation, wall insulation, heat pump,
+    heat-pump water heater, windows, solar, smart thermostat) → cost, annual
+    savings, payback, estimated HERS after, rebates shown separately as "if
+    income-eligible" where the state's program is open. (B) Buy new ENERGY
+    STAR / ZERH: certification premium vs 10-year energy savings. (C) Build:
+    state cost per sq ft × size, efficient-build premium, timeline; land is
+    flagged as not included. Compare table.
+13. **US Phase 5 — Action plan:** personalised steps — close the gap or get
+    pre-approved and compare three Loan Estimates; the state's first-time-buyer
+    programme; option-specific step (energy audit + rebates / ask for the HERS
+    certificate / lot + builder bids + construction loan); inspection + Home
+    Energy Score; HUD-approved counselor. Share link and print, as in CH.
+
 ## Done when…
 
 - [ ] A US visitor is detected, confirms "United States", and completes Phases 1–2 in USD / sq ft with US rules
@@ -135,8 +167,7 @@ Swiss file.
 
 ## Out of scope (v1)
 
-- US Phases 3–5 (energy upgrades, options, action plan) and US Compare. Note for
-  later: federal 25C/25D home-energy credits ended for work after 2025-12-31;
+- US Compare (rent vs buy). Note for later (Phases 3–5 now in scope, see above): federal 25C/25D home-energy credits ended for work after 2025-12-31;
   US incentives are now state-run HOMES/HEAR rebates (income-limited, many not
   yet open) — needs its own data project.
 - FHA / VA / USDA loans, county-level conforming limits, credit-score pricing.
