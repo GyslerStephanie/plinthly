@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plinthly — Comparison Feature: IA &amp; JTBD Analysis</title>
+<style>
+  :root{
+    --ink:#0D0D0D; --body:#3f4651; --muted:#737b86; --line:#E7EAEE; --surface:#F5F7F9;
+    --paper:#ffffff; --teal:#0f766e; --teal-700:#0f766e; --teal-50:#e6f3f1; --teal-100:#cfe8e4;
+    --amber:#b45309; --amber-50:#fef6e7; --amber-200:#fadfa3;
+    --rose:#9f1239; --rose-50:#fdeef1; --rose-200:#f6c9d3;
+    --blue:#1d4ed8; --blue-50:#eaf0fe; --blue-200:#c3d4fb;
+    --green:#047857; --green-50:#e6f5ee;
+    --know:#0f766e; --infer:#7c3aed; --infer-50:#f1eafe; --infer-200:#ddc9fb;
+    --shadow:0 1px 2px rgba(13,13,13,.04),0 8px 24px rgba(13,13,13,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--surface); color:var(--body);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px 96px}
+  h1,h2,h3,h4{color:var(--ink); line-height:1.2; letter-spacing:-.01em; margin:0}
+  h2{font-size:26px; font-weight:800}
+  h3{font-size:19px; font-weight:750}
+  h4{font-size:15px; font-weight:700}
+  p{margin:.6em 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.86em;
+    background:#eef1f4; color:#243; padding:1px 6px; border-radius:5px}
+  a{color:var(--teal)}
+
+  /* ---- Hero ---- */
+  header.hero{
+    background:linear-gradient(135deg,#0b3b37 0%,#114f49 48%,#0f766e 100%);
+    color:#fff; padding:54px 0 46px; position:relative; overflow:hidden;
+  }
+  header.hero::after{content:""; position:absolute; inset:0;
+    background:radial-gradient(900px 280px at 88% -10%, rgba(255,255,255,.14), transparent 60%);}
+  .hero .wrap{padding-bottom:0; position:relative}
+  .eyebrow{font-size:12px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+    color:#a7e3da; margin:0 0 12px}
+  header.hero h1{color:#fff; font-size:40px; font-weight:850; max-width:18ch}
+  header.hero p.sub{color:#d6efeb; font-size:18px; max-width:62ch; margin-top:14px}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px}
+  .chip{display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22); color:#eafaf7; font-size:12.5px; font-weight:600;
+    padding:6px 12px; border-radius:999px; backdrop-filter:blur(4px)}
+
+  /* ---- Legend ---- */
+  .legend{display:flex; flex-wrap:wrap; gap:10px; margin:26px 0 0}
+  .tag{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700;
+    padding:7px 13px; border-radius:999px; border:1px solid}
+  .tag .dot{width:9px; height:9px; border-radius:50%}
+  .tag.know{background:var(--teal-50); color:#0b554f; border-color:var(--teal-100)}
+  .tag.know .dot{background:var(--know)}
+  .tag.infer{background:var(--infer-50); color:#5b21b6; border-color:var(--infer-200)}
+  .tag.infer .dot{background:var(--infer)}
+
+  /* ---- Sections ---- */
+  section{margin-top:40px}
+  .sec-head{display:flex; align-items:center; gap:14px; margin-bottom:8px}
+  .sec-num{flex:none; width:38px; height:38px; border-radius:11px; display:grid; place-items:center;
+    background:var(--ink); color:#fff; font-weight:800; font-size:16px}
+  .sec-head h2{margin:0}
+  .lede{color:var(--muted); font-size:15.5px; margin:2px 0 18px}
+
+  .card{background:var(--paper); border:1px solid var(--line); border-radius:16px;
+    padding:22px 24px; box-shadow:var(--shadow); margin:16px 0}
+  .card h3{margin-bottom:6px}
+
+  /* inline know/infer pills within text */
+  .k,.i{font-size:11px; font-weight:800; letter-spacing:.04em; padding:2px 7px; border-radius:6px;
+    vertical-align:middle; white-space:nowrap}
+  .k{background:var(--teal-50); color:#0b554f}
+  .i{background:var(--infer-50); color:#5b21b6}
+
+  /* tables */
+  table{width:100%; border-collapse:collapse; font-size:14.5px; margin:6px 0}
+  th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top}
+  thead th{font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+    background:var(--surface); font-weight:700}
+  tbody tr:last-child td{border-bottom:none}
+  td.good{color:var(--green); font-weight:700}
+  td.bad{color:var(--rose); font-weight:700}
+  td.partial{color:var(--amber); font-weight:700}
+
+  /* callouts */
+  .callout{border-radius:13px; padding:14px 16px 14px 16px; margin:14px 0; border:1px solid;
+    position:relative; font-size:14.5px}
+  .callout h4{margin-bottom:3px; display:flex; align-items:center; gap:8px}
+  .callout.gap{background:var(--rose-50); border-color:var(--rose-200); color:#7a1330}
+  .callout.gap h4{color:var(--rose)}
+  .callout.redund{background:var(--amber-50); border-color:var(--amber-200); color:#7c4408}
+  .callout.redund h4{color:var(--amber)}
+  .callout.info{background:var(--blue-50); border-color:var(--blue-200); color:#1c3b8f}
+  .callout.info h4{color:var(--blue)}
+  .callout .ic{font-size:15px}
+
+  /* diagram shells */
+  .diagram{background:var(--paper); border:1px solid var(--line); border-radius:16px;
+    padding:20px; box-shadow:var(--shadow); margin:16px 0; overflow-x:auto}
+  .diagram .cap{font-size:12.5px; color:var(--muted); margin-top:10px; text-align:center}
+  svg{display:block; max-width:100%; height:auto; margin:0 auto}
+
+  /* option cards */
+  .opts{display:grid; grid-template-columns:1fr; gap:16px}
+  @media(min-width:760px){.opts{grid-template-columns:1fr 1fr 1fr}}
+  .opt{border:1px solid var(--line); border-radius:16px; padding:18px; background:var(--paper);
+    box-shadow:var(--shadow); display:flex; flex-direction:column}
+  .opt.reco{border:2px solid var(--teal); box-shadow:0 0 0 4px var(--teal-50),var(--shadow)}
+  .opt .badge{align-self:flex-start; font-size:11px; font-weight:800; letter-spacing:.05em;
+    text-transform:uppercase; padding:4px 9px; border-radius:999px; margin-bottom:10px}
+  .opt.reco .badge{background:var(--teal); color:#fff}
+  .opt .badge.neutral{background:var(--surface); color:var(--muted); border:1px solid var(--line)}
+  .opt h4{font-size:16px; margin-bottom:8px}
+  .pc{font-size:13.5px; margin:8px 0 0; padding-left:0}
+  .pc li{list-style:none; padding-left:22px; position:relative; margin:6px 0}
+  .pc li.pro::before{content:"▲"; color:var(--green); position:absolute; left:0; top:1px; font-size:10px}
+  .pc li.con::before{content:"▼"; color:var(--rose); position:absolute; left:0; top:1px; font-size:10px}
+
+  ul.clean{margin:.5em 0; padding-left:1.15em}
+  ul.clean li{margin:.35em 0}
+  .pillrow{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0}
+  .pill{font-size:12.5px; font-weight:650; padding:6px 12px; border-radius:999px;
+    background:var(--surface); border:1px solid var(--line); color:var(--body)}
+
+  .summary{background:linear-gradient(135deg,#0b3b37,#0f766e); color:#eafaf7; border-radius:18px;
+    padding:26px 28px; margin-top:34px}
+  .summary h3{color:#fff}
+  .summary p{color:#d6efeb}
+
+  .foot{margin-top:36px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:12.5px; color:var(--muted)}
+  @media print{
+    body{background:#fff} .card,.diagram,.opt{box-shadow:none}
+    header.hero{background:#0f766e !important; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Plinthly · Information Architecture &amp; JTBD</p>
+    <h1>Where do comparison tools belong in the journey?</h1>
+    <p class="sub">A structural analysis of housing rent‑vs‑buy (≡ invest‑vs‑buy) and renovate‑vs‑new comparison inside Plinthly's five‑phase funnel — not a UI design.</p>
+    <div class="meta-row">
+      <span class="chip">📅 2026‑06‑25</span>
+      <span class="chip">🧭 Senior PD / IA lens</span>
+      <span class="chip">⚙️ Grounded in the codebase</span>
+    </div>
+    <div class="legend">
+      <span class="tag know"><span class="dot"></span>KNOW — from code, data &amp; docs (cited)</span>
+      <span class="tag infer"><span class="dot"></span>INFER — reasoned claim about users, flagged for research</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="card" style="margin-top:26px">
+    <h3>The boundary up front</h3>
+    <p>The brief states <em>"user interviews surfaced demand for comparison tools."</em> I could not verify this in the repo — what exists is a <strong>planned</strong> generative study (<code>research/cuj-foundational-study-plan.md</code>) and EN/DE interview scripts, all dated 2026‑06‑12, with the consolidated journey map listed as an intended <em>output</em>. So the research is designed but, on the repo evidence, <strong>not yet run</strong>. I treat "comparison is in demand" as an accepted premise, and treat <em>where it fits</em> as exactly the question that study should answer. Every user‑journey claim below is therefore <span class="i">INFER</span>.</p>
+  </div>
+
+  <!-- ================= 1. IA AUDIT ================= -->
+  <section id="ia">
+    <div class="sec-head"><div class="sec-num">1</div><h2>Information Architecture Audit</h2></div>
+    <p class="lede">What the product is, the implicit hierarchy, and where the funnel serves vs. fights users.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 980 300" role="img" aria-label="Five-phase linear funnel diagram">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#9aa3ad"/>
+          </marker>
+          <marker id="arrowT" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/>
+          </marker>
+        </defs>
+        <!-- qualification zone -->
+        <rect x="8" y="44" width="168" height="150" rx="14" fill="#e6f3f1" stroke="#cfe8e4"/>
+        <text x="92" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#0b554f">QUALIFICATION · one right answer</text>
+        <!-- exploration zone -->
+        <rect x="196" y="44" width="700" height="150" rx="14" fill="#f6f1fb" stroke="#ddc9fb"/>
+        <text x="546" y="32" text-anchor="middle" font-size="12" font-weight="700" fill="#5b21b6">EXPLORATION · many valid answers (gated &amp; inheriting Phase 1 state)</text>
+
+        <!-- phase nodes -->
+        <g font-family="inherit">
+          <!-- p1 -->
+          <rect x="26" y="70" width="132" height="98" rx="11" fill="#0f766e"/>
+          <text x="92" y="100" text-anchor="middle" fill="#fff" font-size="14" font-weight="800">1 · Can I buy?</text>
+          <text x="92" y="122" text-anchor="middle" fill="#d6efeb" font-size="11">income+savings</text>
+          <text x="92" y="138" text-anchor="middle" fill="#d6efeb" font-size="11">→ max price</text>
+          <text x="92" y="156" text-anchor="middle" fill="#bfe7e0" font-size="10">affordability.js</text>
+
+          <rect x="210" y="70" width="150" height="98" rx="11" fill="#fff" stroke="#cdd4db"/>
+          <text x="285" y="98" text-anchor="middle" fill="#0D0D0D" font-size="13.5" font-weight="800">2 · Dream price</text>
+          <text x="285" y="120" text-anchor="middle" fill="#737b86" font-size="11">reverse-check a</text>
+          <text x="285" y="135" text-anchor="middle" fill="#737b86" font-size="11">target price</text>
+          <text x="285" y="156" text-anchor="middle" fill="#9aa3ad" font-size="10">inserted (4→5)</text>
+
+          <rect x="388" y="70" width="150" height="98" rx="11" fill="#fff" stroke="#cdd4db"/>
+          <text x="463" y="98" text-anchor="middle" fill="#0D0D0D" font-size="13.5" font-weight="800">3 · What to look</text>
+          <text x="463" y="120" text-anchor="middle" fill="#737b86" font-size="11">budget · energy</text>
+          <text x="463" y="135" text-anchor="middle" fill="#737b86" font-size="11">class · subsidies</text>
+          <text x="463" y="156" text-anchor="middle" fill="#9aa3ad" font-size="10">exploration.js</text>
+
+          <rect x="566" y="70" width="150" height="98" rx="11" fill="#fff" stroke="#cdd4db"/>
+          <text x="641" y="98" text-anchor="middle" fill="#0D0D0D" font-size="13.5" font-weight="800">4 · Real options</text>
+          <text x="641" y="120" text-anchor="middle" fill="#737b86" font-size="11">renovate · new</text>
+          <text x="641" y="135" text-anchor="middle" fill="#737b86" font-size="11">· build</text>
+          <text x="641" y="156" text-anchor="middle" fill="#9aa3ad" font-size="10">options.js ✓ built</text>
+
+          <rect x="744" y="70" width="134" height="98" rx="11" fill="#fff" stroke="#cdd4db"/>
+          <text x="811" y="98" text-anchor="middle" fill="#0D0D0D" font-size="13.5" font-weight="800">5 · Plan</text>
+          <text x="811" y="120" text-anchor="middle" fill="#737b86" font-size="11">synthesis ·</text>
+          <text x="811" y="135" text-anchor="middle" fill="#737b86" font-size="11">bank · feedback</text>
+        </g>
+        <!-- arrows -->
+        <g stroke="#9aa3ad" stroke-width="2" fill="none">
+          <line x1="158" y1="119" x2="206" y2="119" marker-end="url(#arrow)"/>
+          <line x1="360" y1="119" x2="384" y2="119" marker-end="url(#arrow)"/>
+          <line x1="538" y1="119" x2="562" y2="119" marker-end="url(#arrow)"/>
+          <line x1="716" y1="119" x2="740" y2="119" marker-end="url(#arrow)"/>
+        </g>
+        <!-- gate -->
+        <text x="183" y="210" text-anchor="middle" font-size="11" fill="#9f1239" font-weight="700">🔒 gate: no phase &gt;1 without a Phase 1 result</text>
+        <!-- the tension -->
+        <rect x="196" y="232" width="360" height="52" rx="11" fill="#fdeef1" stroke="#f6c9d3"/>
+        <text x="376" y="254" text-anchor="middle" font-size="12.5" font-weight="800" fill="#9f1239">Rent‑vs‑buy / invest wants to live PRE‑gate…</text>
+        <text x="376" y="272" text-anchor="middle" font-size="12" fill="#9f1239">…but the IA has no "before qualification."</text>
+        <line x1="376" y1="232" x2="92" y2="172" stroke="#9f1239" stroke-width="2" stroke-dasharray="4 4" fill="none" marker-end="url(#arrow)"/>
+        <!-- NextSteps modular hop -->
+        <path d="M92 172 C 92 215, 463 220, 463 172" stroke="#0f766e" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#arrowT)"/>
+        <text x="600" y="252" font-size="11.5" fill="#0b554f" font-weight="700">↳ NextSteps cards already hop the line (modular precedent)</text>
+      </svg>
+      <div class="cap">Live app: a strictly linear 5‑phase funnel (<code>App.jsx</code> · <code>PHASE_NUMBERS=[1‑5]</code>, <code>LAST_PHASE=5</code>). Docs still say "4‑phase" — the funnel already stretched once.</div>
+    </div>
+
+    <div class="card">
+      <h3>Implicit hierarchy &amp; the core tension <span class="k">KNOW</span></h3>
+      <p>Qualification is the root and the gate. <code>goToPhase</code> refuses any phase&nbsp;&gt;&nbsp;1 without a result (<code>App.jsx:174</code>); <code>PhaseNav</code> only allows jumps to already‑visited phases (<code>maxVisited</code>). Everything downstream inherits Phase 1's budget (<code>explore.budget</code> ← <code>phase1.maxPrice</code>, <code>App.jsx:176‑182</code>).</p>
+      <p><strong>Two different jobs wear one navigation model.</strong> Phase 1 is <em>qualification</em> — deterministic, regulation‑bound, one correct answer; a funnel fits. Phases 2–4 are <em>exploration</em> — open‑ended, many valid answers — yet they're forced into the same gated, one‑way flow. That is where comparison fights the IA: rent‑vs‑buy/invest is, for many users, a question <em>prior to</em> qualification, and the funnel cannot express "I haven't decided I want to buy yet." <span class="i">INFER</span></p>
+    </div>
+
+    <div class="callout redund">
+      <h4><span class="ic">◐</span> Redundancy — two parallel "go forward" mechanisms</h4>
+      Each result screen ships both a linear <em>Continue →</em> button <em>and</em> a <code>NextSteps</code> module whose cards route to Phase 3 &amp; 4 (<code>AffordabilityResult.jsx:577</code>, <code>DreamPricePhase.jsx:497</code>). The product already has a modular contextual cross‑link pattern that jumps linear order — it just duplicates Continue rather than offering what the funnel can't. <strong>This is the key existing asset for housing comparison.</strong>
+    </div>
+
+    <div class="callout info">
+      <h4><span class="ic">◇</span> Coherence gap — three budget‑like numbers, loosely tied</h4>
+      <code>maxPrice</code> (P1), <code>dreamPrice</code> (P2, a <em>separate</em> state, <code>App.jsx:61</code>), and <code>explore.budget</code> (P3, freely editable) aren't reconciled. Any comparison that asks "buy <em>what</em>, exactly?" must pick one anchor.
+    </div>
+
+    <div class="callout gap">
+      <h4><span class="ic">✕</span> Gap A — Rent‑vs‑buy / invest is entirely absent (incl. in the data)</h4>
+      No rent / opportunity‑cost / invest‑the‑difference logic anywhere. The building block exists — <code>monthlyCostsAtRate</code> gives real monthly carry (<code>affordability.js:400</code>) — but there's <strong>no rent figure in the dataset</strong> (only buy CHF/m², <code>exploration.js</code>), no equity‑accumulation projection, no investment‑return model. A data gap, not just a UI gap.
+    </div>
+
+    <div class="callout gap">
+      <h4><span class="ic">◑</span> Gap B — Renovate‑vs‑new is ~80% built, mis‑framed &amp; buried</h4>
+      <code>options.js</code> + <code>Phase3Options</code> already render a full comparison (<em>get‑in price · energy class · 10‑yr heating · trade‑off</em>, <code>Phase3Options.jsx:64‑90, 271‑326</code>). But it's framed as "pick a route to <em>execute</em>" (selects <code>chosenOption</code>), not "is the difference <em>substantial</em>?" — and it sits four gated steps deep.
+    </div>
+  </section>
+
+  <!-- ================= 2. MENTAL MODELS ================= -->
+  <section id="mm">
+    <div class="sec-head"><div class="sec-num">2</div><h2>Mental Models &amp; JTBD</h2></div>
+    <p class="lede">All <span class="i">INFER</span>, grounded in the brief's stated audience ("financially literate but rule‑illiterate") &amp; Swiss market structure — the hypotheses the planned study should test.</p>
+
+    <div class="card">
+      <h3>Four mental models buyers bring</h3>
+      <div class="pillrow">
+        <span class="pill">🚪 "Can I clear the hurdle?" → matches Phase 1 (correct root)</span>
+        <span class="pill">⚖️ "Rent or buy — is it worth it?" → bookends: early &amp; late</span>
+        <span class="pill">📈 "Invest instead / stay liquid" → same model, most at odds with funnel</span>
+        <span class="pill">🔧 "Renovate or pay up for new?" → within‑buying, magnitude judgment</span>
+      </div>
+      <p><strong>The conflict:</strong> rent‑vs‑buy and invest‑vs‑buy are <em>one</em> engine (rent + invest‑the‑difference vs. buy + build‑equity); only the vocabulary differs. It's the model most in tension with the funnel, because the funnel's premise is "you want to buy — here's how," and this user hasn't accepted that premise.</p>
+    </div>
+
+    <div class="card">
+      <h3>Core jobs &amp; the comparison that belongs to each</h3>
+      <table>
+        <thead><tr><th>JTBD</th><th>Served today?</th><th>Comparison that belongs</th></tr></thead>
+        <tbody>
+          <tr><td><strong>J1</strong> "Am I even in the game?"</td><td class="good">Yes · Phase 1</td><td>—</td></tr>
+          <tr><td><strong>J2</strong> "Is buying worth it vs. rent / invest?"</td><td class="bad">No</td><td>Rent‑vs‑buy / invest</td></tr>
+          <tr><td><strong>J3</strong> "What does my money buy, what's good?"</td><td class="good">Yes · Phase 3</td><td>—</td></tr>
+          <tr><td><strong>J4</strong> "Which route to ownership?"</td><td class="partial">Partial · Phase 4</td><td>Renovate‑vs‑new "is it substantial?"</td></tr>
+          <tr><td><strong>J5</strong> "What do I do next?"</td><td class="good">Yes · Phase 5</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Is "compare" a destination, a mode, or an interruption?</h3>
+      <ul class="clean">
+        <li><strong>Rent‑vs‑buy / invest = a MODE</strong> — a lens you switch into at decision moments. Best as a <em>contextual module</em> at two bookend moments, <em>plus</em> one thin standalone door for the pre‑qualification browser (the only persona the funnel can't serve).</li>
+        <li><strong>Renovate‑vs‑new = a contextual module</strong> already living in the right phase.</li>
+        <li><strong>Neither should be the primary "Compare hub" destination.</strong> A hub reads clean on a sitemap but fragments the journey, re‑poses inputs the funnel already has, and creates a second app to maintain.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= 3. JOURNEYS ================= -->
+  <section id="journeys">
+    <div class="sec-head"><div class="sec-num">3</div><h2>Journey / Workflow Mapping</h2></div>
+    <p class="lede">Four <span class="i">INFER</span> personas (consistent with the secondary personas named in the brief) and where comparison enters for each.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 980 330" role="img" aria-label="Persona journey map">
+        <!-- columns -->
+        <text x="250" y="24" text-anchor="middle" font-size="12.5" font-weight="800" fill="#9f1239">BEFORE QUALIFYING</text>
+        <text x="720" y="24" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0b554f">AFTER QUALIFYING · has max price + monthly</text>
+        <line x1="490" y1="34" x2="490" y2="318" stroke="#e7eaee" stroke-width="2" stroke-dasharray="6 5"/>
+
+        <!-- row labels -->
+        <g font-size="12.5" font-weight="700" fill="#0D0D0D">
+          <text x="16" y="70">Browser /</text><text x="16" y="86">renter on fence</text>
+          <text x="16" y="150">Serious buyer</text>
+          <text x="16" y="222">Owner /</text><text x="16" y="238">renovator</text>
+          <text x="16" y="298">New‑build planner</text>
+        </g>
+
+        <!-- browser -->
+        <rect x="150" y="50" width="250" height="48" rx="10" fill="#fdeef1" stroke="#f6c9d3"/>
+        <text x="275" y="70" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9f1239">"Should I buy at all, or stay liquid?"</text>
+        <text x="275" y="87" text-anchor="middle" font-size="11" fill="#9f1239">wants rent‑vs‑buy FIRST · no financials yet</text>
+        <line x1="400" y1="74" x2="560" y2="74" stroke="#9aa3ad" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+        <rect x="560" y="56" width="150" height="36" rx="9" fill="#fff" stroke="#cdd4db"/>
+        <text x="635" y="79" text-anchor="middle" font-size="11.5" fill="#737b86">may convert → Phase 1</text>
+
+        <!-- serious buyer -->
+        <rect x="150" y="128" width="150" height="44" rx="10" fill="#0f766e"/>
+        <text x="225" y="155" text-anchor="middle" font-size="12.5" font-weight="800" fill="#fff">Phase 1 → result</text>
+        <rect x="320" y="128" width="170" height="44" rx="10" fill="#f6f1fb" stroke="#ddc9fb"/>
+        <text x="405" y="148" text-anchor="middle" font-size="11.5" font-weight="700" fill="#5b21b6">gut‑check:</text>
+        <text x="405" y="163" text-anchor="middle" font-size="11.5" font-weight="700" fill="#5b21b6">rent / invest?</text>
+        <rect x="560" y="128" width="180" height="44" rx="10" fill="#fff" stroke="#cdd4db"/>
+        <text x="650" y="148" text-anchor="middle" font-size="11.5" fill="#737b86">Phase 4: renovate</text>
+        <text x="650" y="163" text-anchor="middle" font-size="11.5" fill="#737b86">vs new (verdict)</text>
+        <line x1="300" y1="150" x2="318" y2="150" stroke="#9aa3ad" stroke-width="2" marker-end="url(#arrow)"/>
+        <line x1="490" y1="150" x2="558" y2="150" stroke="#9aa3ad" stroke-width="2" marker-end="url(#arrow)"/>
+
+        <!-- owner -->
+        <rect x="560" y="204" width="230" height="44" rx="10" fill="#fff" stroke="#cdd4db"/>
+        <text x="675" y="224" text-anchor="middle" font-size="11.5" fill="#737b86">renovate economics</text>
+        <text x="675" y="239" text-anchor="middle" font-size="11.5" fill="#9aa3ad">retrofit.js (skips qualify &amp; rent‑vs‑buy)</text>
+
+        <!-- new build -->
+        <rect x="560" y="276" width="230" height="42" rx="10" fill="#fff" stroke="#cdd4db"/>
+        <text x="675" y="302" text-anchor="middle" font-size="11.5" fill="#737b86">Phase 4 build option ✓ already served</text>
+      </svg>
+      <div class="cap">Comparison enters at <strong>different moments per persona</strong>. The serious buyer can inherit rich state (maxPrice, monthly, canton) — near‑zero new input. The browser inherits nothing and needs an honest "generic until you add your numbers" flag.</div>
+    </div>
+
+    <div class="card">
+      <h3>Natural entry points, reasoned</h3>
+      <table>
+        <thead><tr><th>Entry point</th><th>Seeding quality</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td><strong>After Phase 1</strong> (max price + monthly known)</td><td class="good">Highest — <code>monthlyCostsAtRate</code> gives buy‑side; rent needs 1 input</td><td class="good">Best contextual moment — lands on the "is it worth it?" gut‑check</td></tr>
+          <tr><td><strong>After Phase 2</strong> dream price</td><td class="partial">Strong but aspirational</td><td class="partial">Risk: attaching opp‑cost math to a stretch number validates overreach</td></tr>
+          <tr><td><strong>Standalone Compare hub</strong></td><td class="bad">Cold‑start inputs</td><td class="bad">Serves browser but fragments &amp; recreates the toggle problem</td></tr>
+          <tr><td><strong>Contextual links</strong> (NextSteps pattern)</td><td class="good">Reuses seeded state</td><td class="good">Lowest friction, already in codebase</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= 4. PLACEMENT ================= -->
+  <section id="placement">
+    <div class="sec-head"><div class="sec-num">4</div><h2>Placement Options + Recommendation</h2></div>
+    <p class="lede">Three concrete IA options, each weighed against the mental‑model &amp; journey findings.</p>
+
+    <div class="opts">
+      <div class="opt">
+        <span class="badge neutral">Option 1</span>
+        <h4>A new comparison <em>phase</em></h4>
+        <p style="font-size:13.5px;color:var(--muted);margin:0">"Is it worth it?" inserted between qualify &amp; explore.</p>
+        <ul class="pc">
+          <li class="pro">Explicit, discoverable, inherits state</li>
+          <li class="con">Forces the lens on <em>everyone</em></li>
+          <li class="con">Lengthens a funnel already grown 4→5</li>
+          <li class="con">Reframes a <em>mode</em> as a mandatory step</li>
+          <li class="con">Still behind the gate — no help for the browser</li>
+        </ul>
+      </div>
+
+      <div class="opt">
+        <span class="badge neutral">Option 2</span>
+        <h4>A parallel "Compare" hub</h4>
+        <p style="font-size:13.5px;color:var(--muted);margin:0">Second top‑level destination beside the funnel.</p>
+        <ul class="pc">
+          <li class="pro">Serves the pre‑qualification browser</li>
+          <li class="pro">Home for future comparisons</li>
+          <li class="con">Fragments the journey into two apps</li>
+          <li class="con">Cold‑start inputs → the 7‑toggle problem returns</li>
+          <li class="con">Duplicates state; maintenance cost</li>
+        </ul>
+      </div>
+
+      <div class="opt reco">
+        <span class="badge">★ Recommended · Option 3</span>
+        <h4>Contextual modules + one thin door</h4>
+        <p style="font-size:13.5px;color:var(--muted);margin:0">Modules at decision moments; a single standalone entry.</p>
+        <ul class="pc">
+          <li class="pro">Matches the mental‑model finding (mode, bookends)</li>
+          <li class="pro">Reuses seeded state → kills toggle bloat</li>
+          <li class="pro">Preserves the funnel for serious buyers</li>
+          <li class="pro">Reuses existing <code>NextSteps</code> pattern</li>
+          <li class="con">Comparison logic spread across surfaces</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Recommended structure — in three moves</h3>
+      <ul class="clean">
+        <li><strong>1 · Rent‑vs‑buy / invest as a collapsible module on the Phase 1 result</strong> (optionally the Phase 2 dream result), seeded from <code>maxPrice</code>, <code>monthly</code>, <code>mortgage</code>, <code>downPayment</code>, <code>canton</code>. Reuses the <code>NextSteps</code> precedent and the existing market‑rate slider.</li>
+        <li><strong>2 · One low‑input standalone door</strong> from the Phase 1 "Other tracks" area ("Rent or buy? Start here") for the un‑qualified browser — generic, seeded only by canton, loudly flagged as indicative, one click into Phase 1 to personalize.</li>
+        <li><strong>3 · Renovate‑vs‑new stays in Phase 4, re‑framed</strong> — keep the <code>ComparisonSummary</code>, add an explicit <em>verdict line</em> ("buying new costs ~CHF X more to get in but saves ~CHF Y over 10 yrs; the gap is small/large") instead of a neutral row‑picker.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Defeating the toggle problem (the prototype's 7+ inputs)</h3>
+      <div class="pillrow">
+        <span class="pill">① Lead with a <strong>verdict</strong>, hide assumptions (progressive disclosure)</span>
+        <span class="pill">② <strong>Smart defaults</strong> seeded from prior phases — zero new inputs to get an answer</span>
+        <span class="pill">③ <strong>Presets over sliders</strong> — "Cautious 2% / Balanced 4% / Optimistic 6%" × "Stay 5/10/20 yrs"</span>
+      </div>
+      <div class="callout gap" style="margin-bottom:0">
+        <h4><span class="ic">⚠︎</span> Honesty guardrail &amp; data gap — must flag</h4>
+        Rent‑vs‑buy is far more assumption‑sensitive than renovate‑vs‑new (which is fully data‑backed today). It needs two things the dataset lacks: a <strong>rent figure</strong> (no cantonal rent CHF/m² in <code>swiss-cantonal-data.json</code>) and an <strong>assumed investment return</strong>. To honor "honest, indicative numbers," lead with a <em>band + verdict</em> (never a false‑precision point estimate) and carry a "<em>this flips if…</em>" sentence — mirroring the existing <code>Indicative</code> labelling. If no defensible rent benchmark can be sourced, require a user‑entered rent rather than inventing one.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 5. OPEN QUESTIONS ================= -->
+  <section id="open">
+    <div class="sec-head"><div class="sec-num">5</div><h2>Open Questions for Research</h2></div>
+    <p class="lede">These map onto the planned (not‑yet‑run) CUJ study — several are already in its RQ set.</p>
+    <div class="card">
+      <ol style="margin:0;padding-left:1.2em">
+        <li style="margin:.5em 0"><strong>Entry vs. validation?</strong> Is rent‑vs‑buy the <em>first</em> question or a <em>late</em> gut‑check for this audience? Decides whether the standalone door is essential. <span style="color:var(--muted)">(study RQ1, RQ3)</span></li>
+        <li style="margin:.5em 0"><strong>"Rent vs buy" or "invest vs buy"?</strong> Same model, different vocabulary — which entry label converts?</li>
+        <li style="margin:.5em 0"><strong>What magnitude reads as "substantial"</strong> for renovate‑vs‑new? Sets the verdict‑line threshold.</li>
+        <li style="margin:.5em 0"><strong>Will the un‑qualified browser accept a generic comparison,</strong> or does lost personalization erode the trust asset? <span style="color:var(--muted)">(RQ4)</span></li>
+        <li style="margin:.5em 0"><strong>Presets vs. sliders</strong> — do presets satisfy the financially‑literate user, or will they demand (and churn on) the raw controls?</li>
+        <li style="margin:.5em 0"><strong>Funnel impact</strong> — does inserting comparison reduce completion of the qualify→action path? A guardrail metric.</li>
+        <li style="margin:.5em 0"><strong>Sequencing</strong> — before or after the dream price, given the stretch‑number risk? <span style="color:var(--muted)">(RQ6)</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="summary">
+    <h3>In one paragraph</h3>
+    <p>Plinthly's funnel correctly models <strong>qualification</strong> as a gated, single‑answer flow, but forces <strong>exploration &amp; comparison</strong> — modes with many valid answers — to live as gated children of it. Renovate‑vs‑new is already built but framed as a route‑picker rather than a "is the gap substantial?" verdict, and buried at Phase 4. Rent‑vs‑buy / invest is absent — and is the case most at odds with the funnel, because it's the question of users who haven't yet accepted that they want to buy. The recommended structure is <strong>contextual comparison modules at the two natural decision moments, plus one thin standalone door</strong> for the pre‑qualification browser — reusing the existing <code>NextSteps</code> pattern and seeded state to kill the toggle problem — not a new linear phase or a separate hub. The principal risk is data/assumption honesty: rent‑vs‑buy needs a rent benchmark the dataset lacks and an investment‑return assumption, both of which must surface as indicative bands with an explicit "this flips if…" caveat to protect the brand's core trust asset.</p>
+  </div>
+
+  <p class="foot">Sources — read directly from the repo: <code>src/App.jsx</code>, <code>src/lib/affordability.js</code>, <code>src/lib/options.js</code>, <code>src/lib/exploration.js</code>, <code>src/lib/retrofit.js</code>, <code>src/state/AppStateContext.jsx</code>, <code>src/components/{AffordabilityResult,DreamPricePhase,Phase2Exploration,Phase3Options,NextSteps}.jsx</code>, <code>src/i18n/translations.js</code>, <code>src/data/swiss-cantonal-data.json</code>, <code>PRODUCT_BRIEF.md</code>, <code>FIGMA_MAKE_BRIEF.md</code>, <code>research/cuj-foundational-study-plan.md</code>. A companion long‑form version is in <code>COMPARISON_IA_ANALYSIS.md</code>.</p>
+
+</div>
+</body>
+</html>

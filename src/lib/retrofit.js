@@ -8,7 +8,7 @@
  *
  * Everything is grounded in swiss-cantonal-data.json:
  *  - per-measure costs    → renovation_cost_benchmarks.measures
- *  - subsidies            → gebaeueprogramm_federal.typical_subsidy_ranges
+ *  - subsidies            → gebaeudeprogramm_federal.typical_subsidy_ranges
  *  - energy/CO₂ per class  → energy_classes.classes
  *  - resale uplift        → minergie.standards.*.resale_premium_pct
  *
@@ -38,7 +38,7 @@ const RESALE_PREMIUM_PCT = {
 }
 
 const M = data.renovation_cost_benchmarks.measures
-const SUB = data.gebaeueprogramm_federal.typical_subsidy_ranges
+const SUB = data.gebaeudeprogramm_federal.typical_subsidy_ranges
 
 /**
  * Measure catalogue. `cost(size)` and `subsidy(size)` derive a total CHF for the

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plinthly — How the tool works today (workflow map)</title>
+<style>
+  :root{
+    --ink:#0D0D0D; --body:#3f4651; --muted:#737b86; --line:#E7EAEE; --surface:#F5F7F9; --paper:#fff;
+    --teal:#0f766e; --teal-50:#e6f3f1; --teal-100:#cfe8e4;
+    --amber:#b45309; --amber-50:#fef6e7; --amber-200:#fadfa3;
+    --violet:#7c3aed; --violet-50:#f1eafe; --violet-200:#ddc9fb;
+    --blue:#1d4ed8; --blue-50:#eaf0fe; --blue-200:#c3d4fb;
+    --rose:#9f1239; --rose-50:#fdeef1; --rose-200:#f6c9d3;
+    --green:#047857; --green-50:#e6f5ee;
+    --shadow:0 1px 2px rgba(13,13,13,.04),0 8px 24px rgba(13,13,13,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--surface);color:var(--body);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px 80px}
+  h1,h2,h3{color:var(--ink);margin:0;line-height:1.2;letter-spacing:-.01em}
+  header.hero{background:linear-gradient(135deg,#0b3b37,#0f766e);color:#fff;padding:40px 0 34px}
+  header.hero .wrap{padding-bottom:0}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7e3da;margin:0 0 10px}
+  header.hero h1{color:#fff;font-size:32px;font-weight:850}
+  header.hero p{color:#d6efeb;max-width:70ch;margin-top:10px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 6px}
+  .lg{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:650;padding:6px 11px;border-radius:999px;border:1px solid}
+  .lg .sw{width:12px;height:12px;border-radius:3px}
+  .lg.data{background:var(--amber-50);border-color:var(--amber-200);color:#7c4408} .lg.data .sw{background:var(--amber)}
+  .lg.eng{background:var(--teal-50);border-color:var(--teal-100);color:#0b554f} .lg.eng .sw{background:var(--teal)}
+  .lg.state{background:var(--violet-50);border-color:var(--violet-200);color:#5b21b6} .lg.state .sw{background:var(--violet)}
+  .lg.ui{background:#fff;border-color:var(--line);color:var(--ink)} .lg.ui .sw{background:var(--ink)}
+  .lg.out{background:var(--blue-50);border-color:var(--blue-200);color:#1c3b8f} .lg.out .sw{background:var(--blue)}
+  .lg.gate{background:var(--rose-50);border-color:var(--rose-200);color:#7a1330} .lg.gate .sw{background:var(--rose)}
+
+  section{margin-top:30px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
+  .sec-num{width:34px;height:34px;border-radius:10px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800}
+  .lede{color:var(--muted);margin:0 0 12px}
+  .panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);overflow-x:auto}
+  svg{display:block;max-width:100%;height:auto;margin:0 auto}
+  .note{font-size:12.5px;color:var(--muted);margin-top:8px}
+
+  .cards{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+  @media(min-width:780px){.cards{grid-template-columns:1fr 1fr}}
+  .c{border:1px solid var(--line);border-radius:13px;padding:13px 15px;background:var(--paper);box-shadow:var(--shadow)}
+  .c h3{font-size:14.5px;margin-bottom:5px}
+  .c p{margin:.3em 0;font-size:13.5px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;background:#eef1f4;color:#243;padding:1px 5px;border-radius:5px}
+  .foot{margin-top:30px;font-size:12px;color:var(--muted);text-align:center}
+  @media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}header.hero{background:#0f766e!important}.panel,.c{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Plinthly · System map</p>
+    <h1>How the tool works today</h1>
+    <p>The actual live flow, mapped from the code: the 5‑phase journey with its gate and state, then the data → engine → component architecture underneath it. Everything runs client‑side; nothing is stored server‑side except the URL hash and chosen language.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="legend">
+    <span class="lg data"><span class="sw"></span>Data (JSON)</span>
+    <span class="lg eng"><span class="sw"></span>Engine (pure lib)</span>
+    <span class="lg state"><span class="sw"></span>State (App.jsx)</span>
+    <span class="lg ui"><span class="sw"></span>UI component / phase</span>
+    <span class="lg out"><span class="sw"></span>Output / external</span>
+    <span class="lg gate"><span class="sw"></span>Gate / rule</span>
+  </div>
+
+  <!-- ============ DIAGRAM 1: JOURNEY + CONTROL FLOW ============ -->
+  <section>
+    <div class="sec-head"><div class="sec-num">1</div><h2>User journey &amp; control flow</h2></div>
+    <p class="lede">The linear 5‑phase funnel, the gate that governs it, and the one cross‑phase loop (a modelled renovation flows <em>back</em> into Phase 1 as an effective budget).</p>
+    <div class="panel">
+      <svg viewBox="0 0 1120 1180" role="img" aria-label="Plinthly 5-phase journey and control flow">
+        <defs>
+          <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b939d"/></marker>
+          <marker id="at" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/></marker>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9f1239"/></marker>
+          <marker id="av" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+        </defs>
+
+        <!-- ENTRY -->
+        <rect x="360" y="16" width="400" height="56" rx="11" fill="#eaf0fe" stroke="#c3d4fb"/>
+        <text x="560" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="#1c3b8f">Load · decodeState() reads URL #hash</text>
+        <text x="560" y="58" text-anchor="middle" font-size="11.5" fill="#1c3b8f">restores inputs + phase (share.js) · else blank Phase 1</text>
+        <line x1="560" y1="72" x2="560" y2="96" stroke="#8b939d" stroke-width="2" marker-end="url(#a)"/>
+
+        <!-- STATE RAIL (right) -->
+        <rect x="900" y="100" width="206" height="300" rx="12" fill="#f1eafe" stroke="#ddc9fb"/>
+        <text x="1003" y="124" text-anchor="middle" font-size="12.5" font-weight="800" fill="#5b21b6">App.jsx — state owner</text>
+        <g font-size="11.5" fill="#5b21b6">
+          <text x="916" y="148">• values (income, savings…)</text>
+          <text x="916" y="167">• phase1 (engine result)</text>
+          <text x="916" y="186">• explore (budget, canton…)</text>
+          <text x="916" y="205">• dreamPrice · dreamContext</text>
+          <text x="916" y="224">• phase · maxVisited</text>
+          <text x="916" y="243">• feedback</text>
+        </g>
+        <line x1="916" y1="262" x2="916" y2="276" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="916" y="292" font-size="11" font-weight="700" fill="#5b21b6">syncHash() ⟳ on every change</text>
+        <text x="916" y="309" font-size="11" fill="#5b21b6">→ URL stays shareable</text>
+        <line x1="916" y1="326" x2="916" y2="340" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="916" y="356" font-size="11" font-weight="700" fill="#5b21b6">deriveAppState()</text>
+        <text x="916" y="373" font-size="11" fill="#5b21b6">→ StickySummaryBar,</text>
+        <text x="916" y="389" font-size="11" fill="#5b21b6">PhaseContextBanner, advisor</text>
+
+        <!-- PhaseNav rail (left) -->
+        <rect x="14" y="100" width="150" height="300" rx="12" fill="#fff" stroke="#E7EAEE"/>
+        <text x="89" y="123" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0D0D0D">PhaseNav</text>
+        <g font-size="11.5" fill="#3f4651">
+          <text x="30" y="147">1 Can I buy?</text>
+          <text x="30" y="169">2 Dream price</text>
+          <text x="30" y="191">3 What to look</text>
+          <text x="30" y="213">4 Real options</text>
+          <text x="30" y="235">5 Action plan</text>
+        </g>
+        <text x="30" y="266" font-size="10.5" fill="#737b86">jump allowed only to</text>
+        <text x="30" y="280" font-size="10.5" fill="#737b86">n ≤ maxVisited</text>
+        <rect x="22" y="296" width="134" height="92" rx="9" fill="#fdeef1" stroke="#f6c9d3"/>
+        <text x="89" y="316" text-anchor="middle" font-size="11.5" font-weight="800" fill="#9f1239">🔒 THE GATE</text>
+        <text x="30" y="335" font-size="10.5" fill="#9f1239">goToPhase blocks</text>
+        <text x="30" y="350" font-size="10.5" fill="#9f1239">any n &gt; 1 until</text>
+        <text x="30" y="365" font-size="10.5" fill="#9f1239">phase1 result exists</text>
+        <text x="30" y="380" font-size="10.5" fill="#9f1239">(income+savings &gt; 0)</text>
+
+        <!-- ===== PHASE 1 ===== -->
+        <rect x="186" y="100" width="700" height="190" rx="14" fill="#fff" stroke="#cdd4db"/>
+        <circle cx="214" cy="128" r="13" fill="#0f766e"/><text x="214" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">1</text>
+        <text x="236" y="132" font-size="14.5" font-weight="800" fill="#0D0D0D">Can I buy?  ·  reverse calc (means → max price)</text>
+        <!-- input -->
+        <rect x="202" y="146" width="200" height="126" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="214" y="166" font-size="11.5" font-weight="700" fill="#0D0D0D">AffordabilityForm</text>
+        <text x="214" y="184" font-size="10.5" fill="#737b86">income · savings · 3a ·</text>
+        <text x="214" y="198" font-size="10.5" fill="#737b86">pillar2 · down% · canton ·</text>
+        <text x="214" y="212" font-size="10.5" fill="#737b86">household</text>
+        <text x="214" y="234" font-size="10" fill="#0f766e">live: no "run" button</text>
+        <text x="214" y="250" font-size="10" fill="#737b86">handleValuesChange()</text>
+        <text x="214" y="264" font-size="10" fill="#737b86">→ track(calc_completed)</text>
+        <line x1="402" y1="209" x2="430" y2="209" stroke="#0f766e" stroke-width="2" marker-end="url(#at)"/>
+        <!-- engine -->
+        <rect x="430" y="158" width="150" height="100" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+        <text x="505" y="180" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0b554f">calculateAffordability</text>
+        <text x="505" y="198" text-anchor="middle" font-size="10" fill="#0b554f">equity vs income</text>
+        <text x="505" y="212" text-anchor="middle" font-size="10" fill="#0b554f">ceilings → min</text>
+        <text x="505" y="230" text-anchor="middle" font-size="10" fill="#0b554f">maxPrice · binding</text>
+        <text x="505" y="244" text-anchor="middle" font-size="10" fill="#0b554f">constraint · shortfall</text>
+        <line x1="580" y1="209" x2="608" y2="209" stroke="#8b939d" stroke-width="2" marker-end="url(#a)"/>
+        <!-- output -->
+        <rect x="608" y="146" width="264" height="126" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="620" y="166" font-size="11.5" font-weight="700" fill="#0D0D0D">AffordabilityResult</text>
+        <text x="620" y="184" font-size="10.5" fill="#737b86">4‑state grade · down breakdown</text>
+        <text x="620" y="199" font-size="10.5" fill="#737b86">monthly slider (real rate vs 5%)</text>
+        <text x="620" y="214" font-size="10.5" fill="#737b86">PathToGoal · Levers</text>
+        <text x="620" y="229" font-size="10.5" fill="#737b86">NextSteps → jump to P3 / P4</text>
+        <text x="620" y="252" font-size="10" fill="#9f1239">if not viable → honest "not yet"</text>
+        <text x="620" y="266" font-size="10" fill="#9f1239">+ shortfall &amp; what moves it</text>
+
+        <text x="536" y="115" font-size="10.5" fill="#737b86">"Other tracks" (own property / land) = coming‑soon cards</text>
+
+        <!-- arrow to P2 -->
+        <line x1="536" y1="290" x2="536" y2="312" stroke="#0f766e" stroke-width="2.4" marker-end="url(#at)"/>
+        <rect x="470" y="294" width="132" height="16" rx="8" fill="#0f766e"/><text x="536" y="306" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">Continue ↓ (gate open)</text>
+
+        <!-- ===== PHASE 2 ===== -->
+        <rect x="186" y="320" width="700" height="170" rx="14" fill="#fff" stroke="#cdd4db"/>
+        <circle cx="214" cy="346" r="13" fill="#0f766e"/><text x="214" y="350" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">2</text>
+        <text x="236" y="350" font-size="14.5" font-weight="800" fill="#0D0D0D">Dream price  ·  forward check (does THIS price work?)</text>
+        <rect x="202" y="364" width="196" height="106" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="214" y="384" font-size="11.5" font-weight="700" fill="#0D0D0D">DreamPricePhase</text>
+        <text x="214" y="402" font-size="10.5" fill="#737b86">enter target price (+ optional</text>
+        <text x="214" y="416" font-size="10.5" fill="#737b86">assessed val, prop type, debts)</text>
+        <text x="214" y="438" font-size="10" fill="#737b86">track(dream_price_opened)</text>
+        <text x="214" y="456" font-size="10" fill="#7c3aed">→ onDreamContext (advisor)</text>
+        <line x1="398" y1="417" x2="426" y2="417" stroke="#0f766e" stroke-width="2" marker-end="url(#at)"/>
+        <rect x="426" y="372" width="154" height="92" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+        <text x="503" y="392" text-anchor="middle" font-size="11" font-weight="800" fill="#0b554f">checkSpecificProperty</text>
+        <text x="503" y="409" text-anchor="middle" font-size="9.5" fill="#0b554f">Niederstwert · valuation gap</text>
+        <text x="503" y="423" text-anchor="middle" font-size="9.5" fill="#0b554f">prop‑type adj · obligations</text>
+        <text x="503" y="441" text-anchor="middle" font-size="9.5" fill="#0b554f">qualifies? + gaps</text>
+        <line x1="580" y1="417" x2="608" y2="417" stroke="#8b939d" stroke-width="2" marker-end="url(#a)"/>
+        <rect x="608" y="364" width="264" height="106" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="620" y="384" font-size="11.5" font-weight="700" fill="#0D0D0D">verdict + path over time</text>
+        <text x="620" y="401" font-size="10.5" fill="#737b86">GapChart · PathToGoal · Levers</text>
+        <text x="620" y="416" font-size="10.5" fill="#737b86">TrajectoryChart · MilestoneTable</text>
+        <text x="620" y="431" font-size="10.5" fill="#737b86">savings→timeline (static target)</text>
+        <text x="620" y="454" font-size="10" fill="#737b86">NextSteps → jump to P3 / P4</text>
+        <line x1="536" y1="490" x2="536" y2="512" stroke="#0f766e" stroke-width="2.4" marker-end="url(#at)"/>
+
+        <!-- ===== PHASE 3 ===== -->
+        <rect x="186" y="520" width="700" height="150" rx="14" fill="#fff" stroke="#cdd4db"/>
+        <circle cx="214" cy="546" r="13" fill="#0f766e"/><text x="214" y="550" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">3</text>
+        <text x="236" y="550" font-size="14.5" font-weight="800" fill="#0D0D0D">What to look for  ·  exploration  (entry seeds budget = maxPrice)</text>
+        <rect x="202" y="564" width="196" height="92" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="214" y="584" font-size="11.5" font-weight="700" fill="#0D0D0D">Phase2Exploration</text>
+        <text x="214" y="602" font-size="10.5" fill="#737b86">budget · canton · type ·</text>
+        <text x="214" y="616" font-size="10.5" fill="#737b86">condition · sustainability</text>
+        <text x="214" y="640" font-size="10" fill="#737b86">PhaseContextBanner echoes budget</text>
+        <line x1="398" y1="610" x2="426" y2="610" stroke="#0f766e" stroke-width="2" marker-end="url(#at)"/>
+        <rect x="426" y="568" width="154" height="84" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+        <text x="503" y="588" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0b554f">exploration.js</text>
+        <text x="503" y="605" text-anchor="middle" font-size="9.5" fill="#0b554f">marketOverview · energyClass</text>
+        <text x="503" y="619" text-anchor="middle" font-size="9.5" fill="#0b554f">minergie · subsidyOverview</text>
+        <line x1="580" y1="610" x2="608" y2="610" stroke="#8b939d" stroke-width="2" marker-end="url(#a)"/>
+        <rect x="608" y="564" width="264" height="92" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="620" y="584" font-size="11.5" font-weight="700" fill="#0D0D0D">market + energy + subsidy cards</text>
+        <text x="620" y="601" font-size="10.5" fill="#737b86">what CHF buys (size band)</text>
+        <text x="620" y="615" font-size="10.5" fill="#737b86">GEAK 10‑yr running cost table</text>
+        <text x="620" y="629" font-size="10.5" fill="#737b86">Minergie + cantonal subsidies</text>
+        <line x1="536" y1="670" x2="536" y2="692" stroke="#0f766e" stroke-width="2.4" marker-end="url(#at)"/>
+
+        <!-- ===== PHASE 4 ===== -->
+        <rect x="186" y="700" width="700" height="170" rx="14" fill="#fff" stroke="#cdd4db"/>
+        <circle cx="214" cy="726" r="13" fill="#0f766e"/><text x="214" y="730" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">4</text>
+        <text x="236" y="730" font-size="14.5" font-weight="800" fill="#0D0D0D">My real options  ·  renovate / buy‑new / build</text>
+        <rect x="202" y="744" width="196" height="108" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="214" y="764" font-size="11.5" font-weight="700" fill="#0D0D0D">Phase3Options</text>
+        <text x="214" y="782" font-size="10.5" fill="#737b86">ComparisonSummary table</text>
+        <text x="214" y="796" font-size="10.5" fill="#737b86">+ RetrofitConfigurator</text>
+        <text x="214" y="810" font-size="10.5" fill="#737b86">(toggle measures)</text>
+        <text x="214" y="832" font-size="10" fill="#737b86">sets explore.chosenOption,</text>
+        <text x="214" y="846" font-size="10" fill="#737b86">explore.measures</text>
+        <line x1="398" y1="798" x2="426" y2="798" stroke="#0f766e" stroke-width="2" marker-end="url(#at)"/>
+        <rect x="426" y="754" width="154" height="92" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+        <text x="503" y="774" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0b554f">options.js + retrofit.js</text>
+        <text x="503" y="791" text-anchor="middle" font-size="9.5" fill="#0b554f">optionRenovate / NewBuild / Build</text>
+        <text x="503" y="805" text-anchor="middle" font-size="9.5" fill="#0b554f">computeLedger (net cost,</text>
+        <text x="503" y="819" text-anchor="middle" font-size="9.5" fill="#0b554f">payback, resale uplift)</text>
+        <line x1="580" y1="798" x2="608" y2="798" stroke="#8b939d" stroke-width="2" marker-end="url(#a)"/>
+        <rect x="608" y="754" width="264" height="92" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="620" y="774" font-size="11.5" font-weight="700" fill="#0D0D0D">3 routes side by side</text>
+        <text x="620" y="791" font-size="10.5" fill="#737b86">get‑in price · energy class ·</text>
+        <text x="620" y="805" font-size="10.5" fill="#737b86">10‑yr heat · trade‑off · land flag</text>
+        <text x="620" y="826" font-size="10.5" fill="#737b86">pick a route</text>
+        <line x1="536" y1="870" x2="536" y2="892" stroke="#0f766e" stroke-width="2.4" marker-end="url(#at)"/>
+
+        <!-- cross-phase loop: renovation back to Phase 1 -->
+        <path d="M872 808 C 952 808, 152 470, 152 250 L 200 209" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#av)"/>
+        <rect x="120" y="430" width="150" height="40" rx="9" fill="#f1eafe" stroke="#ddc9fb"/>
+        <text x="195" y="447" text-anchor="middle" font-size="10" font-weight="700" fill="#5b21b6">if chosenOption=renovate</text>
+        <text x="195" y="461" text-anchor="middle" font-size="10" fill="#5b21b6">→ "effective budget" in P1</text>
+
+        <!-- ===== PHASE 5 ===== -->
+        <rect x="186" y="900" width="700" height="150" rx="14" fill="#fff" stroke="#cdd4db"/>
+        <circle cx="214" cy="926" r="13" fill="#0f766e"/><text x="214" y="930" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">5</text>
+        <text x="236" y="930" font-size="14.5" font-weight="800" fill="#0D0D0D">Action plan  ·  synthesis + hand‑off</text>
+        <rect x="202" y="944" width="196" height="92" rx="10" fill="#fff" stroke="#E7EAEE"/>
+        <text x="214" y="964" font-size="11.5" font-weight="700" fill="#0D0D0D">Phase4ActionPlan</text>
+        <text x="214" y="982" font-size="10.5" fill="#737b86">actionPlan.js → personalized</text>
+        <text x="214" y="996" font-size="10.5" fill="#737b86">steps · print / share URL</text>
+        <text x="214" y="1018" font-size="10" fill="#737b86">BankInquiry · FeedbackSection</text>
+        <line x1="398" y1="990" x2="426" y2="990" stroke="#8b939d" stroke-width="2" marker-end="url(#a)"/>
+        <rect x="426" y="948" width="154" height="84" rx="10" fill="#eaf0fe" stroke="#c3d4fb"/>
+        <text x="503" y="968" text-anchor="middle" font-size="11" font-weight="800" fill="#1c3b8f">BankInquiry</text>
+        <text x="503" y="985" text-anchor="middle" font-size="9.5" fill="#1c3b8f">mailto: draft (EN/DE)</text>
+        <text x="503" y="999" text-anchor="middle" font-size="9.5" fill="#1c3b8f">banks.json filtered by canton</text>
+        <text x="503" y="1019" text-anchor="middle" font-size="9.5" fill="#1c3b8f">never auto‑sends</text>
+        <line x1="580" y1="990" x2="608" y2="990" stroke="#8b939d" stroke-width="2" marker-end="url(#a)"/>
+        <rect x="608" y="948" width="264" height="84" rx="10" fill="#eaf0fe" stroke="#c3d4fb"/>
+        <text x="620" y="968" font-size="11.5" font-weight="700" fill="#1c3b8f">FeedbackSection → POST /api/feedback</text>
+        <text x="620" y="985" font-size="10.5" fill="#1c3b8f">only goal · strategy · free text</text>
+        <text x="620" y="999" font-size="10.5" fill="#1c3b8f">NO financial inputs ever sent</text>
+        <text x="620" y="1019" font-size="10.5" fill="#1c3b8f">optimistic thank‑you</text>
+
+        <!-- Advisor FAB -->
+        <rect x="186" y="1078" width="700" height="78" rx="14" fill="#f1eafe" stroke="#ddc9fb"/>
+        <text x="206" y="1102" font-size="13" font-weight="800" fill="#5b21b6">AdvisorFab (floating)  —  appears once a Phase 1 result exists</text>
+        <text x="206" y="1122" font-size="11" fill="#5b21b6">buildAdvisorContext(result, lang, dreamContext when in Phase 2) grounds an independent AI guide.</text>
+        <text x="206" y="1140" font-size="11" fill="#5b21b6">The separate "get independent advice" link in NextSteps is a demand‑signal stub (logs interest, "coming soon").</text>
+
+        <!-- back/continue note -->
+        <text x="930" y="430" font-size="11" font-weight="700" fill="#3f4651">Every phase also has</text>
+        <text x="930" y="446" font-size="11" fill="#3f4651">Back ↑ and Continue ↓.</text>
+        <text x="930" y="462" font-size="11" fill="#3f4651">PhaseNav lets you revisit</text>
+        <text x="930" y="478" font-size="11" fill="#3f4651">any visited phase freely.</text>
+      </svg>
+      <div class="note">Solid teal arrows = the linear "Continue" path (deterministic order). Violet dashed = the one feedback loop (a chosen renovation re‑enters Phase 1 as an effective budget). Grey = data hand‑off. The rose box (left) is the single gate that makes all of phases 2–5 children of Phase 1.</div>
+    </div>
+  </section>
+
+  <!-- ============ DIAGRAM 2: ARCHITECTURE ============ -->
+  <section>
+    <div class="sec-head"><div class="sec-num">2</div><h2>Data → engine → component architecture</h2></div>
+    <p class="lede">What feeds what. One auditable dataset drives every pure‑function engine; components only render — they never hold the rule math.</p>
+    <div class="panel">
+      <svg viewBox="0 0 1120 560" role="img" aria-label="Plinthly data and engine architecture">
+        <defs>
+          <marker id="b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b939d"/></marker>
+        </defs>
+
+        <!-- LAYER LABELS -->
+        <text x="20" y="40" font-size="12" font-weight="800" fill="#7c4408">DATA</text>
+        <text x="20" y="190" font-size="12" font-weight="800" fill="#0b554f">ENGINE — pure functions in /lib</text>
+        <text x="20" y="370" font-size="12" font-weight="800" fill="#0D0D0D">COMPONENTS — render only</text>
+        <text x="20" y="510" font-size="12" font-weight="800" fill="#1c3b8f">CROSS‑CUTTING</text>
+
+        <!-- DATA layer -->
+        <rect x="150" y="20" width="300" height="64" rx="11" fill="#fef6e7" stroke="#fadfa3"/>
+        <text x="300" y="44" text-anchor="middle" font-size="13" font-weight="800" fill="#7c4408">swiss‑cantonal‑data.json</text>
+        <text x="300" y="62" text-anchor="middle" font-size="10.5" fill="#7c4408">mortgage_rules · prices/m² · tax · Eigenmietwert</text>
+        <text x="300" y="76" text-anchor="middle" font-size="10.5" fill="#7c4408">energy classes · reno/build · subsidies</text>
+        <rect x="470" y="20" width="150" height="64" rx="11" fill="#fef6e7" stroke="#fadfa3"/>
+        <text x="545" y="48" text-anchor="middle" font-size="12" font-weight="700" fill="#7c4408">glossary.json</text>
+        <text x="545" y="66" text-anchor="middle" font-size="10" fill="#7c4408">10 jargon terms</text>
+        <rect x="640" y="20" width="150" height="64" rx="11" fill="#fef6e7" stroke="#fadfa3"/>
+        <text x="715" y="48" text-anchor="middle" font-size="12" font-weight="700" fill="#7c4408">banks.json</text>
+        <text x="715" y="66" text-anchor="middle" font-size="10" fill="#7c4408">lenders by canton</text>
+
+        <!-- arrows data->engine -->
+        <line x1="300" y1="84" x2="300" y2="206" stroke="#8b939d" stroke-width="1.6" marker-end="url(#b)"/>
+        <line x1="300" y1="120" x2="180" y2="206" stroke="#8b939d" stroke-width="1.4" marker-end="url(#b)"/>
+        <line x1="300" y1="120" x2="440" y2="206" stroke="#8b939d" stroke-width="1.4" marker-end="url(#b)"/>
+        <line x1="320" y1="120" x2="600" y2="206" stroke="#8b939d" stroke-width="1.4" marker-end="url(#b)"/>
+        <line x1="320" y1="120" x2="760" y2="206" stroke="#8b939d" stroke-width="1.4" marker-end="url(#b)"/>
+
+        <!-- ENGINE layer -->
+        <g font-size="11" fill="#0b554f">
+          <rect x="120" y="208" width="140" height="74" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+          <text x="190" y="232" text-anchor="middle" font-size="11.5" font-weight="800">affordability.js</text>
+          <text x="190" y="249" text-anchor="middle" font-size="9.5">calculate · check ·</text>
+          <text x="190" y="262" text-anchor="middle" font-size="9.5">monthlyCostsAtRate ·</text>
+          <text x="190" y="275" text-anchor="middle" font-size="9.5">requirementsForPrice</text>
+
+          <rect x="272" y="208" width="128" height="74" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+          <text x="336" y="232" text-anchor="middle" font-size="11.5" font-weight="800">exploration.js</text>
+          <text x="336" y="249" text-anchor="middle" font-size="9.5">marketOverview ·</text>
+          <text x="336" y="262" text-anchor="middle" font-size="9.5">energyClass · minergie</text>
+          <text x="336" y="275" text-anchor="middle" font-size="9.5">subsidyOverview</text>
+
+          <rect x="412" y="208" width="120" height="74" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+          <text x="472" y="232" text-anchor="middle" font-size="11.5" font-weight="800">options.js</text>
+          <text x="472" y="252" text-anchor="middle" font-size="9.5">renovate / new /</text>
+          <text x="472" y="265" text-anchor="middle" font-size="9.5">build costs</text>
+
+          <rect x="544" y="208" width="120" height="74" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+          <text x="604" y="232" text-anchor="middle" font-size="11.5" font-weight="800">retrofit.js</text>
+          <text x="604" y="252" text-anchor="middle" font-size="9.5">computeLedger ·</text>
+          <text x="604" y="265" text-anchor="middle" font-size="9.5">measures · payback</text>
+
+          <rect x="676" y="208" width="120" height="74" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+          <text x="736" y="232" text-anchor="middle" font-size="11.5" font-weight="800">actionPlan.js</text>
+          <text x="736" y="252" text-anchor="middle" font-size="9.5">synthesize steps</text>
+
+          <rect x="808" y="208" width="150" height="74" rx="10" fill="#e6f3f1" stroke="#cfe8e4"/>
+          <text x="883" y="232" text-anchor="middle" font-size="11.5" font-weight="800">cantons · format</text>
+          <text x="883" y="252" text-anchor="middle" font-size="9.5">share · track ·</text>
+          <text x="883" y="265" text-anchor="middle" font-size="9.5">advisorContext</text>
+        </g>
+
+        <!-- arrows engine->components -->
+        <line x1="190" y1="282" x2="190" y2="384" stroke="#8b939d" stroke-width="1.6" marker-end="url(#b)"/>
+        <line x1="336" y1="282" x2="430" y2="384" stroke="#8b939d" stroke-width="1.6" marker-end="url(#b)"/>
+        <line x1="472" y1="282" x2="610" y2="384" stroke="#8b939d" stroke-width="1.6" marker-end="url(#b)"/>
+        <line x1="604" y1="282" x2="610" y2="384" stroke="#8b939d" stroke-width="1.4" marker-end="url(#b)"/>
+        <line x1="736" y1="282" x2="800" y2="384" stroke="#8b939d" stroke-width="1.6" marker-end="url(#b)"/>
+
+        <!-- COMPONENTS layer -->
+        <g font-size="10.5" fill="#0D0D0D">
+          <rect x="120" y="386" width="170" height="60" rx="10" fill="#fff" stroke="#E7EAEE"/>
+          <text x="205" y="410" text-anchor="middle" font-size="11" font-weight="700">AffordabilityForm/Result</text>
+          <text x="205" y="428" text-anchor="middle" font-size="9.5" fill="#737b86">+ PathToGoal · Levers · NextSteps</text>
+
+          <rect x="300" y="386" width="170" height="60" rx="10" fill="#fff" stroke="#E7EAEE"/>
+          <text x="385" y="410" text-anchor="middle" font-size="11" font-weight="700">DreamPricePhase</text>
+          <text x="385" y="428" text-anchor="middle" font-size="9.5" fill="#737b86">+ DreamPriceCharts</text>
+
+          <rect x="480" y="386" width="150" height="60" rx="10" fill="#fff" stroke="#E7EAEE"/>
+          <text x="555" y="410" text-anchor="middle" font-size="11" font-weight="700">Phase2Exploration</text>
+          <text x="555" y="428" text-anchor="middle" font-size="9.5" fill="#737b86">market / energy / subsidy</text>
+
+          <rect x="640" y="386" width="150" height="60" rx="10" fill="#fff" stroke="#E7EAEE"/>
+          <text x="715" y="410" text-anchor="middle" font-size="11" font-weight="700">Phase3Options</text>
+          <text x="715" y="428" text-anchor="middle" font-size="9.5" fill="#737b86">+ RetrofitConfigurator</text>
+
+          <rect x="800" y="386" width="158" height="60" rx="10" fill="#fff" stroke="#E7EAEE"/>
+          <text x="879" y="410" text-anchor="middle" font-size="11" font-weight="700">Phase4ActionPlan</text>
+          <text x="879" y="428" text-anchor="middle" font-size="9.5" fill="#737b86">+ BankInquiry · Feedback</text>
+        </g>
+
+        <!-- CROSS-CUTTING -->
+        <rect x="120" y="470" width="838" height="74" rx="11" fill="#eaf0fe" stroke="#c3d4fb"/>
+        <g font-size="11" fill="#1c3b8f">
+          <text x="136" y="492" font-weight="700">AppStateContext.deriveAppState()</text><text x="136" y="508" font-size="10">budget · monthly · canton → shared read‑only</text>
+          <text x="400" y="492" font-weight="700">StickySummaryBar · PhaseContextBanner</text><text x="400" y="508" font-size="10">persistent figures + "based on your CHF X" echoes</text>
+          <text x="710" y="492" font-weight="700">i18n (EN/DE/FR/IT)</text><text x="710" y="508" font-size="10">glossary tooltips · FR/IT MT banner</text>
+          <text x="136" y="530" font-weight="700">share.js</text><text x="195" y="530" font-size="10">URL #hash = the only persistence (no DB, no accounts)</text>
+          <text x="560" y="530" font-weight="700">track.js + Vercel Analytics/Speed Insights</text><text x="560" y="530" font-size="10"></text>
+        </g>
+      </svg>
+      <div class="note">One‑way dependency: data → engine → components → screen. No component contains rule math; every threshold lives in <code>mortgage_rules</code> so a regulation change is a one‑line edit. State lives only in <code>App.jsx</code>; <code>AppStateContext</code> is a read‑only derivation.</div>
+    </div>
+  </section>
+
+  <!-- KEY BEHAVIORS -->
+  <section>
+    <div class="sec-head"><div class="sec-num">3</div><h2>Key behaviours the diagram encodes</h2></div>
+    <div class="cards">
+      <div class="c"><h3>🔒 One gate, five children</h3><p><code>goToPhase</code> blocks any phase &gt; 1 until a Phase 1 result exists; <code>PhaseNav</code> only re‑visits <code>maxVisited</code>. So qualification is the root of everything — the structural point the IA analysis flagged.</p></div>
+      <div class="c"><h3>⟳ Live, no "run" button</h3><p>Phase 1 recalculates on every keystroke (<code>handleValuesChange</code> → <code>calculateAffordability</code>); the result and the sticky bar update continuously.</p></div>
+      <div class="c"><h3>↩ The one loop</h3><p>Picking "renovate" in Phase 4 feeds a modelled net cost back into Phase 1 as an "effective property budget" — the only place the flow bends backward.</p></div>
+      <div class="c"><h3>🔗 State = URL</h3><p>No backend. <code>syncHash</code> writes inputs + phase to the URL on every change; <code>decodeState</code> restores them on load. The link IS the saved session.</p></div>
+      <div class="c"><h3>🛡 Privacy by architecture</h3><p>Nothing stored server‑side except language. Feedback POSTs only goal / strategy / free‑text — never financial inputs. Bank inquiry is a local <code>mailto:</code> draft that never auto‑sends.</p></div>
+      <div class="c"><h3>🤖 Advisor rides along</h3><p>Once a result exists, <code>AdvisorFab</code> is grounded by <code>buildAdvisorContext</code> (and the dream gap in Phase 2). The "independent advice" link is still a demand‑signal stub.</p></div>
+    </div>
+  </section>
+
+  <p class="foot">Mapped from <code>src/App.jsx</code>, <code>src/state/AppStateContext.jsx</code>, <code>src/lib/*</code>, <code>src/components/*</code>, <code>src/data/*.json</code>, <code>src/i18n/*</code>. Companion docs: <code>COMPARISON_IA_ANALYSIS.html</code>, <code>INTERVIEW_FEATURE_ANALYSIS.html</code>, <code>F1-F4_FEATURE_SPEC.md</code>, <code>F1_PROTOTYPE.html</code>.</p>
+
+</div>
+</body>
+</html>

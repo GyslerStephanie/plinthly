@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plinthly — F1 prototype · When could we afford it?</title>
+<style>
+  :root{
+    --ink:#0D0D0D; --body:#3f4651; --muted:#737b86; --line:#E7EAEE; --surface:#F5F7F9;
+    --paper:#fff; --teal:#0f766e; --teal-50:#e6f3f1; --teal-100:#cfe8e4;
+    --moss:#6f8a35; --amber:#b45309; --amber-50:#fef6e7; --rose:#c4452f; --rose-50:#fdeef1;
+    --green:#047857; --green-50:#e6f5ee;
+    --shadow:0 1px 2px rgba(13,13,13,.04),0 8px 24px rgba(13,13,13,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--surface);color:var(--body);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 64px}
+  h1,h2,h3,h4{color:var(--ink);margin:0;line-height:1.2;letter-spacing:-.01em}
+
+  /* product chrome mimic */
+  .topbar{background:var(--paper);border-bottom:1px solid var(--line)}
+  .topbar .inner{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:10px}
+  .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#0b3b37,#0f766e);display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px}
+  .wordmark{font-weight:850;color:var(--ink);font-size:17px;letter-spacing:-.02em}
+  .tag{font-size:11px;color:var(--muted)}
+  .protochip{margin-left:auto;font-size:11px;font-weight:700;color:#7c4408;background:var(--amber-50);border:1px solid #fadfa3;padding:4px 10px;border-radius:999px}
+
+  .phasebar{max-width:1080px;margin:0 auto;padding:14px 20px 0;display:flex;gap:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+  .phasebar .step{display:inline-flex;align-items:center;gap:6px}
+  .phasebar .n{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--line);color:var(--muted)}
+  .phasebar .step.on .n{background:var(--teal);color:#fff}
+  .phasebar .step.on{color:var(--ink);font-weight:600}
+
+  h1.title{font-size:26px;font-weight:850;margin-top:18px}
+  .lede{color:var(--muted);margin:6px 0 0}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:20px}
+  @media(min-width:900px){.grid{grid-template-columns:340px 1fr}}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
+  .card h3{font-size:15px;margin-bottom:4px}
+  .card .hint{font-size:12px;color:var(--muted);margin:0 0 14px}
+
+  .field{margin:12px 0}
+  .field label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:600;color:#41474f}
+  .field label .v{font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+  .field .num{margin-top:6px;display:flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:#fff;overflow:hidden}
+  .field .num span{padding:0 8px;color:var(--muted);font-size:12px}
+  .field .num input{border:0;outline:0;width:100%;padding:9px 8px 9px 0;text-align:right;font:inherit;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);background:transparent}
+  input[type=range]{width:100%;margin-top:8px;accent-color:var(--ink)}
+
+  .assumptions{margin-top:6px;border-top:1px dashed var(--line);padding-top:12px}
+  .assumptions .head{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .presets{display:flex;gap:6px;margin-top:6px}
+  .presets button{font-size:11.5px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer;color:var(--body)}
+  .presets button.on{background:var(--teal-50);border-color:var(--teal-100);color:#0b554f;font-weight:700}
+
+  /* result */
+  .verdict{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:14px;border:1px solid var(--line);background:#fff;border-left:5px solid var(--teal)}
+  .verdict.never{border-left-color:var(--rose);background:var(--rose-50)}
+  .verdict .big{font-size:30px;font-weight:850;color:var(--ink);line-height:1;letter-spacing:-.02em}
+  .verdict.never .big{font-size:20px;color:var(--rose)}
+  .verdict .lbl{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .verdict .side{margin-left:auto;text-align:right;font-size:12.5px;color:var(--muted)}
+  .verdict .side b{color:var(--ink)}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+  .toggle{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--body);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 11px;cursor:pointer;user-select:none}
+  .toggle input{accent-color:var(--ink)}
+  .horizon{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .horizon button{border:0;background:#fff;padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--body)}
+  .horizon button.on{background:var(--ink);color:#fff;font-weight:700}
+
+  .chartwrap{position:relative;margin-top:8px}
+  svg{display:block;width:100%;height:auto}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:12.5px}
+  .legend .it{display:inline-flex;align-items:center;gap:7px;color:#41474f}
+  .legend .sw{width:18px;height:0;border-top-width:3px;border-top-style:solid;border-radius:2px}
+  .swdash{border-top-style:dashed!important}
+
+  .caveat{margin-top:14px;border-radius:11px;padding:11px 14px;font-size:13px;border:1px solid}
+  .caveat.warn{background:var(--amber-50);border-color:#fadfa3;color:#7c4408}
+  .caveat.ok{background:var(--green-50);border-color:#bfe3cf;color:#055f43}
+  .assume-echo{font-size:12px;color:var(--muted);margin-top:10px}
+  .assume-echo b{color:var(--ink)}
+
+  .tip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:8px 10px;font-size:12px;min-width:150px;opacity:0;transition:opacity .08s;z-index:5}
+  .tip .ty{font-weight:700;color:var(--ink);margin-bottom:4px}
+  .tip .r{display:flex;justify-content:space-between;gap:10px;padding:1px 0}
+  .tip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .foot{margin-top:22px;font-size:12px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="inner">
+  <div class="mark">P</div>
+  <div><div class="wordmark">Plinthly</div><div class="tag">honest, indicative numbers</div></div>
+  <span class="protochip">PROTOTYPE · F1 concept</span>
+</div></div>
+
+<div class="phasebar">
+  <span class="step"><span class="n">1</span>Can I buy?</span>
+  <span class="step on"><span class="n">2</span>When could we?</span>
+  <span class="step"><span class="n">3</span>What to look for</span>
+  <span class="step"><span class="n">4</span>Real options</span>
+  <span class="step"><span class="n">5</span>Action plan</span>
+</div>
+
+<div class="wrap">
+  <h1 class="title">When could we afford it?</h1>
+  <p class="lede">Not "can you afford this price today" (the answer's usually depressing) — but <em>given your means, savings pace, salary growth and how prices move, when does the target come within reach?</em></p>
+
+  <div class="grid">
+    <!-- ── INPUTS ── -->
+    <div class="card">
+      <h3>Your situation</h3>
+      <p class="hint">Seeded from Phase 1 — adjust to explore.</p>
+
+      <div class="field">
+        <label for="target">Target price <span class="v" id="target_v"></span></label>
+        <div class="num"><span>CHF</span><input id="target" inputmode="numeric"></div>
+      </div>
+      <div class="field">
+        <label for="income">Gross income / yr <span class="v" id="income_v"></span></label>
+        <div class="num"><span>CHF</span><input id="income" inputmode="numeric"></div>
+      </div>
+      <div class="field">
+        <label for="equity">Equity today <span class="v" id="equity_v"></span></label>
+        <div class="num"><span>CHF</span><input id="equity" inputmode="numeric"></div>
+      </div>
+      <div class="field">
+        <label for="save">Saving / month <span class="v" id="save_v"></span></label>
+        <input id="save" type="range" min="0" max="6000" step="50">
+      </div>
+
+      <div class="assumptions">
+        <div class="head">⚙︎ Assumptions <span style="font-weight:500;text-transform:none;letter-spacing:0">— shown, never hidden</span></div>
+
+        <div class="field">
+          <label for="appr">Price growth / yr <span class="v" id="appr_v"></span></label>
+          <input id="appr" type="range" min="0" max="4" step="0.1">
+          <div class="presets" data-for="appr"><button data-v="0">0%</button><button data-v="1">1%</button><button data-v="2">2%</button></div>
+        </div>
+        <div class="field">
+          <label for="ig">Income growth / yr <span class="v" id="ig_v"></span></label>
+          <input id="ig" type="range" min="0" max="5" step="0.1">
+          <div class="presets" data-for="ig"><button data-v="0">0%</button><button data-v="1">1%</button><button data-v="2">2%</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── RESULT ── -->
+    <div class="card">
+      <div class="verdict" id="verdict">
+        <div>
+          <div class="big" id="reach_big">—</div>
+          <div class="lbl" id="reach_lbl">until your target comes within reach</div>
+        </div>
+        <div class="side" id="binding"></div>
+      </div>
+
+      <div class="toggles">
+        <label class="toggle"><input type="checkbox" id="ghost" checked> Show "old tool" (ignores price growth)</label>
+        <span style="flex:1"></span>
+        <span class="horizon" id="horizon">
+          <button data-h="10">10y</button><button data-h="20" class="on">20y</button><button data-h="30">30y</button>
+        </span>
+      </div>
+
+      <div class="chartwrap">
+        <svg id="chart" viewBox="0 0 720 330" role="img" aria-label="Projection of what you can afford vs the moving target price over time"></svg>
+        <div class="tip" id="tip"></div>
+      </div>
+
+      <div class="legend">
+        <span class="it"><span class="sw" style="border-color:var(--ink)"></span> What you can afford</span>
+        <span class="it"><span class="sw swdash" style="border-color:var(--rose)"></span> Target price (grows)</span>
+        <span class="it"><span class="sw swdash" style="border-color:#b9c0c8"></span> Old tool: frozen price</span>
+      </div>
+
+      <div class="caveat" id="caveat"></div>
+      <p class="assume-echo" id="echo"></p>
+    </div>
+  </div>
+
+  <p class="foot">Functional prototype — the projection math is the real F1 model from the spec (means→affordable price, target moves with appreciation, income ceiling relaxes with salary growth). Swiss mortgage constants: 20% down · 10% hard cash · 5% stress rate · ⅓-income rule.</p>
+</div>
+
+<script>
+(function(){
+  // ── Swiss rule constants (from affordability.js) ──
+  const MIN_DOWN=0.20, MIN_LIQUID=0.10, NOTIONAL=0.05, MAINT=0.01, COST_RATIO=0.333,
+        AMORT_TARGET_LTV=0.67, AMORT_YEARS=15;
+  const LTV=1-MIN_DOWN;
+  const HCF = NOTIONAL*LTV + Math.max(0,LTV-AMORT_TARGET_LTV)/AMORT_YEARS + MAINT; // ≈0.0587
+
+  // ── state ──
+  const S = { target:1100000, income:190000, equity:130000, save:2200, appr:1.5, ig:1.0, horizon:20, ghost:true };
+
+  // ── helpers ──
+  const chf = n => 'CHF '+Math.round(n).toLocaleString('de-CH').replace(/,/g,"'");
+  const chfK = n => 'CHF '+(Math.round(n/1000)).toLocaleString('de-CH').replace(/,/g,"'")+'k';
+  const fmtDur = m => { const y=m/12; if(m<=0)return 'now'; return y<2 ? Math.round(m)+' months' : y.toFixed(1).replace(/\.0$/,'')+' years'; };
+
+  // ── core projection (the F1 model) ──
+  function project(s){
+    const H = s.horizon*12;
+    const ap = s.appr/100, ig = s.ig/100;
+    const series=[];
+    let reachMonth=null, bindingAtReach=null;
+    for(let m=0;m<=H;m++){
+      const income   = s.income*Math.pow(1+ig, m/12);
+      const target   = s.target*Math.pow(1+ap, m/12);
+      const equity   = s.equity + s.save*m;
+      const incomeCeil = COST_RATIO*income/HCF;
+      const equityCeil = Math.min(equity/MIN_LIQUID, equity/MIN_DOWN); // ⇒ equity/0.20
+      const maxAfford  = Math.min(incomeCeil, equityCeil);
+      const reachable  = maxAfford >= target;
+      if(reachable && reachMonth===null){ reachMonth=m; bindingAtReach = equityCeil<incomeCeil?'equity':'income'; }
+      series.push({m,income,target,equity,incomeCeil,equityCeil,maxAfford,reachable});
+    }
+    // "old tool": frozen target, frozen income (ignores growth) — affordable line still rises via savings only
+    const frozen=[];
+    for(let m=0;m<=H;m++){
+      const equity = s.equity + s.save*m;
+      const equityCeil = equity/MIN_DOWN;
+      const incomeCeil = COST_RATIO*s.income/HCF;
+      frozen.push({m, maxAfford:Math.min(incomeCeil,equityCeil), target:s.target});
+    }
+    return {series, frozen, reachMonth, bindingAtReach, H};
+  }
+
+  // ── chart ──
+  const W=720,Hh=330, padL=58,padR=18,padT=18,padB=30;
+  const plotW=W-padL-padR, plotH=Hh-padT-padB;
+  const svg=document.getElementById('chart');
+  const tip=document.getElementById('tip');
+  let last=null;
+
+  function draw(){
+    const P=project(S); last=P;
+    const yMax = Math.max(
+      P.series[P.series.length-1].target,
+      P.series[P.series.length-1].maxAfford,
+      S.target
+    )*1.08;
+    const x = m => padL + (m/P.H)*plotW;
+    const y = v => padT + plotH - (Math.min(v,yMax)/yMax)*plotH;
+
+    const path = (arr,key)=> arr.map((p,i)=>(i?'L':'M')+x(p.m).toFixed(1)+' '+y(p[key]).toFixed(1)).join(' ');
+
+    let g='';
+    // y gridlines (CHF)
+    const ticks=4;
+    for(let i=0;i<=ticks;i++){
+      const v=yMax*i/ticks, yy=y(v);
+      g+=`<line x1="${padL}" y1="${yy}" x2="${W-padR}" y2="${yy}" stroke="#eef0f3" stroke-width="1"/>`;
+      g+=`<text x="${padL-8}" y="${yy+4}" font-size="10.5" fill="#9aa3ad" text-anchor="end">${chfK(v)}</text>`;
+    }
+    // x gridlines (years)
+    const stepY = S.horizon<=10?2:S.horizon<=20?4:5;
+    for(let yr=0;yr<=S.horizon;yr+=stepY){
+      const xx=x(yr*12);
+      g+=`<line x1="${xx}" y1="${padT}" x2="${xx}" y2="${padT+plotH}" stroke="#f4f5f7" stroke-width="1"/>`;
+      g+=`<text x="${xx}" y="${Hh-9}" font-size="10.5" fill="#9aa3ad" text-anchor="middle">${yr}y</text>`;
+    }
+
+    // reachable shading (after crossing)
+    if(P.reachMonth!==null){
+      const rx=x(P.reachMonth);
+      g+=`<rect x="${rx}" y="${padT}" width="${(W-padR)-rx}" height="${plotH}" fill="#e6f5ee" opacity=".55"/>`;
+    }
+
+    // ghost "old tool" lines
+    if(S.ghost){
+      g+=`<path d="${path(P.frozen,'maxAfford')}" fill="none" stroke="#b9c0c8" stroke-width="2" stroke-dasharray="2 3"/>`;
+      g+=`<line x1="${x(0)}" y1="${y(S.target)}" x2="${x(P.H)}" y2="${y(S.target)}" stroke="#cfd5db" stroke-width="1.5" stroke-dasharray="2 3"/>`;
+    }
+
+    // target line (moving)
+    g+=`<path d="${path(P.series,'target')}" fill="none" stroke="#c4452f" stroke-width="2" stroke-dasharray="6 4"/>`;
+    g+=`<text x="${x(P.H)-2}" y="${y(P.series[P.series.length-1].target)-7}" font-size="10.5" font-weight="600" fill="#c4452f" text-anchor="end" paint-order="stroke" stroke="#fff" stroke-width="3">${chfK(P.series[P.series.length-1].target)}</text>`;
+
+    // affordable line (the hero)
+    g+=`<path d="${path(P.series,'maxAfford')}" fill="none" stroke="#1b1c17" stroke-width="2.8" stroke-linecap="round"/>`;
+
+    // crossing marker
+    if(P.reachMonth!==null){
+      const cx=x(P.reachMonth), cy=y(P.series[P.reachMonth].target);
+      g+=`<line x1="${cx}" y1="${padT}" x2="${cx}" y2="${padT+plotH}" stroke="#0f766e" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+      g+=`<circle cx="${cx}" cy="${cy}" r="6" fill="#0f766e" stroke="#fff" stroke-width="2"/>`;
+      g+=`<text x="${cx}" y="${padT-3}" font-size="11" font-weight="700" fill="#0f766e" text-anchor="${cx>W*0.8?'end':'middle'}">${fmtDur(P.reachMonth)}</text>`;
+    }
+    svg.innerHTML=g;
+
+    // ── readout ──
+    const big=document.getElementById('reach_big'), lbl=document.getElementById('reach_lbl');
+    const verdict=document.getElementById('verdict'), binding=document.getElementById('binding');
+    const caveat=document.getElementById('caveat'), echo=document.getElementById('echo');
+    const today=P.series[0];
+
+    if(P.reachMonth===null){
+      verdict.classList.add('never');
+      big.textContent='Not within '+S.horizon+' years';
+      lbl.textContent='at these assumptions — try saving more, or a lower target';
+      binding.innerHTML='';
+    }else{
+      verdict.classList.remove('never');
+      big.textContent='≈ '+fmtDur(P.reachMonth);
+      lbl.textContent = P.reachMonth===0 ? 'you can afford the target today' : 'until your target comes within reach';
+      const bword = P.bindingAtReach==='equity' ? 'deposit (equity)' : 'income (the ⅓ rule)';
+      binding.innerHTML = `today you can afford<br><b>${chf(today.maxAfford)}</b><br><span style="color:#9aa3ad">last hurdle: ${bword}</span>`;
+    }
+
+    // honesty caveat — flips on appreciation vs income growth
+    if(S.appr>S.ig){
+      caveat.className='caveat warn';
+      caveat.innerHTML=`⚠︎ Prices grow faster than your income here (${S.appr}% vs ${S.ig}%), so the target pulls away — the wait gets longer the more you wait. <b>This flips if your income grows faster than prices.</b>`;
+    }else{
+      caveat.className='caveat ok';
+      caveat.innerHTML=`✓ Your income is keeping pace with prices (${S.ig}% vs ${S.appr}%), so the gap closes over time rather than widening.`;
+    }
+    echo.innerHTML=`We assumed <b>${S.appr}%/yr</b> price growth and <b>${S.ig}%/yr</b> income growth. The old binary tools freeze both — that's the dotted line, which reaches the target sooner than reality.`;
+  }
+
+  // ── hover ──
+  svg.addEventListener('mousemove',e=>{
+    if(!last)return;
+    const r=svg.getBoundingClientRect();
+    const vbX=((e.clientX-r.left)/r.width)*W;
+    const m=Math.round(((vbX-padL)/plotW)*last.H);
+    if(m<0||m>last.H){tip.style.opacity=0;return;}
+    const p=last.series[m];
+    const leftPct=(padL+(m/last.H)*plotW)/W*100;
+    tip.style.left=`calc(${Math.min(82,Math.max(8,leftPct))}% )`;
+    tip.style.top='8px';
+    tip.style.opacity=1;
+    tip.innerHTML=`<div class="ty">Year ${(m/12).toFixed(1)}</div>
+      <div class="r"><span><span class="dot" style="background:#1b1c17"></span>Can afford</span><b>${chfK(p.maxAfford)}</b></div>
+      <div class="r"><span><span class="dot" style="background:#c4452f"></span>Target</span><b>${chfK(p.target)}</b></div>
+      <div class="r"><span style="color:${p.reachable?'#047857':'#9aa3ad'}">${p.reachable?'✓ in reach':'gap '+chfK(p.target-p.maxAfford)}</span></div>`;
+  });
+  svg.addEventListener('mouseleave',()=>tip.style.opacity=0);
+
+  // ── wire inputs ──
+  function setText(){
+    target_v.textContent=chf(S.target); income_v.textContent=chf(S.income);
+    equity_v.textContent=chf(S.equity); save_v.textContent=chf(S.save)+' /mo';
+    appr_v.textContent=S.appr.toFixed(1)+'%'; ig_v.textContent=S.ig.toFixed(1)+'%';
+  }
+  const $ = id=>document.getElementById(id);
+  function num(el){return Number(String(el.value).replace(/[^0-9]/g,''))||0;}
+  function group(el){ el.value = (Number(String(el.value).replace(/[^0-9]/g,''))||0).toLocaleString('de-CH').replace(/,/g,"'"); }
+
+  ['target','income','equity'].forEach(k=>{
+    const el=$(k); el.value=S[k].toLocaleString('de-CH').replace(/,/g,"'");
+    el.addEventListener('input',()=>{S[k]=num(el); setText(); draw();});
+    el.addEventListener('blur',()=>group(el));
+  });
+  $('save').value=S.save; $('save').addEventListener('input',e=>{S.save=Number(e.target.value);setText();draw();});
+  $('appr').value=S.appr; $('appr').addEventListener('input',e=>{S.appr=Number(e.target.value);syncPresets();setText();draw();});
+  $('ig').value=S.ig; $('ig').addEventListener('input',e=>{S.ig=Number(e.target.value);syncPresets();setText();draw();});
+
+  document.querySelectorAll('.presets').forEach(box=>{
+    const key=box.dataset.for;
+    box.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      S[key]=Number(b.dataset.v); $(key).value=S[key]; syncPresets(); setText(); draw();
+    }));
+  });
+  function syncPresets(){
+    document.querySelectorAll('.presets').forEach(box=>{
+      const key=box.dataset.for;
+      box.querySelectorAll('button').forEach(b=>b.classList.toggle('on',Number(b.dataset.v)===Math.round(S[key])));
+    });
+  }
+  $('ghost').addEventListener('change',e=>{S.ghost=e.target.checked;draw();});
+  document.getElementById('horizon').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#horizon button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); S.horizon=Number(b.dataset.h); draw();
+  }));
+
+  setText(); syncPresets(); draw();
+})();
+</script>
+</body>
+</html>

@@ -52,8 +52,8 @@ export function buildActionPlan(profile) {
   }
 
   // 2. Sustainability / subsidy step — canton-specific.
-  if (canton?.gebaeueprogramm?.available) {
-    const measures = canton.gebaeueprogramm.key_measures.slice(0, 3).join(', ')
+  if (canton?.gebaeudeprogramm?.available) {
+    const measures = canton.gebaeudeprogramm.key_measures.slice(0, 3).join(', ')
     steps.push({
       titleKey: 'actionPlan.subsidiesTitle',
       bodyKey: 'actionPlan.subsidiesBody',
@@ -62,7 +62,7 @@ export function buildActionPlan(profile) {
       link: {
         labelKey: 'actionPlan.subsidiesLink',
         labelVars: { canton: canton.name_en },
-        url: canton.gebaeueprogramm.url,
+        url: canton.gebaeudeprogramm.url,
       },
     })
   }
