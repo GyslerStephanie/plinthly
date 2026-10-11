@@ -11,6 +11,8 @@ import { buildUsActionPlan } from '../src/markets/us/plan.js'
 import { calculateAffordability } from '../src/markets/us/affordability.js'
 import home from '../src/markets/us/us-home-data.json' with { type: 'json' }
 import market from '../src/markets/us/us-data.json' with { type: 'json' }
+import { computeSeries, summarize, ownerPath, COMPARE_DEFAULTS, SCENARIOS, MAX_YEARS } from '../src/markets/us/compare.js'
+import { paymentFactor } from '../src/markets/us/affordability.js'
 
 let pass = 0
 let fail = 0
@@ -95,6 +97,31 @@ check('plan: viable buyer starts with pre-approval', buildUsActionPlan({ result:
 const poor = calculateAffordability({ grossIncome: 90000, savings: 5000, downPct: 10, state: 'TX', rate: 0.074 })
 check('plan: unviable buyer starts with the gap', buildUsActionPlan({ result: poor, state: 'TX', budget: 150000 })[0].tone === 'amber')
 check('plan: the state program is named', buildUsActionPlan({ result: viable, state: 'GA', budget: 300000 })[1].body.includes('Georgia Dream'))
+
+// ── 6b. Compare (rent vs buy, US model) ─────────────────────────────────────
+check('compare: four US scenarios, no "buy abroad"', SCENARIOS.map((x) => x.id).join() === 'rent_vs_buy,save_invest,buy_cheaper,buy_later')
+check('compare: rate default from data', COMPARE_DEFAULTS.mortgageRatePct === market.mortgage_rules.default_rate.thirty_year_pct)
+const D = { ...COMPARE_DEFAULTS, mortgageRatePct: 6, downPaymentPct: 20, appreciationPct: 0 }
+const op = ownerPath(D)
+// Year 1 by hand: $320k loan at 6% → 12 × $1,918.56 paid; interest ≈ $19,103.
+const pay = 320000 * paymentFactor(0.06, 30) * 12
+check('owner: year-1 cash = P&I + tax + insurance + maintenance (no PMI at 20%)',
+  near(op.path[1].ownerCash, pay + 400000 * (D.propertyTaxPct + D.insurancePct + D.maintenancePct) / 100, 1))
+check('owner: balance falls every year', op.path.slice(2).every((r, i) => r.balance < op.path[i + 1].balance))
+check('owner: 25-year path', op.path.length === MAX_YEARS + 1)
+check('owner: closing = 3% of price', op.closing === 12000)
+const pmiPath = ownerPath({ ...D, downPaymentPct: 5 })
+check('owner: PMI raises costs below 20% down', pmiPath.path[1].nonRecov > ownerPath({ ...D, downPaymentPct: 20 }).path[1].nonRecov * 0.9)
+const rb = computeSeries('rent_vs_buy', {})
+eq('rent: year 1 = 12 × rent', rb.A[1], COMPARE_DEFAULTS.rentMonthly * 12, 0.01)
+check('rent vs buy: cumulative and rising', rb.A.slice(2).every((v, i) => v > rb.A[i + 1]) && rb.B.slice(2).every((v, i) => v > rb.B[i + 1]))
+check('rent vs buy: true cost ≥ cash cost', computeSeries('rent_vs_buy', { trueCost: true }).B[10] >= rb.B[10])
+check('save+invest: higher return lifts renting', summarize('save_invest', { investReturnPct: 8 }, 20).a > summarize('save_invest', { investReturnPct: 2 }, 20).a)
+check('buy cheaper at 100% = buying at your price', near(computeSeries('buy_cheaper', { cheaperPricePct: 100 }).A[15], computeSeries('buy_cheaper', { cheaperPricePct: 100 }).B[15], 1))
+const bl = computeSeries('buy_later', { buyInYear: 5 })
+check('buy later: renting + saving until the purchase', bl.A[4] > bl.A[3] && bl.A[3] > bl.A[2])
+check('summary: ahead key matches the sign', ['rent_vs_buy', 'save_invest', 'buy_cheaper', 'buy_later'].every((sc) => { const x = summarize(sc, {}, 10); return x.aheadKey === (x.diff >= 0 ? x.hA : x.hB) }))
+check('compare data sourced in notes', /closing|commission/i.test(market.compare.notes))
 
 // ── 7. Data file ────────────────────────────────────────────────────────────
 for (const c of STATES) {

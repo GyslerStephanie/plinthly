@@ -1,8 +1,8 @@
 /**
  * United States — conventional-loan rules, USD, square feet, English only.
  * Rules, data and engines live beside this file (us-data.json, affordability.js,
- * mortgagePayoff.js, dream.js). All five phases have a US implementation
- * (Compare is Swiss-only for now).
+ * mortgagePayoff.js, dream.js). All five phases and the Compare screen have a
+ * US implementation.
  */
 export default {
   id: 'us',

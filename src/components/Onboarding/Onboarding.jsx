@@ -37,11 +37,9 @@ const FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking']
 const WHO_OPTS = ['national', 'expat']
 const CITY_OPTS = ['area', 'region', 'notyet']
 
-// US variant. Rent-vs-buy (Compare) isn't built for the US yet, so it isn't
-// offered; Q4 asks
-// about first-time buying (it decides the 3% programs) instead of residency,
-// and Q5 picks a state instead of a canton.
-const US_FOCUS_OPTS = ['learn', 'afford', 'dream', 'looking']
+// US variant: Q4 asks about first-time buying (it decides the 3% programs)
+// instead of residency, and Q5 picks a state instead of a canton.
+const US_FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking']
 const US_WHO_OPTS = ['first', 'owned']
 const US_CITY_OPTS = ['state', 'notyet']
 
@@ -246,7 +244,6 @@ export default function Onboarding({ onComplete, onSkip, marketId = 'ch' }) {
             onChange={set('focus')}
             tOpt={(o) => (isUs ? ut(`onboarding.focusOpt.${o}`) : t(`onboarding.q3.opt.${o}`))}
           />
-          {isUs && <p className="-mt-2 px-1 text-xs text-muted">{ut('onboarding.soonNote')}</p>}
           <Question
             n="4"
             name="ob-who"

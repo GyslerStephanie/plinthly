@@ -1,13 +1,14 @@
 import { useState, useMemo, useEffect } from 'react'
 import AdvisorFab from '../AdvisorFab'
 import { buildCompareAdvisorContext } from '../../lib/advisorContext'
-import {
-  computeSeries,
-  SCENARIOS,
-  COMPARE_DEFAULTS,
-  COMPARE_METHODOLOGY,
-  MAX_YEARS,
-} from '../../lib/compare/model'
+import * as chModel from '../../lib/compare/model'
+import * as usModel from '../../markets/us/compare'
+import { useMarket } from '../../markets/MarketContext'
+import { ut } from '../../markets/us/copy'
+import { getState } from '../../markets/us/affordability'
+
+// Chart helpers below are market-agnostic; both models project 25 years.
+const MAX_YEARS = chModel.MAX_YEARS
 import { money, groupDigits, currencySymbol } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
 import { useDialogFocus } from '../../lib/useDialogFocus'
@@ -17,7 +18,12 @@ import { useDialogFocus } from '../../lib/useDialogFocus'
 // loss; owning cost buys equity), and red misreads as a loss on the winning line.
 const RENT = '#4f7d88' // path A — renting / renting+investing / waiting to buy (calm blue)
 const OWN = '#566d29' //  path B — owning / buying / buying now (moss green)
-const fK = (v) => `${v < 0 ? '−' : ''}CHF ${Math.round(Math.abs(v) / 1000).toLocaleString('en-US')}k`
+// Compact "92k" amounts for charts and the table, in the active market's
+// currency: "CHF 92k" in Switzerland, "$92k" in the US.
+const fK = (v) => {
+  const sym = currencySymbol()
+  return `${v < 0 ? '−' : ''}${sym}${sym.length > 1 ? ' ' : ''}${Math.round(Math.abs(v) / 1000).toLocaleString('en-US')}k`
+}
 
 const HALO = { paintOrder: 'stroke', stroke: 'var(--paper-100)', strokeWidth: 3 }
 
@@ -124,7 +130,7 @@ function PctField({ label, sub, value, onChange }) {
     <label className="block text-xs text-muted">
       <span>
         {label}
-        {sub && <span className="ml-1 text-faint">— {sub}</span>}
+        {sub && <span className="ml-1 text-faint">· {sub}</span>}
       </span>
       <div className={`mt-1 ${FIELD}`}>
         <input
@@ -145,8 +151,21 @@ function PctField({ label, sub, value, onChange }) {
   )
 }
 
-export default function CompareView({ onClose, seed = {}, seedYear }) {
-  const { t, lang } = useI18n()
+export default function CompareView({ onClose, seed = {}, seedYear, region }) {
+  const { t: tBase, lang } = useI18n()
+  const { marketId } = useMarket()
+  const isUs = marketId === 'us'
+  // Same screen, two models: the US engine has its own scenarios and costs.
+  const { SCENARIOS, COMPARE_DEFAULTS, computeSeries, MAX_YEARS, COMPARE_METHODOLOGY } = isUs ? usModel : chModel
+  // US copy overrides the Swiss compare.* strings where the meaning differs.
+  const t = (key, vars) => {
+    if (isUs && key.startsWith('compare.')) {
+      const v = ut(key, vars)
+      if (v !== key) return v
+    }
+    return tBase(key, vars)
+  }
+  const usState = isUs && region ? getState(region) : null
   // Read-only view with a visible back button — Escape has nothing to discard.
   const dialogRef = useDialogFocus({ onClose })
   const [scenario, setScenario] = useState('rent_vs_buy')
@@ -156,6 +175,8 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
   )
   const [inputs, setInputs] = useState({
     ...COMPARE_DEFAULTS,
+    // US: property tax and insurance default to the chosen state's rates.
+    ...(usState ? { propertyTaxPct: usState.property_tax_rate_pct, insurancePct: usState.insurance_rate_pct } : {}),
     ...Object.fromEntries(Object.entries(seed).filter(([, v]) => v != null)),
   })
 
@@ -404,6 +425,16 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
             {pct('incomeGrowthPct', t('compare.sIncg'))}
           </div>
 
+          {isUs ? (
+            <>
+              <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpCosts')}</p>
+              <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {pct('propertyTaxPct', t('compare.fTax'))}
+                {pct('insurancePct', t('compare.fIns'))}
+              </div>
+            </>
+          ) : (
+          <>
           <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpTax')}</p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             {[['old', 'regimeOld'], ['new', 'regimeNew']].map(([val, k]) => (
@@ -418,6 +449,8 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
             ))}
             <div className="min-w-[140px]">{pct('marginalTaxPct', t('compare.sTax'))}</div>
           </div>
+          </>
+          )}
 
           <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpStructure')}</p>
           <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -484,6 +517,22 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
             </table>
           </div>
 
+          {scenario === 'buy_cheaper' && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs text-muted">{t('compare.cheaperAt')}</span>
+              <div className={`${FIELD} w-24`}>
+                <input
+                  inputMode="numeric"
+                  aria-label={t('compare.cheaperAt')}
+                  value={inputs.cheaperPricePct}
+                  onChange={(e) => setVal('cheaperPricePct', Math.min(100, Number(String(e.target.value).replace(/[^0-9]/g, '')) || 0))}
+                  className="ds-figure w-full bg-transparent py-2 pl-3 text-right text-sm text-ink focus:outline-none"
+                />
+              </div>
+              <span className="text-xs text-faint">{t('compare.cheaperUnit')}</span>
+            </div>
+          )}
+
           {scenario === 'buy_later' && (
             <div className="mt-3 flex items-center gap-2">
               <span className="text-xs text-muted">{t('compare.buyIn')}</span>
@@ -507,7 +556,7 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
           z-50`, so an instance rendered by App would be painted over; `inline`
           lifts this one above it. It gets the Compare toolset, so it answers
           from the scenario model rather than the Phase 1 engine. */}
-      <AdvisorFab
+      {!isUs && <AdvisorFab
         surface="compare"
         inline
         context={buildCompareAdvisorContext(scenario, inputs, year, { a, b, hA: s.hA, hB: s.hB, costLens: s.costLens }, lang)}
@@ -520,7 +569,7 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
           if (nextYear) setYear(nextYear)
           if (Object.keys(rest).length) setInputs((p) => ({ ...p, ...rest }))
         }}
-      />
+      />}
     </div>
   )
 }

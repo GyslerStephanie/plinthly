@@ -4,6 +4,7 @@ import { dreamPlan, payoffMilestones } from '../../markets/us/dream'
 import { US_RULES } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { MoneyInput, Row, usInput } from './UsPhase1'
+import CompareCta from '../CompareCta'
 
 /**
  * US Phase 2 — dream price. UI only: every figure comes from
@@ -13,7 +14,7 @@ import { MoneyInput, Row, usInput } from './UsPhase1'
 const num = (v) => Number(String(v ?? '').replace(/[^0-9.]/g, '')) || 0
 const pct1 = (f) => Math.round(f * 1000) / 10
 
-export default function UsDreamPhase({ values, dreamPrice, onDreamPriceChange }) {
+export default function UsDreamPhase({ values, dreamPrice, onDreamPriceChange, onCompare }) {
   const [extra, setExtra] = useState('')
   const input = usInput(values)
   const plan = dreamPlan(input, num(dreamPrice), { extraMonthly: num(extra) })
@@ -40,6 +41,7 @@ export default function UsDreamPhase({ values, dreamPrice, onDreamPriceChange })
           </div>
           {plan.savingsScenarios.length > 0 && <Savings plan={plan} />}
           <Payoff plan={plan} extra={extra} onExtra={setExtra} />
+          {onCompare && <CompareCta onCompare={onCompare} />}
         </>
       )}
     </div>

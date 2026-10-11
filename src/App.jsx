@@ -500,9 +500,9 @@ export default function App() {
         )}
 
         {/* United States — Phase 1 on the US engine; later phases not built yet */}
-        {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={setUsValues} />}
+        {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={setUsValues} onCompare={() => setShowCompare(true)} />}
         {isUs && phase === 2 && usRes && (
-          <UsDreamPhase values={usValues} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} />
+          <UsDreamPhase values={usValues} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => setShowCompare(true)} />
         )}
         {isUs && usRes && phase === 3 && (
           <UsExplorePhase
@@ -712,11 +712,23 @@ export default function App() {
         <CompareView
           onClose={() => setShowCompare(false)}
           seedYear={compareHorizon}
-          seed={{
-            income: Number(String(values.grossIncome).replace(/[^0-9.]/g, '')) || undefined,
-            cash: phase1?.inputs?.hardEquity || undefined,
-            price: phase1?.maxPrice || undefined,
-          }}
+          region={isUs ? usValues.region : undefined}
+          seed={
+            isUs
+              ? {
+                  income: usRes?.inputs?.grossIncome || undefined,
+                  cash: usRes?.inputs?.savings || undefined,
+                  // On the dream-price step, compare the home being considered.
+                  price: (phase === 2 && Number(String(dreamPrice).replace(/[^0-9.]/g, ''))) || usRes?.maxPrice || undefined,
+                  downPaymentPct: Number(usValues.downPct) || undefined,
+                  mortgageRatePct: Number(usValues.ratePct) || undefined,
+                }
+              : {
+                  income: Number(String(values.grossIncome).replace(/[^0-9.]/g, '')) || undefined,
+                  cash: phase1?.inputs?.hardEquity || undefined,
+                  price: phase1?.maxPrice || undefined,
+                }
+          }
         />
       )}
 

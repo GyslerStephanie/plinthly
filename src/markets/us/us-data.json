@@ -4,7 +4,6 @@
     "last_updated": "2026-10-11",
     "notes": "All figures are indicative and dated. Prices: Redfin statewide median sale price (all residential, Aug 2026). $/sqft mid: Redfin statewide average LIST $/sqft for most states (true median SALE $/sqft only for FL); low/high: Redfin median sale $/sqft of the cheapest / priciest major metro. Property tax: Tax Foundation effective rate on owner-occupied homes (2024 ACS, published Mar 2026); recent buyers in CA (Prop 13) and FL (Save Our Homes) pay more because assessments reset on sale. Insurance: NerdWallet 2026 state averages for a $400k dwelling; insurance_rate_pct = premium / $400,000. Sources diverge widely for FL, TX and CO insurance. Refresh the default rate weekly (Freddie Mac PMMS) and the conforming limits each November (FHFA)."
   },
-
   "mortgage_rules": {
     "loan_term_years": 30,
     "front_end_ratio_pct": 28,
@@ -14,9 +13,13 @@
     "min_down_payment_pct": 3,
     "default_down_payment_pct": 10,
     "maintenance_pct_of_value": 1,
-    "closing_costs_pct_of_price": { "low": 2, "typical": 3, "high": 5 },
+    "closing_costs_pct_of_price": {
+      "low": 2,
+      "typical": 3,
+      "high": 5
+    },
     "default_rate": {
-      "thirty_year_pct": 7.40,
+      "thirty_year_pct": 7.4,
       "fifteen_year_pct": 6.73,
       "week_of": "2026-10-08",
       "source": "https://www.freddiemac.com/pmms"
@@ -24,10 +27,22 @@
     "pmi": {
       "no_pmi_at_down_pct": 20,
       "annual_rate_pct_by_down": [
-        { "min_down_pct": 3, "rate_pct": 0.95 },
-        { "min_down_pct": 5, "rate_pct": 0.79 },
-        { "min_down_pct": 10, "rate_pct": 0.46 },
-        { "min_down_pct": 15, "rate_pct": 0.30 }
+        {
+          "min_down_pct": 3,
+          "rate_pct": 0.95
+        },
+        {
+          "min_down_pct": 5,
+          "rate_pct": 0.79
+        },
+        {
+          "min_down_pct": 10,
+          "rate_pct": 0.46
+        },
+        {
+          "min_down_pct": 15,
+          "rate_pct": 0.3
+        }
       ],
       "cancel_request_ltv_pct": 80,
       "auto_terminate_ltv_pct": 78,
@@ -66,86 +81,235 @@
       "https://yourhome.fanniemae.com/own/how-build-your-maintenance-and-repair-budget"
     ]
   },
-
   "dream": {
-    "savings_scenarios_usd_per_month": [500, 1000, 2000],
+    "savings_scenarios_usd_per_month": [
+      500,
+      1000,
+      2000
+    ],
     "payoff_milestone_years": 5,
-    "example_inputs": { "grossIncome": 120000, "savings": 80000, "monthlyDebts": 600, "region": "TX" },
+    "example_inputs": {
+      "grossIncome": 120000,
+      "savings": 80000,
+      "monthlyDebts": 600,
+      "region": "TX"
+    },
     "notes": "Presentation choices for the US dream-price phase, not rules: the monthly savings amounts the savings timeline compares, and the interval of the payoff milestones table, and the example numbers Phase 1 opens with (clearly labelled as an example, one click to clear)."
   },
-
+  "compare": {
+    "methodology": "us-0.1.0",
+    "max_years": 25,
+    "sell_cost_pct": 6,
+    "defaults": {
+      "income": 120000,
+      "incomeGrowthPct": 2,
+      "price": 400000,
+      "cash": 80000,
+      "rentMonthly": 2200,
+      "investReturnPct": 4,
+      "appreciationPct": 3,
+      "rentInflationPct": 3,
+      "savingMonthly": 1000,
+      "downPaymentPct": 10,
+      "maintenancePct": 1,
+      "propertyTaxPct": 1.0,
+      "insurancePct": 0.62,
+      "buyInYear": 5,
+      "cheaperPricePct": 75,
+      "trueCost": false
+    },
+    "notes": "Real-cost model for the US Compare screen (projections, not qualifying). Buying: fully amortising 30-year loan at the entered rate; property tax, homeowners insurance and maintenance on the home's value; PMI until the balance reaches 78% of the original price; closing costs (mortgage_rules.closing_costs_pct_of_price.typical) on purchase; selling costs ~6% of value on exit (agent commissions ~5–5.5% plus seller closing costs, an estimate). The mortgage-interest deduction is ignored: most first-time buyers take the standard deduction. Future rates (returns, appreciation, rent inflation, income growth) are the user's guesses, editable on screen; property tax and insurance default to the chosen state's rates."
+  },
   "states": {
     "CA": {
-      "name": "California", "as_of": "2026-08",
+      "name": "California",
+      "as_of": "2026-08",
       "median_price_usd": 747000,
-      "price_per_sqft_usd": { "low": 234, "mid": 472, "high": 847 },
-      "property_tax_rate_pct": 0.70, "insurance_rate_pct": 0.46, "insurance_avg_annual_usd": 1820,
+      "price_per_sqft_usd": {
+        "low": 234,
+        "mid": 472,
+        "high": 847
+      },
+      "property_tax_rate_pct": 0.7,
+      "insurance_rate_pct": 0.46,
+      "insurance_avg_annual_usd": 1820,
       "notes": "Prop 13: a buyer's tax resets to about 1% of the purchase price plus local assessments (Mello-Roos), so the effective rate understates a new buyer's bill. Insurance market is stressed; wildfire areas cost far more than the average. High-cost conforming limits in coastal metros.",
-      "sources": ["https://www.redfin.com/state/California/housing-market", "https://www.redfin.com/city/953/CA/Bakersfield/housing-market", "https://www.redfin.com/city/17420/CA/San-Jose/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"]
+      "sources": [
+        "https://www.redfin.com/state/California/housing-market",
+        "https://www.redfin.com/city/953/CA/Bakersfield/housing-market",
+        "https://www.redfin.com/city/17420/CA/San-Jose/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+      ]
     },
     "NY": {
-      "name": "New York", "as_of": "2026-08",
+      "name": "New York",
+      "as_of": "2026-08",
       "median_price_usd": 548000,
-      "price_per_sqft_usd": { "low": 128, "mid": 318, "high": 656 },
-      "property_tax_rate_pct": 1.30, "insurance_rate_pct": 0.43, "insurance_avg_annual_usd": 1710,
+      "price_per_sqft_usd": {
+        "low": 128,
+        "mid": 318,
+        "high": 656
+      },
+      "property_tax_rate_pct": 1.3,
+      "insurance_rate_pct": 0.43,
+      "insurance_avg_annual_usd": 1710,
       "notes": "Property tax varies hugely (NYC much lower than the suburbs). NYC co-ops and condos add monthly charges; mansion tax applies at $1M+. High-cost conforming limits in the NYC metro.",
-      "sources": ["https://www.redfin.com/state/New-York/housing-market", "https://www.redfin.com/city/16162/NY/Rochester/housing-market", "https://www.redfin.com/city/30749/NY/New-York/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/new-york-home-insurance"]
+      "sources": [
+        "https://www.redfin.com/state/New-York/housing-market",
+        "https://www.redfin.com/city/16162/NY/Rochester/housing-market",
+        "https://www.redfin.com/city/30749/NY/New-York/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/new-york-home-insurance"
+      ]
     },
     "TX": {
-      "name": "Texas", "as_of": "2026-08",
+      "name": "Texas",
+      "as_of": "2026-08",
       "median_price_usd": 334000,
-      "price_per_sqft_usd": { "low": 148, "mid": 171, "high": 299 },
-      "property_tax_rate_pct": 1.40, "insurance_rate_pct": 1.23, "insurance_avg_annual_usd": 4915,
+      "price_per_sqft_usd": {
+        "low": 148,
+        "mid": 171,
+        "high": 299
+      },
+      "property_tax_rate_pct": 1.4,
+      "insurance_rate_pct": 1.23,
+      "insurance_avg_annual_usd": 4915,
       "notes": "No state income tax, but high property tax (plus MUD/PID levies in new subdivisions); the homestead exemption lowers owner-occupant bills. Insurance among the most expensive in the US (hail, wind).",
-      "sources": ["https://www.redfin.com/state/Texas/housing-market", "https://www.redfin.com/city/16657/TX/San-Antonio/housing-market", "https://www.redfin.com/city/30818/TX/Austin/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"]
+      "sources": [
+        "https://www.redfin.com/state/Texas/housing-market",
+        "https://www.redfin.com/city/16657/TX/San-Antonio/housing-market",
+        "https://www.redfin.com/city/30818/TX/Austin/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+      ]
     },
     "FL": {
-      "name": "Florida", "as_of": "2026-08",
+      "name": "Florida",
+      "as_of": "2026-08",
       "median_price_usd": 385000,
-      "price_per_sqft_usd": { "low": 156, "mid": 272, "high": 542 },
-      "property_tax_rate_pct": 0.78, "insurance_rate_pct": 0.71, "insurance_avg_annual_usd": 2845,
+      "price_per_sqft_usd": {
+        "low": 156,
+        "mid": 272,
+        "high": 542
+      },
+      "property_tax_rate_pct": 0.78,
+      "insurance_rate_pct": 0.71,
+      "insurance_avg_annual_usd": 2845,
       "notes": "Stressed insurance market: separate hurricane deductibles, flood insurance is separate, condo special assessments. Insurance sources disagree sharply (one 2026 source is more than double this average). Save Our Homes cap resets on sale. No state income tax.",
-      "sources": ["https://www.redfin.com/state/Florida/housing-market", "https://www.redfin.com/city/13058/FL/Ocala/housing-market", "https://www.redfin.com/city/11458/FL/Miami/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost", "https://insurify.com/homeowners-insurance/states/"]
+      "sources": [
+        "https://www.redfin.com/state/Florida/housing-market",
+        "https://www.redfin.com/city/13058/FL/Ocala/housing-market",
+        "https://www.redfin.com/city/11458/FL/Miami/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost",
+        "https://insurify.com/homeowners-insurance/states/"
+      ]
     },
     "WA": {
-      "name": "Washington", "as_of": "2026-08",
+      "name": "Washington",
+      "as_of": "2026-08",
       "median_price_usd": 598000,
-      "price_per_sqft_usd": { "low": 207, "mid": 323, "high": 533 },
-      "property_tax_rate_pct": 0.75, "insurance_rate_pct": 0.47, "insurance_avg_annual_usd": 1880,
+      "price_per_sqft_usd": {
+        "low": 207,
+        "mid": 323,
+        "high": 533
+      },
+      "property_tax_rate_pct": 0.75,
+      "insurance_rate_pct": 0.47,
+      "insurance_avg_annual_usd": 1880,
       "notes": "No state income tax on wages. Earthquake cover is excluded from standard policies. High-cost conforming limits in the Seattle metro.",
-      "sources": ["https://www.redfin.com/state/Washington/housing-market", "https://www.redfin.com/city/17154/WA/Spokane/housing-market", "https://www.redfin.com/city/16163/WA/Seattle/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"]
+      "sources": [
+        "https://www.redfin.com/state/Washington/housing-market",
+        "https://www.redfin.com/city/17154/WA/Spokane/housing-market",
+        "https://www.redfin.com/city/16163/WA/Seattle/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+      ]
     },
     "MA": {
-      "name": "Massachusetts", "as_of": "2026-08",
+      "name": "Massachusetts",
+      "as_of": "2026-08",
       "median_price_usd": 657000,
-      "price_per_sqft_usd": { "low": 275, "mid": 361, "high": 717 },
-      "property_tax_rate_pct": 1.00, "insurance_rate_pct": 0.41, "insurance_avg_annual_usd": 1645,
+      "price_per_sqft_usd": {
+        "low": 275,
+        "mid": 361,
+        "high": 717
+      },
+      "property_tax_rate_pct": 1.0,
+      "insurance_rate_pct": 0.41,
+      "insurance_avg_annual_usd": 1645,
       "notes": "Moderate effective tax rate; residential exemptions vary by town. Insurance below the national average but rising fast; coastal areas carry wind deductibles. High-cost conforming limits in the Boston metro.",
-      "sources": ["https://www.redfin.com/state/Massachusetts/housing-market", "https://www.redfin.com/city/20420/MA/Worcester/housing-market", "https://www.redfin.com/city/1826/MA/Boston/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"]
+      "sources": [
+        "https://www.redfin.com/state/Massachusetts/housing-market",
+        "https://www.redfin.com/city/20420/MA/Worcester/housing-market",
+        "https://www.redfin.com/city/1826/MA/Boston/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+      ]
     },
     "CO": {
-      "name": "Colorado", "as_of": "2026-08",
+      "name": "Colorado",
+      "as_of": "2026-08",
       "median_price_usd": 553000,
-      "price_per_sqft_usd": { "low": 210, "mid": 257, "high": 561 },
-      "property_tax_rate_pct": 0.50, "insurance_rate_pct": 0.98, "insurance_avg_annual_usd": 3910,
+      "price_per_sqft_usd": {
+        "low": 210,
+        "mid": 257,
+        "high": 561
+      },
+      "property_tax_rate_pct": 0.5,
+      "insurance_rate_pct": 0.98,
+      "insurance_avg_annual_usd": 3910,
       "notes": "Low property tax, but bills have been volatile after recent reassessments. Insurance expensive and rising (hail, Front Range wildfire). HOA and metro-district fees common in new builds.",
-      "sources": ["https://www.redfin.com/state/Colorado/housing-market", "https://www.redfin.com/city/4147/CO/Colorado-Springs/housing-market", "https://www.redfin.com/city/2025/CO/Boulder/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"]
+      "sources": [
+        "https://www.redfin.com/state/Colorado/housing-market",
+        "https://www.redfin.com/city/4147/CO/Colorado-Springs/housing-market",
+        "https://www.redfin.com/city/2025/CO/Boulder/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+      ]
     },
     "IL": {
-      "name": "Illinois", "as_of": "2026-08",
+      "name": "Illinois",
+      "as_of": "2026-08",
       "median_price_usd": 330000,
-      "price_per_sqft_usd": { "low": 108, "mid": 191, "high": 287 },
-      "property_tax_rate_pct": 1.88, "insurance_rate_pct": 0.81, "insurance_avg_annual_usd": 3240,
+      "price_per_sqft_usd": {
+        "low": 108,
+        "mid": 191,
+        "high": 287
+      },
+      "property_tax_rate_pct": 1.88,
+      "insurance_rate_pct": 0.81,
+      "insurance_avg_annual_usd": 3240,
       "notes": "Second-highest effective property tax in the US; often the biggest cost after the mortgage. Insurance above average (storms, hail). The $/sqft mid is an older listing snapshot (late 2025).",
-      "sources": ["https://www.redfin.com/state/Illinois/housing-market", "https://www.redfin.com/city/15268/IL/Peoria/housing-market", "https://www.redfin.com/city/29470/IL/Chicago/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"]
+      "sources": [
+        "https://www.redfin.com/state/Illinois/housing-market",
+        "https://www.redfin.com/city/15268/IL/Peoria/housing-market",
+        "https://www.redfin.com/city/29470/IL/Chicago/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+      ]
     },
     "GA": {
-      "name": "Georgia", "as_of": "2026-08",
+      "name": "Georgia",
+      "as_of": "2026-08",
       "median_price_usd": 359000,
-      "price_per_sqft_usd": { "low": 123, "mid": 175, "high": 270 },
-      "property_tax_rate_pct": 0.79, "insurance_rate_pct": 0.81, "insurance_avg_annual_usd": 3225,
+      "price_per_sqft_usd": {
+        "low": 123,
+        "mid": 175,
+        "high": 270
+      },
+      "property_tax_rate_pct": 0.79,
+      "insurance_rate_pct": 0.81,
+      "insurance_avg_annual_usd": 3225,
       "notes": "Moderate property tax with a statewide homestead assessment cap (unless a jurisdiction opted out). Insurance above average (storms; hurricane exposure on the coast). Prices flat to slightly down.",
-      "sources": ["https://www.redfin.com/state/Georgia/housing-market", "https://www.redfin.com/city/36061/GA/Macon-Bibb/housing-market", "https://www.redfin.com/city/30756/GA/Atlanta/housing-market", "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/", "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"]
+      "sources": [
+        "https://www.redfin.com/state/Georgia/housing-market",
+        "https://www.redfin.com/city/36061/GA/Macon-Bibb/housing-market",
+        "https://www.redfin.com/city/30756/GA/Atlanta/housing-market",
+        "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
+        "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+      ]
     }
   }
 }

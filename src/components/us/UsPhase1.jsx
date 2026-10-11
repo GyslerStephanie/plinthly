@@ -9,6 +9,7 @@ import {
 } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import usData from '../../markets/us/us-data.json'
+import CompareCta from '../CompareCta'
 
 /**
  * US Phase 1 — "Can I buy?" on the US engine. UI only: every number comes from
@@ -68,7 +69,7 @@ export function usResult(values) {
   return calculateAffordability(usInput(values))
 }
 
-export default function UsPhase1({ values, onChange }) {
+export default function UsPhase1({ values, onChange, onCompare }) {
   const result = usResult(values)
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
@@ -78,7 +79,10 @@ export default function UsPhase1({ values, onChange }) {
       </div>
       <div className="lg:sticky lg:top-6 lg:self-start">
         {result ? (
-          <UsResult result={result} />
+          <div className="space-y-5">
+            <UsResult result={result} />
+            {onCompare && <CompareCta onCompare={onCompare} />}
+          </div>
         ) : (
           <div className="flex min-h-72 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white/60 p-8 text-center text-sm text-slate-500">
             {ut('result.empty')}
