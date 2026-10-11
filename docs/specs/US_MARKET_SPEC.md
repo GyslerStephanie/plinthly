@@ -60,6 +60,13 @@ Max price = the lowest of three limits:
    old 43 % qualified-mortgage DTI cap was removed by the CFPB General QM rule
    (mandatory since 2022-10-01); it is not used.*
 
+**What a lender might approve** (under the main figure): the same buyer at
+Fannie Mae's real limits — total debts up to 45 % (strong credit/reserves) and
+50 % (Desktop Underwriter), no separate housing cap, still capped by cash —
+shown as a range, labelled a stretch, not a target. Example (TX, $120k income,
+$80k savings, $600/mo debts, 10 % down, 7.4 %): comfortable $315,000; stretch
+$440,000–$500,000.
+
 Also flagged (not limits): loan above the **conforming limit** ($832,750 in 2026
 baseline; high-cost counties up to $1,249,125) → "jumbo loan, stricter terms";
 down payment < 20 % → PMI explained, with when it drops off (78 % LTV).
@@ -112,7 +119,7 @@ Swiss file.
 4. **Onboarding confirm step + header switcher.** ✅ Done.
 5. **US Phase 1** — form + result on the US engine. ✅ Done.
 6. **US Phase 2** — Dream price + US payoff schedule. ✅ Done: `src/markets/us/dream.js` (verdict per test, levers: save / earn / cut debt / lower down / aim lower, savings timeline, payoff with PMI end + extra payments), `components/us/UsDreamPhase.jsx`.
-7. **Gating** — "coming soon" for Phases 3–5, Compare, bank inquiry in US.
+7. **Gating** — "coming soon" for Phases 3–5, Compare, bank inquiry in US. ✅ Done (Compare, advisor and summary bar hidden in US).
 8. **Advisor** — market-aware prompt.
 9. QA (`plinthly-qa`), FEATURES.md, README.
 
@@ -147,6 +154,21 @@ Swiss file.
   next to the language selector (where people look for locale settings), and
   repeated in the footer. It shows the current country, opens a short list, and
   switching asks to confirm because inputs reset.
+- **Default down payment (2026-10-11):** 10 % (3 % minimum; 20 % avoids PMI).
+- **US copy file (2026-10-11):** US text lives in `src/markets/us/copy.js`, not a
+  `us.*` namespace in translations (that test requires all four Swiss locales).
+- **Lender stretch (2026-10-11):** from a prototype comment; the 28/36 figure
+  stays the headline, the 45–50 % lender range sits below it.
+- **Review surface (2026-10-11):** UI is reviewed on the live prototype
+  (https://claude.ai/artifact/AxaqrccGL5HPCrGbjK6qdL), not wireframes.
 - **Formatting (step 2):** `money()` / `int()` format for the active market
   (set by MarketProvider); `formatMoney(value, market)` is the pure form for
   `lib/` and tests. Swiss output is byte-identical to the old `chf()` (tested).
+
+## Open questions
+
+- Compare amortises to exactly ⅔; the data file says 67 %. Align (methodology bump)?
+- FL / TX / CO insurance: sources disagree widely — use a range or the higher figure?
+- $/sqft mid is listing-based for 8 of 9 states — source true sale medians?
+- Default rate is weekly — refresh by hand or automate?
+- Landing copy says "renovate in Switzerland" before the country step — make it neutral?
