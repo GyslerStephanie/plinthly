@@ -55,7 +55,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
   if (prog) {
     steps.push({
       title: 'Check first-time buyer help in your state',
-      body: `${prog.name}: ${prog.offer} These programmes usually require their own mortgage through a participating lender and a homebuyer class.`,
+      body: `${prog.name}: ${prog.offer} These programs usually require their own mortgage through a participating lender and a homebuyer class.`,
       tone: 'teal',
       links: [{ label: prog.name, url: prog.url }],
     })
@@ -72,8 +72,8 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
         `Book an energy audit (about ${usd(home.costs.energy_audit_usd.low)}–${usd(home.costs.energy_audit_usd.high)}) during the inspection period. ` +
         `Your plan costs about ${usd(led.cost.mid)} and ${led.annualSaving >= 0 ? `saves about ${usd(led.monthlySaving)}/mo` : `adds about ${usd(-led.monthlySaving)}/mo`} in energy. ` +
         (r.status === 'open'
-          ? `Your state's rebate programme is open: up to ${usd(r.upTo)} back if your household income qualifies.`
-          : 'Check utility rebates; the state rebate programme is not open right now.'),
+          ? `Your state's rebate program is open: up to ${usd(r.upTo)} back if your household income qualifies.`
+          : 'Check utility rebates; the state rebate program is not open right now.'),
       tone: 'default',
       links: [{ label: r.program, url: r.url }, { label: 'All incentives by ZIP (DSIRE)', url: L.dsire }],
     })
@@ -106,7 +106,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
   // 5. Free, independent advice.
   steps.push({
     title: 'Talk to a HUD-approved housing counselor',
-    body: 'Free or low-cost, independent advice on your budget, credit and assistance programmes before you sign anything.',
+    body: 'Free or low-cost, independent advice on your budget, credit and assistance programs before you sign anything.',
     tone: 'default',
     links: [{ label: 'Find a counselor (HUD)', url: L.hud_counselors }],
   })

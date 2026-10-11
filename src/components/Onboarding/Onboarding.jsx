@@ -37,11 +37,11 @@ const FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking']
 const WHO_OPTS = ['national', 'expat']
 const CITY_OPTS = ['area', 'region', 'notyet']
 
-// US variant (spec: US v1). Rent-vs-buy and the energy/options phases aren't
-// built for the US yet, so only destinations that work are offered; Q4 asks
+// US variant. Rent-vs-buy (Compare) isn't built for the US yet, so it isn't
+// offered; Q4 asks
 // about first-time buying (it decides the 3% programs) instead of residency,
 // and Q5 picks a state instead of a canton.
-const US_FOCUS_OPTS = ['learn', 'afford', 'dream']
+const US_FOCUS_OPTS = ['learn', 'afford', 'dream', 'looking']
 const US_WHO_OPTS = ['first', 'owned']
 const US_CITY_OPTS = ['state', 'notyet']
 

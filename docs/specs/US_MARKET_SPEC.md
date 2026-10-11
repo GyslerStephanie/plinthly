@@ -128,7 +128,7 @@ Swiss file.
 Originally out of scope for v1; now in. Same structure as the Swiss phases,
 US rules and data. Steps continue the build order:
 
-10. **US data for Phases 3–5** — per state: electricity and gas prices (EIA),
+10. **US data for Phases 3–5** ✅ Done (`src/markets/us/us-home-data.json`, `home.js`, `plan.js`, 116 checks in `npm run test:us-home`). — per state: electricity and gas prices (EIA),
     energy cost per sq ft (EIA RECS), build cost per sq ft, IRA Home Energy
     Rebates status, state/utility programs, net metering, first-time-buyer
     (HFA) programs; national: HERS reference points, upgrade measure costs and
@@ -140,7 +140,7 @@ US rules and data. Steps continue the build order:
     per sq ft × (HERS ÷ typical-existing HERS); incentives in the state
     (federal credits ended after 2025, IRA rebates status, state/utility
     programs, net metering); certifications explained (HERS, ENERGY STAR,
-    ZERH, Home Energy Score).
+    ZERH, Home Energy Score). ✅ Done (`components/us/UsExplorePhase.jsx`).
 12. **US Phase 4 — What are my real options?** (A) Buy existing & upgrade:
     configurator (air sealing + attic insulation, wall insulation, heat pump,
     heat-pump water heater, windows, solar, smart thermostat) → cost, annual
@@ -148,12 +148,12 @@ US rules and data. Steps continue the build order:
     income-eligible" where the state's program is open. (B) Buy new ENERGY
     STAR / ZERH: certification premium vs 10-year energy savings. (C) Build:
     state cost per sq ft × size, efficient-build premium, timeline; land is
-    flagged as not included. Compare table.
+    flagged as not included. Compare table. ✅ Done (`components/us/UsOptionsPhase.jsx`).
 13. **US Phase 5 — Action plan:** personalised steps — close the gap or get
     pre-approved and compare three Loan Estimates; the state's first-time-buyer
     programme; option-specific step (energy audit + rebates / ask for the HERS
     certificate / lot + builder bids + construction loan); inspection + Home
-    Energy Score; HUD-approved counselor. Share link and print, as in CH.
+    Energy Score; HUD-approved counselor. Share link and print, as in CH. ✅ Done (`components/us/UsPlanPhase.jsx`).
 
 ## Done when…
 

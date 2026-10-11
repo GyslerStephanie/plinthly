@@ -94,7 +94,7 @@ for (const option of ['upgrade', 'new', 'build', undefined]) {
 check('plan: viable buyer starts with pre-approval', buildUsActionPlan({ result: viable, state: 'TX', budget: 315000 })[0].title.startsWith('Get pre-approved'))
 const poor = calculateAffordability({ grossIncome: 90000, savings: 5000, downPct: 10, state: 'TX', rate: 0.074 })
 check('plan: unviable buyer starts with the gap', buildUsActionPlan({ result: poor, state: 'TX', budget: 150000 })[0].tone === 'amber')
-check('plan: the state programme is named', buildUsActionPlan({ result: viable, state: 'GA', budget: 300000 })[1].body.includes('Georgia Dream'))
+check('plan: the state program is named', buildUsActionPlan({ result: viable, state: 'GA', budget: 300000 })[1].body.includes('Georgia Dream'))
 
 // ── 7. Data file ────────────────────────────────────────────────────────────
 for (const c of STATES) {
@@ -102,9 +102,9 @@ for (const c of STATES) {
   check(`${c}: energy prices`, s.electricity_cents_per_kwh > 5 && s.gas_usd_per_mcf > 5 && s.energy_usd_per_sqft_2020 > 0)
   check(`${c}: solar yield`, s.solar_kwh_per_kw > 900 && s.solar_kwh_per_kw < 2000)
   check(`${c}: rebate status is known`, ['open', 'waitlist', 'paused', 'not_launched', 'unclear'].includes(s.ira_rebates.status) && /^https:\/\//.test(s.ira_rebates.url))
-  check(`${c}: programmes with links`, s.programs.length > 0 && s.programs.every((p) => /^https:\/\//.test(p.url)))
+  check(`${c}: programs with links`, s.programs.length > 0 && s.programs.every((p) => /^https:\/\//.test(p.url)))
   check(`${c}: build cost band`, s.build_cost_per_sqft.low < s.build_cost_per_sqft.mid && s.build_cost_per_sqft.mid < s.build_cost_per_sqft.high)
-  check(`${c}: first-time buyer programme`, s.buyer_programs.length > 0 && /^https:\/\//.test(s.buyer_programs[0].url))
+  check(`${c}: first-time buyer program`, s.buyer_programs.length > 0 && /^https:\/\//.test(s.buyer_programs[0].url))
   check(`${c}: net metering note`, typeof s.net_metering === 'string' && s.net_metering.length > 10)
 }
 check('every section cites sources', ['energy', 'hers', 'certified_homes', 'measures', 'federal_incentives', 'build'].every((k) => home[k].sources && home[k].sources.length))

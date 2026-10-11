@@ -17,7 +17,9 @@ import { usDataMeta } from './markets/us/affordability'
 import CountryConfirm from './components/CountryConfirm'
 import CountrySwitcher from './components/CountrySwitcher'
 import UsPhase1, { US_DEFAULT_VALUES, US_EXAMPLE_VALUES, usResult } from './components/us/UsPhase1'
-import UsComingSoon from './components/us/UsComingSoon'
+import UsExplorePhase from './components/us/UsExplorePhase'
+import UsOptionsPhase from './components/us/UsOptionsPhase'
+import UsPlanPhase from './components/us/UsPlanPhase'
 import UsDreamPhase from './components/us/UsDreamPhase'
 import { buildUsAdvisorContext } from './markets/us/advisor'
 import { dreamPlan } from './markets/us/dream'
@@ -63,6 +65,11 @@ const DEFAULT_VALUES = {
   householdSize: '2',
 }
 
+// Copy namespace per US phase (2–5) for the phase heading.
+const US_PHASE_COPY = { 2: 'dream', 3: 'explore', 4: 'options', 5: 'plan' }
+
+const US_DEFAULT_EXPLORE = { budget: '', chosenOption: '', measures: undefined }
+
 const DEFAULT_EXPLORE = {
   budget: '',
   canton: '', // seeded from Phase 1 canton on entering Phase 2
@@ -85,6 +92,7 @@ export default function App() {
   const isUs = marketId === 'us'
   const [usValues, setUsValues] = useState(US_EXAMPLE_VALUES) // US Phase 1 inputs (example until edited)
   const [showCountry, setShowCountry] = useState(false) // front door step 1: country confirm
+  const [usExplore, setUsExplore] = useState(US_DEFAULT_EXPLORE) // US Phases 3–5
   const usRes = isUs ? usResult(usValues) : null
   const [phase, setPhase] = useState(1)
   const [maxVisited, setMaxVisited] = useState(1)
@@ -141,6 +149,7 @@ export default function App() {
       }
       setUsValues(next)
       if (s.dreamPrice) setDreamPrice(s.dreamPrice)
+      setUsExplore({ budget: s.budget ?? '', chosenOption: s.chosenOption ?? '', measures: s.measures })
       if (usResult(next)) {
         const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
         setPhase(target)
@@ -197,7 +206,7 @@ export default function App() {
     if (isUs) {
       // US links carry only US inputs (ct holds the state code).
       const { region, ...rest } = usValues
-      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId })
+      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore })
       return
     }
     syncHash({
@@ -214,7 +223,7 @@ export default function App() {
       residentStatus,
       market: marketId,
     })
-  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues])
+  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore])
 
   const flatState = {
     ...values,
@@ -276,6 +285,9 @@ export default function App() {
     if (n < 1 || n > LAST_PHASE) return
     if (n > 1 && !(isUs ? usRes : phase1)) return
     // Entering exploration (phase 3) for the first time: seed budget + canton.
+    if (n === 3 && isUs) {
+      setUsExplore((e) => ({ ...e, budget: e.budget || groupDigits(usRes?.maxPrice || '') }))
+    }
     if (n === 3 && !isUs) {
       setExplore((e) => ({
         ...e,
@@ -361,6 +373,7 @@ export default function App() {
     setShowCompare(false)
     setRouteIntent(null)
     setUsValues(US_EXAMPLE_VALUES)
+    setUsExplore(US_DEFAULT_EXPLORE)
     setPhase(1)
     setMaxVisited(1)
   }
@@ -487,13 +500,11 @@ export default function App() {
         ) : (
           <div className="mb-8 max-w-2xl no-print">
             <h1 className="text-2xl font-semibold tracking-tight text-ink">
-              {isUs && phase === 2 ? ut('dream.title') : t(`heading.${phase}.title`)}
+              {isUs ? ut(`${US_PHASE_COPY[phase]}.title`) : t(`heading.${phase}.title`)}
             </h1>
-            {(!isUs || phase === 2) && (
-              <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
-                {isUs ? ut('dream.blurb') : t(`heading.${phase}.blurb`)}
-              </p>
-            )}
+            <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
+              {isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)}
+            </p>
           </div>
         )}
 
@@ -502,7 +513,25 @@ export default function App() {
         {isUs && phase === 2 && usRes && (
           <UsDreamPhase values={usValues} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} />
         )}
-        {isUs && !market.phases.includes(phase) && <UsComingSoon phase={phase} onBack={() => goToPhase(1)} />}
+        {isUs && usRes && phase === 3 && (
+          <UsExplorePhase
+            explore={usExplore}
+            onExploreChange={setUsExplore}
+            region={usValues.region}
+            onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
+          />
+        )}
+        {isUs && usRes && phase === 4 && (
+          <UsOptionsPhase explore={usExplore} onExploreChange={setUsExplore} region={usValues.region} />
+        )}
+        {isUs && usRes && phase === 5 && (
+          <UsPlanPhase
+            result={usRes}
+            explore={usExplore}
+            region={usValues.region}
+            shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore })}
+          />
+        )}
 
         {/* Phase 1 — two-column on desktop: inputs left, live output right */}
         {phase === 1 && !isUs && (
