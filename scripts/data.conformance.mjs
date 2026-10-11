@@ -139,6 +139,15 @@ for (const [code, c] of Object.entries(cantonal.cantons)) {
   check('rules: pillar3a_max_contribution_chf is a positive number', R.pillar3a_max_contribution_chf > 0)
 }
 
+// Compare real-cost assumptions (src/lib/compare/model.js reads these). Pinned
+// because a change here moves Compare outputs and requires a methodology bump.
+{
+  const CA = cantonal.compare_assumptions || {}
+  check('compare: purchase_cost_pct === 3', CA.purchase_cost_pct === 3)
+  check('compare: sell_cost_pct === 2', CA.sell_cost_pct === 2)
+  check('compare: imputed_rent_pct_of_market_rent === 65', CA.imputed_rent_pct_of_market_rent === 65)
+}
+
 // ── 4. banks.json ────────────────────────────────────────────────────────────
 // `scope` is a union: the string "national" OR an array of canton codes.
 // A consumer doing scope.includes(code) without the string check would treat

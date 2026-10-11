@@ -33,18 +33,27 @@
  *    not the leveraged full-value appreciation (that upside lives in save_invest).
  */
 
+import data from '../../data/swiss-cantonal-data.json'
+
 export const COMPARE_METHODOLOGY = '0.2.0'
 export const MAX_YEARS = 25
 
-/** Swiss rule constants for the real-cost model. */
+const MR = data.mortgage_rules
+const CA = data.compare_assumptions
+
+/** Swiss rule constants for the real-cost model. Qualifying rules come from
+ *  `mortgage_rules`; real-cost assumptions from `compare_assumptions`. */
 const RULES = {
-  downPct: 0.2, // 20% minimum down payment
+  downPct: MR.min_down_payment_pct / 100, // 20% minimum down payment
+  // Deliberately 2/3, not mortgage_rules.amortization_target_pct (67): the SBA
+  // rule is "two thirds of lending value" and Compare is pinned to it. Aligning
+  // the two is a methodology change (bump COMPARE_METHODOLOGY).
   amortTargetLTV: 2 / 3, // amortize down to 66.7% LTV…
-  amortYears: 15, // …over 15 years
-  maintenancePct: 0.01, // 1% of value / yr (maintenance + ancillary)
-  purchaseCostPct: 0.03, // notary, land registry, fees (~3%)
-  sellCostPct: 0.02, // selling costs on exit (~2%)
-  imputedRentPct: 0.65, // eigenmietwert ≈ 65% of market rent
+  amortYears: MR.amortization_years, // …over 15 years
+  maintenancePct: MR.maintenance_cost_pct_of_value / 100, // 1% of value / yr
+  purchaseCostPct: CA.purchase_cost_pct / 100, // notary, land registry, fees (~3%)
+  sellCostPct: CA.sell_cost_pct / 100, // selling costs on exit (~2%)
+  imputedRentPct: CA.imputed_rent_pct_of_market_rent / 100, // eigenmietwert ≈ 65% of market rent
 }
 
 export const COMPARE_DEFAULTS = {
@@ -61,8 +70,8 @@ export const COMPARE_DEFAULTS = {
   savingMonthly: 1500,
   regime: 'old', // 'old' (eigenmietwert) | 'new' (post-2025 referendum)
   buyInYear: 10, // only used by buy_later
-  downPaymentPct: 20, // % of price put down (Swiss minimum 20); user-adjustable
-  maintenancePct: 1, // % of value / yr for maintenance + ancillary; user-adjustable
+  downPaymentPct: MR.min_down_payment_pct, // % of price put down (Swiss minimum 20); user-adjustable
+  maintenancePct: MR.maintenance_cost_pct_of_value, // % of value / yr for maintenance + ancillary; user-adjustable
   trueCost: false, // rent_vs_buy: include opportunity cost of blocked money
 }
 

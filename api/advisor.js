@@ -19,6 +19,7 @@
  */
 
 import { toolsFor } from '../src/lib/advisorTools.js'
+import { RULE_CONSTANTS as R } from '../src/lib/affordability.js'
 
 const MODEL = process.env.ADVISOR_MODEL || 'claude-haiku-4-5' // Haiku — verify id
 const MAX_TOKENS = 800
@@ -39,13 +40,22 @@ function rateLimited(ip, now) {
 }
 
 const chf = (n) => 'CHF ' + Math.round(Number(n) || 0).toLocaleString('de-CH')
+const pctOf = (fraction) => `${Math.round(fraction * 100)}%`
+
+// Swiss rules, worded from the same data the engine computes with
+// (swiss-cantonal-data.json → mortgage_rules), so prompt and numbers can't drift.
+const SWISS_RULES =
+  `Swiss rules you must respect: ${pctOf(R.MIN_DOWN)} minimum down payment, of which at least ${pctOf(R.MIN_LIQUID)} must be "hard" equity (cash + Pillar 3a, NOT the 2nd pillar); ` +
+  `affordability = imputed housing cost at a ${pctOf(R.NOTIONAL_RATE)} notional rate must stay under one third of gross income; ` +
+  `the 2nd-mortgage slice above ${pctOf(R.AMORT_TARGET_LTV)} LTV amortises within ${R.AMORT_YEARS} years; ` +
+  `the Pillar 3a maximum is ${chf(R.PILLAR3A_MAX)} for employees with a pension fund.`
 
 function buildSystemPrompt(ctx, mode, surface) {
   const lang = { en: 'English', de: 'German', fr: 'French', it: 'Italian' }[ctx.lang] || 'English'
   const facts = JSON.stringify(ctx, null, 0)
   return [
     'You are Plinthly\'s mortgage-affordability advisor for first-time home buyers in Switzerland.',
-    'Swiss rules you must respect: 20% minimum down payment, of which at least 10% must be "hard" equity (cash + Pillar 3a, NOT the 2nd pillar); affordability = imputed housing cost at a 5% notional rate must stay under one third of gross income; the 2nd-mortgage slice above 67% LTV amortises within 15 years; the 2026 Pillar 3a maximum is CHF 7\'258 for employees with a pension fund.',
+    SWISS_RULES,
     'CRITICAL: every number you state must come from the CONTEXT object below. Never invent or estimate a figure that is not derivable from it. If a question needs a number you do not have, say so and suggest the user adjust their inputs in the tool.',
     'You are NOT a licensed advisor. Frame everything as illustrative. When you give a plan, end by pointing the user to an independent advisor (e.g. VZ VermögensZentrum, hypotheke.ch, or their cantonal bank).',
     `Reply in ${lang}. Be concise, concrete, and encouraging. Use CHF figures. No markdown headers; short paragraphs or tight bullet lists.`,
@@ -148,8 +158,8 @@ function mockAgentTurn(ctx, messages, mode, surface) {
     // number for that constraint — getting this backwards is a wrong-advice bug,
     // not a copy nit.
     const EXPLAIN = {
-      equity: 'Your equity is the cap: Swiss rules need 20% down, of which at least 10% in real cash or Pillar 3a. More income cannot lift this number — more hard equity can.',
-      income: 'Your income is the cap: housing costs must stay under one third of gross income at the 5% notional rate. More equity cannot lift this number — more income can.',
+      equity: `Your equity is the cap: Swiss rules need ${pctOf(R.MIN_DOWN)} down, of which at least ${pctOf(R.MIN_LIQUID)} in real cash or Pillar 3a. More income cannot lift this number — more hard equity can.`,
+      income: `Your income is the cap: housing costs must stay under one third of gross income at the ${pctOf(R.NOTIONAL_RATE)} notional rate. More equity cannot lift this number — more income can.`,
     }
     const lines = [
       headline,
