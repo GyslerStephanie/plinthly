@@ -8,6 +8,8 @@ import {
   measureDetails, upgradeLedger, optionNewCertified, optionBuild, DEFAULT_MEASURES, MEASURE_IDS,
 } from '../src/markets/us/home.js'
 import { buildUsActionPlan } from '../src/markets/us/plan.js'
+import { sustainabilityFor } from '../src/markets/us/home.js'
+import { ut } from '../src/markets/us/copy.js'
 import { calculateAffordability } from '../src/markets/us/affordability.js'
 import home from '../src/markets/us/us-home-data.json' with { type: 'json' }
 import market from '../src/markets/us/us-data.json' with { type: 'json' }
@@ -137,6 +139,30 @@ for (const c of STATES) {
 check('every section cites sources', ['energy', 'hers', 'certified_homes', 'measures', 'federal_incentives', 'build'].every((k) => home[k].sources && home[k].sources.length))
 check('HERS tiers sorted worst → best', home.hers.tiers.every((t2, i, a) => i === 0 || t2.hers < a[i - 1].hers))
 check('default measures exist', DEFAULT_MEASURES.every((id) => MEASURE_IDS.includes(id)))
+
+// ── Sustainability section (Phase 4) ─────────────────────────────────────────
+{
+  const S = home.sustainability
+  const DASH = /[\u2013\u2014]/
+  const stateCodes = Object.keys(market.states)
+  check('sustainability: every state has notes', stateCodes.every((c) => S.states[c] && S.states[c].rainwater_note))
+  check('sustainability: rainwater status is legal or limited', stateCodes.every((c) => ['legal', 'limited'].includes(S.states[c].rainwater)))
+  check('sustainability: Colorado barrels are limited (HB16-1005)', S.states.CO.rainwater === 'limited' && /110 gallons/.test(S.states.CO.rainwater_note))
+  check('sustainability: no landscape rebate → a note explains', stateCodes.every((c) => S.states[c].landscape_rebate || S.states[c].note))
+  const ms = Object.entries(S.measures)
+  check('sustainability: 12 measures across 4 groups', ms.length === 12 && S.groups.every((g) => ms.some(([, m]) => m.group === g)))
+  check('sustainability: every measure has a name, an https link and low ≤ high', ms.every(([id, m]) =>
+    typeof ut(`sustain.names.${id}`) === 'string' && !ut(`sustain.names.${id}`).startsWith('sustain.') &&
+    /^https:\/\//.test(m.link.url) && m.cost.low <= m.cost.high))
+  check('sustainability: every cost unit has copy', ms.every(([, m]) => !ut(`sustain.cost.${m.cost.unit}`).startsWith('sustain.')))
+  check('sustainability: best_in only names real states', ms.every(([, m]) => m.best_in.every((c) => stateCodes.includes(c))))
+  check('sustainability: no long dashes in shown text', !DASH.test(JSON.stringify({ m: S.measures, s: S.states, n: S.notes })))
+  check('sustainability: no dead energy.gov/energysaver links', !/energy\.gov\/energysaver/.test(JSON.stringify(S)))
+  check('sustainability: no federal credit promised', /ended/.test(S.notes))
+  const co = sustainabilityFor('CO')
+  check('sustainabilityFor: 4 groups, climate fits first (CO → triple pane leads envelope)', co.groups.length === 4 && co.groups.find((g) => g.id === 'envelope').items[0].goodFit)
+  check('sustainabilityFor: unknown state → null', sustainabilityFor('ZZ') === null)
+}
 
 console.log(`\nUS home conformance: ${pass} passed, ${fail} failed (${pass + fail} checks)`)
 if (fail > 0) process.exit(1)

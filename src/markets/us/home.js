@@ -222,3 +222,26 @@ export function optionBuild(stateCode, sqft) {
     landIncluded: false,
   }
 }
+
+/**
+ * "More ways to make your home sustainable": water, outdoors, envelope and
+ * systems measures beyond the energy ledger, with the state's rainwater rule
+ * and landscape rebate. Display data only: no savings are modelled here, so
+ * nothing in it feeds the routes or the plan's figures.
+ *
+ * @returns {{ groups: Array<{id, items: Array}>, state: object, notes: string } | null}
+ */
+export function sustainabilityFor(stateCode) {
+  const S = homeData.sustainability
+  const st = S.states[stateCode]
+  if (!st) return null
+  const groups = S.groups.map((g) => ({
+    id: g,
+    items: Object.entries(S.measures)
+      .filter(([, m]) => m.group === g)
+      .map(([id, m]) => ({ id, ...m, goodFit: m.best_in.includes(stateCode) }))
+      // Climate fits first, data order otherwise (sort is stable).
+      .sort((a, b) => Number(b.goodFit) - Number(a.goodFit)),
+  }))
+  return { groups, state: st, notes: S.notes, lastChecked: S.last_checked }
+}

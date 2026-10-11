@@ -7,6 +7,7 @@ import { ut } from '../../markets/us/copy'
 import { Row } from './UsPhase1'
 import { StatusPill } from './UsExplorePhase'
 import { Indicative } from '../ui'
+import UsSustainability from './UsSustainability'
 
 /**
  * US Phase 4 — three routes. UI only: figures come from src/markets/us/home.js.
@@ -190,6 +191,8 @@ export default function UsOptionsPhase({ explore, onExploreChange, region, onReg
         </div>
         <Indicative>{ut('options.indicative')}</Indicative>
       </section>
+
+      <UsSustainability region={region} />
     </div>
   )
 }

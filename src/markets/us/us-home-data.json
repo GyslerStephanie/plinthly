@@ -178,7 +178,7 @@
     "hear_note": "IRA HEEHR (HEAR) caps: up to 100% of cost for households at or below 80% of area median income, 50% for 80–150%; heat pump $8,000, heat-pump water heater $1,750, insulation/air sealing $1,600, household total $14,000. Only where the state program is open.",
     "sources": [
       "https://www.energystar.gov/saveathome/seal_insulate/methodology",
-      "https://www.energy.gov/energysaver/electric-resistance-heating",
+      "https://web.archive.org/web/2025/https://www.energy.gov/energysaver/electric-resistance-heating",
       "https://www.energysage.com/heat-pumps/costs-and-benefits-air-source-heat-pumps",
       "https://emp.lbl.gov/research-areas/tracking-sun",
       "https://developer.nrel.gov/docs/solar/pvwatts/v8",
@@ -596,5 +596,312 @@
       "high": 700
     },
     "notes": "Consumer cost aggregators (HomeAdvisor/Angi, 2024–2026). Utilities often subsidise energy audits."
+  },
+  "sustainability": {
+    "last_checked": "2026-10-11",
+    "groups": [
+      "water",
+      "outdoors",
+      "envelope",
+      "systems"
+    ],
+    "measures": {
+      "xeriscaping": {
+        "group": "water",
+        "cost": {
+          "low": 5,
+          "high": 20,
+          "unit": "sqft"
+        },
+        "what": "Swap thirsty lawn for native or drought-tolerant plants, mulch and drip irrigation.",
+        "benefit": "Outdoor watering is over 30% of household water use, up to 60% in dry areas. Water-wise yards use about half as much outdoors.",
+        "best_in": [
+          "CA",
+          "TX",
+          "CO"
+        ],
+        "link": {
+          "label": "EPA WaterSense: outdoors",
+          "url": "https://www.epa.gov/watersense/outdoors"
+        }
+      },
+      "rainwater_capture": {
+        "group": "water",
+        "cost": {
+          "low": 100,
+          "high": 4500,
+          "unit": "total"
+        },
+        "what": "Collect roof runoff in rain barrels (40 to 100 gallons) or a larger cistern to water the garden.",
+        "benefit": "Each inch of rain on 1,000 sq ft of roof gives about 620 gallons. A barrel is about $100 to $150; above-ground cisterns $1,500 to $4,500.",
+        "best_in": [],
+        "link": {
+          "label": "University of Arizona: harvest rain",
+          "url": "https://waterwise.arizona.edu/ways-save-water/harvest-rain"
+        }
+      },
+      "watersense_fixtures": {
+        "group": "water",
+        "cost": {
+          "low": 5,
+          "high": 550,
+          "unit": "fixture"
+        },
+        "what": "WaterSense toilets, showerheads and faucet aerators use at least 20% less water with no loss in performance.",
+        "benefit": "A WaterSense toilet saves a typical family about 13,000 gallons a year; a showerhead about 2,700 gallons plus the energy to heat it. Often pays back within a year or two.",
+        "best_in": [],
+        "link": {
+          "label": "EPA WaterSense: start saving",
+          "url": "https://www.epa.gov/watersense/start-saving"
+        }
+      },
+      "smart_irrigation_controller": {
+        "group": "water",
+        "cost": {
+          "low": 150,
+          "high": 600,
+          "unit": "total"
+        },
+        "what": "A weather- or soil-moisture-based sprinkler timer that waters only when plants need it.",
+        "benefit": "Cuts irrigation water by up to 30%, up to 15,000 gallons a year. Many water utilities offer rebates of $50 to $250.",
+        "best_in": [
+          "CA",
+          "TX",
+          "CO"
+        ],
+        "link": {
+          "label": "EPA WaterSense: irrigation controllers",
+          "url": "https://www.epa.gov/watersense/watersense-labeled-controllers"
+        }
+      },
+      "shade_trees": {
+        "group": "outdoors",
+        "cost": {
+          "low": 100,
+          "high": 2000,
+          "unit": "tree"
+        },
+        "what": "Plant deciduous shade trees on the west and south sides to shade walls, windows and the AC unit.",
+        "benefit": "Well-placed trees typically cut summer AC costs 15% to 35%. Leaves drop in winter, so the sun still warms the house.",
+        "best_in": [
+          "TX",
+          "FL",
+          "GA",
+          "CA"
+        ],
+        "link": {
+          "label": "EPA: trees and vegetation",
+          "url": "https://www.epa.gov/heatislands/using-trees-and-vegetation-reduce-heat-islands"
+        }
+      },
+      "permeable_paving": {
+        "group": "outdoors",
+        "cost": {
+          "low": 6,
+          "high": 40,
+          "unit": "sqft"
+        },
+        "what": "Driveways and patios of porous pavers, pervious concrete or grid pavers that let rain soak in.",
+        "benefit": "Less runoff and puddling, cleaner stormwater, and some cities give stormwater-fee credits. Needs sweeping so it doesn't clog.",
+        "best_in": [],
+        "link": {
+          "label": "EPA Soak Up the Rain: permeable pavement",
+          "url": "https://www.epa.gov/soakuptherain/soak-rain-permeable-pavement"
+        }
+      },
+      "triple_pane_windows": {
+        "group": "envelope",
+        "cost": {
+          "low": 10,
+          "high": 15,
+          "unit": "pct"
+        },
+        "what": "Windows with three layers of glass and two gas-filled gaps: warmer, quieter and less condensation.",
+        "benefit": "ENERGY STAR windows cut heating and cooling bills up to 13%. Triple pane adds most in cold climates; in mild or hot ones the payback is long.",
+        "best_in": [
+          "CO",
+          "IL",
+          "MA",
+          "NY"
+        ],
+        "link": {
+          "label": "ENERGY STAR: windows",
+          "url": "https://www.energystar.gov/products/res_windows_doors_skylights"
+        }
+      },
+      "tight_envelope": {
+        "group": "envelope",
+        "cost": {
+          "low": 500,
+          "high": 6000,
+          "unit": "total"
+        },
+        "what": "Seal air leaks (attic, rim joists, pipes and wires) and top up attic insulation to R-38 to R-49, then confirm with a blower-door test.",
+        "benefit": "About 15% off heating and cooling on average. Older homes often leak 10 to 20 air changes an hour under test; current code asks for 3 to 5. Very tight homes need fresh-air ventilation.",
+        "best_in": [
+          "CO",
+          "IL",
+          "MA",
+          "NY"
+        ],
+        "link": {
+          "label": "ENERGY STAR: seal and insulate",
+          "url": "https://www.energystar.gov/saveathome/seal_insulate/why-seal-and-insulate"
+        }
+      },
+      "cool_roof": {
+        "group": "envelope",
+        "cost": {
+          "low": 0,
+          "high": 0.5,
+          "unit": "sqft_premium"
+        },
+        "what": "Light-colored or cool-rated roofing that reflects sunlight instead of soaking it up.",
+        "benefit": "Cuts peak cooling demand 11% to 27% in air-conditioned homes; a white roof runs about 55°F cooler than a gray one. Best when you're replacing the roof anyway.",
+        "best_in": [
+          "TX",
+          "FL",
+          "GA",
+          "CA"
+        ],
+        "link": {
+          "label": "EPA: cool roofs",
+          "url": "https://www.epa.gov/heatislands/using-cool-roofs-reduce-heat-islands"
+        }
+      },
+      "induction_cooktop": {
+        "group": "systems",
+        "cost": {
+          "low": 1225,
+          "high": 2850,
+          "unit": "total"
+        },
+        "what": "An electric cooktop that heats the pan directly: fast, precise, and the surface stays cooler.",
+        "benefit": "About 85% efficient, against roughly 32% for gas. No combustion indoors: switching from gas cut indoor NO2 by 35% to 56% in one study. Needs a 240V circuit.",
+        "best_in": [],
+        "link": {
+          "label": "ENERGY STAR: induction cooking",
+          "url": "https://www.energystar.gov/partner-resources/products_partner_resources/brand-owner/eta-consumers/res-induction-cooking-tops"
+        }
+      },
+      "battery_storage": {
+        "group": "systems",
+        "cost": {
+          "low": 990,
+          "high": 1370,
+          "unit": "kwh"
+        },
+        "what": "A home battery (usually 10 to 15 kWh) that stores solar power for evenings and outages.",
+        "benefit": "Backup for essentials and more use of your own solar, most useful with time-of-use rates or low export pay. A 13.5 kWh system is about $15,650 and rarely pays back on bills alone.",
+        "best_in": [
+          "CA"
+        ],
+        "link": {
+          "label": "EnergySage: battery costs",
+          "url": "https://www.energysage.com/energy-storage/how-much-do-batteries-cost/"
+        }
+      },
+      "ev_ready_charger": {
+        "group": "systems",
+        "cost": {
+          "low": 1100,
+          "high": 3200,
+          "unit": "total"
+        },
+        "what": "A 240V Level 2 charger, or at least a dedicated circuit or conduit (EV-ready), for overnight charging.",
+        "benefit": "Several times faster than a normal outlet. Wiring it during a renovation costs less than retrofitting later; many utilities offer rebates.",
+        "best_in": [],
+        "link": {
+          "label": "DOE AFDC: charging at home",
+          "url": "https://afdc.energy.gov/fuels/electricity-charging-home"
+        }
+      }
+    },
+    "states": {
+      "CA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal: the Rainwater Capture Act (AB 1750, 2012) lets you use barrels and cisterns for non-drinking uses without a water right.",
+        "landscape_rebate": {
+          "name": "SoCal Water$mart turf replacement",
+          "amount": "$2 per sq ft, up to 5,000 sq ft a year; reserve funds before you start; no artificial turf. Your local water agency may add more.",
+          "url": "https://socalwatersmart.com/en/residential/rebates/available-rebates/turf-replacement-program/"
+        }
+      },
+      "TX": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal and encouraged: harvesting equipment is exempt from sales tax, and HOAs can regulate placement but can't ban it.",
+        "landscape_rebate": {
+          "name": "Austin Water WaterWise Landscape Rebate and SAWS WaterSaver coupons",
+          "amount": "Austin: about $100 per 100 sq ft converted, up to $3,000. San Antonio: $125 to $150 coupons per 200 sq ft of grass removed, in seasonal windows.",
+          "url": "https://www.austintexas.gov/water/water-wise-landscaping-rebate-faqs"
+        }
+      },
+      "CO": {
+        "rainwater": "limited",
+        "rainwater_note": "Limited: a home may use at most 2 barrels totaling 110 gallons, from rooftop downspouts, for outdoor use on the same property. No permit needed.",
+        "landscape_rebate": {
+          "name": "Aurora Water Grass Replacement Incentive (GRIP)",
+          "amount": "$3 per sq ft for a water-wise landscape, $0.50 for water-wise grass; pre-approval required. Denver Water's turf discount is fully allocated for 2026.",
+          "url": "https://www.auroragov.org/Grip"
+        }
+      },
+      "FL": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal, with no statewide limit; rain barrels are widely promoted for watering landscapes.",
+        "landscape_rebate": {
+          "name": "Tampa / Hillsborough Florida-Friendly Landscaping Incentive (FLIP)",
+          "amount": "A rebate for converting up to 500 sq ft of irrigated lawn after three workshops; for Tampa and Hillsborough water customers.",
+          "url": "https://www.tampa.gov/water/conservation/how-to-water-smarter/florida-friendly-landscaping-incentive-program-flip"
+        }
+      },
+      "GA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal for outdoor, non-drinking use; the state plumbing code also allows it for toilet flushing. Some counties require covered barrels.",
+        "landscape_rebate": null,
+        "note": "No turf rebate found in metro Atlanta; Gwinnett County offers a $75 toilet rebate."
+      },
+      "WA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal: collecting rooftop rain for use on the same property needs no water-right permit.",
+        "landscape_rebate": {
+          "name": "Seattle RainWise",
+          "amount": "Can cover up to 100% of the cost of cisterns and rain gardens on eligible Seattle properties.",
+          "url": "https://seattlerainwise.org/"
+        }
+      },
+      "MA": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal and encouraged by the state for garden and outdoor use.",
+        "landscape_rebate": null,
+        "note": "No statewide turf rebate found."
+      },
+      "NY": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal with no state restriction; NYC and other towns run rain-barrel giveaways.",
+        "landscape_rebate": null,
+        "note": "No turf rebate found."
+      },
+      "IL": {
+        "rainwater": "legal",
+        "rainwater_note": "Legal for outdoor use. A system connected to indoor plumbing needs a plumbing permit and backflow protection.",
+        "landscape_rebate": null,
+        "note": "No turf rebate found."
+      }
+    },
+    "notes": "Federal tax credits for these upgrades ended for work after 2025 (EV chargers after June 2026). Look for state, city and utility rebates instead. Costs are national ranges from EPA, ENERGY STAR and contractor cost guides (2025 to 2026); local prices vary a lot.",
+    "sources": [
+      "https://www.epa.gov/watersense/statistics-and-facts",
+      "https://www.homeadvisor.com/cost/landscape/xeriscaping/",
+      "https://www.homeadvisor.com/cost/plumbing/rainwater-collection-system/",
+      "https://www.epa.gov/watersense/residential-toilets",
+      "https://www.epa.gov/watersense/showerheads",
+      "https://www.energystar.gov/saveathome/seal_insulate/methodology",
+      "https://basc.pnnl.gov/information/infiltration-meets-ach50-requirements",
+      "https://heatisland.lbl.gov/coolscience/cool-roofs",
+      "https://publichealth.berkeley.edu/articles/spotlight/research/switching-from-gas-to-electric-stoves-cuts-indoor-air-pollution",
+      "https://www.irs.gov/newsroom/faqs-for-modification-of-sections-25c-25d-25e-30c-30d-45l-45w-and-179d-under-public-law-119-21-139-stat-72-july-4-2025-commonly-known-as-the-one-big-beautiful-bill-obbb",
+      "https://dwr.colorado.gov/services/water-administration/rainwater-storm-water-graywater",
+      "https://ecology.wa.gov/water-shorelines/water-supply/water-recovery-solutions/rainwater-collection"
+    ]
   }
 }
