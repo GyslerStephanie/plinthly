@@ -8,6 +8,7 @@ import {
   US_RULES,
 } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
+import usData from '../../markets/us/us-data.json'
 
 /**
  * US Phase 1 — "Can I buy?" on the US engine. UI only: every number comes from
@@ -26,6 +27,26 @@ export const US_DEFAULT_VALUES = {
   region: '',
   ratePct: String(Math.round(DEFAULT_RATE.rate * 10000) / 100),
   hoaMonthly: '',
+}
+
+const EX = usData.dream.example_inputs
+
+/** Example numbers Phase 1 opens with, so a first visit shows a real result. */
+export const US_EXAMPLE_VALUES = {
+  ...US_DEFAULT_VALUES,
+  grossIncome: groupDigits(EX.grossIncome),
+  savings: groupDigits(EX.savings),
+  monthlyDebts: groupDigits(EX.monthlyDebts),
+  region: EX.region,
+}
+
+/** True while the money fields still hold the example numbers. */
+export function isExampleValues(v) {
+  return (
+    num(v.grossIncome) === EX.grossIncome &&
+    num(v.savings) === EX.savings &&
+    num(v.monthlyDebts) === EX.monthlyDebts
+  )
 }
 
 /** Engine input from the form's string values. */
@@ -106,6 +127,18 @@ function UsForm({ values, onChange }) {
   const st = values.region ? getState(values.region) : null
   return (
     <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+      {isExampleValues(values) && (
+        <div className="flex flex-wrap items-center gap-3 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-900">
+          <span className="min-w-0 flex-1">{ut('form.exampleNote')}</span>
+          <button
+            type="button"
+            onClick={() => onChange({ ...US_DEFAULT_VALUES, region: values.region, downPct: values.downPct, ratePct: values.ratePct })}
+            className="rounded-md border border-amber-200 bg-card px-2.5 py-1 text-xs font-semibold text-amber-900 transition hover:border-amber-500"
+          >
+            {ut('form.exampleClear')}
+          </button>
+        </div>
+      )}
       <Field id="us-income" label={ut('form.income')} hint={ut('form.incomeHint')}>
         <MoneyInput id="us-income" value={values.grossIncome} onChange={set('grossIncome')} />
       </Field>

@@ -81,6 +81,8 @@ const COPY = {
     hoa: 'HOA dues (optional)',
     hoaHint: 'Monthly homeowners-association fees, common for condos and new builds.',
     live: 'Your result updates as you type.',
+    exampleNote: 'These are example numbers so you can see how it works. Replace them with yours.',
+    exampleClear: 'Clear example',
   },
   result: {
     eyebrow: 'Your estimated maximum purchase price',

@@ -16,7 +16,7 @@ import { ut } from './markets/us/copy'
 import { usDataMeta } from './markets/us/affordability'
 import CountryConfirm from './components/CountryConfirm'
 import CountrySwitcher from './components/CountrySwitcher'
-import UsPhase1, { US_DEFAULT_VALUES, usResult } from './components/us/UsPhase1'
+import UsPhase1, { US_DEFAULT_VALUES, US_EXAMPLE_VALUES, usResult } from './components/us/UsPhase1'
 import UsComingSoon from './components/us/UsComingSoon'
 import UsDreamPhase from './components/us/UsDreamPhase'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
@@ -79,7 +79,7 @@ export default function App() {
   const { t, lang, setLang, languages } = useI18n()
   const { marketId, market, setMarket } = useMarket()
   const isUs = marketId === 'us'
-  const [usValues, setUsValues] = useState(US_DEFAULT_VALUES) // US Phase 1 inputs
+  const [usValues, setUsValues] = useState(US_EXAMPLE_VALUES) // US Phase 1 inputs (example until edited)
   const [showCountry, setShowCountry] = useState(false) // front door step 1: country confirm
   const usRes = isUs ? usResult(usValues) : null
   const [phase, setPhase] = useState(1)
@@ -123,13 +123,15 @@ export default function App() {
     if (!s || Object.keys(s).length === 0) return
 
     if (s.market === 'us') {
+      // A US link without numbers (e.g. just a country) opens on the example.
+      const base = s.grossIncome || s.savings ? US_DEFAULT_VALUES : US_EXAMPLE_VALUES
       const next = {
-        ...US_DEFAULT_VALUES,
-        grossIncome: s.grossIncome ?? '',
-        savings: s.savings ?? '',
-        monthlyDebts: s.monthlyDebts ?? '',
-        downPct: s.downPct ?? US_DEFAULT_VALUES.downPct,
-        region: s.canton ?? '',
+        ...base,
+        grossIncome: s.grossIncome ?? base.grossIncome,
+        savings: s.savings ?? base.savings,
+        monthlyDebts: s.monthlyDebts ?? base.monthlyDebts,
+        downPct: s.downPct ?? base.downPct,
+        region: s.canton ?? base.region,
         ratePct: s.ratePct ?? US_DEFAULT_VALUES.ratePct,
         hoaMonthly: s.hoaMonthly ?? '',
       }
@@ -354,7 +356,7 @@ export default function App() {
     setShowWithoutEquity(false)
     setShowCompare(false)
     setRouteIntent(null)
-    setUsValues(US_DEFAULT_VALUES)
+    setUsValues(US_EXAMPLE_VALUES)
     setPhase(1)
     setMaxVisited(1)
   }

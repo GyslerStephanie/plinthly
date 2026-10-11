@@ -70,7 +70,8 @@
   "dream": {
     "savings_scenarios_usd_per_month": [500, 1000, 2000],
     "payoff_milestone_years": 5,
-    "notes": "Presentation choices for the US dream-price phase, not rules: the monthly savings amounts the savings timeline compares, and the interval of the payoff milestones table."
+    "example_inputs": { "grossIncome": 120000, "savings": 80000, "monthlyDebts": 600, "region": "TX" },
+    "notes": "Presentation choices for the US dream-price phase, not rules: the monthly savings amounts the savings timeline compares, and the interval of the payoff milestones table, and the example numbers Phase 1 opens with (clearly labelled as an example, one click to clear)."
   },
 
   "states": {
