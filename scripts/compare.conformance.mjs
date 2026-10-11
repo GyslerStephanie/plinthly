@@ -20,13 +20,28 @@ function check(name, got, want, tol = 1) {
   }
 }
 
-// Pinned against methodology 0.1.0, default inputs.
-check('methodology', COMPARE_METHODOLOGY, '0.1.0')
+// Pinned against methodology 0.2.0, default inputs.
+check('methodology', COMPARE_METHODOLOGY, '0.2.0')
 
 const rb = summarize('rent_vs_buy', {}, 10)
 check('rent_vs_buy A@10', Math.round(rb.a), 351530)
 check('rent_vs_buy B@10', Math.round(rb.b), 251574)
 check('rent_vs_buy break-even', rb.breakEven, 3)
+
+// True-cost mode adds the net opportunity cost of blocked money to the owning
+// line, so owning reads more expensive than the plain cash lens.
+const rbT = summarize('rent_vs_buy', { trueCost: true }, 10)
+check('rent_vs_buy true-cost B@10', Math.round(rbT.b), 335378)
+check('true cost > cash cost', rbT.b > rb.b, true)
+check('opp series exposed', Math.round(computeSeries('rent_vs_buy', {}).opp[10]), 83804)
+
+// A bigger down payment locks up more cash: less mortgage interest (lower cash
+// cost) but a larger opportunity charge in true-cost mode.
+const rb30 = summarize('rent_vs_buy', { downPaymentPct: 30 }, 10)
+check('higher down lowers cash owning cost', rb30.b < rb.b, true)
+check('higher down raises true cost',
+  summarize('rent_vs_buy', { downPaymentPct: 30, trueCost: true }, 10).b >
+  summarize('rent_vs_buy', { downPaymentPct: 20, trueCost: true }, 10).b, true)
 
 const si = summarize('save_invest', {}, 10)
 check('save_invest A@10', Math.round(si.a), 322028)

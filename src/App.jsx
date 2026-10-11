@@ -546,9 +546,24 @@ export default function App() {
         </div>
       </footer>
 
-      {/* AI advisor — available once a result exists */}
-      {previewResult && (
-        <AdvisorFab context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)} />
+      {/* AI advisor — available once a result exists. Hidden while Compare is
+          open: that overlay mounts its own instance with the Compare toolset,
+          and two FABs would stack (both announced by a screen reader). */}
+      {previewResult && !showCompare && (
+        <AdvisorFab
+          context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
+          values={values}
+          onApplyScenario={(overrides) => {
+            // The advisor only ever previews; this is the one path that writes
+            // a what-if back into the user's real inputs.
+            const next = { ...values }
+            for (const [key, value] of Object.entries(overrides)) next[key] = String(value)
+            setValues(next)
+            // Recompute in place (same idiom as handleExploreChange) — nulling
+            // phase1 here would unmount the result and the advisor with it.
+            if (phase1) setPhase1(calc(next))
+          }}
+        />
       )}
 
       {/* Compare — a parallel surface reached from the Phase 1 / Phase 2 results;
