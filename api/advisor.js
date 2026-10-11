@@ -60,7 +60,7 @@ function buildSystemPrompt(ctx, mode, surface) {
       ...usPromptRules(),
       'CRITICAL: every number you state must come from the CONTEXT object below or a tool result. Never invent or estimate a figure. If a question needs a number you do not have, say so and suggest the user adjust their inputs in the tool.',
       'Reply in English. Be concise, concrete, and encouraging. No markdown headers; short paragraphs or tight bullet lists.',
-      usToolsPrompt(),
+      usToolsPrompt(surface),
       mode === 'plan' ? usPlanTask() : "TASK: answer the user's question grounded in their numbers.",
       'CONTEXT:',
       facts,
@@ -78,7 +78,7 @@ function buildSystemPrompt(ctx, mode, surface) {
     'You also have `explain_term`: for any "what is / what does … mean" question, call it and explain in plain everyday words from the returned glossary definition, including its learn-more link. Never define a term from memory.',
     'Scenario figures may come ONLY from a tool result in this conversation; never state a scenario number you did not receive from a tool. After a result, give the new figure, the delta, and what it means in one short paragraph.',
     mode === 'plan'
-      ? 'TASK: produce a short, structured savings roadmap to close the gap — monthly savings target, Pillar 3a optimisation, 2-3 timeline scenarios, and any debt/hard-equity flag. Use only context numbers.'
+      ? 'TASK: produce a short, structured savings roadmap to close the gap: the equity gap, Pillar 3a optimisation, any income gap, and any debt/hard-equity flag. Use only figures present in CONTEXT or a tool result. Never compute a monthly savings target, a timeline or any other figure yourself; if a figure is not in the context, describe the step without a number or suggest the user try it as a what-if.'
       : 'TASK: answer the user\'s question grounded in their numbers.',
     'CONTEXT:',
     facts,

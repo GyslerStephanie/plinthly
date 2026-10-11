@@ -48,6 +48,9 @@ const COPY = {
       durFew: 'If you only plan to stay a few years, closing costs weigh more. Worth knowing before you buy.',
     },
   },
+  landing: {
+    sub: 'Compare different scenarios or see what you can buy, build or upgrade in the US',
+  },
   hero: {
     title: 'Can I buy?',
     blurb: 'Get an honest picture of your buying power under US lending rules, before you talk to a lender, agent, or builder. No account needed, nothing saved, nothing sold to you.',
@@ -169,6 +172,7 @@ const COPY = {
     pmiEnds: 'PMI ends automatically',
     pmiEndsValue: 'after {years} years',
     pmiNone: 'No PMI (20%+ down)',
+    pmiCancel: 'You can ask your lender to cancel PMI',
     extraLabel: 'Extra payment toward principal',
     extraHint: 'Optional. Paying a little extra each month shortens the loan and cuts interest.',
     extraSaves: 'Paying {extra}/mo extra saves {interest} in interest and pays the loan off {years} years sooner.',
@@ -179,6 +183,8 @@ const COPY = {
   },
   advisor: {
     starters: ['What if my monthly debts were $300?', 'Can I afford $450,000?', 'Why is my limit what it is?'],
+    cStarters: ['What if I rent for 5 more years?', 'What if rates were 5.5%?', 'Which is ahead at 15 years?'],
+    mockCompare: 'Preview: connect an API key for live answers about these scenarios.',
     planButton: 'Make my roadmap to this price',
     mock: 'Preview: your comfortable maximum is {max}. Connect an API key for live answers.',
     mockDream: 'Preview: your maximum today is {max} against a {price} goal. Connect an API key for a tailored roadmap.',
@@ -190,6 +196,7 @@ const COPY = {
     budgetHint: 'Starts at your maximum price from step 1. Try lower or higher.',
     state: 'State',
     pickState: 'Pick a state to see local prices, energy costs and incentives.',
+    indicative: 'Indicative ranges from public state data, not live listings or a quote.',
     buysTitle: 'What {budget} buys in {state}',
     buysRange: '{low}–{high} sq ft',
     buysMid: '≈ {mid} sq ft at the typical price',
@@ -264,6 +271,7 @@ const COPY = {
     cmpUpgrade: 'Upgrade',
     cmpNew: 'New certified',
     cmpBuild: 'Build (construction only)',
+    indicative: 'Indicative costs and savings, not a quote. Get bids from local contractors and check rebate rules before you commit.',
   },
   plan: {
     title: 'What do I do next?',
@@ -276,6 +284,7 @@ const COPY = {
     share: 'Copy share link',
     copied: 'Link copied',
     print: 'Print or save as PDF',
+    disclaimer: 'Indicative estimates only, not financial, tax or mortgage advice. Check with a lender or HUD-approved housing counselor before deciding.',
   },
   compare: {
     intro: 'Undecided? See how renting, buying and investing play out over time.',

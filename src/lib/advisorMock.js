@@ -63,7 +63,7 @@ export function mockAgentTurn(ctx, messages, mode, surface) {
     if (p && p.definition) return { reply: narrateExplain(p) }
     if (p && p.available) return { reply: `(Preview mock) I can only explain terms from Plinthly's glossary, for example: ${p.available.slice(0, 6).join(', ')}.` }
   } else if (typeof lastMsg?.content === 'string' && EXPLAIN_RE.test(lastMsg.content)) {
-    const id = findTerm(lastMsg.content, market)
+    const id = findTerm(lastMsg.content, market, ctx)
     if (id) {
       const input = { term: lastMsg.content.slice(0, 80) }
       return {
@@ -74,7 +74,7 @@ export function mockAgentTurn(ctx, messages, mode, surface) {
       }
     }
   }
-  if (ctx.market === 'us') return mockUsTurn(ctx, messages, mode)
+  if (ctx.market === 'us') return surface === 'compare' ? mockUsCompareTurn(ctx, messages) : mockUsTurn(ctx, messages, mode)
   const last = messages[messages.length - 1]
 
   // Second leg of the loop: a tool result came back — narrate it.
@@ -260,7 +260,7 @@ function mockUsTurn(ctx, messages, mode) {
   }
   return { reply: [
     `(Preview mock, no API key set) Your comfortable maximum is ${usd(ctx.maxPrice)}, set by ${US_LIMIT_TEXT[ctx.limit] || ctx.limit}`,
-    ctx.lenderStretch && ctx.lenderStretch.at50 > ctx.maxPrice ? `A lender might approve up to ${usd(ctx.lenderStretch.at45)}–${usd(ctx.lenderStretch.at50)} with strong credit, but that's a stretch.` : null,
+    ctx.lenderStretch && ctx.lenderStretch.at50 > ctx.maxPrice ? `A lender might approve ${usd(ctx.lenderStretch.at45)} to ${usd(ctx.lenderStretch.at50)} with strong credit, but that's a stretch.` : null,
     'Ask me a what-if like "what if my monthly debts were $300?" or "can I afford $450,000?".',
   ].filter(Boolean).join('\n\n') }
 }
@@ -348,3 +348,138 @@ function readCompareIntent(text) {
   return { ...input, label: 'What-if' }
 }
 
+
+/* ==========================================================================
+ * US Compare mock: same contract. Only the CHOICE of tool is scripted; the
+ * browser runs run_us_compare_scenario on the real US model and this narrates
+ * the result in USD. No long dashes in any US-facing string.
+ * ========================================================================== */
+
+// Fallback side names; the client attaches `aheadLabel` from US copy first.
+// Keys must match src/markets/us/compare.js.
+const US_SIDE = {
+  rent: 'renting', own: 'owning', rentInvest: 'renting and investing', buy: 'buying',
+  cheaper: 'buying a cheaper home and investing the difference', buyPrice: 'buying at your price',
+  buyLater: 'waiting to buy', buyNow: 'buying now',
+}
+const US_COMPARE_FIELD = {
+  price: 'the price', cash: 'your starting cash', rentMonthly: 'the rent', savingMonthly: 'your monthly saving',
+  mortgageRatePct: 'the mortgage rate', investReturnPct: 'the investment return', appreciationPct: 'home price growth',
+  rentInflationPct: 'rent increases', downPaymentPct: 'the down payment', maintenancePct: 'maintenance',
+  propertyTaxPct: 'property tax', insurancePct: 'insurance', cheaperPricePct: 'the cheaper home', buyInYear: 'the year you buy',
+  trueCost: 'the opportunity cost setting',
+}
+
+const US_MONEY_FIELDS = ['price', 'cash', 'rentMonthly', 'savingMonthly']
+const fmtUsField = (k, v) => (US_MONEY_FIELDS.includes(k) ? usd(v) : /Pct$/.test(k) ? `${v}%` : String(v))
+
+function mockUsCompareTurn(ctx, messages) {
+  const last = messages[messages.length - 1]
+  const toolResult = Array.isArray(last?.content) && last.content.find((b) => b.type === 'tool_result')
+  if (toolResult) {
+    let p = {}
+    try { p = JSON.parse(toolResult.content) } catch { p = {} }
+    if (p.error) return { reply: `(Preview mock) I couldn't run that one: ${[].concat(p.detail || p.error).join(' ')}` }
+    if (p.result) return { reply: narrateUsCompare(p) }
+    return { reply: '(Preview mock, no API key set) I could not read that result.' }
+  }
+  const text = typeof last?.content === 'string' ? last.content : ''
+  const input = readUsCompareIntent(text)
+  if (input) {
+    return {
+      stop: 'tool_use',
+      reply: '',
+      assistant: [{ type: 'tool_use', id: 'mock_usc1', name: 'run_us_compare_scenario', input }],
+      toolUse: [{ id: 'mock_usc1', name: 'run_us_compare_scenario', input }],
+    }
+  }
+  return { reply: '(Preview mock, no API key set) Ask me about the scenarios on screen, for example "what if I rent for 5 more years?", "what if rates were 5.5%?" or "which is ahead at 15 years?".' }
+}
+
+/** Narrate a run_us_compare_scenario result. Every figure is from the tool. */
+function narrateUsCompare(p) {
+  const { onScreen, result, changed, deltaVsOnScreen } = p
+  const side = (shape, k) => (shape && shape.aheadLabel) || US_SIDE[k] || k
+  const cost = /cost/.test(result.lens)
+  const gap = result.gapUsd || usd(result.gap)
+  const lines = [
+    `(Preview mock, no API key set) At year ${result.year}, ${side(result, result.ahead)} comes out ahead by ${gap}. ` +
+      (cost ? 'This view compares the money each path costs you, so lower is better.' : 'This view compares net worth, so higher is better.'),
+  ]
+  // A no-op change (the value already on screen) is not worth narrating.
+  const keys = Object.keys(changed || {}).filter((k) => changed[k].from !== changed[k].to)
+  if (keys.length) {
+    const k = keys[0]
+    lines.push(
+      `Changing ${US_COMPARE_FIELD[k] || k} from ${fmtUsField(k, changed[k].from)} to ${fmtUsField(k, changed[k].to)} moves the gap by ${p.deltaVsOnScreenUsd || usd(Math.abs(deltaVsOnScreen))}. ` +
+        `On screen, ${side(onScreen, onScreen.ahead)} was ahead by ${onScreen.gapUsd || usd(onScreen.gap)}.`,
+    )
+  } else if (result.scenario !== onScreen.scenario || result.year !== onScreen.year) {
+    lines.push(`On screen, ${side(onScreen, onScreen.ahead)} is ahead by ${onScreen.gapUsd || usd(onScreen.gap)} at year ${onScreen.year}.`)
+  }
+  lines.push(
+    result.breakEvenYear
+      ? `The two paths cross at year ${result.breakEvenYear}; before that the other side is ahead.`
+      : 'The two paths never cross within the modelled horizon.',
+  )
+  lines.push('Illustrative, not licensed advice. A HUD-approved housing counselor can review it with you.')
+  return lines.join('\n\n')
+}
+
+/** Crude intent reader for the US Compare mock. Stands in for Claude choosing. */
+function readUsCompareIntent(text) {
+  if (!text) return null
+  const input = {}
+  const t = text.replace(/[$,]/g, '')
+
+  const later = /\b(later|wait(ing)?|hold off|rent (for )?(another|\d+ more)|keep renting|\d+\s*more\s*years?)\b/i.test(t)
+  const scenario = later ? 'buy_later'
+    : /cheaper|smaller|less expensive|lower price/i.test(t) ? 'buy_cheaper'
+      : /invest|stock|market|index fund/i.test(t) ? 'save_invest'
+        : /\brent/i.test(t) ? 'rent_vs_buy'
+          : null
+  if (scenario) input.scenarioId = scenario
+
+  // "at year 15" / "after 15 years" is the horizon; for buy_later, "for 5
+  // (more) years" is when the purchase happens.
+  const atYear = t.match(/\b(?:at|by|over|after)\s+(?:year\s*)?(\d{1,2})(?![\d.%]|\s*%)(?:\s*years?)?|\byear\s*(\d{1,2})/i)
+  if (atYear) input.year = Number(atYear[1] || atYear[2])
+  if (scenario === 'buy_later') {
+    const wait = t.match(/\b(?:for|in|wait|another)\s*(\d{1,2})\s*(?:more\s*)?years?|(\d{1,2})\s*more\s*years?/i)
+    if (wait) input.buyInYear = Number(wait[1] || wait[2])
+  } else if (!atYear) {
+    const n = t.match(/(\d{1,2})\s*years?/i)
+    if (n) input.year = Number(n[1])
+  }
+
+  const pctMatch = t.match(/(-?\d+(?:\.\d+)?)\s*%/)
+  if (pctMatch) {
+    const v = Number(pctMatch[1])
+    const field = /property tax/i.test(t) ? 'propertyTaxPct'
+      : /insurance/i.test(t) ? 'insurancePct'
+        : /maint/i.test(t) ? 'maintenancePct'
+          : /down ?payment|\bdown\b/i.test(t) ? 'downPaymentPct'
+            : /rent.*(inflat|increase|rise|go(es)? up)/i.test(t) ? 'rentInflationPct'
+              : /apprecia|home (value|price)s? (grow|rise)|prices? (grow|rise)/i.test(t) ? 'appreciationPct'
+                : /return|invest|stock|market/i.test(t) ? 'investReturnPct'
+                  : /cheaper|smaller/i.test(t) ? 'cheaperPricePct'
+                    : 'mortgageRatePct'
+    input[field] = v
+  }
+
+  const amount = t.match(/(\d+(?:\.\d+)?)\s*(k|m|million)(?![a-z])|(\d{3,}(?:\.\d+)?)(?!\s*%)/i)
+  if (amount) {
+    let v = Number(amount[1] || amount[3])
+    if (/k$/i.test(amount[0])) v *= 1000
+    if (/(m|million)$/i.test(amount[0])) v *= 1000000
+    if (/rent/i.test(t) && v < 20000 && !later) input.rentMonthly = v
+    else if (/sav(e|ing)\b.*(month|\/mo)|per month|a month|monthly/i.test(t) && v < 20000) input.savingMonthly = v
+    else if (/\bcash\b|savings|have|saved/i.test(t) && v < 1000000 && !/price|home|house|condo/i.test(t)) input.cash = v
+    else if (v >= 50000) input.price = v
+  }
+
+  if (/true ?cost|opportunity/i.test(t)) input.trueCost = true
+
+  if (!Object.keys(input).length && !/ahead|show|compare|which|better|break ?even|winning|win\b/i.test(t)) return null
+  return { ...input, label: 'What-if' }
+}

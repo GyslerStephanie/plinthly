@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import AdvisorFab from '../AdvisorFab'
 import { buildCompareAdvisorContext } from '../../lib/advisorContext'
+import { buildUsCompareAdvisorContext } from '../../markets/us/advisor'
 import * as chModel from '../../lib/compare/model'
 import * as usModel from '../../markets/us/compare'
 import { useMarket } from '../../markets/MarketContext'
@@ -565,17 +566,18 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           from the scenario model rather than the Phase 1 engine. */}
       <LearnToast inline links={learnLinks(isUs ? 'us' : 'ch', 'compare')} />
 
-      {/* US: the advisor on Compare answers from the US engine and the glossary
-          (the Swiss Compare toolset is CH-only). */}
-      {isUs && usAdvisor && (
-        <AdvisorFab inline tipKey="compare" context={usAdvisor.context} values={usAdvisor.values} />
-      )}
-
-      {!isUs && <AdvisorFab
+      {/* Both markets get the Compare toolset for their own model: the US one
+          runs run_us_compare_scenario on markets/us/compare.js, the Swiss one
+          run_compare_scenario on lib/compare/model.js. `values` (US form
+          values) only feed explain_term's "your figure". */}
+      <AdvisorFab
         tipKey="compare"
         surface="compare"
         inline
-        context={buildCompareAdvisorContext(scenario, inputs, year, { a, b, hA: s.hA, hB: s.hB, costLens: s.costLens }, lang)}
+        context={isUs
+          ? buildUsCompareAdvisorContext(scenario, inputs, year, lang)
+          : buildCompareAdvisorContext(scenario, inputs, year, { a, b, hA: s.hA, hB: s.hB, costLens: s.costLens }, lang)}
+        values={isUs ? usAdvisor?.values : undefined}
         compare={{ scenario, inputs, year }}
         onApplyScenario={(overrides) => {
           // Same discipline as Phase 1: the chat only ever previews, and this is
@@ -585,7 +587,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           if (nextYear) setYear(nextYear)
           if (Object.keys(rest).length) setInputs((p) => ({ ...p, ...rest }))
         }}
-      />}
+      />
     </div>
   )
 }

@@ -15,7 +15,9 @@ import { calculateAffordability } from '../src/lib/affordability.js'
 import { summarize, MAX_YEARS } from '../src/lib/compare/model.js'
 import { calculateAffordability as usCalc } from '../src/markets/us/affordability.js'
 import { dreamPlan } from '../src/markets/us/dream.js'
-import { buildUsAdvisorContext, usPromptRules, US_ADVISOR_TOOLS } from '../src/markets/us/advisor.js'
+import { buildUsAdvisorContext, usPromptRules, usToolsPrompt, usPlanTask, US_ADVISOR_TOOLS, US_COMPARE_TOOL, buildUsCompareAdvisorContext, sanitiseUsCompareInput } from '../src/markets/us/advisor.js'
+import { summarize as usSummarize, COMPARE_DEFAULTS as US_CMP_DEFAULTS, MAX_YEARS as US_MAX, SCENARIOS as US_SCENARIOS } from '../src/markets/us/compare.js'
+import { COMPARE_TOOL } from '../src/lib/advisorTools.js'
 import advisorHandler from '../api/advisor.js'
 
 let passed = 0
@@ -293,6 +295,66 @@ const exOut = runAdvisorTool('explain_term', exLeg1.toolUse[0].input, { values: 
 const exLeg2 = await callHandler({ context: usCtx, messages: [{ role: 'user', content: 'What does property appreciation mean?' }, { role: 'assistant', content: exLeg1.assistant }, { role: 'user', content: [{ type: 'tool_result', tool_use_id: exLeg1.toolUse[0].id, content: JSON.stringify(exOut.content) }] }] })
 check('explain mock: narrates the glossary definition', exLeg2.reply.includes('Property appreciation') && exLeg2.reply.includes('How much a home’s value rises'))
 check('explain mock: works on the Swiss side too', (await callHandler({ context: { lang: 'en', maxPrice: 1 }, messages: [{ role: 'user', content: 'What is the Eigenmietwert?' }] })).toolUse[0].name === 'explain_term')
+
+/* --- US Compare: run_us_compare_scenario ---------------------------------- */
+check('US compare: toolsFor(compare, us) = US compare tool + explain', toolsFor('compare', 'us').map((t) => t.name).join() === 'run_us_compare_scenario,explain_term')
+check('US compare: CH toolsFor unchanged', toolsFor('compare').map((t) => t.name).join() === 'run_compare_scenario,explain_term' && toolsFor('compare', 'ch')[0] === COMPARE_TOOL && toolsFor('phase1', 'ch').map((t) => t.name).join() === 'recompute_affordability,explain_term')
+check('US compare: US phase1 unchanged', toolsFor('phase1', 'us').map((t) => t.name).join() === 'recompute_us_affordability,check_home_price,explain_term')
+check('US compare: schema optional-only', US_COMPARE_TOOL.input_schema.required.length === 0)
+const US_CMP = { scenario: 'rent_vs_buy', inputs: { ...US_CMP_DEFAULTS, propertyTaxPct: 1.6 }, year: 10 }
+const usCmp = (input, compare = US_CMP) => runAdvisorTool('run_us_compare_scenario', input, { market: 'us', compare, values: US_VALUES })
+const finiteShape = (r) => [r.sideA.value, r.sideB.value, r.gap].every(Number.isFinite) && /^\$/.test(r.sideA.usd) && /^\$/.test(r.gapUsd)
+for (const sc of US_SCENARIOS.map((x) => x.id)) {
+  const r = usCmp({ scenarioId: sc, year: 15 })
+  const ref = usSummarize(sc, US_CMP.inputs, 15)
+  check(`US compare ${sc}: ok, finite USD figures`, r.ok && finiteShape(r.content.result) && finiteShape(r.content.onScreen) && r.content.currency === 'USD')
+  check(`US compare ${sc}: equals the US model exactly`, r.content.result.sideA.value === Math.round(ref.a) && r.content.result.sideB.value === Math.round(ref.b) && r.content.result.breakEvenYear === ref.breakEven)
+  check(`US compare ${sc}: no CHF anywhere`, !/CHF/.test(JSON.stringify(r)))
+}
+const rv = usCmp({ year: 10 })
+const rvRef = usSummarize('rent_vs_buy', US_CMP.inputs, 10)
+check('US compare: cost lens picks the LOWER side', rv.content.result.ahead === (rvRef.a < rvRef.b ? 'rent' : 'own') && /LOWER/.test(rv.content.result.lens))
+const later = usCmp({ scenarioId: 'buy_later', buyInYear: 5 })
+check('US compare: buy_later override echoed + preview chip', later.ok && later.content.changed.buyInYear.to === 5 && later.scenario.target === 'compare' && later.scenario.overrides.scenarioId === 'buy_later')
+check('US compare: state-specific tax inherited from screen', usCmp({ mortgageRatePct: 6 }).content.result.sideB.value === Math.round(usSummarize('rent_vs_buy', { ...US_CMP.inputs, mortgageRatePct: 6 }, 10).b))
+check('US compare: rate 40 clamps to 15', sanitiseUsCompareInput({ mortgageRatePct: 40 }).input.mortgageRatePct === 15)
+check('US compare: rate 0.2 clamps to 1', sanitiseUsCompareInput({ mortgageRatePct: 0.2 }).input.mortgageRatePct === 1)
+check('US compare: clamp disclosed', usCmp({ mortgageRatePct: 40 }).content.note.some((e) => /clamped/.test(e)))
+check('US compare: down payment clamps to 3% floor', sanitiseUsCompareInput({ downPaymentPct: 1 }).input.downPaymentPct === 3)
+check('US compare: year clamps to horizon', sanitiseUsCompareInput({ year: 99 }).input.year === US_MAX && sanitiseUsCompareInput({ year: 0 }).input.year === 1)
+check('US compare: buyInYear rounded + clamped', sanitiseUsCompareInput({ buyInYear: 4.6 }).input.buyInYear === 5 && sanitiseUsCompareInput({ buyInYear: 60 }).input.buyInYear === US_MAX - 1)
+check('US compare: cheaperPricePct clamped', sanitiseUsCompareInput({ cheaperPricePct: 5 }).input.cheaperPricePct === 30)
+check('US compare: negative appreciation allowed (clamped)', sanitiseUsCompareInput({ appreciationPct: -20 }).input.appreciationPct === -5)
+check('US compare: negative price rejected', sanitiseUsCompareInput({ price: -1 }).input.price === undefined)
+check('US compare: absurd price ignored', sanitiseUsCompareInput({ price: 9e12 }).input.price === undefined)
+check('US compare: "$450,000" coerced', sanitiseUsCompareInput({ price: '$450,000' }).input.price === 450000)
+check('US compare: Swiss fields rejected', sanitiseUsCompareInput({ regime: 'new', marginalTaxPct: 30 }).errors.length === 2 && sanitiseUsCompareInput({ regime: 'new' }).input.regime === undefined)
+check('US compare: unknown scenario rejected', sanitiseUsCompareInput({ scenarioId: 'buy_abroad' }).input.scenarioId === undefined)
+check('US compare: non-object rejected', usCmp('price=1').ok === false)
+check('US compare: never runs in CH', runAdvisorTool('run_us_compare_scenario', {}, { market: 'ch', compare: US_CMP }).ok === false)
+check('US compare: Swiss compare tool refused in US', runAdvisorTool('run_compare_scenario', {}, { market: 'us', compare: US_CMP }).ok === false)
+check('US compare: Swiss compare still runs in CH', runAdvisorTool('run_compare_scenario', { year: 12 }, { market: 'ch', compare: { scenario: 'rent_vs_buy', inputs: {}, year: 10 } }).ok === true)
+const usCmpCtx = buildUsCompareAdvisorContext('rent_vs_buy', US_CMP.inputs, 10, 'en')
+check('US compare context: market + surface + model figures', usCmpCtx.market === 'us' && usCmpCtx.surface === 'compare' && usCmpCtx.onScreen.sideA.value === Math.round(rvRef.a))
+check('US compare prompt: names the US tool, no long dashes', /run_us_compare_scenario/.test(usToolsPrompt('compare')) && !/[—–]/.test(usToolsPrompt('compare')))
+check('US prompts: no long dashes', !/[—–]/.test(usPromptRules().join(' ') + usToolsPrompt() + usPlanTask() + JSON.stringify(US_ADVISOR_TOOLS) + JSON.stringify(US_COMPARE_TOOL)))
+check('US plan task: timelines come from context, not the model', /savingsScenarios/.test(usPlanTask()) && /Never compute/.test(usPlanTask()))
+check('US context: dream carries engine timelines', Array.isArray(usCtx.dream.savingsScenarios) && usCtx.dream.savingsScenarios.every((x) => Number.isFinite(x.months) && x.months === usPlan.savingsScenarios.find((y) => y.perMonth === x.perMonth).months))
+
+// Mock: "what if I rent for 5 more years" → the US compare tool, narrated in USD.
+const cQ = 'What if I rent for 5 more years?'
+const cLeg1 = await callHandler({ context: usCmpCtx, surface: 'compare', messages: [{ role: 'user', content: cQ }] })
+check('US compare mock: routes to run_us_compare_scenario', cLeg1.stop === 'tool_use' && cLeg1.toolUse[0].name === 'run_us_compare_scenario')
+check('US compare mock: reads buy_later + buyInYear 5', cLeg1.toolUse[0].input.scenarioId === 'buy_later' && cLeg1.toolUse[0].input.buyInYear === 5)
+const cOut = runAdvisorTool(cLeg1.toolUse[0].name, cLeg1.toolUse[0].input, { market: 'us', compare: US_CMP })
+const cLeg2 = await callHandler({ context: usCmpCtx, surface: 'compare', messages: [{ role: 'user', content: cQ }, { role: 'assistant', content: cLeg1.assistant }, { role: 'user', content: [{ type: 'tool_result', tool_use_id: cLeg1.toolUse[0].id, content: JSON.stringify(cOut.content) }] }] })
+check('US compare mock: narrates the tool figure in USD', cLeg2.reply.includes(cOut.content.result.gapUsd) && !/CHF/.test(cLeg2.reply) && !/[—–]/.test(cLeg2.reply))
+const cRate = await callHandler({ context: usCmpCtx, surface: 'compare', messages: [{ role: 'user', content: 'What if rates were 5.5%?' }] })
+check('US compare mock: rate what-if', cRate.toolUse && cRate.toolUse[0].input.mortgageRatePct === 5.5)
+const cAhead = await callHandler({ context: usCmpCtx, surface: 'compare', messages: [{ role: 'user', content: 'Which is ahead at 15 years?' }] })
+check('US compare mock: horizon question', cAhead.toolUse && cAhead.toolUse[0].input.year === 15 && cAhead.toolUse[0].input.buyInYear === undefined)
+const chCmpLeg = await callHandler({ context: { lang: 'en', surface: 'compare' }, surface: 'compare', messages: [{ role: 'user', content: 'What if rates were 3%?' }] })
+check('CH compare mock unchanged: still the Swiss tool', chCmpLeg.toolUse && chCmpLeg.toolUse[0].name === 'run_compare_scenario')
 if (savedKey !== undefined) process.env.ANTHROPIC_API_KEY = savedKey
 
 /* --- report --------------------------------------------------------------- */

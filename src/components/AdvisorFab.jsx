@@ -76,8 +76,17 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
 
   if (!context) return null
 
-  /** Human label for a Compare side key ("own" → "owning"). */
-  const sideLabel = (key) => (key ? t(`compare.win.${key}`) : '')
+  const isUs = context.market === 'us'
+  /** Human label for a Compare side key ("own" → "owning"). US copy first: the
+   *  US model has its own sides (cheaper, buyPrice) that only US copy names. */
+  const sideLabel = (key) => {
+    if (!key) return ''
+    if (isUs) {
+      const us = ut(`compare.win.${key}`)
+      if (us !== `compare.win.${key}`) return us
+    }
+    return t(`compare.win.${key}`)
+  }
   /** Attach readable labels to a Compare tool result before the model sees it. */
   const withLabels = (content) => {
     if (!content || !content.result) return content
@@ -90,10 +99,10 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
       }
     return { ...content, result: tag(content.result), onScreen: tag(content.onScreen) }
   }
-  const isUs = context.market === 'us'
   const clientMock = (mode) => {
     const d = context.dream
     if (isUs) {
+      if (surface === 'compare') return ut('advisor.mockCompare')
       return d
         ? ut('advisor.mockDream', { max: money(context.maxPrice), price: money(d.price) })
         : ut('advisor.mock', { max: money(context.maxPrice) })
@@ -114,19 +123,25 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
    * the same preview mock the server uses, in the browser — so the tool loop
    * still works on the real engine. Nothing leaves the device in that case.
    */
+  // The preview mock stands in only when there is no advisor API at all (no
+  // server, a 404, or a non-JSON page). A real API that refuses (rate limit,
+  // daily cap, upstream error) says so: a made-up answer would hide it.
   async function post(history, mode) {
+    const mock = () => ({ mock: true, ...mockAgentTurn(context, history, mode, surface) })
+    let res
     try {
-      const res = await fetch('/api/advisor', {
+      res = await fetch('/api/advisor', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ context, messages: history, mode, surface }),
       })
-      const ct = res.headers.get('content-type') || ''
-      if (!res.ok || !ct.includes('application/json')) throw new Error('no-api')
-      return await res.json()
     } catch {
-      return { mock: true, ...mockAgentTurn(context, history, mode, surface) }
+      return mock()
     }
+    const ct = res.headers.get('content-type') || ''
+    if (res.status === 404 || !ct.includes('application/json')) return mock()
+    if (!res.ok) return { reply: t('advisor.errorNote'), error: true }
+    return res.json()
   }
 
   async function send(text, mode) {
@@ -183,7 +198,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
   // Starters are surface-specific: on Compare, the useful openers are about the
   // scenarios on screen, not about the Phase 1 equity gap.
   const starters = isUs
-    ? ut('advisor.starters')
+    ? ut(surface === 'compare' ? 'advisor.cStarters' : 'advisor.starters')
     : surface === 'compare'
       ? [t('advisor.cStarter1'), t('advisor.cStarter2'), t('advisor.cStarter3')]
       : [t('advisor.starter1'), t('advisor.starter2'), t('advisor.starter3')]

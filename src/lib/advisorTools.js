@@ -17,7 +17,7 @@
 import { calculateAffordability } from './affordability.js'
 import { summarize, SCENARIOS, MAX_YEARS, COMPARE_DEFAULTS } from './compare/model.js'
 import data from '../data/swiss-cantonal-data.json'
-import { US_ADVISOR_TOOLS, isUsToolName, runUsAdvisorTool } from '../markets/us/advisor.js'
+import { US_ADVISOR_TOOLS, US_COMPARE_TOOL, isUsToolName, runUsAdvisorTool, runUsCompareTool } from '../markets/us/advisor.js'
 import { explainTerm, termsFor } from './learn.js'
 
 const CANTON_CODES = Object.keys(data.cantons)
@@ -150,7 +150,7 @@ function runExplainTool(rawInput, ctx) {
   const market = ctx && ctx.market === 'us' ? 'us' : 'ch'
   const term = rawInput && typeof rawInput.term === 'string' ? rawInput.term.slice(0, 80) : ''
   if (!term.trim()) return { ok: false, content: { error: 'A term is required.' } }
-  const hit = explainTerm(term, market, (ctx && ctx.values) || {})
+  const hit = explainTerm(term, market, (ctx && ctx.values) || {}, ctx)
   if (!hit) {
     return {
       ok: false,
@@ -175,7 +175,7 @@ export const ADVISOR_TOOLS = [RECOMPUTE_TOOL, COMPARE_TOOL, EXPLAIN_TOOL]
  * own: Phase 1 recomputes affordability, Compare runs scenarios.
  */
 export function toolsFor(surface, market = 'ch') {
-  if (market === 'us') return [...US_ADVISOR_TOOLS, EXPLAIN_TOOL]
+  if (market === 'us') return surface === 'compare' ? [US_COMPARE_TOOL, EXPLAIN_TOOL] : [...US_ADVISOR_TOOLS, EXPLAIN_TOOL]
   if (surface === 'compare') return [COMPARE_TOOL, EXPLAIN_TOOL]
   return [RECOMPUTE_TOOL, EXPLAIN_TOOL]
 }
@@ -387,6 +387,16 @@ function summarise(result) {
  */
 export function runAdvisorTool(name, rawInput, ctx) {
   if (name === EXPLAIN_TOOL.name) return runExplainTool(rawInput, ctx)
+  // Compare tools are market-specific: each runs only on its own market's model,
+  // so a US screen can never be answered in CHF (or the reverse).
+  const market = ctx && ctx.market
+  if (name === US_COMPARE_TOOL.name) {
+    if (market === 'ch') return { ok: false, content: { error: `"${name}" is only available on the US Compare screen.` } }
+    return runUsCompareTool(rawInput, ctx && ctx.compare)
+  }
+  if (name === COMPARE_TOOL.name && market === 'us') {
+    return { ok: false, content: { error: `"${name}" is Swiss-only. Use ${US_COMPARE_TOOL.name}.` } }
+  }
   // US tools run on the US engine against the US form values.
   if (isUsToolName(name)) return runUsAdvisorTool(name, rawInput, (ctx && ctx.values) || {})
   if (!isToolName(name)) {
