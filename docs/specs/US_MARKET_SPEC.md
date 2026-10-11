@@ -46,14 +46,19 @@ Phase 1/2 UI can render either.
 
 Inputs: gross annual income, savings for down payment + closing, monthly debt
 payments (car, student loans, cards), state, down payment %, mortgage rate.
+Defaults: 10 % down (3 % minimum), 30-year fixed at the latest Freddie Mac
+PMMS rate with its date (7.40 %, week of 2026-10-08), 3 % closing costs.
 
 Max price = the lowest of three limits:
 
 1. **Cash** — savings must cover down payment + estimated closing costs.
 2. **Front-end ratio** — PITI (principal & interest at the entered rate, property
    tax, homeowners insurance, PMI if < 20 % down, HOA) ≤ 28 % of gross monthly income.
-3. **Back-end ratio** — PITI + other monthly debts ≤ 36 % of gross monthly income
-   (show 43 % as the hard qualified-mortgage ceiling, not the target).
+3. **Back-end ratio** — PITI + other monthly debts ≤ 36 % of gross monthly income.
+   Above that, Fannie Mae allows up to 45 % with strong credit/reserves and 50 %
+   through Desktop Underwriter (the hard ceiling). *Correction (2026-10-11): the
+   old 43 % qualified-mortgage DTI cap was removed by the CFPB General QM rule
+   (mandatory since 2022-10-01); it is not used.*
 
 Also flagged (not limits): loan above the **conforming limit** ($832,750 in 2026
 baseline; high-cost counties up to $1,249,125) → "jumbo loan, stricter terms";
@@ -63,7 +68,7 @@ Loan: conventional 30-year fixed, fully amortising (the payoff panel needs a US
 schedule; the Swiss one deliberately stops at 67 % LTV). Down payment 3–20 %+.
 
 All constants live in data, never in code: `src/markets/us/us-data.json →
-mortgage_rules` (28/36/43 ratios, PMI rate band, closing-cost %, insurance %,
+mortgage_rules` (28/36/45/50 ratios, PMI rate band, closing-cost %, insurance %,
 conforming limits, default rate with an "as of" date) and per-state
 `{name, median_price, price_per_sqft {low,mid,high}, property_tax_rate_pct,
 insurance_rate_pct, notes, source}`. Every figure gets a source + date, like the
@@ -103,7 +108,7 @@ Swiss file.
 1. **Market layer** — registry, context, hash `mk`, localStorage, detection.
    CH-only at this point; app looks identical.
 2. **Formatting** — `money()`, `MoneyField`, area unit. Still identical for CH.
-3. **US data + engine + conformance tests** — no UI yet.
+3. **US data + engine + conformance tests** — no UI yet. ✅ Done: `src/markets/us/` (`us-data.json`, `affordability.js`, `mortgagePayoff.js`), `npm run test:us` (146 checks).
 4. **Onboarding confirm step + header switcher.**
 5. **US Phase 1** — form + result on the US engine.
 6. **US Phase 2** — Dream price + US payoff schedule.
