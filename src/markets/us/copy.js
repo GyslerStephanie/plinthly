@@ -26,19 +26,6 @@ const COPY = {
     },
     continue: 'Continue',
   },
-  switcher: {
-    label: 'Country: {name}. Change country',
-    list: 'Country',
-    detail: {
-      us: 'USD · 9 states · English',
-      ch: 'CHF · 16 cantons · EN / DE / FR / IT',
-    },
-    note: 'Switching country clears your numbers, because the rules are different.',
-    confirmTitle: 'Switch to {name}?',
-    confirmBody: 'Your current numbers will be cleared so nothing mixes with {name}’s rules.',
-    confirmYes: 'Switch and start fresh',
-    confirmNo: 'Stay in {current}',
-  },
   onboarding: {
     q2: 'How long do you plan to stay in your next home?',
     q4: 'Have you owned a home before?',

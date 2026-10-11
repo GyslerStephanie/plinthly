@@ -3252,3 +3252,72 @@ const phaseKeys = {
 for (const lng of Object.keys(phaseKeys)) {
   Object.assign(translations[lng], phaseKeys[lng])
 }
+
+// Country + language menu in the header (LocaleMenu). Kept as its own block so
+// the four locales stay side by side.
+const localeKeys = {
+  en: {
+    locale: {
+      button: 'Country and language: {country}, {language}. Change',
+      country: 'Country',
+      language: 'Language',
+      note: 'Switching country clears your numbers, because the rules are different.',
+      confirmTitle: 'Switch to {name}?',
+      confirmBody: 'Your current numbers will be cleared so nothing mixes with the rules for {name}.',
+      confirmYes: 'Switch and start fresh',
+      confirmNo: 'Stay in {current}',
+      detailCh: 'CHF · 16 cantons',
+      detailUs: 'USD · 9 states',
+      onlyLanguage: 'Available in English only for now.',
+    },
+  },
+  de: {
+    locale: {
+      button: 'Land und Sprache: {country}, {language}. Ändern',
+      country: 'Land',
+      language: 'Sprache',
+      note: 'Beim Wechsel des Landes werden deine Zahlen gelöscht, weil andere Regeln gelten.',
+      confirmTitle: 'Zu {name} wechseln?',
+      confirmBody: 'Deine aktuellen Zahlen werden gelöscht, damit nichts mit den Regeln für {name} vermischt wird.',
+      confirmYes: 'Wechseln und neu beginnen',
+      confirmNo: 'In {current} bleiben',
+      detailCh: 'CHF · 16 Kantone',
+      detailUs: 'USD · 9 Bundesstaaten',
+      onlyLanguage: 'Vorerst nur auf Englisch verfügbar.',
+    },
+  },
+  fr: {
+    locale: {
+      button: 'Pays et langue : {country}, {language}. Modifier',
+      country: 'Pays',
+      language: 'Langue',
+      note: 'Changer de pays efface vos chiffres, car les règles sont différentes.',
+      confirmTitle: 'Passer à {name} ?',
+      confirmBody: 'Vos chiffres actuels seront effacés pour ne pas les mélanger avec les règles de {name}.',
+      confirmYes: 'Changer et recommencer',
+      confirmNo: 'Rester en {current}',
+      detailCh: 'CHF · 16 cantons',
+      detailUs: 'USD · 9 États',
+      onlyLanguage: 'Disponible en anglais uniquement pour le moment.',
+    },
+  },
+  it: {
+    locale: {
+      button: 'Paese e lingua: {country}, {language}. Modifica',
+      country: 'Paese',
+      language: 'Lingua',
+      note: 'Cambiando paese i tuoi numeri vengono cancellati, perché le regole sono diverse.',
+      confirmTitle: 'Passare a {name}?',
+      confirmBody: 'I tuoi numeri attuali verranno cancellati per non mescolarli con le regole di {name}.',
+      confirmYes: 'Cambia e ricomincia',
+      confirmNo: 'Resta in {current}',
+      detailCh: 'CHF · 16 cantoni',
+      detailUs: 'USD · 9 stati',
+      onlyLanguage: 'Per ora disponibile solo in inglese.',
+    },
+  },
+}
+
+for (const lng of Object.keys(localeKeys)) {
+  Object.assign(translations[lng], localeKeys[lng])
+}

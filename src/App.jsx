@@ -15,7 +15,7 @@ import { useMarket } from './markets/MarketContext'
 import { ut } from './markets/us/copy'
 import { usDataMeta } from './markets/us/affordability'
 import CountryConfirm from './components/CountryConfirm'
-import CountrySwitcher from './components/CountrySwitcher'
+import LocaleMenu from './components/LocaleMenu'
 import UsPhase1, { US_DEFAULT_VALUES, US_EXAMPLE_VALUES, usResult } from './components/us/UsPhase1'
 import UsExplorePhase from './components/us/UsExplorePhase'
 import UsOptionsPhase from './components/us/UsOptionsPhase'
@@ -446,13 +446,7 @@ export default function App() {
             >
               {t('onboarding.startOver')}
             </button>
-            <CountrySwitcher onSwitch={switchMarket} />
-            <LanguageSwitcher
-              lang={lang}
-              setLang={setLang}
-              languages={marketLanguages}
-              label={t('lang.label')}
-            />
+            <LocaleMenu onSwitch={switchMarket} languages={marketLanguages} />
           </div>
         </div>
       </header>
@@ -803,26 +797,6 @@ function PhaseNav({ current, maxVisited, onJump }) {
         })}
       </ol>
     </nav>
-  )
-}
-
-function LanguageSwitcher({ lang, setLang, languages, label }) {
-  return (
-    <label className="flex items-center gap-1.5">
-      <span className="sr-only">{label}</span>
-      <select
-        aria-label={label}
-        value={lang}
-        onChange={(e) => setLang(e.target.value)}
-        className="rounded-lg border border-slate-300 bg-white py-1.5 pl-2.5 pr-7 text-xs font-medium text-slate-700 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
-      >
-        {languages.map((l) => (
-          <option key={l.code} value={l.code}>
-            {l.short} · {l.label}
-          </option>
-        ))}
-      </select>
-    </label>
   )
 }
 
