@@ -155,6 +155,25 @@ US rules and data. Steps continue the build order:
     certificate / lot + builder bids + construction loan); inspection + Home
     Energy Score; HUD-approved counselor. Share link and print, as in CH. ✅ Done (`components/us/UsPlanPhase.jsx`).
 
+## Added after the prototype review (2026-10-11)
+
+14. **US Compare** — the scenario explorer runs a US model
+    (`src/markets/us/compare.js`): Rent vs Buy, Save + Invest, Buy a cheaper
+    home (replaces "buy abroad"), Buy later. 30-year loan, state property tax
+    and insurance, PMI to 78%, ~3% to buy / ~6% to sell, no interest
+    deduction. ✅ Done.
+15. **Learn v1** — glossary (42 terms, both markets, vetted links:
+    CFPB/HUD/energy.gov, ch.ch/moneyland/SFOE, Investopedia),
+    `explain_term` advisor tool, "How is this calculated?" cards,
+    "New to mortgages?" message (replaced the "?" icons, which weren't
+    discoverable). English first. ✅ Done.
+16. **Prototype feedback round** — labelled example numbers in Phase 1,
+    "What a lender might approve" (45–50% DTI), no long dashes in US copy,
+    header pill removed, one country + language menu, 8-second
+    "Ask Plinthly AI" tooltip, advisor on Compare. ✅ Done.
+17. **Next** — wrap-up (QA, FEATURES.md, README, PR), then learn v2/v3
+    (translations, more cards, guided walkthrough, US Compare advisor tools).
+
 ## Done when…
 
 - [ ] A US visitor is detected, confirms "United States", and completes Phases 1–2 in USD / sq ft with US rules
@@ -167,7 +186,7 @@ US rules and data. Steps continue the build order:
 
 ## Out of scope (v1)
 
-- US Compare (rent vs buy). Note for later (Phases 3–5 now in scope, see above): federal 25C/25D home-energy credits ended for work after 2025-12-31;
+- Nothing from the Swiss version is left out any more (Compare added, see above). Note: federal 25C/25D home-energy credits ended for work after 2025-12-31;
   US incentives are now state-run HOMES/HEAR rebates (income-limited, many not
   yet open) — needs its own data project.
 - FHA / VA / USDA loans, county-level conforming limits, credit-score pricing.
@@ -203,3 +222,6 @@ US rules and data. Steps continue the build order:
 - $/sqft mid is listing-based for 8 of 9 states — source true sale medians?
 - Default rate is weekly — refresh by hand or automate?
 - Landing copy says "renovate in Switzerland" before the country step — make it neutral?
+- Learn translations: glossary, cards and US copy are English only so far.
+- Advisor on US Compare can't run Compare scenarios yet (Swiss one can).
+- Advisor default model is still `claude-haiku-4-5`; update before adding an API key.
