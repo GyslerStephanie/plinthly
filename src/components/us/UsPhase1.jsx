@@ -195,7 +195,7 @@ function UsForm({ values, onChange }) {
           onChange={(e) => set('region')(e.target.value)}
           className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-ink focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
         >
-          <option value="">—</option>
+          <option value="">Select a state</option>
           {stateOptions.map((s) => (
             <option key={s.code} value={s.code}>
               {s.name} ({s.code})

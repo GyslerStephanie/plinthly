@@ -301,7 +301,7 @@ export function usPromptRules() {
       `Minimum down payment ${R.min_down_payment_pct}% for first-time buyers (Fannie Mae / Freddie Mac programs). PMI can be cancelled on request at ${R.pmi.cancel_request_ltv_pct}% of the original value and ends automatically at ${R.pmi.auto_terminate_ltv_pct}%. Loans above ${usd(R.conforming_limits.baseline_usd)} are jumbo in most counties (high-cost ceiling ${usd(R.conforming_limits.high_cost_ceiling_usd)}). ` +
       `The default rate is the Freddie Mac weekly 30-year average (${R.default_rate.thirty_year_pct}%, week of ${R.default_rate.week_of}) — not a quote; credit score changes the real rate.`,
     'You are NOT a licensed advisor. Frame everything as illustrative. When you give a plan, end by suggesting a HUD-approved housing counseling agency (free or low-cost) and comparing Loan Estimates from at least three lenders.',
-    'Use USD figures. Never mention Swiss rules, CHF, cantons or pillars.',
+    'Use USD figures. Never mention Swiss rules, CHF, cantons or pillars. Write plainly and never use long dashes (—); use commas, colons or full stops instead.',
   ]
 }
 

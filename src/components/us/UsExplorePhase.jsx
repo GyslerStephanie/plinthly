@@ -59,7 +59,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
             onChange={(e) => onRegionChange(e.target.value)}
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-ink focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
           >
-            <option value="">—</option>
+            <option value="">Select a state</option>
             {stateOptions.map((s) => (
               <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
             ))}
@@ -125,7 +125,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
                   <StatusPill status={sh.ira_rebates.status} />
                 </div>
                 <p className="mt-1 text-sm text-body">
-                  <a href={sh.ira_rebates.url} target="_blank" rel="noreferrer" className="font-medium">{sh.ira_rebates.program}</a> — {sh.ira_rebates.note}
+                  <a href={sh.ira_rebates.url} target="_blank" rel="noreferrer" className="font-medium">{sh.ira_rebates.program}</a>: {sh.ira_rebates.note}
                 </p>
               </div>
               <div>
@@ -133,7 +133,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
                 <ul className="mt-1 space-y-1.5">
                   {sh.programs.map((p) => (
                     <li key={p.name} className="text-sm text-body">
-                      <a href={p.url} target="_blank" rel="noreferrer" className="font-medium">{p.name}</a> — {p.gist}
+                      <a href={p.url} target="_blank" rel="noreferrer" className="font-medium">{p.name}</a>: {p.gist}
                     </li>
                   ))}
                 </ul>

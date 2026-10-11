@@ -137,9 +137,9 @@ export function mockAgentTurn(ctx, messages, mode, surface) {
 
 const usd = (n) => '$' + Math.round(Number(n) || 0).toLocaleString('en-US')
 const US_LIMIT_TEXT = {
-  cash: 'your savings — they have to cover the down payment and closing costs. More savings (or a smaller down payment) lifts it; more income alone does not.',
-  front_end: 'your income — housing costs should stay under 28% of gross income. More income or a cheaper area lifts it; more savings alone does not.',
-  back_end: 'your existing debts — housing plus debts should stay under 36% of gross income. Paying down debt lifts it fastest.',
+  cash: 'your savings: they have to cover the down payment and closing costs. More savings (or a smaller down payment) lifts it; more income alone does not.',
+  front_end: 'your income: housing costs should stay under 28% of gross income. More income or a cheaper area lifts it; more savings alone does not.',
+  back_end: 'your existing debts: housing plus debts should stay under 36% of gross income. Paying down debt lifts it fastest.',
 }
 const US_FIELD_NAMES = { grossIncome: 'income', savings: 'savings', monthlyDebts: 'monthly debts', downPct: 'down payment', ratePct: 'mortgage rate', state: 'state', hoaMonthly: 'HOA dues' }
 
@@ -156,9 +156,9 @@ function mockUsTurn(ctx, messages, mode) {
     if (p.error) return { reply: `(Preview mock) I couldn't run that one: ${[].concat(p.detail || p.error).join(' ')}` }
     if (p.tests) {
       const lines = [p.reachable
-        ? `(Preview mock — no API key set) ${usd(p.price)} works with your numbers: about ${usd(p.monthlyHousing)}/mo for housing.`
-        : `(Preview mock — no API key set) ${usd(p.price)} is out of reach right now (about ${usd(p.monthlyHousing)}/mo for housing).`]
-      if (!p.tests.cash.ok) lines.push(`Cash: you'd need ${usd(p.tests.cash.needed)} at closing and have ${usd(p.tests.cash.have)} — ${usd(p.tests.cash.gap)} short.`)
+        ? `(Preview mock, no API key set) ${usd(p.price)} works with your numbers: about ${usd(p.monthlyHousing)}/mo for housing.`
+        : `(Preview mock, no API key set) ${usd(p.price)} is out of reach right now (about ${usd(p.monthlyHousing)}/mo for housing).`]
+      if (!p.tests.cash.ok) lines.push(`Cash: you'd need ${usd(p.tests.cash.needed)} at closing and have ${usd(p.tests.cash.have)}: ${usd(p.tests.cash.gap)} short.`)
       if (!p.tests.housingCost.ok) lines.push(`Housing would be ${p.tests.housingCost.pctOfIncome}% of income, above the ${p.tests.housingCost.limitPct}% guideline.`)
       if (!p.tests.totalDebt.ok) lines.push(`With your debts it's ${p.tests.totalDebt.pctOfIncome}% of income, above ${p.tests.totalDebt.limitPct}%.`)
       const L = p.levers || {}
@@ -169,15 +169,15 @@ function mockUsTurn(ctx, messages, mode) {
         L.aimFor && `aim for ${usd(L.aimFor)}`,
       ].filter(Boolean)
       if (levers.length) lines.push(`What would close the gap: ${levers.join(', or ')}.`)
-      lines.push('Illustrative, not licensed advice — a HUD-approved housing counselor can review it with you.')
+      lines.push('Illustrative, not licensed advice. A HUD-approved housing counselor can review it with you.')
       return { reply: lines.join('\n\n') }
     }
     const { current, scenario, delta, changed } = p
     const field = Object.keys(changed || {})[0]
     const name = US_FIELD_NAMES[field] || 'that input'
     const lines = [delta.maxPrice === 0
-      ? `(Preview mock — no API key set) Changing your ${name} doesn't move your maximum — it stays at ${usd(scenario.maxPrice)}.`
-      : `(Preview mock — no API key set) Changing your ${name} ${delta.maxPrice > 0 ? 'raises' : 'lowers'} your maximum from ${usd(current.maxPrice)} to ${usd(scenario.maxPrice)} — ${usd(Math.abs(delta.maxPrice))} ${delta.maxPrice > 0 ? 'more' : 'less'}.`]
+      ? `(Preview mock, no API key set) Changing your ${name} doesn't move your maximum. It stays at ${usd(scenario.maxPrice)}.`
+      : `(Preview mock, no API key set) Changing your ${name} ${delta.maxPrice > 0 ? 'raises' : 'lowers'} your maximum from ${usd(current.maxPrice)} to ${usd(scenario.maxPrice)}, ${usd(Math.abs(delta.maxPrice))} ${delta.maxPrice > 0 ? 'more' : 'less'}.`]
     lines.push(`What limits you${delta.limitChanged ? ' now' : ''}: ${US_LIMIT_TEXT[scenario.limit] || scenario.limit}`)
     lines.push(`Housing would be about ${usd(scenario.monthlyHousing)}/mo (${scenario.housingRatioPct}% of income), with ${usd(scenario.cashNeeded)} needed at closing.`)
     lines.push('Illustrative, not licensed advice.')
@@ -216,18 +216,18 @@ function mockUsTurn(ctx, messages, mode) {
   const d = ctx.dream
   if (mode === 'plan') {
     if (!d) return { reply: '(Preview mock) Enter a dream price first and I\'ll lay out a roadmap to reach it.' }
-    if (d.reachable) return { reply: `(Preview mock — no API key set) ${usd(d.price)} already works with your numbers — about ${usd(d.monthlyHousing)}/mo for housing. Next: get pre-approved and compare Loan Estimates from at least three lenders.` }
+    if (d.reachable) return { reply: `(Preview mock, no API key set) ${usd(d.price)} already works with your numbers: about ${usd(d.monthlyHousing)}/mo for housing. Next: get pre-approved and compare Loan Estimates from at least three lenders.` }
     return { reply: [
-      `(Preview mock — no API key set) Roadmap to ${usd(d.price)}:`,
+      `(Preview mock, no API key set) Roadmap to ${usd(d.price)}:`,
       d.cashGap ? `• Cash: save about ${usd(d.cashGap)} more for the down payment and closing costs.` : null,
       d.incomeGap ? `• Income: about ${usd(Math.ceil(d.incomeGap / 1000) * 1000)}/yr more would clear the housing-cost test.` : null,
       d.debtCutMonthly ? `• Debt: paying monthly debts down by about ${usd(d.debtCutMonthly)} would clear the total-debt test.` : null,
-      `• Or aim for ${usd(ctx.maxPrice)} — affordable for you today.`,
-      'Illustrative, not licensed advice — a HUD-approved housing counselor can help you plan it.',
+      `• Or aim for ${usd(ctx.maxPrice)}, affordable for you today.`,
+      'Illustrative, not licensed advice. A HUD-approved housing counselor can help you plan it.',
     ].filter(Boolean).join('\n') }
   }
   return { reply: [
-    `(Preview mock — no API key set) Your comfortable maximum is ${usd(ctx.maxPrice)}, set by ${US_LIMIT_TEXT[ctx.limit] || ctx.limit}`,
+    `(Preview mock, no API key set) Your comfortable maximum is ${usd(ctx.maxPrice)}, set by ${US_LIMIT_TEXT[ctx.limit] || ctx.limit}`,
     ctx.lenderStretch && ctx.lenderStretch.at50 > ctx.maxPrice ? `A lender might approve up to ${usd(ctx.lenderStretch.at45)}–${usd(ctx.lenderStretch.at50)} with strong credit, but that's a stretch.` : null,
     'Ask me a what-if like "what if my monthly debts were $300?" or "can I afford $450,000?".',
   ].filter(Boolean).join('\n\n') }
