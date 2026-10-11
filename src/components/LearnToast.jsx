@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { askAdvisor } from './GlossaryTerm'
+import { localizeLinks } from '../lib/learn'
 
 const DISMISS_KEY = 'plinthly.learnToastDismissed'
 
@@ -13,8 +14,10 @@ const DISMISS_KEY = 'plinthly.learnToastDismissed'
  * @param {Array<{label, url}>} links  Vetted guides (src/data/courses.json).
  * @param {boolean} [inline]           Mounted inside an overlay (Compare) → sit above it.
  */
-export default function LearnToast({ links = [], inline = false }) {
-  const { t } = useI18n()
+export default function LearnToast({ links: rawLinks = [], inline = false }) {
+  const { t, lang } = useI18n()
+  // Swiss guide labels in the UI language (URLs unchanged; US links pass through).
+  const links = localizeLinks(rawLinks, lang)
   const [hidden, setHidden] = useState(() => {
     try {
       return sessionStorage.getItem(DISMISS_KEY) === '1'
@@ -41,9 +44,8 @@ export default function LearnToast({ links = [], inline = false }) {
 
   return (
     <aside
-      role="status"
       aria-label={t('learnToast.title')}
-      className={`learn-toast fixed bottom-5 left-5 w-[22rem] max-w-[calc(100vw-7rem)] rounded-2xl border border-line bg-card p-4 shadow-xl no-print ${inline ? 'z-[60]' : 'z-40'}`}
+      className={`learn-toast fixed bottom-5 left-5 w-[22rem] max-w-[calc(100vw-7rem)] rounded-2xl border border-line bg-card p-4 shadow-[var(--shadow-float)] no-print ${inline ? 'z-[60]' : 'z-40'}`}
     >
       <div className="flex items-start justify-between gap-3">
         <p className="font-display text-base font-semibold text-ink">{t('learnToast.title')}</p>

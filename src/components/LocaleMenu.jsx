@@ -18,17 +18,33 @@ export default function LocaleMenu({ onSwitch, languages }) {
   const [open, setOpen] = useState(false)
   const [pending, setPending] = useState(null) // country awaiting confirm
   const rootRef = useRef(null)
+  const buttonRef = useRef(null)
+  const confirmRef = useRef(null)
   const name = (m) => marketName(m, lang)
+  // Country name as a template needs it ("zur Schweiz", "aux États-Unis");
+  // falls back to the bare name for a market without forms.
+  const form = (m, k) => {
+    const key = `locale.forms.${m.id}.${k}`
+    const s = t(key)
+    return s === key ? name(m) : s
+  }
   const current = languages.find((l) => l.code === lang) || languages[0]
 
-  const close = () => {
+  // Focus goes back to the menu button, so keyboard users aren't dropped on <body>.
+  const close = (refocus = true) => {
     setOpen(false)
     setPending(null)
+    if (refocus) buttonRef.current?.focus()
   }
+
+  // The confirm view replaces the list: move focus into it.
+  useEffect(() => {
+    if (pending) confirmRef.current?.focus()
+  }, [pending])
 
   useEffect(() => {
     if (!open) return
-    const onDown = (e) => rootRef.current && !rootRef.current.contains(e.target) && close()
+    const onDown = (e) => rootRef.current && !rootRef.current.contains(e.target) && close(false)
     const onKey = (e) => e.key === 'Escape' && close()
     document.addEventListener('mousedown', onDown)
     document.addEventListener('keydown', onKey)
@@ -43,8 +59,9 @@ export default function LocaleMenu({ onSwitch, languages }) {
   return (
     <div ref={rootRef} className="relative">
       <button
+        ref={buttonRef}
         type="button"
-        aria-haspopup="true"
+        aria-haspopup="dialog"
         aria-expanded={open}
         aria-label={t('locale.button', { country: name(market), language: current.label })}
         onClick={() => (open ? close() : setOpen(true))}
@@ -68,13 +85,14 @@ export default function LocaleMenu({ onSwitch, languages }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-11 z-40 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-line bg-card shadow-xl">
+        <div role="dialog" aria-label={t('locale.button', { country: name(market), language: current.label })} className="absolute right-0 top-11 z-40 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-line bg-card shadow-[var(--shadow-float)]">
           {pending ? (
             <div className="p-4">
-              <p className="text-sm font-semibold text-ink">{t('locale.confirmTitle', { name: name(pending) })}</p>
-              <p className="mt-1 text-sm text-body">{t('locale.confirmBody', { name: name(pending) })}</p>
+              <p className="text-sm font-semibold text-ink">{t('locale.confirmTitle', { name: name(pending), to: form(pending, 'to') })}</p>
+              <p className="mt-1 text-sm text-body">{t('locale.confirmBody', { name: name(pending), of: form(pending, 'of') })}</p>
               <div className="mt-4 flex flex-col gap-2">
                 <button
+                  ref={confirmRef}
                   type="button"
                   onClick={() => {
                     onSwitch(pending.id)
@@ -89,14 +107,14 @@ export default function LocaleMenu({ onSwitch, languages }) {
                   onClick={() => setPending(null)}
                   className="rounded-lg border border-line px-3 py-2.5 text-sm text-ink transition hover:border-slate-400"
                 >
-                  {t('locale.confirmNo', { current: name(market) })}
+                  {t('locale.confirmNo', { current: name(market), stay: form(market, 'stay') })}
                 </button>
               </div>
             </div>
           ) : (
             <>
               <section className="p-2">
-                <p className="ds-eyebrow px-2.5 pb-1.5 pt-2 text-[10px] text-muted">{t('locale.country')}</p>
+                <p className="ds-eyebrow px-2.5 pb-1.5 pt-2 text-[11px] text-muted">{t('locale.country')}</p>
                 <ul>
                   {marketList.map((m) => {
                     const on = m.id === market.id
@@ -130,7 +148,7 @@ export default function LocaleMenu({ onSwitch, languages }) {
               </section>
 
               <section className="border-t border-line p-2">
-                <p className="ds-eyebrow px-2.5 pb-1.5 pt-2 text-[10px] text-muted">{t('locale.language')}</p>
+                <p className="ds-eyebrow px-2.5 pb-1.5 pt-2 text-[11px] text-muted">{t('locale.language')}</p>
                 <div className="grid grid-cols-2 gap-1.5 px-1 pb-1">
                   {languages.map((l) => {
                     const on = l.code === lang
@@ -149,7 +167,7 @@ export default function LocaleMenu({ onSwitch, languages }) {
                         }
                       >
                         <span>{l.label}</span>
-                        <span className="ds-figure text-[10px] text-muted">{l.short}</span>
+                        <span className="ds-figure text-[11px] text-muted">{l.short}</span>
                       </button>
                     )
                   })}

@@ -3,11 +3,15 @@ import { useI18n } from '../i18n/I18nContext'
 /**
  * "How is this calculated?" crash-course card: 3–4 plain steps with the user's
  * own numbers, then vetted learn-more links. Collapsed by default so it never
- * crowds the result. Content comes from src/lib/learn.js.
+ * crowds the result. Content comes from src/lib/learn.js (Swiss cards in
+ * en/de/fr/it, US cards in English).
  */
-export default function HowItWorks({ course }) {
-  const { t } = useI18n()
-  if (!course) return null
+export default function HowItWorks({ course: card }) {
+  const { t, lang } = useI18n()
+  if (!card) return null
+  // Swiss cards built without a language carry their translations; show the
+  // one for the UI language (US cards have none and stay English).
+  const course = (card.i18n && card.i18n[lang]) || card
   return (
     <details className="group rounded-xl border border-line bg-white p-5 shadow-sm no-print">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-ink">
@@ -27,7 +31,7 @@ export default function HowItWorks({ course }) {
       </ol>
       {course.links.length > 0 && (
         <div className="mt-4 border-t border-line pt-3">
-          <p className="ds-eyebrow text-[10px] text-muted">{t('learnMore')}</p>
+          <p className="ds-eyebrow text-[11px] text-muted">{t('learnMore')}</p>
           <ul className="mt-1.5 space-y-1">
             {course.links.map((l) => (
               <li key={l.url} className="text-sm">

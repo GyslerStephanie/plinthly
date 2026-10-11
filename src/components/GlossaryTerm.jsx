@@ -1,15 +1,15 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import glossary from '../data/glossary.json'
 import { useI18n } from '../i18n/I18nContext'
 import { useMarket } from '../markets/MarketContext'
-import { linkFor } from '../lib/learn'
+import { getTerm, linkFor } from '../lib/learn'
 
 /**
  * Inline glossary term. Renders a dotted-underlined trigger; on click it reveals
  * a plain-language definition — a floating popover on desktop, a bottom sheet on
  * mobile. Dismisses on outside-click, Escape, or the close (×) button.
  *
- * Definitions come from src/data/glossary.json:
+ * Definitions come from src/data/glossary.json, translated for Swiss users
+ * (de/fr/it) from src/data/glossary.i18n.json; the US market stays English:
  *   - <GlossaryTerm id="tragbarkeit" />            ← label + definition from JSON
  *   - <GlossaryTerm term="GEAK class" def="..." /> ← explicit (used by InfoTerm)
  */
@@ -19,9 +19,10 @@ export function askAdvisor(question) {
 }
 
 export default function GlossaryTerm({ id, term, def, children }) {
-  const { t } = useI18n()
-  const entry = id ? glossary[id] : null
-  const link = linkFor(entry, useMarket().marketId)
+  const { t, lang } = useI18n()
+  const { marketId } = useMarket()
+  const entry = id ? getTerm(id, null, marketId === 'us' ? 'en' : lang) : null
+  const link = linkFor(entry, marketId)
   const label = term ?? entry?.term ?? id ?? ''
   const definition = children ?? def ?? entry?.definition ?? ''
 
@@ -54,7 +55,7 @@ export default function GlossaryTerm({ id, term, def, children }) {
       <button
         type="button"
         onClick={() => setOpen(false)}
-        aria-label="Close"
+        aria-label={t('glossaryClose')}
         className="-mr-1 -mt-1 flex h-6 w-6 flex-none items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
         <span aria-hidden className="text-lg leading-none">×</span>
@@ -75,7 +76,7 @@ export default function GlossaryTerm({ id, term, def, children }) {
           type="button"
           onClick={() => {
             setOpen(false)
-            askAdvisor(`What does “${label}” mean for me?`)
+            askAdvisor(t('glossaryAsk', { term: label }))
           }}
           className="rounded-full bg-teal-50 px-2.5 py-1 font-semibold text-teal-800 transition hover:bg-teal-100"
         >

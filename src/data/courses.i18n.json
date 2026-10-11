@@ -1,0 +1,86 @@
+{
+  "en": {
+    "chPhase1": {
+      "title": "How is this calculated?",
+      "equity": "Equity: you need {downPct}% of the price as a down payment, and at least {minLiquidPct}% must be hard equity (cash or Pillar 3a, not your pension fund). Your equity allows a home up to {equityMax}.",
+      "affordability": "Affordability: banks add up yearly costs at a deliberately high {notionalRatePct}% interest rate, plus amortisation and {maintenancePct}% maintenance. That total must stay under a third of your gross income, which allows up to {affordMax}.",
+      "maxEquity": "Your maximum is the lower of the two: {max}, set by your equity.",
+      "maxIncome": "Your maximum is the lower of the two: {max}, set by your income."
+    },
+    "compare": {
+      "title": "How does this comparison work?",
+      "sameCash": "Both sides start with the same cash, so the comparison is fair: one puts it into a home, the other keeps renting.",
+      "costsCh": "Buying counts mortgage interest, amortisation, maintenance, purchase costs and taxes on the imputed rental value. Renting counts rent that rises every year.",
+      "costsUs": "Buying counts the mortgage, property tax, insurance, maintenance, mortgage insurance, ~3% to buy and ~6% to sell. Renting counts rent that rises every year.",
+      "lenses": "“Rent vs Buy” compares money you don’t get back. The other scenarios compare what you’d own: invested savings plus home equity.",
+      "guesses": "Returns, appreciation and rent increases are your guesses about the future. Change them below and watch the lines move; nothing here is a forecast."
+    },
+    "links": {}
+  },
+  "de": {
+    "chPhase1": {
+      "title": "Wie wird das berechnet?",
+      "equity": "Eigenmittel: Sie brauchen {downPct}% des Preises als Anzahlung, und mindestens {minLiquidPct}% müssen harte Eigenmittel sein (Erspartes oder Säule 3a, nicht Ihre Pensionskasse). Ihre Eigenmittel reichen für ein Eigenheim bis {equityMax}.",
+      "affordability": "Tragbarkeit: Banken rechnen die jährlichen Kosten mit einem bewusst hohen Zinssatz von {notionalRatePct}%, dazu kommen Amortisation und {maintenancePct}% Unterhalt. Diese Summe muss unter einem Drittel Ihres Bruttoeinkommens bleiben, das reicht für bis zu {affordMax}.",
+      "maxEquity": "Ihr Maximum ist der tiefere der beiden Werte: {max}, begrenzt durch Ihre Eigenmittel.",
+      "maxIncome": "Ihr Maximum ist der tiefere der beiden Werte: {max}, begrenzt durch Ihr Einkommen."
+    },
+    "compare": {
+      "title": "Wie funktioniert dieser Vergleich?",
+      "sameCash": "Beide Seiten starten mit demselben Geld, damit der Vergleich fair ist: Die eine steckt es in ein Eigenheim, die andere mietet weiter.",
+      "costsCh": "Beim Kaufen zählen Hypothekarzinsen, Amortisation, Unterhalt, Kaufnebenkosten und die Steuern auf den Eigenmietwert. Beim Mieten zählt eine Miete, die jedes Jahr steigt.",
+      "lenses": "«Mieten vs. Kaufen» vergleicht Geld, das Sie nicht zurückbekommen. Die anderen Szenarien vergleichen, was Ihnen gehören würde: angelegte Ersparnisse plus Eigenkapital im Eigenheim.",
+      "guesses": "Renditen, Wertsteigerung und Mietzinsanstieg sind Ihre Annahmen über die Zukunft. Ändern Sie sie unten und beobachten Sie, wie sich die Linien bewegen; nichts davon ist eine Prognose."
+    },
+    "links": {
+      "https://www.moneyland.ch/en/calculating-your-mortgage-swiss-tools": "moneyland.ch: So berechnen Sie eine Schweizer Hypothek (Englisch)",
+      "https://www.ch.ch/en/housing/homeownership/buying-property/financing-homeownership/": "ch.ch: Wohneigentum finanzieren (Englisch)",
+      "https://www.moneyland.ch/en/buying-a-home-in-switzerland-tips": "moneyland.ch: Worauf Sie vor dem Hauskauf achten sollten (Englisch)",
+      "https://www.moneyland.ch/en/rent-or-buy-calculator": "moneyland.ch: Rechner Mieten oder Kaufen (Englisch)"
+    }
+  },
+  "fr": {
+    "chPhase1": {
+      "title": "Comment est-ce calculé ?",
+      "equity": "Fonds propres : il vous faut {downPct}% du prix comme apport, dont au moins {minLiquidPct}% en fonds propres durs (épargne ou pilier 3a, pas votre caisse de pension). Vos fonds propres permettent un logement jusqu’à {equityMax}.",
+      "affordability": "Capacité financière : les banques additionnent les coûts annuels à un taux d’intérêt volontairement élevé de {notionalRatePct}%, plus l’amortissement et {maintenancePct}% de frais d’entretien. Ce total doit rester sous un tiers de votre revenu brut, ce qui permet jusqu’à {affordMax}.",
+      "maxEquity": "Votre maximum est la plus basse des deux valeurs : {max}, fixée par vos fonds propres.",
+      "maxIncome": "Votre maximum est la plus basse des deux valeurs : {max}, fixée par votre revenu."
+    },
+    "compare": {
+      "title": "Comment fonctionne cette comparaison ?",
+      "sameCash": "Les deux options partent du même capital, pour que la comparaison soit équitable : l’une le place dans un logement, l’autre continue de louer.",
+      "costsCh": "L’achat compte les intérêts hypothécaires, l’amortissement, l’entretien, les frais d’achat et les impôts sur la valeur locative. La location compte un loyer qui augmente chaque année.",
+      "lenses": "« Louer vs Acheter » compare l’argent que vous ne récupérez pas. Les autres scénarios comparent ce que vous posséderiez : épargne investie plus fonds propres dans le logement.",
+      "guesses": "Les rendements, l’appréciation et les hausses de loyer sont vos hypothèses sur l’avenir. Modifiez-les ci-dessous et regardez les courbes bouger ; rien ici n’est une prévision."
+    },
+    "links": {
+      "https://www.moneyland.ch/en/calculating-your-mortgage-swiss-tools": "moneyland.ch : calculer une hypothèque suisse (en anglais)",
+      "https://www.ch.ch/en/housing/homeownership/buying-property/financing-homeownership/": "ch.ch : financer un logement en propriété (en anglais)",
+      "https://www.moneyland.ch/en/buying-a-home-in-switzerland-tips": "moneyland.ch : à quoi penser avant d’acheter (en anglais)",
+      "https://www.moneyland.ch/en/rent-or-buy-calculator": "moneyland.ch : calculateur louer ou acheter (en anglais)"
+    }
+  },
+  "it": {
+    "chPhase1": {
+      "title": "Come viene calcolato?",
+      "equity": "Capitale proprio: ti serve il {downPct}% del prezzo come acconto, e almeno il {minLiquidPct}% deve essere capitale proprio duro (risparmi o pilastro 3a, non la tua cassa pensione). Il tuo capitale proprio consente una casa fino a {equityMax}.",
+      "affordability": "Sostenibilità: le banche sommano i costi annui a un tasso d’interesse volutamente alto del {notionalRatePct}%, più l’ammortamento e il {maintenancePct}% di manutenzione. Il totale deve restare sotto un terzo del tuo reddito lordo, il che consente fino a {affordMax}.",
+      "maxEquity": "Il tuo massimo è il più basso dei due valori: {max}, determinato dal tuo capitale proprio.",
+      "maxIncome": "Il tuo massimo è il più basso dei due valori: {max}, determinato dal tuo reddito."
+    },
+    "compare": {
+      "title": "Come funziona questo confronto?",
+      "sameCash": "Entrambe le opzioni partono dallo stesso capitale, così il confronto è equo: una lo investe in una casa, l’altra continua ad affittare.",
+      "costsCh": "L’acquisto considera interessi ipotecari, ammortamento, manutenzione, costi d’acquisto e imposte sul valore locativo. L’affitto considera un canone che aumenta ogni anno.",
+      "lenses": "«Affittare vs Comprare» confronta i soldi che non recuperi. Gli altri scenari confrontano ciò che possiederesti: risparmi investiti più il capitale proprio nella casa.",
+      "guesses": "Rendimenti, rivalutazione e aumenti dell’affitto sono le tue ipotesi sul futuro. Modificale qui sotto e guarda come si muovono le linee; nulla qui è una previsione."
+    },
+    "links": {
+      "https://www.moneyland.ch/en/calculating-your-mortgage-swiss-tools": "moneyland.ch: come calcolare un’ipoteca svizzera (in inglese)",
+      "https://www.ch.ch/en/housing/homeownership/buying-property/financing-homeownership/": "ch.ch: finanziare una casa di proprietà (in inglese)",
+      "https://www.moneyland.ch/en/buying-a-home-in-switzerland-tips": "moneyland.ch: cosa considerare prima di comprare casa (in inglese)",
+      "https://www.moneyland.ch/en/rent-or-buy-calculator": "moneyland.ch: calcolatore affittare o comprare (in inglese)"
+    }
+  }
+}
