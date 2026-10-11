@@ -99,6 +99,14 @@ const COPY = {
     notViable: 'At these numbers you can’t reach a {target} home yet.',
     gapCash: 'About {gap} more in savings would get you there.',
     gapIncome: 'About {gap} more in yearly income would get you there.',
+    stretch: {
+      title: 'What a lender might approve',
+      range: 'Up to {price}–{max} with strong credit and savings.',
+      single: 'Up to {price} with strong credit and savings.',
+      cost: 'That’s about {monthly}–{monthlyMax}/mo for housing: {ratio}–{ratioMax}% of your gross income, against {front}% in the comfortable estimate above.',
+      cashLimited: 'Your savings are what limit you, so a lender wouldn’t approve more without more cash for the down payment and closing costs.',
+      caution: 'A stretch, not a target. Approval depends on your credit score, the savings you have left after closing, and the lender.',
+    },
     limitsTitle: 'What sets your limit',
     limits: {
       cash: 'Cash for down payment + closing',

@@ -194,6 +194,38 @@ export function Row({ label, value, strong }) {
   )
 }
 
+/** "What a lender might approve" — the stretch range from the engine. */
+function LenderStretch({ r }) {
+  const st = r.stretch
+  return (
+    <div className="mt-4 rounded-lg border border-line bg-surface px-4 py-3">
+      <p className="ds-eyebrow text-[11px] text-muted">{ut('result.stretch.title')}</p>
+      {st.moreThanComfortable ? (
+        <>
+          <p className="mt-1 text-sm font-semibold text-ink">
+            {st.maxPrice > st.price
+              ? ut('result.stretch.range', { price: money(st.price), max: money(st.maxPrice) })
+              : ut('result.stretch.single', { price: money(st.maxPrice) })}
+          </p>
+          <p className="mt-1 text-sm text-body">
+            {ut('result.stretch.cost', {
+              monthly: money(st.monthly),
+              monthlyMax: money(st.monthlyAtMax),
+              ratio: Math.round(st.housingRatio * 100),
+              ratioMax: Math.round(st.housingRatioAtMax * 100),
+              front: r.rules.frontEndPct,
+            })}
+          </p>
+          {st.cashLimited && <p className="mt-1 text-sm text-body">{ut('result.stretch.cashLimited')}</p>}
+          <p className="mt-2 text-xs text-muted">{ut('result.stretch.caution')}</p>
+        </>
+      ) : (
+        <p className="mt-1 text-sm text-body">{ut('result.stretch.cashLimited')}</p>
+      )}
+    </div>
+  )
+}
+
 function UsResult({ result: r }) {
   const state = affordabilityState(r)
   const ruleVars = { front: r.rules.frontEndPct, back: r.rules.backEndPct }
@@ -215,6 +247,7 @@ function UsResult({ result: r }) {
         </div>
         <p className="ds-figure mt-3 text-5xl font-medium tracking-tight text-ink">{money(r.maxPrice)}</p>
         <p className="mt-3 text-base leading-relaxed text-ink">{ut(`result.headline.${r.limit}`, ruleVars)}</p>
+        {r.viable && <LenderStretch r={r} />}
         {!r.viable && r.shortfall && (
           <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
             {ut('result.notViable', { target: money(r.shortfall.targetPrice) })}{' '}

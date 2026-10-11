@@ -33,6 +33,7 @@ const num = (v) => {
 export const US_RULES = {
   FRONT_END: pct(R.front_end_ratio_pct),
   BACK_END: pct(R.back_end_ratio_pct),
+  BACK_END_STRETCH: pct(R.back_end_stretch_ratio_pct),
   BACK_END_MAX: pct(R.back_end_max_ratio_pct),
   MIN_DOWN: pct(R.min_down_payment_pct),
   DEFAULT_DOWN: pct(R.default_down_payment_pct),
@@ -203,6 +204,31 @@ export function calculateAffordability(input = {}) {
 
   const viable = maxPrice >= US_RULES.MEANINGFUL_PRICE && savings > 0
 
+  // "What a lender might approve" — the same buyer at Fannie Mae's real
+  // limits instead of the comfortable 28/36 guideline: total debts up to the
+  // stretch ratio (45%, strong credit + reserves) or the automated-underwriting
+  // max (50%). Fannie sets no separate housing-ratio cap, so the front-end test
+  // drops out; cash still has to cover down payment + closing.
+  const stretchAt = (ratio) =>
+    floorTo(
+      Math.min(cashMaxPrice, k > 0 ? Math.max(0, ratio * monthlyIncome - a.hoaMonthly - monthlyDebts) / k : 0),
+      US_RULES.PRICE_STEP,
+    )
+  const stretchPrice = stretchAt(US_RULES.BACK_END_STRETCH)
+  const stretchMaxPrice = stretchAt(US_RULES.BACK_END_MAX)
+  const stretchHousing = (p) => (monthlyIncome > 0 ? (k * p + a.hoaMonthly) / monthlyIncome : 0)
+  const stretch = {
+    price: stretchPrice,
+    maxPrice: stretchMaxPrice,
+    // Cash caps the stretch too: when it binds, a lender can't approve more.
+    cashLimited: stretchMaxPrice >= floorTo(cashMaxPrice, US_RULES.PRICE_STEP),
+    housingRatio: stretchHousing(stretchPrice),
+    housingRatioAtMax: stretchHousing(stretchMaxPrice),
+    monthly: k * stretchPrice + a.hoaMonthly,
+    monthlyAtMax: k * stretchMaxPrice + a.hoaMonthly,
+    moreThanComfortable: stretchMaxPrice > floorTo(limits[limit], US_RULES.PRICE_STEP),
+  }
+
   return {
     market: 'us',
     inputs: { grossIncome, savings, monthlyDebts, state: a.state, hardEquity: savings },
@@ -210,6 +236,7 @@ export function calculateAffordability(input = {}) {
     bindingConstraint,
     limit, // 'cash' | 'front_end' | 'back_end' — which US test binds
     viable,
+    stretch,
     shortfall: viable ? null : computeShortfall({ a, k, limit, savings, grossIncome, monthlyDebts }),
     constraints: {
       cashMaxPrice: floorTo(cashMaxPrice, US_RULES.PRICE_STEP),

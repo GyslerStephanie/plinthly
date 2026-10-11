@@ -89,6 +89,21 @@ check('C: PMI charged', C.monthlyCosts.pmi > 0 && C.flags.pmi === true)
 eq('C: PMI = loan × rate / 12', C.monthlyCosts.pmi, (C.maxPrice * 0.9 * pmi10) / 12, 0.01)
 check('C: housing ratio at or under 28%', C.ratios.housing <= 0.28 + 1e-9)
 
+// ── 4b. What a lender might approve (stretch) ────────────────────────────────
+// C is front-end limited; at Fannie's 45% / 50% total-DTI limits (no housing
+// cap) the same buyer stretches to (ratio × 12,500 − debts) / k.
+eq('stretch 45%', C.stretch.price, Math.floor((0.45 * 12500) / kC / US_RULES.PRICE_STEP) * US_RULES.PRICE_STEP)
+eq('stretch 50%', C.stretch.maxPrice, Math.floor((0.50 * 12500) / kC / US_RULES.PRICE_STEP) * US_RULES.PRICE_STEP)
+check('stretch: more than the comfortable max', C.stretch.moreThanComfortable && C.stretch.price > C.maxPrice)
+check('stretch: 50% ≥ 45%', C.stretch.maxPrice >= C.stretch.price)
+check('stretch: housing ratio reported', C.stretch.housingRatio > 0.28 && C.stretch.housingRatio <= 0.45 + 1e-9)
+// A is cash-limited: a lender can't approve more than the savings cover.
+eq('stretch: cash-limited buyer stays at the cash limit', A.stretch.maxPrice, A.maxPrice)
+check('stretch: cash-limited flag', A.stretch.cashLimited === true && A.stretch.moreThanComfortable === false)
+// B is debt-limited at 36%; at 45% the debts weigh less.
+eq('stretch: debt-limited buyer at 45%', B.stretch.price, Math.floor((0.45 * 10000 - 1800) / (0.8 * paymentFactor(0.06) + 0.015 / 12) / US_RULES.PRICE_STEP) * US_RULES.PRICE_STEP)
+check('stretch: 45% passes the forward check at 45%', checkSpecificProperty({ price: C.stretch.price, grossIncome: 150000, savings: 200000, downPct: 10, state: 'TX', ...FIX }).backEnd.ratio <= 0.45 + 1e-9)
+
 // ── 5. HOA reduces buying power, never below zero ────────────────────────────
 const noHoa = calculateAffordability({ grossIncome: 120000, savings: 500000, downPct: 20, state: 'TX', ...FIX })
 const hoa = calculateAffordability({ grossIncome: 120000, savings: 500000, downPct: 20, hoaMonthly: 400, state: 'TX', ...FIX })
@@ -203,6 +218,7 @@ for (const code of STATES) {
 const MR = data.mortgage_rules
 check('rules: 28 / 36', MR.front_end_ratio_pct === 28 && MR.back_end_ratio_pct === 36)
 check('rules: back-end max above guideline', MR.back_end_max_ratio_pct > MR.back_end_ratio_pct)
+check('rules: stretch between guideline and max', MR.back_end_stretch_ratio_pct > MR.back_end_ratio_pct && MR.back_end_stretch_ratio_pct < MR.back_end_max_ratio_pct)
 check('rules: 3% minimum down', MR.min_down_payment_pct === 3)
 check('rules: PMI cancel 80 / auto 78', MR.pmi.cancel_request_ltv_pct === 80 && MR.pmi.auto_terminate_ltv_pct === 78)
 check('rules: 2026 conforming baseline $832,750', MR.conforming_limits.baseline_usd === 832750)
