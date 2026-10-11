@@ -7,8 +7,9 @@
  * Pure module (no React, no window) so the conformance tests can import it.
  */
 import ch from './ch/index.js'
+import us from './us/index.js'
 
-export const MARKETS = { ch }
+export const MARKETS = { ch, us }
 export const DEFAULT_MARKET_ID = 'ch'
 export const MARKET_STORAGE_KEY = 'plinthly.market'
 

@@ -246,6 +246,7 @@ export function calculateAffordability(input = {}) {
       minDownPct: R.min_down_payment_pct,
       frontEndPct: R.front_end_ratio_pct,
       backEndPct: R.back_end_ratio_pct,
+      backEndStretchPct: R.back_end_stretch_ratio_pct,
       backEndMaxPct: R.back_end_max_ratio_pct,
       closingCostsPct: Math.round(a.closingRate * 1000) / 10,
       ratePct: Math.round(a.rate * 10000) / 100,

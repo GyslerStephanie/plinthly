@@ -24,7 +24,7 @@ function check(name, ok) {
 }
 
 // ── 1. Registry ──────────────────────────────────────────────────────────────
-const REQUIRED = ['id', 'countryCode', 'flag', 'currency', 'numberLocale', 'areaUnit', 'languages', 'regionKind', 'defaultRegion']
+const REQUIRED = ['id', 'countryCode', 'currency', 'numberLocale', 'areaUnit', 'languages', 'regionKind', 'defaultRegion', 'phases']
 for (const [id, m] of Object.entries(MARKETS)) {
   for (const f of REQUIRED) check(`${id}: has ${f}`, m[f] != null)
   check(`${id}: key matches id`, m.id === id)
@@ -40,7 +40,14 @@ check('isMarketId rejects prototype keys', !isMarketId('toString') && !isMarketI
 check('CH country → ch', marketIdForCountry('CH') === 'ch')
 check('country lookup is case-insensitive', marketIdForCountry('ch') === 'ch')
 check('unsupported country → null', marketIdForCountry('FR') === null)
+check('US country → us', marketIdForCountry('US') === 'us')
+check('every market offers Phase 1', Object.values(MARKETS).every((m) => m.phases.includes(1)))
+check('US is English-only', MARKETS.us.languages.length === 1 && MARKETS.us.languages[0] === 'en')
+check('US formats USD for real', formatMoney(1250000, MARKETS.us) === '$1,250,000')
+check('US area unit is sq ft', areaUnit(MARKETS.us) === 'sq ft')
+check('US link opens US even if stored is ch', resolveInitialMarketId({ hashMarket: 'us', hashHasState: true, stored: 'ch' }) === 'us')
 check('marketName localises', marketName(MARKETS.ch, 'de') === 'Schweiz')
+check('marketName US', marketName(MARKETS.us, 'en') === 'United States')
 
 // ── 2. Detection (suggestion only) ───────────────────────────────────────────
 check('Zurich zone → CH', countryFromTimeZone('Europe/Zurich') === 'CH')

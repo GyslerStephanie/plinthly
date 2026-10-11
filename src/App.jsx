@@ -12,6 +12,12 @@ import { computeLedger, selectedMeasures } from './lib/retrofit'
 import { decodeState, syncHash, shareableUrl } from './lib/share'
 import { useI18n } from './i18n/I18nContext'
 import { useMarket } from './markets/MarketContext'
+import { ut } from './markets/us/copy'
+import { usDataMeta } from './markets/us/affordability'
+import CountryConfirm from './components/CountryConfirm'
+import CountrySwitcher from './components/CountrySwitcher'
+import UsPhase1, { US_DEFAULT_VALUES, usResult } from './components/us/UsPhase1'
+import UsComingSoon from './components/us/UsComingSoon'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
@@ -70,7 +76,11 @@ function calc(values) {
 
 export default function App() {
   const { t, lang, setLang, languages } = useI18n()
-  const { marketId } = useMarket()
+  const { marketId, market, setMarket } = useMarket()
+  const isUs = marketId === 'us'
+  const [usValues, setUsValues] = useState(US_DEFAULT_VALUES) // US Phase 1 inputs
+  const [showCountry, setShowCountry] = useState(false) // front door step 1: country confirm
+  const usRes = isUs ? usResult(usValues) : null
   const [phase, setPhase] = useState(1)
   const [maxVisited, setMaxVisited] = useState(1)
   const [values, setValues] = useState(DEFAULT_VALUES)
@@ -111,6 +121,26 @@ export default function App() {
     const s = decodeState()
     if (!s || Object.keys(s).length === 0) return
 
+    if (s.market === 'us') {
+      const next = {
+        ...US_DEFAULT_VALUES,
+        grossIncome: s.grossIncome ?? '',
+        savings: s.savings ?? '',
+        monthlyDebts: s.monthlyDebts ?? '',
+        downPct: s.downPct ?? US_DEFAULT_VALUES.downPct,
+        region: s.canton ?? '',
+        ratePct: s.ratePct ?? US_DEFAULT_VALUES.ratePct,
+        hoaMonthly: s.hoaMonthly ?? '',
+      }
+      setUsValues(next)
+      if (usResult(next)) {
+        const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
+        setPhase(target)
+        setMaxVisited(target)
+      }
+      return
+    }
+
     const nextValues = {
       grossIncome: s.grossIncome ?? '',
       savings: s.savings ?? '',
@@ -148,8 +178,20 @@ export default function App() {
     }
   }, [])
 
+  // A market only offers its own languages (the US is English-only).
+  useEffect(() => {
+    if (!market.languages.includes(lang)) setLang('en')
+  }, [market, lang])
+  const marketLanguages = languages.filter((l) => market.languages.includes(l.code))
+
   // Keep the URL hash in sync so the current view is always shareable.
   useEffect(() => {
+    if (isUs) {
+      // US links carry only US inputs (ct holds the state code).
+      const { region, ...rest } = usValues
+      syncHash({ ...rest, canton: region, phase, market: marketId })
+      return
+    }
     syncHash({
       ...values,
       canton: explore.canton || values.canton,
@@ -164,7 +206,7 @@ export default function App() {
       residentStatus,
       market: marketId,
     })
-  }, [values, explore, phase, dreamPrice, residentStatus, marketId])
+  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues])
 
   const flatState = {
     ...values,
@@ -224,9 +266,9 @@ export default function App() {
 
   const goToPhase = (n) => {
     if (n < 1 || n > LAST_PHASE) return
-    if (n > 1 && !phase1) return
+    if (n > 1 && !(isUs ? usRes : phase1)) return
     // Entering exploration (phase 3) for the first time: seed budget + canton.
-    if (n === 3) {
+    if (n === 3 && !isUs) {
       setExplore((e) => ({
         ...e,
         budget: e.budget || String(phase1?.maxPrice || ''),
@@ -256,6 +298,7 @@ export default function App() {
     markOnboarded()
     if (seed?.residentStatus) setResidentStatus(seed.residentStatus)
     if (seed?.horizon) setCompareHorizon(seed.horizon)
+    if (seed?.region) setUsValues((v) => ({ ...v, region: seed.region }))
     if (seed?.canton) {
       setValues((v) => ({ ...v, canton: seed.canton }))
       setExplore((e) => ({ ...e, canton: seed.canton }))
@@ -267,9 +310,10 @@ export default function App() {
       setShowCompare(true)
       return
     }
+    const hasResult = isUs ? !!usRes : !!phase1
     if (dest === 'dream') {
-      setRouteIntent(phase1 ? null : 'dream')
-      goToPhase(phase1 ? 2 : 1)
+      setRouteIntent(hasResult ? null : 'dream')
+      goToPhase(hasResult ? 2 : 1)
       return
     }
     if (dest === 'looking') {
@@ -292,6 +336,29 @@ export default function App() {
   // Landing → onboarding (the CTA) or straight to the calculator (skip).
   const startFromLanding = () => {
     setShowLanding(false)
+    setShowCountry(true)
+  }
+
+  // Switching country clears every input: the rules differ, so CH and US
+  // numbers must never mix (spec).
+  const switchMarket = (id) => {
+    if (id === marketId) return
+    setMarket(id)
+    setValues(DEFAULT_VALUES)
+    setPhase1(null)
+    setExplore(DEFAULT_EXPLORE)
+    setDreamPrice('')
+    setDreamContext(null)
+    setShowWithoutEquity(false)
+    setShowCompare(false)
+    setRouteIntent(null)
+    setUsValues(US_DEFAULT_VALUES)
+    setPhase(1)
+    setMaxVisited(1)
+  }
+  const chooseCountry = (id) => {
+    switchMarket(id)
+    setShowCountry(false)
     setShowOnboarding(true)
   }
   const skipFromLanding = () => {
@@ -305,13 +372,15 @@ export default function App() {
   const startOver = () => {
     setRouteIntent(null)
     setShowOnboarding(false)
+    setShowCountry(false)
     setShowLanding(true)
   }
 
   // Once a Phase-1 result exists the nudge has served its purpose.
-  const showRouteNudge = phase === 1 && !phase1 && !!routeIntent
+  const hasResultNow = isUs ? !!usRes : !!phase1
+  const showRouteNudge = phase === 1 && !hasResultNow && !!routeIntent
 
-  const canContinue = phase < LAST_PHASE && (phase > 1 || !!phase1)
+  const canContinue = phase < LAST_PHASE && (phase > 1 || hasResultNow)
   const mtNotice = t('meta.mtNotice')
 
   // Derived, read-only view of state shared with descendants via context.
@@ -344,7 +413,7 @@ export default function App() {
             <div>
               <p className="ds-wordmark text-lg leading-tight text-ink">Plinthly</p>
               <p className="text-xs leading-tight text-muted">
-                {t('header.tagline')}
+                {isUs ? ut('header.tagline') : t('header.tagline')}
               </p>
             </div>
           </div>
@@ -359,23 +428,24 @@ export default function App() {
             >
               {t('onboarding.startOver')}
             </button>
+            <CountrySwitcher onSwitch={switchMarket} />
             <LanguageSwitcher
               lang={lang}
               setLang={setLang}
-              languages={languages}
+              languages={marketLanguages}
               label={t('lang.label')}
             />
           </div>
         </div>
       </header>
 
-      {mtNotice && (
+      {mtNotice && !isUs && (
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-xs text-amber-800 no-print">
           {mtNotice}
         </div>
       )}
 
-      <StickySummaryBar />
+      {!isUs && <StickySummaryBar />}
 
       <main className="mx-auto max-w-[1320px] px-5 py-10 md:px-8 lg:px-[60px] lg:py-16">
         <div className="mb-8 no-print">
@@ -399,10 +469,10 @@ export default function App() {
             <img src="/brand/voxel-landscape-hero.png" alt="" className="ds-hero-land hidden sm:block" />
             <div className="relative max-w-2xl px-6 py-10 lg:px-10 lg:py-12">
               <h1 className="font-display text-4xl font-semibold tracking-tight text-ink lg:text-5xl">
-                {t('heading.1.title')}
+                {isUs ? ut('hero.title') : t('heading.1.title')}
               </h1>
               <p className="mt-3 max-w-xl text-base leading-relaxed text-body lg:text-lg">
-                {t('heading.1.blurb')}
+                {isUs ? ut('hero.blurb') : t('heading.1.blurb')}
               </p>
             </div>
           </div>
@@ -411,14 +481,20 @@ export default function App() {
             <h1 className="text-2xl font-semibold tracking-tight text-ink">
               {t(`heading.${phase}.title`)}
             </h1>
-            <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
-              {t(`heading.${phase}.blurb`)}
-            </p>
+            {!isUs && (
+              <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
+                {t(`heading.${phase}.blurb`)}
+              </p>
+            )}
           </div>
         )}
 
+        {/* United States — Phase 1 on the US engine; later phases not built yet */}
+        {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={setUsValues} />}
+        {isUs && phase > 1 && <UsComingSoon phase={phase} onBack={() => goToPhase(1)} />}
+
         {/* Phase 1 — two-column on desktop: inputs left, live output right */}
-        {phase === 1 && (
+        {phase === 1 && !isUs && (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
             <div>
               <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:p-7">
@@ -451,12 +527,12 @@ export default function App() {
         )}
 
         {/* Phase 2 — Calculate dream price */}
-        {phase === 2 && phase1 && (
+        {phase === 2 && phase1 && !isUs && (
           <DreamPricePhase result={phase1} values={values} onValuesChange={handleValuesChange} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => setShowCompare(true)} />
         )}
 
         {/* Phase 3 — exploration */}
-        {phase === 3 && (
+        {phase === 3 && !isUs && (
           <>
             <PhaseContextBanner phase={3} />
             <Phase2Exploration explore={explore} onChange={handleExploreChange} />
@@ -464,7 +540,7 @@ export default function App() {
         )}
 
         {/* Phase 4 — real options */}
-        {phase === 4 && (
+        {phase === 4 && !isUs && (
           <>
             <PhaseContextBanner phase={4} />
             <Phase3Options explore={explore} onChange={handleExploreChange} phase1={phase1} />
@@ -472,7 +548,7 @@ export default function App() {
         )}
 
         {/* Phase 5 — action plan */}
-        {phase === 5 && phase1 && (
+        {phase === 5 && phase1 && !isUs && (
           <>
             <PhaseContextBanner phase={5} />
             <Phase4ActionPlan
@@ -510,7 +586,7 @@ export default function App() {
                 ? t('btn.seeOptions')
                 : t('btn.buildPlan')}
             </button>
-          ) : phase === 1 && !phase1 ? (
+          ) : phase === 1 && !hasResultNow ? (
             <span className="text-sm text-slate-400">{t('btn.runToContinue')}</span>
           ) : (
             <span />
@@ -518,7 +594,7 @@ export default function App() {
         </div>
 
         {/* Other tracks — only on the entry phase */}
-        {phase === 1 && (
+        {phase === 1 && !isUs && (
           <div className="mt-12 border-t border-slate-200 pt-8 no-print">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
               {t('tracks.heading')}
@@ -545,7 +621,9 @@ export default function App() {
               <span className="ds-wordmark text-base">Plinthly</span>
             </div>
             <p className="ml-auto max-w-xl text-xs leading-relaxed" style={{ color: 'color-mix(in oklab, var(--text-on-dark) 80%, transparent)' }}>
-              {t('footer.disclaimer', { date: dataMeta.last_updated })}
+              {isUs
+                ? ut('footer.disclaimer', { date: usDataMeta.last_updated })
+                : t('footer.disclaimer', { date: dataMeta.last_updated })}
             </p>
           </div>
         </div>
@@ -554,7 +632,7 @@ export default function App() {
       {/* AI advisor — available once a result exists. Hidden while Compare is
           open: that overlay mounts its own instance with the Compare toolset,
           and two FABs would stack (both announced by a screen reader). */}
-      {previewResult && !showCompare && (
+      {previewResult && !showCompare && !isUs && (
         <AdvisorFab
           context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
           values={values}
@@ -593,8 +671,14 @@ export default function App() {
 
       {/* Onboarding — the 5-question front door, opened from the landing.
           Rendered last so it overlays the app; skippable and shown-once. */}
+      {/* Country confirm — first step of the front door (auto-detect, then
+          confirm). Picking a country applies it, then opens the onboarding. */}
+      {showCountry && (
+        <CountryConfirm onChoose={chooseCountry} onSkip={() => chooseCountry(marketId)} />
+      )}
+
       {showOnboarding && (
-        <Onboarding onComplete={completeOnboarding} onSkip={skipOnboarding} />
+        <Onboarding onComplete={completeOnboarding} onSkip={skipOnboarding} marketId={marketId} />
       )}
 
       {/* Vercel Speed Insights — anonymous Web Vitals, no PII */}

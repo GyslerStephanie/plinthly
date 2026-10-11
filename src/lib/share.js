@@ -25,6 +25,10 @@ const KEYS = [
   ['ph', 'phase'],
   ['rs', 'residentStatus'], // onboarding: 'expat' | 'national' (drives tax notes)
   ['mk', 'market'], // 'ch' | 'us'. Absent on pre-market links → read as 'ch'
+  // US-only inputs (gi, sv, dn, ct and ph are shared with Switzerland)
+  ['md', 'monthlyDebts'],
+  ['rt', 'ratePct'],
+  ['ho', 'hoaMonthly'],
 ]
 
 // Numeric inputs are displayed with thousands separators (e.g. "1,250,000").
@@ -32,7 +36,7 @@ const KEYS = [
 // on display and every consumer parses with replace(/[^0-9.]/g, '').
 const NUMERIC_KEYS = new Set([
   'grossIncome', 'savings', 'pillar3a', 'pillar2', 'downPct',
-  'householdSize', 'budget', 'dreamPrice',
+  'householdSize', 'budget', 'dreamPrice', 'monthlyDebts', 'ratePct', 'hoaMonthly',
 ])
 
 /** Build a shareable URL hash from the flat state object. */
