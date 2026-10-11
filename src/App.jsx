@@ -11,6 +11,7 @@ import { impliedSize } from './lib/exploration'
 import { computeLedger, selectedMeasures } from './lib/retrofit'
 import { decodeState, syncHash, shareableUrl } from './lib/share'
 import { useI18n } from './i18n/I18nContext'
+import { useMarket } from './markets/MarketContext'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
@@ -32,8 +33,9 @@ const ONBOARDED_KEY = 'plinthly.onboarded'
 function coldFirstVisit() {
   try {
     if (localStorage.getItem(ONBOARDED_KEY)) return false
-    const s = decodeState()
-    if (s && Object.keys(s).length > 0) return false
+    // A market alone (e.g. a "#mk=us" landing link) is not a deep link.
+    const { market, ...s } = decodeState()
+    if (Object.keys(s).length > 0) return false
     return true
   } catch {
     return false
@@ -68,6 +70,7 @@ function calc(values) {
 
 export default function App() {
   const { t, lang, setLang, languages } = useI18n()
+  const { marketId } = useMarket()
   const [phase, setPhase] = useState(1)
   const [maxVisited, setMaxVisited] = useState(1)
   const [values, setValues] = useState(DEFAULT_VALUES)
@@ -159,8 +162,9 @@ export default function App() {
       dreamPrice,
       phase,
       residentStatus,
+      market: marketId,
     })
-  }, [values, explore, phase, dreamPrice, residentStatus])
+  }, [values, explore, phase, dreamPrice, residentStatus, marketId])
 
   const flatState = {
     ...values,
@@ -174,6 +178,7 @@ export default function App() {
     dreamPrice,
     phase,
     residentStatus,
+    market: marketId,
   }
 
   // Fully live: the result reflects the current inputs continuously (no "run"

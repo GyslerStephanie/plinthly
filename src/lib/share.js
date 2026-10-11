@@ -24,6 +24,7 @@ const KEYS = [
   ['dp', 'dreamPrice'],
   ['ph', 'phase'],
   ['rs', 'residentStatus'], // onboarding: 'expat' | 'national' (drives tax notes)
+  ['mk', 'market'], // 'ch' | 'us'. Absent on pre-market links → read as 'ch'
 ]
 
 // Numeric inputs are displayed with thousands separators (e.g. "1,250,000").
