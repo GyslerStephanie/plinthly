@@ -8,7 +8,7 @@ the git branches, not the specs folder, not someone's memory.
 it merges, flip it to `✅ Shipped`. When you shelve an idea, mark it `💡 Idea` or
 delete the row. One row per feature. Link each one to its spec in `docs/specs/`.
 
-_Last synced: 2026-07-31_
+_Last synced: 2026-10-11_
 
 ## Status legend
 
@@ -52,6 +52,8 @@ _Last synced: 2026-07-31_
 | QA skill suite | 🔨 Building | `chore/qa-skills` | Five `qa-*` skills + shared PROJECT_CONTEXT |
 | Repo organization + AI docs | 🔨 Building | `chore/repo-organization` | This change: /docs, plinthly.md, FEATURES.md |
 | IA audit | 🔨 Building | `docs/ia-audit` | Information-architecture review |
+| US market (country picker, US Phases 1–2) | 🔨 Building | `feature/us-market` | [spec](docs/specs/US_MARKET_SPEC.md) |
+| Advisor agent (tool-use) | 🔨 Building | `feature/advisor-agent` | [spec](docs/specs/ADVISOR_AGENT_SPEC.md) — v1 prototype committed as WIP |
 
 ## Ideas / backlog
 
@@ -61,4 +63,4 @@ and `docs/specs/F1-F4_FEATURE_SPEC.md` for candidate features from research.
 
 | Feature | Status | Notes |
 |---|---|---|
-| Advisor agent (tool-use: recompute, don't just narrate) | 🔨 Building | [spec](docs/specs/ADVISOR_AGENT_SPEC.md) — v1 prototype working in the tree (uncommitted, no branch yet): `recompute_affordability` on Phase 1, `run_compare_scenario` on the Compare dashboard |
+| _(none tracked yet)_ | 💡 Idea | — |
