@@ -8,7 +8,7 @@ import {
   COMPARE_METHODOLOGY,
   MAX_YEARS,
 } from '../../lib/compare/model'
-import { chf, groupDigits } from '../../lib/format'
+import { money, groupDigits, currencySymbol } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
 import { useDialogFocus } from '../../lib/useDialogFocus'
 
@@ -174,7 +174,7 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
   // Plain-language verb phrases for the headline, plus full (rounded) figures.
   const winA = t(`compare.win.${s.hA}`)
   const winB = t(`compare.win.${s.hB}`)
-  const round1k = (v) => chf(Math.round(Math.abs(v) / 1000) * 1000)
+  const round1k = (v) => money(Math.round(Math.abs(v) / 1000) * 1000)
 
   let story
   if (s.costLens) {
@@ -214,7 +214,7 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
     <label className="block text-xs text-muted">
       {label}
       <div className={`mt-1 ${FIELD}`}>
-        <span className="select-none pl-2.5 pr-1 text-xs text-faint">CHF</span>
+        <span className="select-none pl-2.5 pr-1 text-xs text-faint">{currencySymbol()}</span>
         <input
           inputMode="numeric"
           value={groupDigits(String(inputs[key]))}
@@ -335,8 +335,8 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
           <p className="mt-2 text-base leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: story }} />
           <p className="mt-4 text-xs text-faint">{t(s.costLens ? 'compare.metricsCost' : 'compare.metricsWealth', { n: year })}</p>
           <div className="mt-1.5 grid grid-cols-3 gap-3">
-            <Metric label={labelA} value={chf(a)} accent={RENT} />
-            <Metric label={labelB} value={chf(b)} accent={OWN} />
+            <Metric label={labelA} value={money(a)} accent={RENT} />
+            <Metric label={labelB} value={money(b)} accent={OWN} />
             <Metric label={t('compare.diff')} value={fK(diff)} />
           </div>
         </div>
@@ -466,9 +466,9 @@ export default function CompareView({ onClose, seed = {}, seedYear }) {
                   return (
                     <tr key={k} className={'border-b border-line/60 ' + (hl ? 'bg-teal-50/70' : '')}>
                       <td className={'py-1.5 pr-2 text-left ' + (hl ? 'border-l-2 border-teal-600 pl-2 font-semibold text-ink' : 'text-muted')}>{k}</td>
-                      {s.incCol && <td className="px-2 py-1.5 text-right text-body">{chf(inputs.income * Math.pow(1 + inputs.incomeGrowthPct / 100, k - 1))}</td>}
-                      <td className="px-2 py-1.5 text-right text-ink">{chf(s.A[k])}</td>
-                      <td className="px-2 py-1.5 text-right text-ink">{chf(s.B[k])}</td>
+                      {s.incCol && <td className="px-2 py-1.5 text-right text-body">{money(inputs.income * Math.pow(1 + inputs.incomeGrowthPct / 100, k - 1))}</td>}
+                      <td className="px-2 py-1.5 text-right text-ink">{money(s.A[k])}</td>
+                      <td className="px-2 py-1.5 text-right text-ink">{money(s.B[k])}</td>
                       <td className="px-2 py-1.5 text-right">
                         <span className="inline-flex items-center justify-end gap-1.5">
                           {/* Colour the gap by the line that's ahead, not red/green — keeps the

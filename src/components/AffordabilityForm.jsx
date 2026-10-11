@@ -1,5 +1,5 @@
 import { cantonOptions, getCanton } from '../lib/cantons'
-import { chf, groupDigits } from '../lib/format'
+import { money, groupDigits, currencySymbol } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 import { SELECT_CHEVRON } from './ui'
@@ -18,7 +18,7 @@ function MoneyField({ id, label, value, onChange, placeholder, hint }) {
         {label}
       </label>
       <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-        <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+        <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
         <input
           id={id}
           type="text"
@@ -102,12 +102,12 @@ export default function AffordabilityForm({ values, onChange }) {
             {t('form.combinedEquity')}
           </span>
           <span className="tabular-nums text-base font-semibold text-slate-900">
-            {chf(toNum(values.savings) + toNum(values.pillar3a) + toNum(values.pillar2))}
+            {money(toNum(values.savings) + toNum(values.pillar3a) + toNum(values.pillar2))}
           </span>
         </div>
         <p className="mt-1 text-xs text-slate-500">
           {t('form.hardEquityNote', {
-            hard: chf(toNum(values.savings) + toNum(values.pillar3a)),
+            hard: money(toNum(values.savings) + toNum(values.pillar3a)),
           })}
         </p>
       </div>
@@ -193,7 +193,7 @@ function CantonHint({ code }) {
   if (apt == null && tax == null) return null
   return (
     <p className="mt-1 text-xs text-slate-400">
-      {t('form.cantonHint', { price: apt != null ? chf(apt) : '—', tax: tax != null ? tax : '—' })}
+      {t('form.cantonHint', { price: apt != null ? money(apt) : '—', tax: tax != null ? tax : '—' })}
     </p>
   )
 }

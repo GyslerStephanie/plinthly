@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { track } from '../lib/track'
 import { runAdvisorTool } from '../lib/advisorTools'
+import { money } from '../lib/format'
 
 /**
  * Floating "Ask the advisor" button + chat drawer (Push 2).
@@ -46,7 +47,6 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
 
   if (!context) return null
 
-  const chf = (n) => 'CHF ' + Math.round(Number(n) || 0).toLocaleString('de-CH')
   /** Human label for a Compare side key ("own" → "owning"). */
   const sideLabel = (key) => (key ? t(`compare.win.${key}`) : '')
   /** Attach readable labels to a Compare tool result before the model sees it. */
@@ -65,12 +65,12 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
     const d = context.dream
     if (mode === 'plan') {
       return d
-        ? `(Preview) Illustrative roadmap to ${chf(d.price)}: close the ~${chf(d.equityGap)} equity gap by saving steadily, max your Pillar 3a (counts as hard equity), and revisit the affordability ratio. Connect an API key for a tailored plan.`
+        ? `(Preview) Illustrative roadmap to ${money(d.price)}: close the ~${money(d.equityGap)} equity gap by saving steadily, max your Pillar 3a (counts as hard equity), and revisit the affordability ratio. Connect an API key for a tailored plan.`
         : '(Preview) Enter a dream price and I\'ll outline a savings roadmap.'
     }
     return d
-      ? `(Preview) Your max today is ${chf(context.maxPrice)} vs a ${chf(d.price)} goal — a ~${chf(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
-      : `(Preview) Your current max is ${chf(context.maxPrice)}. Connect an API key for live answers.`
+      ? `(Preview) Your max today is ${money(context.maxPrice)} vs a ${money(d.price)} goal — a ~${money(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
+      : `(Preview) Your current max is ${money(context.maxPrice)}. Connect an API key for live answers.`
   }
 
   /** POST one leg of the conversation. Throws to trigger the offline fallback. */
@@ -208,7 +208,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
                   <p className="text-xs font-semibold text-ink">
                     {scenario.label || t('advisor.scenarioLabel')} →{' '}
                     {scenario.target === 'compare'
-                      ? t('advisor.scenarioAhead', { who: sideLabel(scenario.aheadKey), amount: chf(scenario.gap) })
+                      ? t('advisor.scenarioAhead', { who: sideLabel(scenario.aheadKey), amount: money(scenario.gap) })
                       : scenario.headline}
                   </p>
                   <p className="mt-0.5 text-[11px] leading-snug text-muted">{t('advisor.scenarioNote')}</p>

@@ -2,7 +2,7 @@ import { optionRenovate, optionNewBuild, optionBuild } from '../lib/options'
 import { impliedSize, energyClassTable } from '../lib/exploration'
 import { selectedMeasures, computeLedger } from '../lib/retrofit'
 import { getCanton } from '../lib/cantons'
-import { chf, int } from '../lib/format'
+import { money, int } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 import { Card, Row, Indicative, Pill } from './ui'
@@ -95,7 +95,7 @@ export default function Phase3Options({ explore, onChange }) {
         as="p"
         className="text-sm leading-relaxed text-slate-600"
         k="phase3.intro"
-        vars={{ budget: chf(budget), canton: canton?.name_en, size: int(size) }}
+        vars={{ budget: money(budget), canton: canton?.name_en, size: int(size) }}
       />
 
       <ComparisonSummary
@@ -119,17 +119,17 @@ export default function Phase3Options({ explore, onChange }) {
       >
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
-            <Row label={t('phase3.renoCost')} value={`${chf(reno.cost.low)} – ${chf(reno.cost.high)}`} sub={`≈ ${chf(reno.cost.mid)}`} />
-            <Row label={t('phase3.lessSubsidies')} value={`−${chf(reno.subsidy.low)} … −${chf(reno.subsidy.high)}`} />
+            <Row label={t('phase3.renoCost')} value={`${money(reno.cost.low)} – ${money(reno.cost.high)}`} sub={`≈ ${money(reno.cost.mid)}`} />
+            <Row label={t('phase3.lessSubsidies')} value={`−${money(reno.subsidy.low)} … −${money(reno.subsidy.high)}`} />
             <div className="my-1 border-t border-slate-100" />
-            <Row label={t('phase3.netUpgrade')} value={`${chf(reno.netCost.low)} – ${chf(reno.netCost.high)}`} strong />
+            <Row label={t('phase3.netUpgrade')} value={`${money(reno.netCost.low)} – ${money(reno.netCost.high)}`} strong />
           </div>
           <div className="rounded-xl bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('phase3.tenYearHeat')}</p>
-            <Row label={t('phase3.unrenovated', { c: reno.runningCost.unrenovatedClass })} value={chf(reno.runningCost.unrenovatedTenYear)} />
-            <Row label={t('phase3.afterMinergie', { c: reno.runningCost.minergieClass })} value={chf(reno.runningCost.minergieTenYear)} />
+            <Row label={t('phase3.unrenovated', { c: reno.runningCost.unrenovatedClass })} value={money(reno.runningCost.unrenovatedTenYear)} />
+            <Row label={t('phase3.afterMinergie', { c: reno.runningCost.minergieClass })} value={money(reno.runningCost.minergieTenYear)} />
             <div className="my-1 border-t border-slate-200" />
-            <Row label={t('phase3.youdSave')} value={chf(reno.runningCost.tenYearSaving)} strong />
+            <Row label={t('phase3.youdSave')} value={money(reno.runningCost.tenYearSaving)} strong />
             <p className="mt-2 text-xs text-slate-500">{t('phase3.energyOffsets')}</p>
           </div>
         </div>
@@ -155,14 +155,14 @@ export default function Phase3Options({ explore, onChange }) {
         {neu ? (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div>
-              <Row label={t('phase3.equivExisting')} value={chf(budget)} />
-              <Row label={t('phase3.newBuildRow')} value={chf(neu.newBuildPrice)} sub={`+${neu.newBuildPremiumPct}%`} />
-              <Row label={t('phase3.minergieCertified')} value={chf(neu.minergiePrice)} sub={`+${neu.minergiePremiumPct}%`} />
-              <p className="mt-2 text-xs text-slate-500">{t('phase3.premiumNote', { premium: chf(neu.minergiePremium) })}</p>
+              <Row label={t('phase3.equivExisting')} value={money(budget)} />
+              <Row label={t('phase3.newBuildRow')} value={money(neu.newBuildPrice)} sub={`+${neu.newBuildPremiumPct}%`} />
+              <Row label={t('phase3.minergieCertified')} value={money(neu.minergiePrice)} sub={`+${neu.minergiePremiumPct}%`} />
+              <p className="mt-2 text-xs text-slate-500">{t('phase3.premiumNote', { premium: money(neu.minergiePremium) })}</p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('phase3.longTermAdv')}</p>
-              <Row label={t('phase3.tenYearSaving')} value={chf(neu.tenYearSaving)} sub={t('phase3.vsExisting')} strong />
+              <Row label={t('phase3.tenYearSaving')} value={money(neu.tenYearSaving)} sub={t('phase3.vsExisting')} strong />
               <Row label={t('phase3.resaleUplift')} value={`+${neu.resalePremiumPct}%`} />
               <div className="mt-3">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t('phase3.availabilityHere')}</p>
@@ -198,8 +198,8 @@ export default function Phase3Options({ explore, onChange }) {
               {build.standards.map((s) => (
                 <tr key={s.label} className="text-slate-700">
                   <td className="px-3 py-2 font-medium text-slate-900">{s.label}</td>
-                  <td className="px-3 py-2 tabular-nums">{chf(s.perM2.low)}–{chf(s.perM2.high)}</td>
-                  <td className="px-3 py-2 tabular-nums font-medium text-slate-900">{chf(s.total.mid)}</td>
+                  <td className="px-3 py-2 tabular-nums">{money(s.perM2.low)}–{money(s.perM2.high)}</td>
+                  <td className="px-3 py-2 tabular-nums font-medium text-slate-900">{money(s.total.mid)}</td>
                 </tr>
               ))}
             </tbody>
@@ -275,7 +275,7 @@ function ComparisonSummary({ rows, chosen, onChoose, budget, canton, size, t }) 
         as="p"
         className="mb-3 text-sm leading-relaxed text-slate-600"
         k="phase3.cmpNote"
-        vars={{ budget: chf(budget), canton: canton?.name_en, size: int(size) }}
+        vars={{ budget: money(budget), canton: canton?.name_en, size: int(size) }}
       />
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-sm">
@@ -304,7 +304,7 @@ function ComparisonSummary({ rows, chosen, onChoose, budget, canton, size, t }) 
                     </span>
                   </td>
                   <td className="px-3 py-2 tabular-nums font-medium text-slate-900">
-                    {chf(r.getIn)}
+                    {money(r.getIn)}
                     {r.land && (
                       <span className="text-xs font-normal text-slate-400"> {t('phase3.cmpPlusLand')}</span>
                     )}
@@ -312,7 +312,7 @@ function ComparisonSummary({ rows, chosen, onChoose, budget, canton, size, t }) 
                   <td className="px-3 py-2">
                     <ClassChip label={r.cls} />
                   </td>
-                  <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{chf(r.heat)}</td>
+                  <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{money(r.heat)}</td>
                   <td className="hidden px-3 py-2 text-slate-600 md:table-cell">{r.tradeoff}</td>
                 </tr>
               )

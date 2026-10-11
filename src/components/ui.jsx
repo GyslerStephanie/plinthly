@@ -1,4 +1,4 @@
-import { chf } from '../lib/format'
+import { money } from '../lib/format'
 
 // Shared custom dropdown chevron for native <select>s — the browser's native
 // arrow had inconsistent spacing that clashed with the custom-styled forms.
@@ -66,9 +66,9 @@ export function RangeValue({ band, suffix = '' }) {
   if (!band) return <span>—</span>
   return (
     <span className="tabular-nums">
-      {chf(band.low)} – {chf(band.high)}
+      {money(band.low)} – {money(band.high)}
       {suffix}
-      <span className="ml-1 text-xs text-slate-400">≈ {chf(band.mid)}</span>
+      <span className="ml-1 text-xs text-slate-400">≈ {money(band.mid)}</span>
     </span>
   )
 }

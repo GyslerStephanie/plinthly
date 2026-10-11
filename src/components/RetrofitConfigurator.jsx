@@ -1,5 +1,5 @@
 import { RETROFIT_MEASURES, measureDetails, computeLedger } from '../lib/retrofit'
-import { chf, int } from '../lib/format'
+import { money, int, currencySymbol } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { Row, Indicative } from './ui'
 
@@ -68,16 +68,16 @@ function MeasureToggle({ id, checked, onToggle, detail, t }) {
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-2">
             <span className="text-sm font-semibold text-slate-900">{t(`retrofit.${id}Label`)}</span>
-            <span className="shrink-0 tabular-nums text-sm font-semibold text-slate-900">{chf(detail.cost)}</span>
+            <span className="shrink-0 tabular-nums text-sm font-semibold text-slate-900">{money(detail.cost)}</span>
           </div>
           <p className="mt-0.5 text-xs text-slate-500">{t(`retrofit.${id}Blurb`)}</p>
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             <span className="rounded bg-teal-100 px-1.5 py-0.5 text-[11px] font-medium text-teal-700">
-              −{detail.dCost} CHF/m²·yr
+              −{detail.dCost} {currencySymbol()}/m²·yr
             </span>
             {detail.subsidy > 0 ? (
               <span className="rounded bg-sky-100 px-1.5 py-0.5 text-[11px] font-medium text-sky-700">
-                {t('retrofit.subsidyChip', { amount: chf(detail.subsidy) })}
+                {t('retrofit.subsidyChip', { amount: money(detail.subsidy) })}
               </span>
             ) : (
               <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-400">
@@ -166,18 +166,18 @@ export default function RetrofitConfigurator({ size, price, selected, onChange }
           <div className="mt-3 border-t border-slate-100 pt-1">
             <Row
               label={t('retrofit.runningCost')}
-              value={`${chf(ledger.runningCost.baseAnnual)} → ${chf(ledger.runningCost.newAnnual)}`}
+              value={`${money(ledger.runningCost.baseAnnual)} → ${money(ledger.runningCost.newAnnual)}`}
             />
             <Row
               label={t('retrofit.co2')}
               value={`${ledger.co2.baseTons} → ${ledger.co2.newTons} t`}
             />
             <div className="my-1 border-t border-slate-100" />
-            <Row label={t('retrofit.totalCost')} value={chf(ledger.totalCost)} />
-            <Row label={t('retrofit.subsidies')} value={`−${chf(ledger.totalSubsidy)}`} />
-            <Row label={t('retrofit.netCost')} value={chf(ledger.netCost)} strong />
+            <Row label={t('retrofit.totalCost')} value={money(ledger.totalCost)} />
+            <Row label={t('retrofit.subsidies')} value={`−${money(ledger.totalSubsidy)}`} />
+            <Row label={t('retrofit.netCost')} value={money(ledger.netCost)} strong />
             <div className="my-1 border-t border-slate-100" />
-            <Row label={t('retrofit.tenYearSaving')} value={chf(ledger.tenYearSaving)} />
+            <Row label={t('retrofit.tenYearSaving')} value={money(ledger.tenYearSaving)} />
             <Row
               label={t('retrofit.payback')}
               value={ledger.paybackYears ? t('retrofit.years', { n: ledger.paybackYears.toFixed(0) }) : '—'}
@@ -185,7 +185,7 @@ export default function RetrofitConfigurator({ size, price, selected, onChange }
             {ledger.valueUplift > 0 && (
               <Row
                 label={t('retrofit.valueUplift')}
-                value={`+${chf(ledger.valueUplift)}`}
+                value={`+${money(ledger.valueUplift)}`}
                 sub={`+${ledger.premiumPct}%`}
               />
             )}
@@ -193,7 +193,7 @@ export default function RetrofitConfigurator({ size, price, selected, onChange }
 
           {ledger.annualSaving > 0 && (
             <div className="mt-3 rounded-lg bg-teal-50 px-3 py-2 text-center text-sm font-semibold text-teal-800">
-              {t('retrofit.monthlySaving', { amount: chf(ledger.monthlySaving) })}
+              {t('retrofit.monthlySaving', { amount: money(ledger.monthlySaving) })}
             </div>
           )}
           {ledger.selectedCount === 0 && (

@@ -132,8 +132,16 @@ Swiss file.
   them possible, it doesn't add them).
 - Renaming the product or changing the Swiss experience.
 
-## Open questions
+## Decisions
 
-- Default mortgage rate: show a dated default (e.g. a recent 30-year average) the
-  user can edit — confirm wording so it isn't read as a rate quote.
-- Header switcher placement/design — needs a quick design pass.
+- **Mortgage rate (2026-10-11):** a dated, editable default (e.g. a recent
+  30-year fixed average, with its "as of" date shown next to it), worded so it
+  can't be read as a rate quote.
+- **Country switcher placement (2026-10-11):** follow the common convention —
+  a compact flag + country code control in the header's top-right utility area,
+  next to the language selector (where people look for locale settings), and
+  repeated in the footer. It shows the current country, opens a short list, and
+  switching asks to confirm because inputs reset.
+- **Formatting (step 2):** `money()` / `int()` format for the active market
+  (set by MarketProvider); `formatMoney(value, market)` is the pure form for
+  `lib/` and tests. Swiss output is byte-identical to the old `chf()` (tested).

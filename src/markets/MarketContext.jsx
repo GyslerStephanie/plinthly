@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react'
 import { decodeState } from '../lib/share'
+import { setFormatMarket } from '../lib/format'
 import {
   getMarket,
   isMarketId,
@@ -51,9 +52,14 @@ export function MarketProvider({ children }) {
     }
   }
 
+  // Point money()/int() at this market before any child renders. Idempotent,
+  // so safe to do during render (StrictMode double-renders are harmless).
+  const market = getMarket(marketId)
+  setFormatMarket(market)
+
   const value = useMemo(
     () => ({
-      market: getMarket(marketId),
+      market,
       marketId,
       setMarket,
       detectedCountry: detected.country,

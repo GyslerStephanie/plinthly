@@ -1,4 +1,4 @@
-import { chf } from '../lib/format'
+import { money } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { useAppState } from '../state/AppStateContext'
 
@@ -37,9 +37,9 @@ export default function PhaseContextBanner({ phase }) {
       </svg>
       <span>
         {t(key, {
-          budget: chf(budget),
+          budget: money(budget),
           canton: cantonName,
-          mortgage: chf(mortgage),
+          mortgage: money(mortgage),
         })}
       </span>
     </div>

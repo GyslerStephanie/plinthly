@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { chf, int, pct } from '../lib/format'
+import { money, int, pct } from '../lib/format'
 import { track } from '../lib/track'
 import {
   buildPriceLadder,
@@ -74,7 +74,7 @@ function Bar({ segments }) {
           key={i}
           className={s.color}
           style={{ width: `${(s.value / total) * 100}%` }}
-          title={`${s.label}: ${chf(s.value)}`}
+          title={`${s.label}: ${money(s.value)}`}
         />
       ))}
     </div>
@@ -173,24 +173,24 @@ function MonthlyCostCard({ price, mortgage, ltv, rate, onRate, notionalPct, main
       <div className="mt-3">
         <Row
           label={t('result.monthInterest')}
-          value={chf(mc.interest)}
+          value={money(mc.interest)}
           sub={t('result.monthInterestSub', { pct: pct(rate, 1) })}
         />
-        <Row label={t('result.amort')} value={chf(mc.amortization)} sub={t('result.amortSub')} />
+        <Row label={t('result.amort')} value={money(mc.amortization)} sub={t('result.amortSub')} />
         <Row
           label={t('result.maintenance')}
-          value={chf(mc.maintenance)}
+          value={money(mc.maintenance)}
           sub={t('result.maintenanceSub', { pct: maintenancePct })}
         />
         <div className="my-1 border-t border-slate-100" />
-        <Row label={t('result.monthTotal')} value={chf(mc.total)} strong />
+        <Row label={t('result.monthTotal')} value={money(mc.total)} strong />
       </div>
 
       <T
         as="div"
         className="mt-3 rounded-lg bg-teal-50 p-3 text-xs leading-relaxed text-teal-900"
         k="result.monthStress"
-        vars={{ notionalPct, notionalMo: chf(mc.totalNotional) }}
+        vars={{ notionalPct, notionalMo: money(mc.totalNotional) }}
       />
     </Collapsible>
   )
@@ -199,12 +199,12 @@ function MonthlyCostCard({ price, mortgage, ltv, rate, onRate, notionalPct, main
 /** Localized "numbers don't work yet" / shortfall sentence from engine data. */
 function shortfallMessage(t, sf) {
   if (!sf) return ''
-  const target = chf(sf.targetPrice)
+  const target = money(sf.targetPrice)
   if (sf.type === 'equity') {
-    if (sf.savingsGap > 0) return t('shortfall.equity', { gap: chf(roundK(sf.savingsGap)), target })
+    if (sf.savingsGap > 0) return t('shortfall.equity', { gap: money(roundK(sf.savingsGap)), target })
     return t('shortfall.equityClose')
   }
-  return t('shortfall.income', { gap: chf(roundK(sf.incomeGap)), target })
+  return t('shortfall.income', { gap: money(roundK(sf.incomeGap)), target })
 }
 
 /** A single bullet in the Key Takeaways summary — teal check + rich text. */
@@ -234,22 +234,22 @@ function KeyTakeaways({ result, rate }) {
   const items = []
   if (result.viable) {
     const mc = monthlyCostsAtRate(result.maxPrice, dp.mortgage, rate, dp.ltv)
-    items.push(renderRich(t('result.tkCeiling', { price: chf(result.maxPrice) })))
+    items.push(renderRich(t('result.tkCeiling', { price: money(result.maxPrice) })))
     items.push(
       t(result.bindingConstraint === 'income' ? 'result.tkLeverIncome' : 'result.tkLeverEquity'),
     )
-    items.push(renderRich(t('result.tkUpfront', { down: chf(dp.total), cash: chf(minCash) })))
+    items.push(renderRich(t('result.tkUpfront', { down: money(dp.total), cash: money(minCash) })))
     items.push(
       renderRich(
         t('result.tkMonthly', {
-          realMo: chf(mc.total),
-          stressMo: chf(mc.totalNotional),
+          realMo: money(mc.total),
+          stressMo: money(mc.totalNotional),
           notional: notionalPct,
         }),
       ),
     )
   } else {
-    items.push(renderRich(t('result.tkNotViable', { target: chf(result.shortfall?.targetPrice ?? 200000) })))
+    items.push(renderRich(t('result.tkNotViable', { target: money(result.shortfall?.targetPrice ?? 200000) })))
     items.push(shortfallMessage(t, result.shortfall))
   }
 
@@ -322,7 +322,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             </span>
           </div>
           <p className="ds-figure mt-1 text-4xl font-medium text-ink">
-            {chf(result.maxPrice)}
+            {money(result.maxPrice)}
           </p>
           {/* Actionable, state-specific lead message */}
           <T
@@ -396,16 +396,16 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
       {/* Effective budget after a modelled renovation (Phase 3 feeds this) */}
       {renovation && result.maxPrice > 0 && (
         <Card title={t('result.renoTitle')} tone="teal">
-          <Row label={t('result.renoCeiling')} value={chf(result.maxPrice)} />
+          <Row label={t('result.renoCeiling')} value={money(result.maxPrice)} />
           <Row
             label={t('result.renoUpgrade')}
-            value={`−${chf(renovation.netCost)}`}
+            value={`−${money(renovation.netCost)}`}
             sub={t('result.renoToClass', { cls: renovation.newClass })}
           />
           <div className="my-1 border-t border-slate-100" />
           <Row
             label={t('result.renoEffective')}
-            value={chf(Math.max(0, result.maxPrice - renovation.netCost))}
+            value={money(Math.max(0, result.maxPrice - renovation.netCost))}
             strong
           />
           <p className="mt-2 text-xs leading-relaxed text-slate-500">{t('result.renoNote')}</p>
@@ -425,7 +425,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
 
       {/* Down payment breakdown */}
       <Collapsible title={t('result.stakeTitle')}>
-        <StakeRow label={t('result.purchasePrice')} value={chf(result.maxPrice)} strong />
+        <StakeRow label={t('result.purchasePrice')} value={money(result.maxPrice)} strong />
         <div className="my-3">
           <Bar
             segments={[
@@ -442,24 +442,24 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         </div>
         <StakeRow
           label={t('result.cashSavings')}
-          value={chf(dp.fromSavings)}
+          value={money(dp.fromSavings)}
           sub={t('result.ofPrice', { pct: pct(cashPctOfPrice) })}
         />
         <StakeRow
           label={t('result.pillarPension')}
-          value={chf(dp.fromPillar2)}
+          value={money(dp.fromPillar2)}
           sub={dp.fromPillar2 > 0 ? t('result.pillarSub') : undefined}
         />
         <div className="my-1 border-t border-slate-100" />
         <StakeRow
           label={t('result.downPayment')}
-          value={chf(dp.total)}
+          value={money(dp.total)}
           sub={t('result.ofPrice', { pct: pct(result.rules.downPct / 100) })}
           strong
         />
         <StakeRow
           label={t('result.mortgage')}
-          value={chf(dp.mortgage)}
+          value={money(dp.mortgage)}
           sub={t('result.ltv', { pct: pct(dp.ltv) })}
         />
         <p className="t-caption mt-3 text-faint">
@@ -473,7 +473,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             as="div"
             className="t-caption mt-3 rounded-lg bg-amber-50 p-3 text-amber-900"
             k="result.pensionLimit"
-            vars={{ entered: chf(result.inputs.pillar2), used: chf(dp.fromPillar2) }}
+            vars={{ entered: money(result.inputs.pillar2), used: money(dp.fromPillar2) }}
           />
         )}
       </Collapsible>
@@ -501,18 +501,18 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         </div>
         <Row
           label={t('result.interest')}
-          value={chf(ac.interest)}
+          value={money(ac.interest)}
           sub={t('result.interestSub', { pct: pct(result.rules.notionalRatePct / 100) })}
         />
-        <Row label={t('result.amort')} value={chf(ac.amortization)} sub={t('result.amortSub')} />
+        <Row label={t('result.amort')} value={money(ac.amortization)} sub={t('result.amortSub')} />
         <Row
           label={t('result.maintenance')}
-          value={chf(ac.maintenance)}
+          value={money(ac.maintenance)}
           sub={t('result.maintenanceSub', { pct: pct(result.rules.maintenancePct / 100) })}
         />
         <div className="my-1 border-t border-slate-100" />
-        <Row label={t('result.totalAnnual')} value={chf(ac.total)} strong />
-        <Row label={t('result.ceilingThird')} value={chf(ac.affordabilityCeiling)} />
+        <Row label={t('result.totalAnnual')} value={money(ac.total)} strong />
+        <Row label={t('result.ceilingThird')} value={money(ac.affordabilityCeiling)} />
         {result.maxPrice > 0 && (
           <T
             as="div"
@@ -520,10 +520,10 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             k="result.realityRate"
             vars={{
               notionalPct,
-              notional: chf(ac.interest),
+              notional: money(ac.interest),
               realPct: pct(rate, 1),
-              real: chf(dp.mortgage * rate),
-              realMo: chf(Math.round((dp.mortgage * rate) / 12)),
+              real: money(dp.mortgage * rate),
+              realMo: money(Math.round((dp.mortgage * rate) / 12)),
             }}
           />
         )}
@@ -539,7 +539,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           onRate={setRate}
           notionalPct={notionalPct}
           maintenancePct={pct(result.rules.maintenancePct / 100)}
-          showing={t('result.monthlyForAfford', { price: chf(result.maxPrice) })}
+          showing={t('result.monthlyForAfford', { price: money(result.maxPrice) })}
         />
       )}
 
@@ -559,7 +559,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             as="p"
             className="mb-3 text-sm leading-relaxed text-slate-600"
             k="result.ladderIntro"
-            vars={{ max: chf(result.maxPrice) }}
+            vars={{ max: money(result.maxPrice) }}
           />
           <PriceLadder
             rows={buildPriceLadder(result.maxPrice, result.rules.downPct / 100)}
@@ -578,7 +578,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
               className="text-sm leading-relaxed text-slate-700"
               k="result.changeEquity"
               vars={{
-                gap: chf(roundK(result.shortfall.savingsGap)),
+                gap: money(roundK(result.shortfall.savingsGap)),
                 liquid: pct(result.rules.minLiquidPct / 100),
               }}
             />
@@ -587,7 +587,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
               as="p"
               className="text-sm leading-relaxed text-slate-700"
               k="result.changeIncome"
-              vars={{ gap: chf(roundK(result.shortfall.incomeGap)) }}
+              vars={{ gap: money(roundK(result.shortfall.incomeGap)) }}
             />
           )}
         </Card>
@@ -674,7 +674,7 @@ function CeilingChart({ equity, income, maxPrice, binding }) {
         {maxPrice > 0 && (
           <div className="pointer-events-none absolute inset-y-0 z-10" style={{ left: `${markerLeft}%` }}>
             <div className="absolute -top-1 -translate-x-1/2 whitespace-nowrap rounded bg-slate-900 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
-              {chf(maxPrice)}
+              {money(maxPrice)}
             </div>
             <div className="h-full w-px border-l border-dashed border-slate-400" />
           </div>
@@ -698,7 +698,7 @@ function CeilingChart({ equity, income, maxPrice, binding }) {
                     {r.isBinding ? t('result.binding') : t('result.slack')}
                   </span>
                 </span>
-                <span className="tabular-nums text-slate-700">{chf(r.value)}</span>
+                <span className="tabular-nums text-slate-700">{money(r.value)}</span>
               </div>
               <div className="flex h-5 w-full overflow-hidden rounded bg-slate-50">
                 <div className="h-full bg-teal-600" style={{ width: `${reachW}%` }} />
@@ -736,7 +736,7 @@ function CeilingChart({ equity, income, maxPrice, binding }) {
           as="p"
           className="mt-3 border-l-2 border-teal-300 pl-3 text-sm leading-relaxed text-slate-600"
           k={binding === 'income' ? 'result.gapIncome' : 'result.gapEquity'}
-          vars={{ gap: chf(gap) }}
+          vars={{ gap: money(gap) }}
         />
       )}
     </div>
@@ -770,10 +770,10 @@ function PriceLadder({ rows, downPct = 20, ltvPct = 80 }) {
                 key={r.price}
                 className={r.status === 'ceiling' ? 'bg-teal-50/60 text-slate-900' : 'text-slate-700'}
               >
-                <td className="px-3 py-2 font-medium tabular-nums">{chf(r.price)}</td>
-                <td className="px-3 py-2 tabular-nums">{chf(r.down)}</td>
-                <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{chf(r.cash)}</td>
-                <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{chf(r.mortgage)}</td>
+                <td className="px-3 py-2 font-medium tabular-nums">{money(r.price)}</td>
+                <td className="px-3 py-2 tabular-nums">{money(r.down)}</td>
+                <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{money(r.cash)}</td>
+                <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{money(r.mortgage)}</td>
                 <td className="px-3 py-2">
                   <span className={`whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium ${s.cls}`}>
                     {s.label}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { chf, pct, groupDigits } from '../lib/format'
+import { money, pct, groupDigits, int, currencySymbol } from '../lib/format'
 import { RULE_CONSTANTS } from '../lib/affordability'
 import { useI18n } from '../i18n/I18nContext'
 
@@ -61,7 +61,7 @@ function GapLegendItem({ color, label }) {
 
 export function GoalColumns({ currentMax, dreamPrice, hardEquity, totalEquity, needEquity }) {
   const { t } = useI18n()
-  const num = (v) => chf(v).replace(/CHF\s*/, '')
+  const num = (v) => int(v)
   const pillar2Add = Math.max(0, totalEquity - hardEquity)
 
   return (
@@ -162,7 +162,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
 
   const ariaSummary = scenarios.map((s) => {
     const cm = Math.ceil(gap / s.perMonth)
-    return `${t(`path.scen.${s.key}`)} ${chf(s.perMonth)}/mo: ${cm <= maxMonths ? fmtDur(cm) : t('dream.trajBeyond')}`
+    return `${t(`path.scen.${s.key}`)} ${money(s.perMonth)}/mo: ${cm <= maxMonths ? fmtDur(cm) : t('dream.trajBeyond')}`
   }).join('; ')
 
   return (
@@ -173,7 +173,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <label className="text-sm text-body">{t('dream.savedPerMonth')}</label>
         <div className="flex w-32 items-center rounded-lg border border-line bg-white">
-          <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
+          <span className="select-none pl-2 pr-1 text-xs text-muted">{currencySymbol()}</span>
           <input
             type="text" inputMode="numeric"
             value={groupDigits(String(Math.max(0, savingsPerMonth)))}
@@ -225,7 +225,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
           {/* goal line + label */}
           <line x1={padL} y1={goalY} x2={W - padR} y2={goalY} stroke="#c4452f" strokeWidth="1.5" strokeDasharray="5 4" />
           <text x={padL} y={goalY - 8} fontSize="11" fontWeight="600" fill="#c4452f" style={{ paintOrder: 'stroke' }} stroke="#ffffff" strokeWidth="3">
-            {t('dream.trajGoal', { value: chf(requiredEquity) })}
+            {t('dream.trajGoal', { value: money(requiredEquity) })}
           </text>
 
           {/* scenario lines + end markers (reach-time label only on the focal line) */}
@@ -255,7 +255,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
             stroke="#ffffff"
             strokeWidth="3.5"
           >
-            {t('dream.trajToday', { value: chf(startEquity) })}
+            {t('dream.trajToday', { value: money(startEquity) })}
           </text>
 
           {/* hover guide + per-line dots */}
@@ -282,7 +282,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
                   <span className="inline-block h-2 w-2 rounded-full" style={{ background: r.color }} />
                   {t(`path.scen.${r.key}`)}
                 </span>
-                <span className="tabular-nums text-ink">{chf(r.eq)}{r.reached ? ' ✓' : ''}</span>
+                <span className="tabular-nums text-ink">{money(r.eq)}{r.reached ? ' ✓' : ''}</span>
               </div>
             ))}
           </div>
@@ -296,7 +296,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
             <span className="inline-flex items-center gap-2 text-slate-700">
               <span className="inline-block h-1 w-5 rounded-full" style={{ background: l.color }} />
               <span className="font-medium">{t(`path.scen.${l.key}`)}</span>
-              <span className="text-muted">· {chf(l.perMonth)}/mo</span>
+              <span className="text-muted">· {money(l.perMonth)}/mo</span>
             </span>
             <span className="tabular-nums font-medium text-slate-700">
               {l.reaches ? t('dream.trajReaches', { time: fmtDur(l.crossM) }) : t('dream.trajBeyond')}
@@ -305,7 +305,7 @@ export function TrajectoryChart({ startEquity, requiredEquity, savingsPerMonth =
         ))}
         <p className="flex items-center gap-2 pt-1 text-xs text-error">
           <span className="inline-block w-5 border-t border-dashed border-error" />
-          {t('dream.trajGoalLegend', { value: chf(requiredEquity) })}
+          {t('dream.trajGoalLegend', { value: money(requiredEquity) })}
         </p>
       </div>
     </div>
@@ -343,7 +343,7 @@ export function MilestoneTable({
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <label className="text-sm text-body">{t('dream.savedPerMonth')}</label>
         <div className="flex w-32 items-center rounded-lg border border-line bg-white">
-          <span className="select-none pl-2 pr-1 text-xs text-muted">CHF</span>
+          <span className="select-none pl-2 pr-1 text-xs text-muted">{currencySymbol()}</span>
           <input
             type="text" inputMode="numeric"
             value={groupDigits(String(perMonth))}
@@ -368,9 +368,9 @@ export function MilestoneTable({
             {rows.map((r) => (
               <tr key={r.yr} className={r.reached ? 'bg-positive-light/40 text-ink' : 'text-slate-700'}>
                 <td className="px-3 py-2 font-medium tabular-nums">{r.yr}</td>
-                <td className="px-3 py-2 tabular-nums">{chf(r.equity)}</td>
+                <td className="px-3 py-2 tabular-nums">{money(r.equity)}</td>
                 <td className="px-3 py-2 tabular-nums">{pct(r.pctGoal)}</td>
-                <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{chf(Math.round(r.taxSaved))}</td>
+                <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{money(Math.round(r.taxSaved))}</td>
               </tr>
             ))}
           </tbody>

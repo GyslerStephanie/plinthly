@@ -7,7 +7,7 @@ import {
   minergieStandards,
   subsidyOverview,
 } from '../lib/exploration'
-import { chf, int, groupDigits } from '../lib/format'
+import { money, int, groupDigits, currencySymbol } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 import { Card, Indicative, Pill, SELECT_CHEVRON } from './ui'
@@ -64,7 +64,7 @@ export default function Phase2Exploration({ explore, onChange }) {
               {t('phase2.budget')}
             </label>
             <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-              <span className="select-none pl-3 pr-2 text-sm text-slate-400">CHF</span>
+              <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
               <input
                 id="budget"
                 type="text"
@@ -142,7 +142,7 @@ export default function Phase2Exploration({ explore, onChange }) {
       </Card>
 
       {/* Market overview */}
-      <Card title={t('phase2.buys', { budget: chf(budget), canton: cantonName(explore.canton) })}>
+      <Card title={t('phase2.buys', { budget: money(budget), canton: cantonName(explore.canton) })}>
         {overview ? (
           <>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -152,7 +152,7 @@ export default function Phase2Exploration({ explore, onChange }) {
               />
               <MarketStat big={`≈ ${int(overview.sizeM2.mid)} m²`} label={t('phase2.midEstimate')} />
               <MarketStat
-                big={`${chf(overview.pricePerM2.low)}–${chf(overview.pricePerM2.high)}`}
+                big={`${money(overview.pricePerM2.low)}–${money(overview.pricePerM2.high)}`}
                 label={t('phase2.pricePerM2')}
               />
             </div>
@@ -180,7 +180,7 @@ export default function Phase2Exploration({ explore, onChange }) {
               as="p"
               className="text-sm text-teal-900"
               k="phase2.aVsD"
-              vars={{ a: chf(delta.better.tenYear), d: chf(delta.worse.tenYear), gap: chf(delta.tenYearSaving) }}
+              vars={{ a: money(delta.better.tenYear), d: money(delta.worse.tenYear), gap: money(delta.tenYearSaving) }}
             />
           </div>
         )}
@@ -204,8 +204,8 @@ export default function Phase2Exploration({ explore, onChange }) {
                       <span className="hidden text-xs text-slate-400 md:inline">{r.description}</span>
                     </span>
                   </td>
-                  <td className="px-3 py-2 tabular-nums">{chf(r.annual)}</td>
-                  <td className="px-3 py-2 tabular-nums font-medium text-slate-900">{chf(r.tenYear)}</td>
+                  <td className="px-3 py-2 tabular-nums">{money(r.annual)}</td>
+                  <td className="px-3 py-2 tabular-nums font-medium text-slate-900">{money(r.tenYear)}</td>
                   <td className="hidden px-3 py-2 tabular-nums sm:table-cell">{int(r.co2PerYear)} kg</td>
                 </tr>
               ))}
@@ -235,15 +235,15 @@ export default function Phase2Exploration({ explore, onChange }) {
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3 text-sm">
             <MiniStat
               label={t('phase2.insulation')}
-              value={`${chf(subsidies.federal.ranges.insulation_chf_per_m2.low)}–${chf(subsidies.federal.ranges.insulation_chf_per_m2.high)} / m²`}
+              value={`${money(subsidies.federal.ranges.insulation_chf_per_m2.low)}–${money(subsidies.federal.ranges.insulation_chf_per_m2.high)} / m²`}
             />
             <MiniStat
               label={t('phase2.heatPump')}
-              value={`${chf(subsidies.federal.ranges.heat_pump_replacement_chf.low)}–${chf(subsidies.federal.ranges.heat_pump_replacement_chf.high)}`}
+              value={`${money(subsidies.federal.ranges.heat_pump_replacement_chf.low)}–${money(subsidies.federal.ranges.heat_pump_replacement_chf.high)}`}
             />
             <MiniStat
               label={t('phase2.solarThermal')}
-              value={`${chf(subsidies.federal.ranges.solar_thermal_chf.low)}–${chf(subsidies.federal.ranges.solar_thermal_chf.high)}`}
+              value={`${money(subsidies.federal.ranges.solar_thermal_chf.low)}–${money(subsidies.federal.ranges.solar_thermal_chf.high)}`}
             />
           </div>
           {subsidies.cantonal.notes && <p className="mt-3 text-sm text-slate-600">{subsidies.cantonal.notes}</p>}

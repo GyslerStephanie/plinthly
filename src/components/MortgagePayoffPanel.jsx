@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { chf, int, pct, groupDigits } from '../lib/format'
+import { money, int, pct, groupDigits, currencySymbol } from '../lib/format'
 import { DEFAULT_MARKET_RATE } from '../lib/affordability'
 import {
   mortgagePayoff,
@@ -24,7 +24,7 @@ function CashField({ label, sub, value, onChange, suffix }) {
         {sub && <span className="ml-1 text-faint">— {sub}</span>}
       </span>
       <div className="mt-1 flex items-center rounded-lg border border-line bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
-        <span className="select-none pl-2.5 pr-1 text-xs text-faint">CHF</span>
+        <span className="select-none pl-2.5 pr-1 text-xs text-faint">{currencySymbol()}</span>
         <input
           inputMode="numeric"
           value={groupDigits(String(value))}
@@ -66,7 +66,7 @@ function BalanceChart({ model, displayYears }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={t('payoff.chartLabel')}>
       {/* y-axis: outstanding balance scale (CHF) */}
-      <text x={padL - 6} y={padT - 7} fontSize="9" textAnchor="end" fill="var(--text-muted)">CHF</text>
+      <text x={padL - 6} y={padT - 7} fontSize="9" textAnchor="end" fill="var(--text-muted)">{currencySymbol()}</text>
       <text x={padL - 6} y={y(max) + 3} fontSize="10" textAnchor="end" fill="var(--text-faint)">{kfmt(max)}</text>
       {hasFloor && (
         <text x={padL - 6} y={y(model.mTarget) + 3} fontSize="10" textAnchor="end" fill="var(--text-faint)">{kfmt(model.mTarget)}</text>
@@ -196,12 +196,12 @@ export default function MortgagePayoffPanel({ price, mortgage, income = 0 }) {
         />
         <Metric
           label={t('payoff.totalInterest')}
-          value={chf(interestOverHorizon)}
+          value={money(interestOverHorizon)}
           sub={t('payoff.totalInterestSub', { y: displayYears, rate: pct(rate, 1) })}
         />
         <Metric
           label={t('payoff.interestSaved')}
-          value={model.interestSaved > 0 ? chf(model.interestSaved) : '—'}
+          value={model.interestSaved > 0 ? money(model.interestSaved) : '—'}
           tone={model.interestSaved > 0 ? undefined : 'faint'}
           sub={model.interestSaved > 0 ? t('payoff.interestSavedSub') : t('payoff.interestSavedOff')}
         />
@@ -214,7 +214,7 @@ export default function MortgagePayoffPanel({ price, mortgage, income = 0 }) {
             {t('payoff.extraLabel')} <span className="font-normal text-faint">— {t('payoff.extraSub')}</span>
           </label>
           <span className="tabular-nums text-sm font-semibold text-teal-700">
-            {extra > 0 ? `${chf(extra)}/mo` : t('payoff.extraOff')}
+            {extra > 0 ? `${money(extra)}/mo` : t('payoff.extraOff')}
           </span>
         </div>
         <input
@@ -295,10 +295,10 @@ export default function MortgagePayoffPanel({ price, mortgage, income = 0 }) {
           <p className="mt-1">
             {t(ret.affordable ? 'payoff.retOk' : 'payoff.retTight', {
               age: ret.retirementAge,
-              income: chf(ret.income),
+              income: money(ret.income),
               ratio: pct(ret.ratio, 0),
               ceiling: pct(0.333, 0),
-              cost: chf(Math.round(ret.housingCost / 12)),
+              cost: money(Math.round(ret.housingCost / 12)),
             })}
           </p>
         </div>

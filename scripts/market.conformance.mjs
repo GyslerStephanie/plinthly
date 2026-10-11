@@ -11,6 +11,7 @@ import {
 } from '../src/markets/index.js'
 import { detectCountry, countryFromTimeZone, countryFromLanguages } from '../src/markets/detect.js'
 import { encodeState, decodeState } from '../src/lib/share.js'
+import { formatMoney, formatInt, money, int, currencySymbol, areaUnit, setFormatMarket } from '../src/lib/format.js'
 
 let pass = 0
 let fail = 0
@@ -70,6 +71,28 @@ check('nothing → default', resolveInitialMarketId() === DEFAULT_MARKET_ID)
 check('mk encodes', encodeState({ market: 'ch', grossIncome: '150,000' }).includes('mk=ch'))
 check('mk round-trips', decodeState('gi=150000&mk=ch').market === 'ch')
 check('legacy hash decodes without market', decodeState('gi=150000&ct=ZH').market === undefined)
+
+// ── 5. Formatting ────────────────────────────────────────────────────────────
+// Switzerland must render byte-identically to the pre-market `chf()`.
+const legacyChf = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF', maximumFractionDigits: 0 })
+const legacyInt = new Intl.NumberFormat('de-CH', { maximumFractionDigits: 0 })
+const SAMPLES = [0, 1, 999, 7258, 170000, 850000, 1250000, 12345678.9, -42000]
+check('CH money is byte-identical to legacy chf()', SAMPLES.every((v) => formatMoney(v, MARKETS.ch) === legacyChf.format(v)))
+check('CH int is byte-identical to legacy int()', SAMPLES.every((v) => formatInt(v, MARKETS.ch) === legacyInt.format(v)))
+check('money() defaults to CH', money(850000) === legacyChf.format(850000))
+check('junk → em dash', formatMoney(NaN) === '—' && formatMoney(null) === '—' && formatInt(Infinity) === '—')
+check('CH symbol is CHF', currencySymbol(MARKETS.ch) === 'CHF')
+check('CH area unit is m²', areaUnit(MARKETS.ch) === 'm²')
+// A stand-in US-shaped market proves the formatter is truly market-driven
+// before the real US market lands.
+const usLike = { currency: 'USD', numberLocale: 'en-US', areaUnit: 'sqft' }
+check('USD formats as $1,250,000', formatMoney(1250000, usLike) === '$1,250,000')
+check('USD symbol is $', currencySymbol(usLike) === '$')
+check('sq ft label', areaUnit(usLike) === 'sq ft')
+setFormatMarket(usLike)
+check('active market drives money()/int()', money(1250000) === '$1,250,000' && int(1250) === '1,250')
+setFormatMarket(MARKETS.ch)
+check('switching back restores CHF', money(1250000) === legacyChf.format(1250000))
 
 console.log(`\nMarket conformance: ${pass} passed, ${fail} failed (${pass + fail} checks)`)
 if (fail > 0) process.exit(1)

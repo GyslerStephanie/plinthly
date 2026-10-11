@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { chf } from '../lib/format'
+import { money } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { useAppState } from '../state/AppStateContext'
 
@@ -71,9 +71,9 @@ export default function StickySummaryBar() {
             {t('summary.title')}
           </p>
           <div className="flex flex-1 items-center justify-end gap-6">
-            <Metric label={t('summary.maxPrice')} value={chf(maxPrice)} />
-            <Metric label={t('summary.downPayment')} value={chf(downPayment)} />
-            <Metric label={t('summary.monthly')} value={`${chf(monthlyActual)}/mo`} />
+            <Metric label={t('summary.maxPrice')} value={money(maxPrice)} />
+            <Metric label={t('summary.downPayment')} value={money(downPayment)} />
+            <Metric label={t('summary.monthly')} value={`${money(monthlyActual)}/mo`} />
             <div className="flex shrink-0 items-center gap-3">
               <StatusBadge viable={statusViable} label={statusLabel} />
               {dreamOutOfReach && (
@@ -102,7 +102,7 @@ export default function StickySummaryBar() {
                 {t('summary.maxPrice')}
               </span>
               <span className="ds-figure text-sm font-medium text-slate-900">
-                {chf(maxPrice)}
+                {money(maxPrice)}
               </span>
             </span>
             <span className="flex items-center gap-2">
@@ -120,8 +120,8 @@ export default function StickySummaryBar() {
           {expanded && (
             <div className="border-t border-slate-100 py-3">
               <div className="grid grid-cols-2 gap-3">
-                <Metric label={t('summary.downPayment')} value={chf(downPayment)} />
-                <Metric label={t('summary.monthly')} value={`${chf(monthlyActual)}/mo`} />
+                <Metric label={t('summary.downPayment')} value={money(downPayment)} />
+                <Metric label={t('summary.monthly')} value={`${money(monthlyActual)}/mo`} />
               </div>
               {dreamOutOfReach && (
                 <button
