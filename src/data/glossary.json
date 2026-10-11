@@ -8,7 +8,11 @@
     "aliases": [
       "imputed rental value",
       "imputed rent"
-    ]
+    ],
+    "link": {
+      "label": "moneyland.ch: Taxes for homeowners in Switzerland",
+      "url": "https://www.moneyland.ch/en/taxes-real-estate-property-switzerland-guide"
+    }
   },
   "tragbarkeit": {
     "term": "Tragbarkeit",
@@ -21,7 +25,11 @@
       "one third rule",
       "1/3 rule",
       "affordability test"
-    ]
+    ],
+    "link": {
+      "label": "moneyland.ch: Affordability, simply explained",
+      "url": "https://www.moneyland.ch/en/affordability-definition"
+    }
   },
   "belehnungswert": {
     "term": "Belehnungswert",
@@ -31,7 +39,11 @@
     ],
     "aliases": [
       "lending value"
-    ]
+    ],
+    "link": {
+      "label": "moneyland.ch: Collateral value, simply explained",
+      "url": "https://www.moneyland.ch/en/collateral-value-definition"
+    }
   },
   "minergie": {
     "term": "Minergie",
@@ -39,7 +51,11 @@
     "markets": [
       "ch"
     ],
-    "aliases": []
+    "aliases": [],
+    "link": {
+      "label": "Swiss Federal Office of Energy: Minergie",
+      "url": "https://www.bfe.admin.ch/en/minergie-en"
+    }
   },
   "gebaeudeprogramm": {
     "term": "Gebäudeprogramm",
@@ -51,7 +67,11 @@
       "building programme",
       "buildings programme",
       "subsidies"
-    ]
+    ],
+    "link": {
+      "label": "Swiss Federal Office of Energy: Buildings programme",
+      "url": "https://www.bfe.admin.ch/en/buildings-programme"
+    }
   },
   "pillar2": {
     "term": "Pillar 2 (BVG/LPP)",
@@ -64,7 +84,11 @@
       "second pillar",
       "pension fund",
       "bvg"
-    ]
+    ],
+    "link": {
+      "label": "ch.ch: The 2nd pillar",
+      "url": "https://www.ch.ch/en/retirement/old-age-pension/the-2nd-pillar/"
+    }
   },
   "amortisation": {
     "term": "Amortisation",
@@ -75,7 +99,11 @@
     "aliases": [
       "amortization",
       "amortisation"
-    ]
+    ],
+    "link": {
+      "label": "moneyland.ch: Amortization, simply explained",
+      "url": "https://www.moneyland.ch/en/amortization-definition"
+    }
   },
   "niederstwertprinzip": {
     "term": "Niederstwertprinzip",
@@ -85,7 +113,11 @@
     ],
     "aliases": [
       "lower value principle"
-    ]
+    ],
+    "link": {
+      "label": "moneyland.ch: Collateral value, simply explained",
+      "url": "https://www.moneyland.ch/en/collateral-value-definition"
+    }
   },
   "geak": {
     "term": "GEAK",
@@ -95,7 +127,11 @@
     ],
     "aliases": [
       "energy certificate"
-    ]
+    ],
+    "link": {
+      "label": "GEAK: Was ist der GEAK? (German)",
+      "url": "https://www.geak.ch/der-geak/was-ist-der-geak/"
+    }
   },
   "solidarschuldnerschaft": {
     "term": "Solidarschuldnerschaft",
@@ -123,6 +159,16 @@
     "value_key": {
       "us": "savings",
       "ch": "savings"
+    },
+    "link": {
+      "us": {
+        "label": "CFPB: Determine your down payment",
+        "url": "https://www.consumerfinance.gov/owning-a-home/prepare/determine-your-down-payment/"
+      },
+      "ch": {
+        "label": "ch.ch: Financing your own apartment or house",
+        "url": "https://www.ch.ch/en/housing/homeownership/buying-property/financing-homeownership/"
+      }
     }
   },
   "down_payment": {
@@ -139,6 +185,16 @@
     "value_key": {
       "us": "downPct",
       "ch": "downPct"
+    },
+    "link": {
+      "us": {
+        "label": "CFPB: What kind of down payment do I need?",
+        "url": "https://www.consumerfinance.gov/ask-cfpb/what-kind-of-down-payment-do-i-need-how-does-the-amount-of-down-payment-i-make-affect-the-terms-of-my-mortgage-loan-en-120/"
+      },
+      "ch": {
+        "label": "ch.ch: Financing your own apartment or house",
+        "url": "https://www.ch.ch/en/housing/homeownership/buying-property/financing-homeownership/"
+      }
     }
   },
   "closing_costs": {
@@ -150,7 +206,11 @@
       "closing costs",
       "closing fees"
     ],
-    "definition": "One-time fees you pay when you buy: lender fees, appraisal, title insurance, recording fees and prepaid taxes and insurance. They usually add up to about 2–5% of the price, on top of the down payment."
+    "definition": "One-time fees you pay when you buy: lender fees, appraisal, title insurance, recording fees and prepaid taxes and insurance. They usually add up to about 2–5% of the price, on top of the down payment.",
+    "link": {
+      "label": "CFPB: What fees are paid when closing on a mortgage?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/what-are-closing-costs-en-1845/"
+    }
   },
   "pmi": {
     "term": "Private mortgage insurance (PMI)",
@@ -162,7 +222,11 @@
       "mortgage insurance",
       "private mortgage insurance"
     ],
-    "definition": "Insurance that protects the lender when you put less than 20% down. You pay it monthly, usually about 0.3–1.5% of the loan a year. You can ask to cancel it once you owe 80% of the original price, and it ends automatically at 78%."
+    "definition": "Insurance that protects the lender when you put less than 20% down. You pay it monthly, usually about 0.3–1.5% of the loan a year. You can ask to cancel it once you owe 80% of the original price, and it ends automatically at 78%.",
+    "link": {
+      "label": "CFPB: What is private mortgage insurance?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/what-is-private-mortgage-insurance-en-122/"
+    }
   },
   "debt_to_income": {
     "term": "Debt-to-income ratio (DTI)",
@@ -180,6 +244,10 @@
     "definition": "Your monthly debt payments divided by your gross monthly income. Lenders look at housing costs alone (a guideline of 28%) and housing plus other debts like car and student loans (36% as a comfortable guideline; some lenders go to 45–50%).",
     "value_key": {
       "us": "monthlyDebts"
+    },
+    "link": {
+      "label": "CFPB: What is a debt-to-income ratio?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/what-is-a-debt-to-income-ratio-en-1791/"
     }
   },
   "loan_estimate": {
@@ -190,7 +258,11 @@
     "aliases": [
       "loan estimate"
     ],
-    "definition": "A standard 3-page form every lender must give you within 3 business days of applying. Because it has the same layout everywhere, you can compare offers line by line: rate, points, fees and closing costs."
+    "definition": "A standard 3-page form every lender must give you within 3 business days of applying. Because it has the same layout everywhere, you can compare offers line by line: rate, points, fees and closing costs.",
+    "link": {
+      "label": "CFPB: Loan Estimate explainer",
+      "url": "https://www.consumerfinance.gov/owning-a-home/loan-estimate/"
+    }
   },
   "preapproval": {
     "term": "Pre-approval",
@@ -203,7 +275,11 @@
       "prequalification",
       "pre-qualification"
     ],
-    "definition": "A lender checks your income, debts, credit and savings and states how much it would likely lend you. It shows sellers you’re a serious buyer. It isn’t a final loan approval."
+    "definition": "A lender checks your income, debts, credit and savings and states how much it would likely lend you. It shows sellers you’re a serious buyer. It isn’t a final loan approval.",
+    "link": {
+      "label": "CFPB: Prequalification vs preapproval",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/whats-the-difference-between-a-prequalification-letter-and-a-preapproval-letter-en-127/"
+    }
   },
   "mortgage_rate_vs_apr": {
     "term": "Mortgage rate and APR",
@@ -219,6 +295,10 @@
     "definition": "The interest rate sets your monthly payment. The APR adds lender fees and points, spread over the loan, so it’s a better way to compare total cost between offers. Your actual rate depends on your credit score, down payment and the lender.",
     "value_key": {
       "us": "ratePct"
+    },
+    "link": {
+      "label": "CFPB: Interest rate vs APR",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/what-is-the-difference-between-a-mortgage-interest-rate-and-an-apr-en-135/"
     }
   },
   "conforming_loan": {
@@ -232,7 +312,11 @@
       "jumbo loan",
       "jumbo"
     ],
-    "definition": "A conforming loan is small enough for Fannie Mae or Freddie Mac to buy ($832,750 in most counties in 2026). Bigger loans are “jumbo” loans, which usually need a higher credit score, more cash in reserve, and sometimes a higher rate."
+    "definition": "A conforming loan is small enough for Fannie Mae or Freddie Mac to buy ($832,750 in most counties in 2026). Bigger loans are “jumbo” loans, which usually need a higher credit score, more cash in reserve, and sometimes a higher rate.",
+    "link": {
+      "label": "CFPB: What is a jumbo loan?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/what-is-a-jumbo-loan-en-116/"
+    }
   },
   "piti": {
     "term": "PITI",
@@ -244,7 +328,11 @@
       "monthly housing cost",
       "principal and interest"
     ],
-    "definition": "Principal, interest, taxes and insurance: the four parts of a typical monthly mortgage payment. Add mortgage insurance and HOA dues if you have them. Lenders use this total for the 28% housing-cost test."
+    "definition": "Principal, interest, taxes and insurance: the four parts of a typical monthly mortgage payment. Add mortgage insurance and HOA dues if you have them. Lenders use this total for the 28% housing-cost test.",
+    "link": {
+      "label": "CFPB: Principal and interest vs your total monthly payment",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/on-a-mortgage-whats-the-difference-between-my-principal-and-interest-payment-and-my-total-monthly-payment-en-1941/"
+    }
   },
   "property_tax": {
     "term": "Property tax",
@@ -255,7 +343,11 @@
       "property tax",
       "property taxes"
     ],
-    "definition": "A yearly local tax on the value of your home, set by your county or city. It varies a lot: from about 0.5% of the value a year in some states to nearly 2% in others. It’s usually paid monthly through your mortgage."
+    "definition": "A yearly local tax on the value of your home, set by your county or city. It varies a lot: from about 0.5% of the value a year in some states to nearly 2% in others. It’s usually paid monthly through your mortgage.",
+    "link": {
+      "label": "Investopedia: Property tax",
+      "url": "https://www.investopedia.com/terms/p/propertytax.asp"
+    }
   },
   "homeowners_insurance": {
     "term": "Homeowners insurance",
@@ -267,7 +359,11 @@
       "home insurance",
       "hazard insurance"
     ],
-    "definition": "Insurance on the house and your belongings against damage like fire or storms, plus liability. Lenders require it. Floods and earthquakes usually need separate cover."
+    "definition": "Insurance on the house and your belongings against damage like fire or storms, plus liability. Lenders require it. Floods and earthquakes usually need separate cover.",
+    "link": {
+      "label": "CFPB: What is homeowner’s insurance?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/what-is-homeowners-insurance-why-is-homeowners-insurance-required-en-162/"
+    }
   },
   "hoa_fees": {
     "term": "HOA dues",
@@ -283,6 +379,10 @@
     "definition": "Monthly fees to a homeowners association, common for condos and many newer neighborhoods. They pay for shared areas and services. Lenders count them in your housing costs.",
     "value_key": {
       "us": "hoaMonthly"
+    },
+    "link": {
+      "label": "CFPB: Are HOA dues part of my mortgage payment?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/are-condoco-op-fees-or-homeowners-association-dues-included-in-my-monthly-mortgage-payment-en-1945/"
     }
   },
   "amortization": {
@@ -295,7 +395,11 @@
       "amortizing",
       "paying down the loan"
     ],
-    "definition": "Paying a loan off gradually. With a 30-year fixed mortgage each payment is the same, but early on most of it is interest; over time more goes to the balance until it reaches zero."
+    "definition": "Paying a loan off gradually. With a 30-year fixed mortgage each payment is the same, but early on most of it is interest; over time more goes to the balance until it reaches zero.",
+    "link": {
+      "label": "CFPB: How does paying down a mortgage work?",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/how-does-paying-down-a-mortgage-work-en-1943/"
+    }
   },
   "home_equity": {
     "term": "Home equity",
@@ -307,7 +411,11 @@
       "equity",
       "home equity"
     ],
-    "definition": "The part of your home you actually own: its value minus what you still owe on the mortgage. It grows as you pay down the loan and if the home’s value rises."
+    "definition": "The part of your home you actually own: its value minus what you still owe on the mortgage. It grows as you pay down the loan and if the home’s value rises.",
+    "link": {
+      "label": "Investopedia: Home equity",
+      "url": "https://www.investopedia.com/terms/h/home_equity.asp"
+    }
   },
   "down_payment_assistance": {
     "term": "Down payment assistance",
@@ -321,7 +429,11 @@
       "dpa",
       "housing finance agency"
     ],
-    "definition": "Help from state or local programs, often as a grant or a low- or no-interest second loan, to cover part of the down payment or closing costs. Most have income and price limits and require a homebuyer class."
+    "definition": "Help from state or local programs, often as a grant or a low- or no-interest second loan, to cover part of the down payment or closing costs. Most have income and price limits and require a homebuyer class.",
+    "link": {
+      "label": "CFPB: Programs for first-time home buyers",
+      "url": "https://www.consumerfinance.gov/ask-cfpb/where-can-i-find-information-on-programs-for-first-time-home-buyers-en-2156/"
+    }
   },
   "area_median_income": {
     "term": "Area median income (AMI)",
@@ -332,7 +444,11 @@
       "ami",
       "area median income"
     ],
-    "definition": "The middle household income for your area, published by HUD. Many assistance and rebate programs are limited to households at or below a share of it, for example 80% or 150% of AMI."
+    "definition": "The middle household income for your area, published by HUD. Many assistance and rebate programs are limited to households at or below a share of it, for example 80% or 150% of AMI.",
+    "link": {
+      "label": "HUD User: Income limits",
+      "url": "https://www.huduser.gov/portal/datasets/il.html"
+    }
   },
   "housing_counselor": {
     "term": "HUD-approved housing counselor",
@@ -344,7 +460,11 @@
       "hud counselor",
       "housing counseling"
     ],
-    "definition": "A free or low-cost advisor at a nonprofit approved by the US Department of Housing and Urban Development. They help with budgets, credit and assistance programs, and they don’t sell you a loan."
+    "definition": "A free or low-cost advisor at a nonprofit approved by the US Department of Housing and Urban Development. They help with budgets, credit and assistance programs, and they don’t sell you a loan.",
+    "link": {
+      "label": "CFPB: Find a housing counselor",
+      "url": "https://www.consumerfinance.gov/find-a-housing-counselor/"
+    }
   },
   "hers_index": {
     "term": "HERS Index",
@@ -356,7 +476,11 @@
       "hers index",
       "hers score"
     ],
-    "definition": "An energy rating for homes from a certified rater. 100 means a home built to 2006 code; lower is better, and 0 means the home makes as much energy as it uses. A typical existing home scores about 130; new homes average about 53."
+    "definition": "An energy rating for homes from a certified rater. 100 means a home built to 2006 code; lower is better, and 0 means the home makes as much energy as it uses. A typical existing home scores about 130; new homes average about 53.",
+    "link": {
+      "label": "RESNET: What is the HERS Index?",
+      "url": "https://www.hersindex.com/hers-index/what-is-the-hers-index/"
+    }
   },
   "energy_star_homes": {
     "term": "ENERGY STAR certified home",
@@ -367,7 +491,11 @@
       "energy star",
       "energy star home"
     ],
-    "definition": "A new home independently checked to be at least 10% (typically about 20%) more efficient than homes built to code, with better insulation, windows, heating and cooling."
+    "definition": "A new home independently checked to be at least 10% (typically about 20%) more efficient than homes built to code, with better insulation, windows, heating and cooling.",
+    "link": {
+      "label": "ENERGY STAR: Certified new homes",
+      "url": "https://www.energystar.gov/newhomes"
+    }
   },
   "heat_pump": {
     "term": "Heat pump",
@@ -379,7 +507,11 @@
       "heat pump",
       "heat pumps"
     ],
-    "definition": "An electric system that moves heat instead of making it, so it heats in winter and cools in summer. It uses far less energy than electric heating; whether it beats a gas furnace on cost depends on local electricity and gas prices."
+    "definition": "An electric system that moves heat instead of making it, so it heats in winter and cools in summer. It uses far less energy than electric heating; whether it beats a gas furnace on cost depends on local electricity and gas prices.",
+    "link": {
+      "label": "energy.gov: Heat pumps",
+      "url": "https://www.energy.gov/articles/pump-your-savings-heat-pumps"
+    }
   },
   "net_metering": {
     "term": "Net metering",
@@ -391,7 +523,11 @@
       "net billing",
       "selling solar"
     ],
-    "definition": "How your utility credits the solar power you send back to the grid. With full net metering you get the retail rate; under newer rules like California’s net billing, exports earn much less, so using your own power matters more."
+    "definition": "How your utility credits the solar power you send back to the grid. With full net metering you get the retail rate; under newer rules like California’s net billing, exports earn much less, so using your own power matters more.",
+    "link": {
+      "label": "energy.gov: Homeowner’s guide to solar",
+      "url": "https://www.energy.gov/cmei/systems/homeowners-guide-solar"
+    }
   },
   "hard_equity": {
     "term": "Hard equity",
@@ -406,6 +542,10 @@
     "definition": "The part of your down payment that must come from your own cash or Pillar 3a, not your pension fund. Swiss banks want at least 10% of the price as hard equity.",
     "value_key": {
       "ch": "savings"
+    },
+    "link": {
+      "label": "ch.ch: Financing your own apartment or house",
+      "url": "https://www.ch.ch/en/housing/homeownership/buying-property/financing-homeownership/"
     }
   },
   "pillar3a": {
@@ -422,6 +562,10 @@
     "definition": "A tax-advantaged private retirement account. You can deduct yearly contributions (up to CHF 7,258 for employees with a pension fund in 2026) from taxable income, and you can use it toward buying your own home.",
     "value_key": {
       "ch": "pillar3a"
+    },
+    "link": {
+      "label": "ch.ch: The 3rd pillar",
+      "url": "https://www.ch.ch/en/retirement/old-age-pension/the-3rd-pillar/"
     }
   },
   "notional_rate": {
@@ -435,7 +579,11 @@
       "imputed interest rate",
       "kalkulatorischer zins"
     ],
-    "definition": "The deliberately high interest rate (5%) Swiss banks use to test whether you could still afford the home if rates rose. It isn’t the rate you’d actually pay."
+    "definition": "The deliberately high interest rate (5%) Swiss banks use to test whether you could still afford the home if rates rose. It isn’t the rate you’d actually pay.",
+    "link": {
+      "label": "moneyland.ch: Affordability, simply explained",
+      "url": "https://www.moneyland.ch/en/affordability-definition"
+    }
   },
   "mortgage_types_ch": {
     "term": "Fixed-rate and SARON mortgages",
@@ -448,7 +596,11 @@
       "fixed-rate mortgage",
       "variable mortgage"
     ],
-    "definition": "A fixed-rate mortgage locks the rate for a set term, often 5–10 years. A SARON mortgage follows the Swiss reference rate and changes every few months, so it’s cheaper when rates are low but less predictable."
+    "definition": "A fixed-rate mortgage locks the rate for a set term, often 5–10 years. A SARON mortgage follows the Swiss reference rate and changes every few months, so it’s cheaper when rates are low but less predictable.",
+    "link": {
+      "label": "moneyland.ch: SARON mortgage questions and answers",
+      "url": "https://www.moneyland.ch/en/saron-mortgage-switzerland-faq"
+    }
   },
   "property_appreciation": {
     "term": "Property appreciation",
@@ -462,7 +614,11 @@
       "home value growth",
       "house price growth"
     ],
-    "definition": "How much a home’s value rises each year. It varies a lot by area and over time, and values can also fall. In Compare it’s your own guess for the future, not a forecast."
+    "definition": "How much a home’s value rises each year. It varies a lot by area and over time, and values can also fall. In Compare it’s your own guess for the future, not a forecast.",
+    "link": {
+      "label": "Investopedia: Appreciation",
+      "url": "https://www.investopedia.com/terms/a/appreciation.asp"
+    }
   },
   "investment_return": {
     "term": "Investment return",
@@ -476,7 +632,11 @@
       "stock market return",
       "etf return"
     ],
-    "definition": "How much money you invest grows each year, for example in a broad stock index fund. Long-run averages have been a few percent a year after inflation, but returns swing from year to year and aren’t guaranteed."
+    "definition": "How much money you invest grows each year, for example in a broad stock index fund. Long-run averages have been a few percent a year after inflation, but returns swing from year to year and aren’t guaranteed.",
+    "link": {
+      "label": "Investopedia: Return on investment",
+      "url": "https://www.investopedia.com/terms/r/returnoninvestment.asp"
+    }
   },
   "rent_inflation": {
     "term": "Rent inflation",
@@ -489,7 +649,11 @@
       "rent increases",
       "rent growth"
     ],
-    "definition": "How much your rent goes up each year. Over many years even small yearly increases add up, which is one reason buying can come out ahead in the long run."
+    "definition": "How much your rent goes up each year. Over many years even small yearly increases add up, which is one reason buying can come out ahead in the long run.",
+    "link": {
+      "label": "Investopedia: Inflation",
+      "url": "https://www.investopedia.com/terms/i/inflation.asp"
+    }
   },
   "opportunity_cost": {
     "term": "Opportunity cost",
@@ -501,7 +665,11 @@
       "opportunity cost",
       "true cost"
     ],
-    "definition": "What you give up by choosing one option over another. Money tied up in a down payment can’t grow in investments at the same time; Compare’s “true cost” view adds that missed growth."
+    "definition": "What you give up by choosing one option over another. Money tied up in a down payment can’t grow in investments at the same time; Compare’s “true cost” view adds that missed growth.",
+    "link": {
+      "label": "Investopedia: Opportunity cost",
+      "url": "https://www.investopedia.com/terms/o/opportunitycost.asp"
+    }
   },
   "break_even": {
     "term": "Break-even point",
@@ -514,7 +682,11 @@
       "break-even",
       "draw even"
     ],
-    "definition": "The year when two choices, like renting and buying, leave you equally well off. Before it one is ahead; after it the other is."
+    "definition": "The year when two choices, like renting and buying, leave you equally well off. Before it one is ahead; after it the other is.",
+    "link": {
+      "label": "Investopedia: Break-even point",
+      "url": "https://www.investopedia.com/terms/b/breakevenpoint.asp"
+    }
   },
   "net_worth": {
     "term": "Net worth",
@@ -526,6 +698,10 @@
       "net worth",
       "wealth"
     ],
-    "definition": "Everything you own minus everything you owe. In Compare it’s your invested savings plus your home equity after selling costs."
+    "definition": "Everything you own minus everything you owe. In Compare it’s your invested savings plus your home equity after selling costs.",
+    "link": {
+      "label": "Investopedia: Net worth",
+      "url": "https://www.investopedia.com/terms/n/networth.asp"
+    }
   }
 }

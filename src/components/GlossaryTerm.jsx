@@ -1,6 +1,8 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import glossary from '../data/glossary.json'
 import { useI18n } from '../i18n/I18nContext'
+import { useMarket } from '../markets/MarketContext'
+import { linkFor } from '../lib/learn'
 
 /**
  * Inline glossary term. Renders a dotted-underlined trigger; on click it reveals
@@ -19,7 +21,7 @@ export function askAdvisor(question) {
 export default function GlossaryTerm({ id, term, def, children, icon = false }) {
   const { t } = useI18n()
   const entry = id ? glossary[id] : null
-  const link = entry?.link || null
+  const link = linkFor(entry, useMarket().marketId)
   const label = term ?? entry?.term ?? id ?? ''
   const definition = children ?? def ?? entry?.definition ?? ''
 

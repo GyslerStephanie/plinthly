@@ -14,6 +14,15 @@ import us from '../markets/us/index.js'
 
 const norm = (s) => String(s || '').toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9äöü/' -]/g, ' ').replace(/\s+/g, ' ').trim()
 
+const PCT_FIELDS = new Set(['downPct', 'ratePct'])
+
+/** A term's learn-more link for a market: one link, or one per market. */
+export function linkFor(entry, market) {
+  const l = entry && entry.link
+  if (!l) return null
+  return l.url ? l : l[market] || null
+}
+
 /** Terms that apply to a market ('ch' | 'us'). */
 export function termsFor(market) {
   return Object.entries(glossary)
@@ -54,12 +63,19 @@ export function explainTerm(idOrText, market, values = {}) {
   if (!e) return null
   const key = e.value_key && e.value_key[market]
   const raw = key != null ? values[key] : undefined
+  const n = Number(String(raw ?? '').replace(/[^0-9.]/g, ''))
+  // Show the user's figure the way the screen does: money or a percentage.
+  const shown = raw === undefined || raw === '' || !isFinite(n)
+    ? raw
+    : PCT_FIELDS.has(key)
+      ? `${n}%`
+      : formatMoney(n, market === 'us' ? us : ch)
   return {
     id: e.id,
     term: e.term,
     definition: e.definition,
-    link: e.link || null,
-    yourValue: raw !== undefined && raw !== '' ? { field: key, value: raw } : null,
+    link: linkFor(e, market),
+    yourValue: raw !== undefined && raw !== '' ? { field: key, value: shown } : null,
   }
 }
 
@@ -69,7 +85,6 @@ export function explainTerm(idOrText, market, values = {}) {
 // first; the figures come straight from the engine results passed in.
 
 
-const pctOf = (f) => `${Math.round(f * 100)}%`
 
 /** US Phase 1: the three lender tests, lowest wins. */
 export function usPhase1Course(r) {
@@ -116,6 +131,6 @@ export function compareCourse(market) {
       '“Rent vs Buy” compares money you don’t get back. The other scenarios compare what you’d own: invested savings plus home equity.',
       'Returns, appreciation and rent increases are your guesses about the future. Change them below and watch the lines move; nothing here is a forecast.',
     ],
-    links: courses.rent_vs_buy || [],
+    links: courses[market === 'us' ? 'rent_vs_buy_us' : 'rent_vs_buy_ch'] || [],
   }
 }

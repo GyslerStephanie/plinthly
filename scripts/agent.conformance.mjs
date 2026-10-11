@@ -282,7 +282,7 @@ check('US mock: plain reply is US-only', /\$/.test(plain.reply) && !/CHF|Pillar|
 const ex = runAdvisorTool('explain_term', { term: 'What is liquid cash?' }, { values: US_VALUES, market: 'us' })
 check('explain: finds the term from a question', ex.ok && ex.content.id === 'liquid_cash')
 check('explain: definition comes from the glossary verbatim', ex.content.definition.startsWith('Money you can use right away'))
-check('explain: carries the user\'s own figure', ex.content.yourValue && ex.content.yourValue.value === '80,000')
+check('explain: carries the user\'s own figure', ex.content.yourValue && ex.content.yourValue.value === '$80,000')
 check('explain: US-only term not offered in CH', runAdvisorTool('explain_term', { term: 'PMI' }, { values: BASE, market: 'ch' }).ok === false)
 check('explain: CH-only term works in CH', runAdvisorTool('explain_term', { term: 'Eigenmietwert' }, { values: BASE, market: 'ch' }).ok === true)
 check('explain: unknown term → rejection listing what is available', (() => { const r = runAdvisorTool('explain_term', { term: 'quantum flux' }, { market: 'us' }); return !r.ok && Array.isArray(r.content.available) && r.content.available.length > 10 })())

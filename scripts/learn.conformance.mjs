@@ -4,7 +4,7 @@
  */
 import glossary from '../src/data/glossary.json' with { type: 'json' }
 import courses from '../src/data/courses.json' with { type: 'json' }
-import { termsFor, findTerm, explainTerm, usPhase1Course, chPhase1Course, compareCourse } from '../src/lib/learn.js'
+import { termsFor, findTerm, explainTerm, usPhase1Course, chPhase1Course, compareCourse, linkFor } from '../src/lib/learn.js'
 import { calculateAffordability as usCalc } from '../src/markets/us/affordability.js'
 import { calculateAffordability as chCalc } from '../src/lib/affordability.js'
 
@@ -19,12 +19,17 @@ function check(name, ok) {
 for (const [id, e] of Object.entries(glossary)) {
   check(`${id}: term + definition`, !!e.term && e.definition && e.definition.length > 40)
   check(`${id}: markets tagged`, Array.isArray(e.markets) && e.markets.every((m) => m === 'ch' || m === 'us'))
-  if (e.link) check(`${id}: link is https with a label`, /^https:\/\//.test(e.link.url) && !!e.link.label)
+  for (const m of e.markets) {
+    const l = linkFor(e, m)
+    if (l) check(`${id}: ${m} link is https with a label`, /^https:\/\//.test(l.url) && !!l.label)
+  }
   if (e.markets.includes('us')) check(`${id}: US-facing text has no long dashes`, !/—/.test(e.definition))
   // Every term is found by its own name in each of its markets.
   for (const m of e.markets) check(`${id}: findable by name in ${m}`, findTerm(`what is ${e.term}?`, m) === id)
 }
 check('US has at least 25 terms', termsFor('us').length >= 25)
+check('every US term has a learn-more link', termsFor('us').every((e) => linkFor(e, 'us')))
+check('shared terms link to the right country', linkFor(glossary.liquid_cash, 'us').url.includes('consumerfinance.gov') && linkFor(glossary.liquid_cash, 'ch').url.includes('ch.ch'))
 check('CH has at least 20 terms', termsFor('ch').length >= 20)
 
 // ── Matching ────────────────────────────────────────────────────────────────
@@ -34,7 +39,8 @@ check('market filter: PMI not in CH', findTerm('what is PMI', 'ch') === null)
 check('market filter: Eigenmietwert not in US', findTerm('what is the Eigenmietwert', 'us') === null)
 check('no match → null', findTerm('what is a llama', 'us') === null)
 const ex = explainTerm('liquid cash', 'us', { savings: '80,000' })
-check('explain: your own figure attached', ex.yourValue && ex.yourValue.value === '80,000')
+check('explain: your own figure attached, formatted', ex.yourValue && ex.yourValue.value === '$80,000')
+check('explain: percentage fields shown as %', explainTerm('down payment', 'us', { downPct: '10' }).yourValue.value === '10%')
 check('explain: by id', explainTerm('pmi', 'us').term.startsWith('Private mortgage'))
 
 // ── Crash courses ───────────────────────────────────────────────────────────
