@@ -50,7 +50,8 @@ know which is which:
 | Surface | Block | What it powers | Example consumer |
 |---|---|---|---|
 | **`:root { … }`** | lines 9–72 | Plain CSS custom properties. Used by hand-written CSS (the `.ds-*` classes) and inline `style={{…}}` in components. | `.ds-meter-fill { background: var(--moss-500) }` |
-| **`@theme { … }`** | lines 79–154 | Tailwind v4's token namespace. Tailwind **generates utility classes** from these. | `class="bg-teal-700 text-body"` |
+| **`@theme { … }`** | lines 82–104 | Tailwind v4's token namespace for fonts, type scale and shadows. Tailwind **generates utility classes** from these. | `class="text-lg shadow-sm"` |
+| **`@theme inline reference { … }`** | lines 113–169 | Colour utilities only. `inline` makes each class use the `var()` directly; `reference` stops Tailwind re-emitting the token into `:root`. | `class="bg-teal-700 text-on-primary bg-card"` |
 
 So a colour can reach the screen two ways: as `var(--…)` in custom CSS, or as a
 Tailwind class generated from `@theme`. There is **no `tailwind.config.js`** —
@@ -60,8 +61,13 @@ places; keep them consistent.
 > **Single source of truth (done):** both surfaces now hold **only `var(--…)`
 > references** for colour — every hex lives once, in the `:root` primitive ramp
 > (lines 10–32). `--color-primary` (`:root`) and `--color-positive` / the
-> `teal→moss` remap (`@theme`) both point at `--moss-500`; change the primitive
-> and both surfaces follow. The one remaining duplication is the **shadow scale**
+> `teal→moss` remap (`@theme inline reference`) both resolve to `--moss-500`;
+> change the primitive and both surfaces follow. Semantic utilities point at the
+> **`:root` roles**, not primitives (`text-ink` → `var(--text-strong)`,
+> `text-error` → `var(--color-danger)`), and because the colour block is
+> `reference`, `--color-accent` / `--color-info` / `--color-warning` /
+> `--color-on-primary` are defined **once**, in `:root` — the build no longer
+> emits a second copy. The one remaining duplication is the **shadow scale**
 > (identical in both blocks) — left intentionally, because Tailwind needs it in
 > `@theme` to generate `shadow-*` utilities while `hero.css` reads it via
 > `var(--shadow-*)`. See §8.
@@ -119,14 +125,20 @@ From `:root` — each role now **aliases a primitive** (no hex here):
 --border-default:var(--line);     --border-focus:var(--moss-400);         --ring:0 0 0 3px rgba(147,173,72,.45);
 ```
 
-And the Tailwind-facing equivalents in `@theme` alias the same primitives (these
-generate `text-ink`, `bg-surface`, `text-positive`, the `teal→moss` remap, etc.):
+And the Tailwind-facing utilities in `@theme inline reference` point at those
+semantic roles (these generate `text-ink`, `bg-surface`, `bg-card`,
+`text-on-primary`, `text-positive`, …); the `teal→moss` brand remap points at
+primitives:
 
 ```css
---color-ink:var(--ink-900);  --color-body:var(--ink-700);  --color-muted:var(--ink-500);
---color-positive:var(--moss-500);  --color-warning:var(--sand-400);  --color-error:var(--coral-500);  --color-accent:var(--coral-400);
+--color-ink:var(--text-strong);  --color-surface:var(--surface-sunken);  --color-card:var(--surface-card);
+--color-on-primary:var(--color-on-primary);  --color-on-dark:var(--text-on-dark);
+--color-positive:var(--color-success);  --color-error:var(--color-danger);  --color-accent:var(--color-accent);
 --color-teal-500:var(--moss-500);  /* the brand remap is aliases too */
 ```
+
+Use `bg-card` (not `bg-white`) for card/panel surfaces and `text-on-primary`
+(not `text-white`) on moss buttons; `text-on-dark` on `bg-ink`.
 
 ### The one thing to understand about this layer
 
@@ -226,7 +238,7 @@ Honest summary for whoever extends this:
 |---|---|---|
 | Primitives | ✅ Complete, well-named ramps | single source of truth for every hex |
 | Semantic tokens | ✅ **Alias primitives** | `--color-primary: var(--moss-500)`; done, verified pixel-identical |
-| Two surfaces (`:root` + `@theme`) | ✅ **Colour de-duplicated** | both surfaces reference primitives; no colour hex is repeated |
+| Two surfaces (`:root` + `@theme`) | ✅ **Colour de-duplicated** | colour utilities are `@theme inline reference` → each `--color-*` is defined once, in `:root`; no hex or name repeated |
 | Shadow scale | ⚠️ Still duplicated | identical in `:root` + `@theme`; left deliberately (Tailwind needs it in `@theme`, `hero.css` reads it from `:root`) |
 | Brand | ✅ Real (Tailwind remap), now aliased | `teal→moss` etc. point at primitives; could optionally be renamed to semantic tokens |
 | Theme | ❌ None yet | now **nearly free** — semantics are aliased, so a `[data-theme=dark]` block that re-points them is all it takes (§7) |
@@ -301,11 +313,12 @@ the Figma plugin API.
 ## 10. How to extend (practical)
 
 **Add a colour:** add the full ramp to `:root` primitives → if it needs a
-utility class, mirror it into `@theme` → reference it from a semantic token, not
+utility class, add it to `@theme inline reference` → reference it from a semantic token, not
 directly from a component.
 
-**Add a semantic role:** define it in `:root` (and `@theme` if it needs a
-Tailwind class), pointing at a primitive. Name it by *meaning*
+**Add a semantic role:** define it in `:root`, pointing at a primitive; if it
+needs a Tailwind class, add `--color-<role>:var(--<role>)` to `@theme inline
+reference` (same name is fine — `reference` means it isn't re-emitted). Name it by *meaning*
 (`--color-highlight`), never by appearance (`--color-yellow`).
 
 **Add a component token:** only when a value is reused across several instances

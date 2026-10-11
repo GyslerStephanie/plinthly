@@ -95,19 +95,36 @@
   --text-4xl:56px;  --text-4xl--line-height:1.05;
   --text-5xl:64px;  --text-5xl--line-height:1;
 
-  /* Semantic palette — Tailwind utility colours; alias the :root primitives.
-     No hex here: every value points back to one primitive, same as the :root
-     semantic layer, so the two surfaces share a single source of truth. */
-  --color-ink:var(--ink-900);
-  --color-body:var(--ink-700);
-  --color-muted:var(--ink-500);
-  --color-line:var(--line);
-  --color-surface:var(--paper-300);
-  --color-positive:var(--moss-500);      --color-positive-light:var(--moss-50);
-  --color-info:var(--sky-500);           --color-info-light:var(--sky-50);
-  --color-warning:var(--sand-400);       --color-warning-light:var(--sand-50);
-  --color-error:var(--coral-500);        --color-error-light:var(--coral-50);
-  --color-accent:var(--coral-400);       --color-accent-light:var(--coral-50);
+  /* Warm-tinted shadow scale (re-skins shadow-sm / shadow-lg …) */
+  --shadow-xs:0 1px 2px rgba(34,44,17,.08);
+  --shadow-sm:0 1px 2px rgba(34,44,17,.07), 0 2px 6px rgba(34,44,17,.06);
+  --shadow-md:0 2px 4px rgba(34,44,17,.06), 0 8px 20px rgba(34,44,17,.09);
+  --shadow-lg:0 4px 8px rgba(34,44,17,.07), 0 18px 40px rgba(34,44,17,.12);
+  --shadow-xl:0 8px 16px rgba(34,44,17,.09), 0 32px 64px rgba(34,44,17,.16);
+}
+
+/* Colour utilities. `inline` makes each utility use the var() reference
+   directly (e.g. .text-info{color:var(--color-info)}) instead of re-emitting
+   the token into :root — so these never shadow or duplicate the :root layer.
+   Semantic utilities point at the :root semantic roles, not at primitives, so
+   a role change in :root reaches the utilities too. Where a name matches its
+   :root role (accent, info, warning, on-primary) the entry only registers the
+   utility; :root stays the single definition. */
+@theme inline reference {
+  /* Semantic roles */
+  --color-ink:var(--text-strong);
+  --color-body:var(--text-body);
+  --color-muted:var(--text-muted);
+  --color-line:var(--border-default);
+  --color-surface:var(--surface-sunken);
+  --color-card:var(--surface-card);
+  --color-on-primary:var(--color-on-primary);
+  --color-on-dark:var(--text-on-dark);
+  --color-positive:var(--color-success); --color-positive-light:var(--color-success-soft);
+  --color-info:var(--color-info);        --color-info-light:var(--color-info-soft);
+  --color-warning:var(--color-warning);  --color-warning-light:var(--color-warning-soft);
+  --color-error:var(--color-danger);     --color-error-light:var(--color-danger-soft);
+  --color-accent:var(--color-accent);    --color-accent-light:var(--color-accent-soft);
 
   /* Neutral scale -> warm stone/ink */
   --color-slate-50:var(--paper-100);  --color-slate-100:var(--paper-300); --color-slate-200:var(--line);
@@ -149,13 +166,6 @@
   --color-moss-600:var(--moss-600); --color-moss-700:var(--moss-700); --color-moss-800:var(--moss-800);
   --color-moss-900:var(--moss-900);
   --color-sand-400:var(--sand-400); --color-sky-500:var(--sky-500); --color-stone-500:var(--stone-500);
-
-  /* Warm-tinted shadow scale (re-skins shadow-sm / shadow-lg …) */
-  --shadow-xs:0 1px 2px rgba(34,44,17,.08);
-  --shadow-sm:0 1px 2px rgba(34,44,17,.07), 0 2px 6px rgba(34,44,17,.06);
-  --shadow-md:0 2px 4px rgba(34,44,17,.06), 0 8px 20px rgba(34,44,17,.09);
-  --shadow-lg:0 4px 8px rgba(34,44,17,.07), 0 18px 40px rgba(34,44,17,.12);
-  --shadow-xl:0 8px 16px rgba(34,44,17,.09), 0 32px 64px rgba(34,44,17,.16);
 }
 
 html {
