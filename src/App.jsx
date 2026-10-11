@@ -19,6 +19,10 @@ import CountrySwitcher from './components/CountrySwitcher'
 import UsPhase1, { US_DEFAULT_VALUES, US_EXAMPLE_VALUES, usResult } from './components/us/UsPhase1'
 import UsComingSoon from './components/us/UsComingSoon'
 import UsDreamPhase from './components/us/UsDreamPhase'
+import { buildUsAdvisorContext } from './markets/us/advisor'
+import { dreamPlan } from './markets/us/dream'
+import { usInput } from './components/us/UsPhase1'
+import { groupDigits } from './lib/format'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
@@ -639,6 +643,30 @@ export default function App() {
       {/* AI advisor — available once a result exists. Hidden while Compare is
           open: that overlay mounts its own instance with the Compare toolset,
           and two FABs would stack (both announced by a screen reader). */}
+      {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
+      {isUs && usRes && (
+        <AdvisorFab
+          context={buildUsAdvisorContext(
+            usRes,
+            lang,
+            phase === 2 && dreamPrice ? dreamPlan(usInput(usValues), dreamPrice) : null,
+          )}
+          values={usValues}
+          onApplyScenario={(overrides) => {
+            // The advisor only previews; this is the one path that writes a
+            // what-if back into the user's real US inputs.
+            const MONEY = ['grossIncome', 'savings', 'monthlyDebts', 'hoaMonthly']
+            setUsValues((v) => {
+              const next = { ...v }
+              for (const [key, value] of Object.entries(overrides)) {
+                next[key] = MONEY.includes(key) ? groupDigits(value) : String(value)
+              }
+              return next
+            })
+          }}
+        />
+      )}
+
       {previewResult && !showCompare && !isUs && (
         <AdvisorFab
           context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}

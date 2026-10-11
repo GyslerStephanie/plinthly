@@ -13,6 +13,10 @@
 import { runAdvisorTool, sanitiseScenarioInput, sanitiseCompareInput, ADVISOR_TOOLS, toolsFor } from '../src/lib/advisorTools.js'
 import { calculateAffordability } from '../src/lib/affordability.js'
 import { summarize, MAX_YEARS } from '../src/lib/compare/model.js'
+import { calculateAffordability as usCalc } from '../src/markets/us/affordability.js'
+import { dreamPlan } from '../src/markets/us/dream.js'
+import { buildUsAdvisorContext, usPromptRules, US_ADVISOR_TOOLS } from '../src/markets/us/advisor.js'
+import advisorHandler from '../api/advisor.js'
 
 let passed = 0
 let failed = 0
@@ -196,6 +200,84 @@ check('phase 1 chip is targeted at the phase 1 surface', run({ savings: 200000 }
 check('compare tool called with no compare context still runs on defaults', runAdvisorTool('run_compare_scenario', {}, {}).ok === true)
 check('phase 1 tool ignores compare context', runAdvisorTool('recompute_affordability', { savings: 200000 }, { values: BASE, compare: CMP }).content.scenario.maxPrice === calculateAffordability({ ...BASE, savings: 200000, householdSize: 2 }).maxPrice)
 check('a bare values object still works (pre-Compare call signature)', runAdvisorTool('recompute_affordability', { savings: 200000 }, BASE).ok === true)
+
+/* --- United States -------------------------------------------------------- */
+// Same premise for the US tools: untrusted input is whitelisted and coerced, and
+// whatever reaches the engine produces exactly what the engine itself produces.
+
+const US_VALUES = { grossIncome: '120,000', savings: '80,000', monthlyDebts: '600', downPct: '10', region: 'TX', ratePct: '7.4', hoaMonthly: '' }
+const US_ENGINE = { grossIncome: 120000, savings: 80000, monthlyDebts: 600, downPct: 10, state: 'TX', rate: 0.074, hoaMonthly: 0 }
+const usRun = (name, input) => runAdvisorTool(name, input, { values: US_VALUES })
+
+check('US: toolsFor(us) offers the two US tools', toolsFor('phase1', 'us').map((t) => t.name).join() === 'recompute_us_affordability,check_home_price')
+check('US: Swiss surfaces unchanged', toolsFor('phase1').map((t) => t.name).join() === 'recompute_affordability' && toolsFor('compare')[0].name === 'run_compare_scenario')
+check('US: every US tool has a schema', US_ADVISOR_TOOLS.every((t) => t.input_schema && t.input_schema.type === 'object'))
+
+const usDebt = usRun('recompute_us_affordability', { monthlyDebts: 300 })
+check('US recompute: ok', usDebt.ok === true)
+check('US recompute: equals the engine exactly', usDebt.content.scenario.maxPrice === usCalc({ ...US_ENGINE, monthlyDebts: 300 }).maxPrice)
+check('US recompute: current equals the engine on the form values', usDebt.content.current.maxPrice === usCalc(US_ENGINE).maxPrice)
+check('US recompute: delta is scenario − current', usDebt.content.delta.maxPrice === usDebt.content.scenario.maxPrice - usDebt.content.current.maxPrice)
+check('US recompute: preview maps back to form keys', usDebt.scenario.overrides.monthlyDebts === 300 && usDebt.scenario.headline.startsWith('$'))
+check('US recompute: currency USD', usDebt.content.currency === 'USD')
+const usState = usRun('recompute_us_affordability', { state: 'ca' })
+check('US recompute: state code normalised + mapped to region', usState.ok && usState.scenario.overrides.region === 'CA')
+check('US recompute: state change matches engine', usState.content.scenario.maxPrice === usCalc({ ...US_ENGINE, state: 'CA' }).maxPrice)
+check('US recompute: unknown state rejected', usRun('recompute_us_affordability', { state: 'ZZ' }).ok === false)
+check('US recompute: Swiss canton is not a US field', usRun('recompute_us_affordability', { canton: 'ZH' }).ok === false)
+check('US recompute: pillar fields are not US fields', usRun('recompute_us_affordability', { pillar3a: 5000 }).ok === false)
+const usDown = usRun('recompute_us_affordability', { downPct: 1 })
+check('US recompute: down payment clamped to 3%', usDown.ok && usDown.content.changed.downPct === 3)
+const usRate = usRun('recompute_us_affordability', { ratePct: '6.5%' })
+check('US recompute: "6.5%" string coerced', usRate.ok && usRate.content.scenario.maxPrice === usCalc({ ...US_ENGINE, rate: 0.065 }).maxPrice)
+check('US recompute: negative rejected', usRun('recompute_us_affordability', { savings: -5 }).ok === false)
+check('US recompute: absurd income ignored', usRun('recompute_us_affordability', { grossIncome: 9e12 }).ok === false)
+check('US recompute: no change → rejection', usRun('recompute_us_affordability', { label: 'x' }).ok === false)
+check('US recompute: non-object rejected', usRun('recompute_us_affordability', 'savings=1').ok === false)
+
+const usPrice = usRun('check_home_price', { price: 400000 })
+const usPlan = dreamPlan(US_ENGINE, 400000)
+check('US price check: ok', usPrice.ok === true)
+check('US price check: verdict equals dreamPlan', usPrice.content.reachable === usPlan.reachable)
+check('US price check: monthly equals engine', usPrice.content.monthlyHousing === Math.round(usPlan.monthly.total))
+check('US price check: levers equal engine', usPrice.content.levers.earnMore === usPlan.levers.earnMore && usPrice.content.levers.aimFor === usPlan.levers.aimFor)
+check('US price check: price required', usRun('check_home_price', { savings: 1 }).ok === false)
+check('US price check: what-if override applied', usRun('check_home_price', { price: 400000, grossIncome: 160000 }).content.reachable === dreamPlan({ ...US_ENGINE, grossIncome: 160000 }, 400000).reachable)
+
+const usCtx = buildUsAdvisorContext(usCalc(US_ENGINE), 'en', usPlan)
+check('US context: market tag', usCtx.market === 'us')
+check('US context: figures from the engine', usCtx.maxPrice === usCalc(US_ENGINE).maxPrice && usCtx.lenderStretch.at50 === usCalc(US_ENGINE).stretch.maxPrice)
+check('US context: no identifying fields', !Object.keys(usCtx).some((k) => /name|email|phone|address/i.test(k)))
+const usPrompt = usPromptRules().join(' ')
+check('US prompt: built from data (28/36/45/50, 3%)', /28%/.test(usPrompt) && /36%/.test(usPrompt) && /45%/.test(usPrompt) && /50%/.test(usPrompt) && /3% for first-time/.test(usPrompt))
+check('US prompt: US referrals, not Swiss', /HUD-approved/.test(usPrompt) && !/VZ|hypotheke|cantonal bank/.test(usPrompt))
+
+// Server, no API key: the US preview mock must call a US tool, then narrate in USD.
+async function callHandler(body) {
+  let out
+  const res = { status() { return res }, json(p) { out = p; return res } }
+  await advisorHandler({ method: 'POST', headers: {}, body }, res)
+  return out
+}
+const savedKey = process.env.ANTHROPIC_API_KEY
+delete process.env.ANTHROPIC_API_KEY
+const leg1 = await callHandler({ context: usCtx, messages: [{ role: 'user', content: 'Can I afford $450,000?' }] })
+check('US mock: price question → check_home_price', leg1.stop === 'tool_use' && leg1.toolUse[0].name === 'check_home_price' && leg1.toolUse[0].input.price === 450000)
+const outcome = runAdvisorTool(leg1.toolUse[0].name, leg1.toolUse[0].input, { values: US_VALUES })
+const leg2 = await callHandler({
+  context: usCtx,
+  messages: [
+    { role: 'user', content: 'Can I afford $450,000?' },
+    { role: 'assistant', content: leg1.assistant },
+    { role: 'user', content: [{ type: 'tool_result', tool_use_id: leg1.toolUse[0].id, content: JSON.stringify(outcome.content) }] },
+  ],
+})
+check('US mock: narrates in USD', /\$450,000/.test(leg2.reply) && !/CHF/.test(leg2.reply))
+const debtLeg = await callHandler({ context: usCtx, messages: [{ role: 'user', content: 'What if my monthly debts were $300?' }] })
+check('US mock: debt question → recompute monthlyDebts', debtLeg.toolUse && debtLeg.toolUse[0].name === 'recompute_us_affordability' && debtLeg.toolUse[0].input.monthlyDebts === 300)
+const plain = await callHandler({ context: usCtx, messages: [{ role: 'user', content: 'hi' }] })
+check('US mock: plain reply is US-only', /\$/.test(plain.reply) && !/CHF|Pillar|canton/i.test(plain.reply))
+if (savedKey !== undefined) process.env.ANTHROPIC_API_KEY = savedKey
 
 /* --- report --------------------------------------------------------------- */
 

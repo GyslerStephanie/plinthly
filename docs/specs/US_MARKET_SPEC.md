@@ -120,7 +120,7 @@ Swiss file.
 5. **US Phase 1** — form + result on the US engine. ✅ Done.
 6. **US Phase 2** — Dream price + US payoff schedule. ✅ Done: `src/markets/us/dream.js` (verdict per test, levers: save / earn / cut debt / lower down / aim lower, savings timeline, payoff with PMI end + extra payments), `components/us/UsDreamPhase.jsx`.
 7. **Gating** — "coming soon" for Phases 3–5, Compare, bank inquiry in US. ✅ Done (Compare, advisor and summary bar hidden in US).
-8. **Advisor** — market-aware prompt.
+8. **Advisor** — market-aware prompt. ✅ Done: `src/markets/us/advisor.js` (US context, tools `recompute_us_affordability` + `check_home_price`, prompt from us-data), US preview mock in `src/lib/advisorMock.js` (shared by server and browser offline fallback).
 9. QA (`plinthly-qa`), FEATURES.md, README.
 
 ## Done when…

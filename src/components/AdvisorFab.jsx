@@ -3,6 +3,8 @@ import { useI18n } from '../i18n/I18nContext'
 import { track } from '../lib/track'
 import { runAdvisorTool } from '../lib/advisorTools'
 import { money } from '../lib/format'
+import { ut } from '../markets/us/copy'
+import { mockAgentTurn } from '../lib/advisorMock'
 
 /**
  * Floating "Ask the advisor" button + chat drawer (Push 2).
@@ -61,8 +63,14 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
       }
     return { ...content, result: tag(content.result), onScreen: tag(content.onScreen) }
   }
+  const isUs = context.market === 'us'
   const clientMock = (mode) => {
     const d = context.dream
+    if (isUs) {
+      return d
+        ? ut('advisor.mockDream', { max: money(context.maxPrice), price: money(d.price) })
+        : ut('advisor.mock', { max: money(context.maxPrice) })
+    }
     if (mode === 'plan') {
       return d
         ? `(Preview) Illustrative roadmap to ${money(d.price)}: close the ~${money(d.equityGap)} equity gap by saving steadily, max your Pillar 3a (counts as hard equity), and revisit the affordability ratio. Connect an API key for a tailored plan.`
@@ -73,20 +81,30 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
       : `(Preview) Your current max is ${money(context.maxPrice)}. Connect an API key for live answers.`
   }
 
-  /** POST one leg of the conversation. Throws to trigger the offline fallback. */
+  /**
+   * POST one leg of the conversation. When no server answers (local `vite`
+   * without the API bridge, or the claude.ai prototype, which has no /api), run
+   * the same preview mock the server uses, in the browser — so the tool loop
+   * still works on the real engine. Nothing leaves the device in that case.
+   */
   async function post(history, mode) {
-    const res = await fetch('/api/advisor', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ context, messages: history, mode, surface }),
-    })
-    const ct = res.headers.get('content-type') || ''
-    if (!res.ok || !ct.includes('application/json')) throw new Error('no-api')
-    return res.json()
+    try {
+      const res = await fetch('/api/advisor', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ context, messages: history, mode, surface }),
+      })
+      const ct = res.headers.get('content-type') || ''
+      if (!res.ok || !ct.includes('application/json')) throw new Error('no-api')
+      return await res.json()
+    } catch {
+      return { mock: true, ...mockAgentTurn(context, history, mode, surface) }
+    }
   }
 
   async function send(text, mode) {
-    const userMsg = mode === 'plan' ? { role: 'user', content: t('advisor.planButton') } : { role: 'user', content: text }
+    const planLabel = isUs ? ut('advisor.planButton') : t('advisor.planButton')
+    const userMsg = mode === 'plan' ? { role: 'user', content: planLabel } : { role: 'user', content: text }
     const next = [...messages, userMsg]
     setMessages(next)
     setInput('')
@@ -137,8 +155,9 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
 
   // Starters are surface-specific: on Compare, the useful openers are about the
   // scenarios on screen, not about the Phase 1 equity gap.
-  const starters =
-    surface === 'compare'
+  const starters = isUs
+    ? ut('advisor.starters')
+    : surface === 'compare'
       ? [t('advisor.cStarter1'), t('advisor.cStarter2'), t('advisor.cStarter3')]
       : [t('advisor.starter1'), t('advisor.starter2'), t('advisor.starter3')]
 
@@ -186,7 +205,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
                     ))}
                     {context.dream && (
                       <button type="button" onClick={() => send(null, 'plan')} className="block w-full rounded-lg bg-teal-600 px-3 py-2 text-left text-sm font-semibold text-on-primary transition hover:bg-teal-700">
-                        {t('advisor.planButton')}
+                        {isUs ? ut('advisor.planButton') : t('advisor.planButton')}
                       </button>
                     )}
                   </div>

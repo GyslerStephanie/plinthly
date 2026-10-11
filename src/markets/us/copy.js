@@ -189,6 +189,12 @@ const COPY = {
     tableEquity: 'Your equity',
     back: '← Back to Can I buy?',
   },
+  advisor: {
+    starters: ['What if my monthly debts were $300?', 'Can I afford $450,000?', 'Why is my limit what it is?'],
+    planButton: 'Make my roadmap to this price',
+    mock: 'Preview: your comfortable maximum is {max}. Connect an API key for live answers.',
+    mockDream: 'Preview: your maximum today is {max} against a {price} goal. Connect an API key for a tailored roadmap.',
+  },
   soon: {
     title: 'Coming soon for the US',
     body: 'This step is built for Switzerland today. The US version is on the way.',

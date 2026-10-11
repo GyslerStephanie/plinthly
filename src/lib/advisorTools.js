@@ -17,6 +17,7 @@
 import { calculateAffordability } from './affordability.js'
 import { summarize, SCENARIOS, MAX_YEARS, COMPARE_DEFAULTS } from './compare/model.js'
 import data from '../data/swiss-cantonal-data.json'
+import { US_ADVISOR_TOOLS, isUsToolName, runUsAdvisorTool } from '../markets/us/advisor.js'
 
 const CANTON_CODES = Object.keys(data.cantons)
 
@@ -129,7 +130,8 @@ export const ADVISOR_TOOLS = [RECOMPUTE_TOOL, COMPARE_TOOL]
  * cannot usefully call just invites a wrong call, so each screen offers only its
  * own: Phase 1 recomputes affordability, Compare runs scenarios.
  */
-export function toolsFor(surface) {
+export function toolsFor(surface, market = 'ch') {
+  if (market === 'us') return US_ADVISOR_TOOLS
   if (surface === 'compare') return [COMPARE_TOOL]
   return [RECOMPUTE_TOOL]
 }
@@ -340,6 +342,8 @@ function summarise(result) {
  *          the tool_result block, so it must stay small and quotable.
  */
 export function runAdvisorTool(name, rawInput, ctx) {
+  // US tools run on the US engine against the US form values.
+  if (isUsToolName(name)) return runUsAdvisorTool(name, rawInput, (ctx && ctx.values) || {})
   if (!isToolName(name)) {
     return { ok: false, content: { error: `Unknown tool "${name}". Available: ${ADVISOR_TOOLS.map((tool) => tool.name).join(', ')}.` } }
   }
