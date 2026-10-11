@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import glossary from '../data/glossary.json'
+import { useI18n } from '../i18n/I18nContext'
 
 /**
  * Inline glossary term. Renders a dotted-underlined trigger; on click it reveals
@@ -10,8 +11,15 @@ import glossary from '../data/glossary.json'
  *   - <GlossaryTerm id="tragbarkeit" />            ← label + definition from JSON
  *   - <GlossaryTerm term="GEAK class" def="..." /> ← explicit (used by InfoTerm)
  */
-export default function GlossaryTerm({ id, term, def, children }) {
+/** Open the advisor with a question pre-filled (AdvisorFab listens for this). */
+export function askAdvisor(question) {
+  window.dispatchEvent(new CustomEvent('plinthly:ask', { detail: { question } }))
+}
+
+export default function GlossaryTerm({ id, term, def, children, icon = false }) {
+  const { t } = useI18n()
   const entry = id ? glossary[id] : null
+  const link = entry?.link || null
   const label = term ?? entry?.term ?? id ?? ''
   const definition = children ?? def ?? entry?.definition ?? ''
 
@@ -52,6 +60,28 @@ export default function GlossaryTerm({ id, term, def, children }) {
     </span>
   )
 
+  // Learn-more link (vetted, from the glossary) + "Ask Plinthly AI".
+  const Extras = () =>
+    id ? (
+      <span className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-slate-100 pt-2 text-xs">
+        {link && (
+          <a href={link.url} target="_blank" rel="noreferrer" className="font-medium">
+            {t('learnMore')} →
+          </a>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            setOpen(false)
+            askAdvisor(`What does “${label}” mean for me?`)
+          }}
+          className="rounded-full bg-teal-50 px-2.5 py-1 font-semibold text-teal-800 transition hover:bg-teal-100"
+        >
+          {t('advisorTip')}
+        </button>
+      </span>
+    ) : null
+
   return (
     <span ref={wrapRef} className="relative inline-block">
       <button
@@ -59,9 +89,14 @@ export default function GlossaryTerm({ id, term, def, children }) {
         aria-expanded={open}
         aria-describedby={open ? tooltipId : undefined}
         onClick={() => setOpen((v) => !v)}
-        className="cursor-help rounded-sm border-b border-dotted border-teal-500 text-teal-800 hover:text-teal-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
+        aria-label={icon ? t('whatIs', { term: label }) : undefined}
+        className={
+          icon
+            ? 'ml-1 inline-flex h-4 w-4 translate-y-[2px] items-center justify-center rounded-full border border-teal-500 text-[10px] font-bold leading-none text-teal-700 hover:bg-teal-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400'
+            : 'cursor-help rounded-sm border-b border-dotted border-teal-500 text-teal-800 hover:text-teal-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400'
+        }
       >
-        {label}
+        {icon ? '?' : label}
       </button>
 
       {/*
@@ -81,6 +116,7 @@ export default function GlossaryTerm({ id, term, def, children }) {
             <span className="mt-1.5 block text-sm font-normal leading-relaxed text-slate-700">
               {definition}
             </span>
+            <Extras />
           </span>
 
           {/* Mobile: dimmed backdrop + bottom sheet */}
@@ -97,6 +133,7 @@ export default function GlossaryTerm({ id, term, def, children }) {
             <span className="mt-2 block text-sm font-normal leading-relaxed text-slate-700">
               {definition}
             </span>
+            <Extras />
           </span>
         </>
       )}

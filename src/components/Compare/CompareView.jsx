@@ -12,6 +12,9 @@ const MAX_YEARS = chModel.MAX_YEARS
 import { money, groupDigits, currencySymbol } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
 import { useDialogFocus } from '../../lib/useDialogFocus'
+import GlossaryTerm from '../GlossaryTerm'
+import HowItWorks from '../HowItWorks'
+import { compareCourse } from '../../lib/learn'
 
 // One colour per option, the SAME on every tab so nothing swaps meaning when you
 // switch scenarios. No red — neither line is inherently "bad" (renting isn't a
@@ -121,7 +124,18 @@ const numFrom = (v) => Number(String(v).replace(/[^0-9.]/g, '')) || 0
  * string while editing so decimals ("1.5") and a leading "−" type cleanly,
  * and re-syncs when the numeric value changes externally (e.g. a preset click).
  */
-function PctField({ label, sub, value, onChange }) {
+// Assumption fields that have a glossary entry get a "?" explainer.
+const TERM_FOR = {
+  cash: 'liquid_cash',
+  investReturnPct: 'investment_return',
+  appreciationPct: 'property_appreciation',
+  rentInflationPct: 'rent_inflation',
+  downPaymentPct: 'down_payment',
+  propertyTaxPct: 'property_tax',
+  insurancePct: 'homeowners_insurance',
+}
+
+function PctField({ label, sub, value, onChange, termId }) {
   const [txt, setTxt] = useState(String(value))
   useEffect(() => {
     setTxt((prev) => (parseFloat(prev) === value ? prev : String(value)))
@@ -130,6 +144,7 @@ function PctField({ label, sub, value, onChange }) {
     <label className="block text-xs text-muted">
       <span>
         {label}
+        {termId && <GlossaryTerm id={termId} icon term={label} />}
         {sub && <span className="ml-1 text-faint">· {sub}</span>}
       </span>
       <div className={`mt-1 ${FIELD}`}>
@@ -234,6 +249,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
   const cashField = (key, label) => (
     <label className="block text-xs text-muted">
       {label}
+      {TERM_FOR[key] && <GlossaryTerm id={TERM_FOR[key]} icon term={label} />}
       <div className={`mt-1 ${FIELD}`}>
         <span className="select-none pl-2.5 pr-1 text-xs text-faint">{currencySymbol()}</span>
         <input
@@ -246,7 +262,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
     </label>
   )
   const pct = (key, label, sub) => (
-    <PctField label={label} sub={sub} value={inputs[key]} onChange={(n) => setVal(key, n)} />
+    <PctField label={label} sub={sub} value={inputs[key]} onChange={(n) => setVal(key, n)} termId={TERM_FOR[key]} />
   )
 
   return (
@@ -346,6 +362,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
                 </button>
               ))}
             </div>
+            <GlossaryTerm id="opportunity_cost" icon term={t('compare.lensTrue')} />
             {trueCost && <p className="mt-1.5 text-xs text-faint">{t('compare.lensHint')}</p>}
           </div>
         )}
@@ -378,6 +395,10 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
             <span className="ml-auto whitespace-nowrap font-medium text-teal-700">{t('compare.bridgeGo')}</span>
           </button>
         )}
+
+        <div className="mt-4">
+          <HowItWorks course={compareCourse(isUs ? 'us' : 'ch')} />
+        </div>
 
         {/* Assumptions */}
         <details open className="mt-4 rounded-xl border border-line bg-white p-4">

@@ -306,7 +306,7 @@ export function usPromptRules() {
 }
 
 export function usToolsPrompt() {
-  return 'TOOLS: you have `recompute_us_affordability` (what-ifs on income, savings, monthly debts, down payment, state, rate, HOA) and `check_home_price` (test a specific price and get the levers that would close any gap). CALL THEM — do not estimate. Pass only the fields that change; the rest are inherited. Scenario figures may come ONLY from a tool result in this conversation.'
+  return 'TOOLS: you have `recompute_us_affordability` (what-ifs on income, savings, monthly debts, down payment, state, rate, HOA), `check_home_price` (test a specific price and get the levers that would close any gap) and `explain_term` (what a word means, from the vetted glossary, with a learn-more link). CALL THEM; do not estimate or define terms from memory. Pass only the fields that change; the rest are inherited. Scenario figures may come ONLY from a tool result in this conversation.'
 }
 
 export function usPlanTask() {

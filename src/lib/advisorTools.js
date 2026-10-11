@@ -18,6 +18,7 @@ import { calculateAffordability } from './affordability.js'
 import { summarize, SCENARIOS, MAX_YEARS, COMPARE_DEFAULTS } from './compare/model.js'
 import data from '../data/swiss-cantonal-data.json'
 import { US_ADVISOR_TOOLS, isUsToolName, runUsAdvisorTool } from '../markets/us/advisor.js'
+import { explainTerm, termsFor } from './learn.js'
 
 const CANTON_CODES = Object.keys(data.cantons)
 
@@ -123,7 +124,50 @@ export const COMPARE_TOOL = {
   },
 }
 
-export const ADVISOR_TOOLS = [RECOMPUTE_TOOL, COMPARE_TOOL]
+/* ==========================================================================
+ * Learn — explain a term from the vetted glossary (both markets, every screen)
+ * ========================================================================== */
+
+export const EXPLAIN_TOOL = {
+  name: 'explain_term',
+  description:
+    'Look up what a home-buying word or concept means (e.g. "liquid cash", "PMI", ' +
+    '"property appreciation", "Eigenmietwert") in Plinthly\'s vetted glossary. Returns ' +
+    "the plain-language definition, a trusted learn-more link if there is one, and the " +
+    "user's own figure when the term matches one of their inputs. Call it for any " +
+    '"what is / what does … mean" question, then explain in everyday words using the ' +
+    'returned definition. Never define a term from memory when this tool can.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      term: { type: 'string', description: 'The word or phrase to explain, as the user wrote it.' },
+    },
+    required: ['term'],
+  },
+}
+
+function runExplainTool(rawInput, ctx) {
+  const market = ctx && ctx.market === 'us' ? 'us' : 'ch'
+  const term = rawInput && typeof rawInput.term === 'string' ? rawInput.term.slice(0, 80) : ''
+  if (!term.trim()) return { ok: false, content: { error: 'A term is required.' } }
+  const hit = explainTerm(term, market, (ctx && ctx.values) || {})
+  if (!hit) {
+    return {
+      ok: false,
+      content: {
+        error: `"${term}" is not in the glossary.`,
+        available: termsFor(market).map((e) => e.term),
+        reminder: 'Say you can only explain glossary terms, and suggest the closest one if any.',
+      },
+    }
+  }
+  return {
+    ok: true,
+    content: { ...hit, reminder: 'Explain in plain words from this definition. Include the link if present. Do not add facts it does not contain.' },
+  }
+}
+
+export const ADVISOR_TOOLS = [RECOMPUTE_TOOL, COMPARE_TOOL, EXPLAIN_TOOL]
 
 /**
  * The tools that make sense on a given surface. Sending the model a tool it
@@ -131,9 +175,9 @@ export const ADVISOR_TOOLS = [RECOMPUTE_TOOL, COMPARE_TOOL]
  * own: Phase 1 recomputes affordability, Compare runs scenarios.
  */
 export function toolsFor(surface, market = 'ch') {
-  if (market === 'us') return US_ADVISOR_TOOLS
-  if (surface === 'compare') return [COMPARE_TOOL]
-  return [RECOMPUTE_TOOL]
+  if (market === 'us') return [...US_ADVISOR_TOOLS, EXPLAIN_TOOL]
+  if (surface === 'compare') return [COMPARE_TOOL, EXPLAIN_TOOL]
+  return [RECOMPUTE_TOOL, EXPLAIN_TOOL]
 }
 
 const isToolName = (name) => ADVISOR_TOOLS.some((tool) => tool.name === name)
@@ -342,6 +386,7 @@ function summarise(result) {
  *          the tool_result block, so it must stay small and quotable.
  */
 export function runAdvisorTool(name, rawInput, ctx) {
+  if (name === EXPLAIN_TOOL.name) return runExplainTool(rawInput, ctx)
   // US tools run on the US engine against the US form values.
   if (isUsToolName(name)) return runUsAdvisorTool(name, rawInput, (ctx && ctx.values) || {})
   if (!isToolName(name)) {

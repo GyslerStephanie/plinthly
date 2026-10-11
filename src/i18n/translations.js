@@ -3257,6 +3257,8 @@ for (const lng of Object.keys(phaseKeys)) {
 // the four locales stay side by side.
 const localeKeys = {
   en: {
+    learnMore: 'Learn more',
+    whatIs: 'What is {term}?',
     advisorTip: 'Ask Plinthly AI',
     locale: {
       button: 'Country and language: {country}, {language}. Change',
@@ -3273,6 +3275,8 @@ const localeKeys = {
     },
   },
   de: {
+    learnMore: 'Mehr erfahren',
+    whatIs: 'Was ist {term}?',
     advisorTip: 'Frag Plinthly AI',
     locale: {
       button: 'Land und Sprache: {country}, {language}. Ändern',
@@ -3289,6 +3293,8 @@ const localeKeys = {
     },
   },
   fr: {
+    learnMore: 'En savoir plus',
+    whatIs: 'Qu’est-ce que {term} ?',
     advisorTip: 'Demandez à Plinthly AI',
     locale: {
       button: 'Pays et langue : {country}, {language}. Modifier',
@@ -3305,6 +3311,8 @@ const localeKeys = {
     },
   },
   it: {
+    learnMore: 'Scopri di più',
+    whatIs: 'Che cos’è {term}?',
     advisorTip: 'Chiedi a Plinthly AI',
     locale: {
       button: 'Paese e lingua: {country}, {language}. Modifica',

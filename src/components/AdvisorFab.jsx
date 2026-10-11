@@ -51,6 +51,19 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
   const [scenario, setScenario] = useState(null) // {label, overrides, maxPrice} — preview only
   const [showTip, setShowTip] = useState(false)
 
+  // "Ask Plinthly AI" from a glossary tooltip: open the chat with the question
+  // filled in (the consent gate still applies; nothing is sent until the user does).
+  useEffect(() => {
+    if (tipKey === undefined) return undefined
+    const onAsk = (e) => {
+      setOpen(true)
+      setShowTip(false)
+      setInput(e.detail?.question || '')
+    }
+    window.addEventListener('plinthly:ask', onAsk)
+    return () => window.removeEventListener('plinthly:ask', onAsk)
+  }, [tipKey])
+
   // Re-show the tooltip on every page load and whenever `tipKey` changes (the
   // App passes the phase), for TIP_MS. Instances without a tipKey (Compare)
   // never show it.
@@ -139,7 +152,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
         const results = []
         for (const call of data.toolUse || []) {
           // The engine runs HERE, in the browser, on the user's own numbers.
-          const outcome = runAdvisorTool(call.name, call.input, { values: values || {}, compare })
+          const outcome = runAdvisorTool(call.name, call.input, { values: values || {}, compare, market: context.market === 'us' ? 'us' : 'ch' })
           track('advisor_tool_run', { tool: call.name, ok: outcome.ok })
           if (outcome.ok && outcome.scenario) setScenario(outcome.scenario)
           results.push({

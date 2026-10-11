@@ -21,6 +21,8 @@ import UsExplorePhase from './components/us/UsExplorePhase'
 import UsOptionsPhase from './components/us/UsOptionsPhase'
 import UsPlanPhase from './components/us/UsPlanPhase'
 import UsDreamPhase from './components/us/UsDreamPhase'
+import HowItWorks from './components/HowItWorks'
+import { chPhase1Course } from './lib/learn'
 import { buildUsAdvisorContext } from './markets/us/advisor'
 import { dreamPlan } from './markets/us/dream'
 import { usInput } from './components/us/UsPhase1'
@@ -541,12 +543,15 @@ export default function App() {
             {/* Sticky so the live result stays in view while scrolling inputs */}
             <div className="lg:sticky lg:top-6 lg:self-start">
               {previewResult ? (
-                <AffordabilityResult
-                  result={previewResult}
-                  renovation={renovation}
-                  onNavigate={goToPhase}
-                  onCompare={() => setShowCompare(true)}
-                />
+                <div className="space-y-5">
+                  <AffordabilityResult
+                    result={previewResult}
+                    renovation={renovation}
+                    onNavigate={goToPhase}
+                    onCompare={() => setShowCompare(true)}
+                  />
+                  <HowItWorks course={chPhase1Course(previewResult)} />
+                </div>
               ) : (
                 <EmptyResult
                   hasIncome={hasIncome(values)}

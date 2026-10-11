@@ -8,6 +8,7 @@
  * PURE: no network, no process.env — safe to bundle for the browser.
  */
 import { RULE_CONSTANTS as R } from './affordability.js'
+import { findTerm } from './learn.js'
 
 const chf = (n) => 'CHF ' + Math.round(Number(n) || 0).toLocaleString('de-CH')
 const pctOf = (fraction) => `${Math.round(fraction * 100)}%`
@@ -41,7 +42,38 @@ export function mockReply(ctx, messages, mode) {
  * tool_result, which this then narrates. So the plumbing, the guards and every
  * number in the demo are the production ones; only the choosing is faked.
  */
+const EXPLAIN_RE = /\b(what('?s| is| are| does)|mean(s|ing)?|explain|define|definition|stand for)\b/i
+
+/** Narrate an explain_term result (both markets). */
+function narrateExplain(p) {
+  const lines = [`(Preview mock, no API key set) ${p.term}: ${p.definition}`]
+  if (p.yourValue) lines.push(`For reference, you entered ${p.yourValue.value} for this.`)
+  if (p.link) lines.push(`Learn more: ${p.link.label} (${p.link.url})`)
+  return lines.join('\n\n')
+}
+
 export function mockAgentTurn(ctx, messages, mode, surface) {
+  const lastMsg = messages[messages.length - 1]
+  const market = ctx.market === 'us' ? 'us' : 'ch'
+  // Glossary questions work on every screen, in both markets.
+  const tr = Array.isArray(lastMsg?.content) && lastMsg.content.find((b) => b.type === 'tool_result')
+  if (tr) {
+    let p = null
+    try { p = JSON.parse(tr.content) } catch { p = null }
+    if (p && p.definition) return { reply: narrateExplain(p) }
+    if (p && p.available) return { reply: `(Preview mock) I can only explain terms from Plinthly's glossary, for example: ${p.available.slice(0, 6).join(', ')}.` }
+  } else if (typeof lastMsg?.content === 'string' && EXPLAIN_RE.test(lastMsg.content)) {
+    const id = findTerm(lastMsg.content, market)
+    if (id) {
+      const input = { term: lastMsg.content.slice(0, 80) }
+      return {
+        stop: 'tool_use',
+        reply: '',
+        assistant: [{ type: 'tool_use', id: 'mock_x1', name: 'explain_term', input }],
+        toolUse: [{ id: 'mock_x1', name: 'explain_term', input }],
+      }
+    }
+  }
   if (ctx.market === 'us') return mockUsTurn(ctx, messages, mode)
   const last = messages[messages.length - 1]
 

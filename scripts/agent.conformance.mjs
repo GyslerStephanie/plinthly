@@ -47,7 +47,7 @@ const run = (input, name = 'recompute_affordability') => runAdvisorTool(name, in
 
 check('unknown tool name is rejected', run({ savings: 1 }, 'delete_everything').ok === false)
 check('unknown tool names the available tools', /recompute_affordability/.test(run({}, 'nope').content.error))
-check('two tools are exposed (Phase 1 + Compare)', ADVISOR_TOOLS.length === 2)
+check('three Swiss-side tools are exposed (Phase 1, Compare, explain)', ADVISOR_TOOLS.length === 3)
 check('tool schema requires nothing (all fields optional)', ADVISOR_TOOLS[0].input_schema.required.length === 0)
 
 /* --- 2. Param whitelist --------------------------------------------------- */
@@ -127,9 +127,9 @@ check('label is length-capped', run({ savings: 300000, label: 'x'.repeat(500) })
 
 /* --- 10. Compare surface: toolset isolation ------------------------------- */
 
-check('Phase 1 is offered only the affordability tool', toolsFor('phase1').map((t) => t.name).join() === 'recompute_affordability')
-check('Compare is offered only the compare tool', toolsFor('compare').map((t) => t.name).join() === 'run_compare_scenario')
-check('an unknown surface falls back to Phase 1', toolsFor('nonsense').map((t) => t.name).join() === 'recompute_affordability')
+check('Phase 1 is offered affordability + explain', toolsFor('phase1').map((t) => t.name).join() === 'recompute_affordability,explain_term')
+check('Compare is offered compare + explain', toolsFor('compare').map((t) => t.name).join() === 'run_compare_scenario,explain_term')
+check('an unknown surface falls back to Phase 1', toolsFor('nonsense').map((t) => t.name).join() === 'recompute_affordability,explain_term')
 
 const CMP = { scenario: 'rent_vs_buy', year: 10, inputs: {} }
 const cmp = (input, ctx = CMP) => runAdvisorTool('run_compare_scenario', input, { compare: ctx })
@@ -209,8 +209,8 @@ const US_VALUES = { grossIncome: '120,000', savings: '80,000', monthlyDebts: '60
 const US_ENGINE = { grossIncome: 120000, savings: 80000, monthlyDebts: 600, downPct: 10, state: 'TX', rate: 0.074, hoaMonthly: 0 }
 const usRun = (name, input) => runAdvisorTool(name, input, { values: US_VALUES })
 
-check('US: toolsFor(us) offers the two US tools', toolsFor('phase1', 'us').map((t) => t.name).join() === 'recompute_us_affordability,check_home_price')
-check('US: Swiss surfaces unchanged', toolsFor('phase1').map((t) => t.name).join() === 'recompute_affordability' && toolsFor('compare')[0].name === 'run_compare_scenario')
+check('US: toolsFor(us) offers the two US tools + explain', toolsFor('phase1', 'us').map((t) => t.name).join() === 'recompute_us_affordability,check_home_price,explain_term')
+check('US: Swiss surfaces keep their own tool first', toolsFor('phase1')[0].name === 'recompute_affordability' && toolsFor('compare')[0].name === 'run_compare_scenario')
 check('US: every US tool has a schema', US_ADVISOR_TOOLS.every((t) => t.input_schema && t.input_schema.type === 'object'))
 
 const usDebt = usRun('recompute_us_affordability', { monthlyDebts: 300 })
@@ -277,6 +277,22 @@ const debtLeg = await callHandler({ context: usCtx, messages: [{ role: 'user', c
 check('US mock: debt question → recompute monthlyDebts', debtLeg.toolUse && debtLeg.toolUse[0].name === 'recompute_us_affordability' && debtLeg.toolUse[0].input.monthlyDebts === 300)
 const plain = await callHandler({ context: usCtx, messages: [{ role: 'user', content: 'hi' }] })
 check('US mock: plain reply is US-only', /\$/.test(plain.reply) && !/CHF|Pillar|canton/i.test(plain.reply))
+
+/* --- Learn: explain_term (both markets) ------------------------------------ */
+const ex = runAdvisorTool('explain_term', { term: 'What is liquid cash?' }, { values: US_VALUES, market: 'us' })
+check('explain: finds the term from a question', ex.ok && ex.content.id === 'liquid_cash')
+check('explain: definition comes from the glossary verbatim', ex.content.definition.startsWith('Money you can use right away'))
+check('explain: carries the user\'s own figure', ex.content.yourValue && ex.content.yourValue.value === '80,000')
+check('explain: US-only term not offered in CH', runAdvisorTool('explain_term', { term: 'PMI' }, { values: BASE, market: 'ch' }).ok === false)
+check('explain: CH-only term works in CH', runAdvisorTool('explain_term', { term: 'Eigenmietwert' }, { values: BASE, market: 'ch' }).ok === true)
+check('explain: unknown term → rejection listing what is available', (() => { const r = runAdvisorTool('explain_term', { term: 'quantum flux' }, { market: 'us' }); return !r.ok && Array.isArray(r.content.available) && r.content.available.length > 10 })())
+check('explain: empty input rejected', runAdvisorTool('explain_term', {}, { market: 'us' }).ok === false)
+const exLeg1 = await callHandler({ context: usCtx, messages: [{ role: 'user', content: 'What does property appreciation mean?' }] })
+check('explain mock: "what does … mean" → explain_term', exLeg1.stop === 'tool_use' && exLeg1.toolUse[0].name === 'explain_term')
+const exOut = runAdvisorTool('explain_term', exLeg1.toolUse[0].input, { values: US_VALUES, market: 'us' })
+const exLeg2 = await callHandler({ context: usCtx, messages: [{ role: 'user', content: 'What does property appreciation mean?' }, { role: 'assistant', content: exLeg1.assistant }, { role: 'user', content: [{ type: 'tool_result', tool_use_id: exLeg1.toolUse[0].id, content: JSON.stringify(exOut.content) }] }] })
+check('explain mock: narrates the glossary definition', exLeg2.reply.includes('Property appreciation') && exLeg2.reply.includes('How much a home’s value rises'))
+check('explain mock: works on the Swiss side too', (await callHandler({ context: { lang: 'en', maxPrice: 1 }, messages: [{ role: 'user', content: 'What is the Eigenmietwert?' }] })).toolUse[0].name === 'explain_term')
 if (savedKey !== undefined) process.env.ANTHROPIC_API_KEY = savedKey
 
 /* --- report --------------------------------------------------------------- */
