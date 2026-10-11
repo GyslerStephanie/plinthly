@@ -3258,7 +3258,7 @@ for (const lng of Object.keys(phaseKeys)) {
 const localeKeys = {
   en: {
     learnMore: 'Learn more',
-    whatIs: 'What is {term}?',
+    learnToast: { title: 'New to mortgages?', body: 'Not sure what all these calculations mean, or need to brush up on mortgage 101? Ask Plinthly AI your questions, or follow these guides to learn more.', dismiss: 'Dismiss' },
     advisorTip: 'Ask Plinthly AI',
     locale: {
       button: 'Country and language: {country}, {language}. Change',
@@ -3276,7 +3276,7 @@ const localeKeys = {
   },
   de: {
     learnMore: 'Mehr erfahren',
-    whatIs: 'Was ist {term}?',
+    learnToast: { title: 'Neu bei Hypotheken?', body: 'Nicht sicher, was all diese Berechnungen bedeuten, oder möchtest du dein Hypotheken-Grundwissen auffrischen? Stell Plinthly AI deine Fragen oder folge diesen Leitfäden.', dismiss: 'Schliessen' },
     advisorTip: 'Frag Plinthly AI',
     locale: {
       button: 'Land und Sprache: {country}, {language}. Ändern',
@@ -3294,7 +3294,7 @@ const localeKeys = {
   },
   fr: {
     learnMore: 'En savoir plus',
-    whatIs: 'Qu’est-ce que {term} ?',
+    learnToast: { title: 'Nouveau dans les hypothèques ?', body: 'Vous ne savez pas ce que signifient tous ces calculs, ou voulez revoir les bases des hypothèques ? Posez vos questions à Plinthly AI ou suivez ces guides.', dismiss: 'Fermer' },
     advisorTip: 'Demandez à Plinthly AI',
     locale: {
       button: 'Pays et langue : {country}, {language}. Modifier',
@@ -3312,7 +3312,7 @@ const localeKeys = {
   },
   it: {
     learnMore: 'Scopri di più',
-    whatIs: 'Che cos’è {term}?',
+    learnToast: { title: 'Nuovo ai mutui ipotecari?', body: 'Non sei sicuro di cosa significhino tutti questi calcoli, o vuoi ripassare le basi delle ipoteche? Fai le tue domande a Plinthly AI o segui queste guide.', dismiss: 'Chiudi' },
     advisorTip: 'Chiedi a Plinthly AI',
     locale: {
       button: 'Paese e lingua: {country}, {language}. Modifica',

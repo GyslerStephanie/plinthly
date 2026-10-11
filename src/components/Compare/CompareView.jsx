@@ -12,9 +12,9 @@ const MAX_YEARS = chModel.MAX_YEARS
 import { money, groupDigits, currencySymbol } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
 import { useDialogFocus } from '../../lib/useDialogFocus'
-import GlossaryTerm from '../GlossaryTerm'
 import HowItWorks from '../HowItWorks'
-import { compareCourse } from '../../lib/learn'
+import LearnToast from '../LearnToast'
+import { compareCourse, learnLinks } from '../../lib/learn'
 
 // One colour per option, the SAME on every tab so nothing swaps meaning when you
 // switch scenarios. No red — neither line is inherently "bad" (renting isn't a
@@ -124,18 +124,7 @@ const numFrom = (v) => Number(String(v).replace(/[^0-9.]/g, '')) || 0
  * string while editing so decimals ("1.5") and a leading "−" type cleanly,
  * and re-syncs when the numeric value changes externally (e.g. a preset click).
  */
-// Assumption fields that have a glossary entry get a "?" explainer.
-const TERM_FOR = {
-  cash: 'liquid_cash',
-  investReturnPct: 'investment_return',
-  appreciationPct: 'property_appreciation',
-  rentInflationPct: 'rent_inflation',
-  downPaymentPct: 'down_payment',
-  propertyTaxPct: 'property_tax',
-  insurancePct: 'homeowners_insurance',
-}
-
-function PctField({ label, sub, value, onChange, termId }) {
+function PctField({ label, sub, value, onChange }) {
   const [txt, setTxt] = useState(String(value))
   useEffect(() => {
     setTxt((prev) => (parseFloat(prev) === value ? prev : String(value)))
@@ -144,7 +133,6 @@ function PctField({ label, sub, value, onChange, termId }) {
     <label className="block text-xs text-muted">
       <span>
         {label}
-        {termId && <GlossaryTerm id={termId} icon term={label} />}
         {sub && <span className="ml-1 text-faint">· {sub}</span>}
       </span>
       <div className={`mt-1 ${FIELD}`}>
@@ -166,7 +154,7 @@ function PctField({ label, sub, value, onChange, termId }) {
   )
 }
 
-export default function CompareView({ onClose, seed = {}, seedYear, region }) {
+export default function CompareView({ onClose, seed = {}, seedYear, region, usAdvisor }) {
   const { t: tBase, lang } = useI18n()
   const { marketId } = useMarket()
   const isUs = marketId === 'us'
@@ -249,7 +237,6 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
   const cashField = (key, label) => (
     <label className="block text-xs text-muted">
       {label}
-      {TERM_FOR[key] && <GlossaryTerm id={TERM_FOR[key]} icon term={label} />}
       <div className={`mt-1 ${FIELD}`}>
         <span className="select-none pl-2.5 pr-1 text-xs text-faint">{currencySymbol()}</span>
         <input
@@ -262,7 +249,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
     </label>
   )
   const pct = (key, label, sub) => (
-    <PctField label={label} sub={sub} value={inputs[key]} onChange={(n) => setVal(key, n)} termId={TERM_FOR[key]} />
+    <PctField label={label} sub={sub} value={inputs[key]} onChange={(n) => setVal(key, n)} />
   )
 
   return (
@@ -362,7 +349,6 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
                 </button>
               ))}
             </div>
-            <GlossaryTerm id="opportunity_cost" icon term={t('compare.lensTrue')} />
             {trueCost && <p className="mt-1.5 text-xs text-faint">{t('compare.lensHint')}</p>}
           </div>
         )}
@@ -577,7 +563,16 @@ export default function CompareView({ onClose, seed = {}, seedYear, region }) {
           z-50`, so an instance rendered by App would be painted over; `inline`
           lifts this one above it. It gets the Compare toolset, so it answers
           from the scenario model rather than the Phase 1 engine. */}
+      <LearnToast inline links={learnLinks(isUs ? 'us' : 'ch', 'compare')} />
+
+      {/* US: the advisor on Compare answers from the US engine and the glossary
+          (the Swiss Compare toolset is CH-only). */}
+      {isUs && usAdvisor && (
+        <AdvisorFab inline tipKey="compare" context={usAdvisor.context} values={usAdvisor.values} />
+      )}
+
       {!isUs && <AdvisorFab
+        tipKey="compare"
         surface="compare"
         inline
         context={buildCompareAdvisorContext(scenario, inputs, year, { a, b, hA: s.hA, hB: s.hB, costLens: s.costLens }, lang)}

@@ -18,7 +18,7 @@ export function askAdvisor(question) {
   window.dispatchEvent(new CustomEvent('plinthly:ask', { detail: { question } }))
 }
 
-export default function GlossaryTerm({ id, term, def, children, icon = false }) {
+export default function GlossaryTerm({ id, term, def, children }) {
   const { t } = useI18n()
   const entry = id ? glossary[id] : null
   const link = linkFor(entry, useMarket().marketId)
@@ -91,14 +91,9 @@ export default function GlossaryTerm({ id, term, def, children, icon = false }) 
         aria-expanded={open}
         aria-describedby={open ? tooltipId : undefined}
         onClick={() => setOpen((v) => !v)}
-        aria-label={icon ? t('whatIs', { term: label }) : undefined}
-        className={
-          icon
-            ? 'ml-1 inline-flex h-4 w-4 translate-y-[2px] items-center justify-center rounded-full border border-teal-500 text-[10px] font-bold leading-none text-teal-700 hover:bg-teal-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400'
-            : 'cursor-help rounded-sm border-b border-dotted border-teal-500 text-teal-800 hover:text-teal-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400'
-        }
+        className="cursor-help rounded-sm border-b border-dotted border-teal-500 text-teal-800 hover:text-teal-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
-        {icon ? '?' : label}
+        {label}
       </button>
 
       {/*

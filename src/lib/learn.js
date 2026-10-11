@@ -86,6 +86,12 @@ export function explainTerm(idOrText, market, values = {}) {
 
 
 
+/** Vetted guides for the "New to mortgages?" message, by market and screen. */
+export function learnLinks(market, surface = 'phases') {
+  if (surface === 'compare') return courses[market === 'us' ? 'rent_vs_buy_us' : 'rent_vs_buy_ch'] || []
+  return courses[market === 'us' ? 'us_how_much_house' : 'ch_how_much_house'] || []
+}
+
 /** US Phase 1: the three lender tests, lowest wins. */
 export function usPhase1Course(r) {
   if (!r) return null

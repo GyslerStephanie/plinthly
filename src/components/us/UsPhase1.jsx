@@ -10,7 +10,6 @@ import {
 import { ut } from '../../markets/us/copy'
 import usData from '../../markets/us/us-data.json'
 import CompareCta from '../CompareCta'
-import GlossaryTerm from '../GlossaryTerm'
 import HowItWorks from '../HowItWorks'
 import { usPhase1Course } from '../../lib/learn'
 
@@ -97,15 +96,12 @@ export default function UsPhase1({ values, onChange, onCompare }) {
   )
 }
 
-function Field({ id, label, hint, children, termId }) {
+function Field({ id, label, hint, children }) {
   return (
     <div>
-      <div className="mb-1.5 flex items-center">
-        <label htmlFor={id} className="text-sm font-semibold text-ink">
-          {label}
-        </label>
-        {termId && <GlossaryTerm id={termId} icon term={label} />}
-      </div>
+      <label htmlFor={id} className="mb-1.5 block text-sm font-semibold text-ink">
+        {label}
+      </label>
       {children}
       {hint && <p className="mt-1.5 text-xs leading-relaxed text-muted">{hint}</p>}
     </div>
@@ -153,14 +149,14 @@ function UsForm({ values, onChange }) {
       <Field id="us-income" label={ut('form.income')} hint={ut('form.incomeHint')}>
         <MoneyInput id="us-income" value={values.grossIncome} onChange={set('grossIncome')} />
       </Field>
-      <Field id="us-savings" label={ut('form.savings')} hint={ut('form.savingsHint')} termId="liquid_cash">
+      <Field id="us-savings" label={ut('form.savings')} hint={ut('form.savingsHint')}>
         <MoneyInput id="us-savings" value={values.savings} onChange={set('savings')} />
       </Field>
-      <Field id="us-debts" label={ut('form.debts')} hint={ut('form.debtsHint')} termId="debt_to_income">
+      <Field id="us-debts" label={ut('form.debts')} hint={ut('form.debtsHint')}>
         <MoneyInput id="us-debts" value={values.monthlyDebts} onChange={set('monthlyDebts')} suffix="/mo" />
       </Field>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <Field id="us-down" label={ut('form.down')} hint={ut('form.downHint')} termId="down_payment">
+        <Field id="us-down" label={ut('form.down')} hint={ut('form.downHint')}>
           <div className={inputBox}>
             <input
               id="us-down"
@@ -175,7 +171,7 @@ function UsForm({ values, onChange }) {
             <span className="select-none pr-3 text-sm text-slate-400">%</span>
           </div>
         </Field>
-        <Field id="us-rate" label={ut('form.rate')} hint={ut('form.rateHint', { date: DEFAULT_RATE.asOf })} termId="mortgage_rate_vs_apr">
+        <Field id="us-rate" label={ut('form.rate')} hint={ut('form.rateHint', { date: DEFAULT_RATE.asOf })}>
           <div className={inputBox}>
             <input
               id="us-rate"
@@ -214,7 +210,7 @@ function UsForm({ values, onChange }) {
           ))}
         </select>
       </Field>
-      <Field id="us-hoa" label={ut('form.hoa')} hint={ut('form.hoaHint')} termId="hoa_fees">
+      <Field id="us-hoa" label={ut('form.hoa')} hint={ut('form.hoaHint')}>
         <MoneyInput id="us-hoa" value={values.hoaMonthly} onChange={set('hoaMonthly')} suffix="/mo" />
       </Field>
       <p className="text-xs text-slate-400">{ut('form.live')}</p>
@@ -303,7 +299,7 @@ function UsResult({ result: r }) {
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h3 className="ds-eyebrow flex items-center text-xs text-muted">{ut('result.limitsTitle')}<GlossaryTerm id="debt_to_income" icon term={ut('result.limitsTitle')} /></h3>
+        <h3 className="ds-eyebrow text-xs text-muted">{ut('result.limitsTitle')}</h3>
         <ul className="mt-3 space-y-2">
           {LIMITS.map(([key, price]) => {
             const binding = key === r.limit
@@ -327,7 +323,7 @@ function UsResult({ result: r }) {
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h3 className="ds-eyebrow flex items-center text-xs text-muted">{ut('result.upfrontTitle')}<GlossaryTerm id="closing_costs" icon term={ut('result.closing', { pct: '' }).replace(/\s*\(.*\)/, '')} /></h3>
+        <h3 className="ds-eyebrow text-xs text-muted">{ut('result.upfrontTitle')}</h3>
         <div className="mt-2">
           <Row label={ut('result.downPayment', { pct: r.rules.downPct })} value={money(dp.total)} />
           <Row label={ut('result.closing', { pct: r.rules.closingCostsPct })} value={money(dp.closingCosts)} />
@@ -337,7 +333,7 @@ function UsResult({ result: r }) {
       </section>
 
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h3 className="ds-eyebrow flex items-center text-xs text-muted">{ut('result.monthlyTitle')}<GlossaryTerm id="piti" icon term={ut('result.monthlyTitle')} /></h3>
+        <h3 className="ds-eyebrow text-xs text-muted">{ut('result.monthlyTitle')}</h3>
         <div className="mt-2">
           <Row label={ut('result.pi')} value={money(mc.principalAndInterest)} />
           <Row label={ut('result.tax')} value={money(mc.propertyTax)} />

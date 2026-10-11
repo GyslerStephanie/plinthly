@@ -22,7 +22,8 @@ import UsOptionsPhase from './components/us/UsOptionsPhase'
 import UsPlanPhase from './components/us/UsPlanPhase'
 import UsDreamPhase from './components/us/UsDreamPhase'
 import HowItWorks from './components/HowItWorks'
-import { chPhase1Course } from './lib/learn'
+import { chPhase1Course, learnLinks } from './lib/learn'
+import LearnToast from './components/LearnToast'
 import { buildUsAdvisorContext } from './markets/us/advisor'
 import { dreamPlan } from './markets/us/dream'
 import { usInput } from './components/us/UsPhase1'
@@ -668,6 +669,12 @@ export default function App() {
       {/* AI advisor — available once a result exists. Hidden while Compare is
           open: that overlay mounts its own instance with the Compare toolset,
           and two FABs would stack (both announced by a screen reader). */}
+      {/* "New to mortgages?" — points to Ask Plinthly AI and vetted guides
+          wherever the advisor is available. Re-mounts per phase. */}
+      {(isUs ? usRes : previewResult) && !showCompare && (
+        <LearnToast key={phase} links={learnLinks(marketId)} />
+      )}
+
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
       {isUs && usRes && (
         <AdvisorFab
@@ -718,6 +725,11 @@ export default function App() {
           onClose={() => setShowCompare(false)}
           seedYear={compareHorizon}
           region={isUs ? usValues.region : undefined}
+          usAdvisor={
+            isUs && usRes
+              ? { context: buildUsAdvisorContext(usRes, lang, null), values: usValues }
+              : null
+          }
           seed={
             isUs
               ? {
