@@ -174,6 +174,29 @@ US rules and data. Steps continue the build order:
 17. **Next** — wrap-up (QA, FEATURES.md, README, PR), then learn v2/v3
     (translations, more cards, guided walkthrough, US Compare advisor tools).
 
+## Wrap-up before the PR (2026-10-11)
+
+- **Sustainable-home ideas (prototype comment):** US Phase 4 has "More ways to
+  make your home sustainable". It lists 12 sourced measures across water, yard,
+  envelope and systems. Each shows its cost, benefit and link, and the ones
+  that suit the state's climate come first. Each state also gets its
+  rainwater rule and landscape rebate. The data is in
+  `us-home-data.json → sustainability` and the logic in `home.js
+  sustainabilityFor()`. It is display only and feeds no figures.
+- **US Compare advisor:** `run_us_compare_scenario` runs the four scenarios on
+  the US model. It is guarded by market, and the preview mock supports it.
+- **Learn translations:** Swiss glossary terms, crash cards and guide labels
+  are in de/fr/it (`data/glossary.i18n.json`, `data/courses.i18n.json`). US
+  stays English.
+- **QA fixes:**
+  - "Indicative" notes on the US cost screens and the printed plan.
+  - `mk` is encoded first in share links, and a link that lost it is still
+    read as US.
+  - The advisor's mock answers only when no API is reachable.
+  - PMI ends automatically on the original amortisation schedule (HPA).
+  - Switching CH → US → CH keeps the visitor's language.
+  - Analytics URLs no longer carry the hash.
+
 ## Done when…
 
 - [ ] A US visitor is detected, confirms "United States", and completes Phases 1–2 in USD / sq ft with US rules
@@ -221,7 +244,7 @@ US rules and data. Steps continue the build order:
 - FL / TX / CO insurance: sources disagree widely — use a range or the higher figure?
 - $/sqft mid is listing-based for 8 of 9 states — source true sale medians?
 - Default rate is weekly — refresh by hand or automate?
-- Landing copy says "renovate in Switzerland" before the country step — make it neutral?
-- Learn translations: glossary, cards and US copy are English only so far.
-- Advisor on US Compare can't run Compare scenarios yet (Swiss one can).
+- Sustainable-home rebate amounts change often (Austin, SAWS, Aurora windows);
+  recheck before launch.
+- French and Italian learn copy needs a native review.
 - Advisor default model is still `claude-haiku-4-5`; update before adding an API key.
