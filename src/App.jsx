@@ -610,9 +610,8 @@ export default function App() {
         )}
 
         {phase === 1 ? (
-          <div className="ds-hero relative mb-8 overflow-hidden rounded-2xl border border-line shadow-sm no-print">
-            <img src="/brand/voxel-landscape-hero.png" alt="" className="ds-hero-land hidden sm:block" />
-            <div className="relative max-w-2xl px-6 py-10 lg:px-10 lg:py-12">
+          <div className="ds-hero mb-8 flex items-center justify-between gap-8 overflow-hidden rounded-2xl border border-line px-6 py-10 shadow-sm no-print lg:px-10 lg:py-12">
+            <div className="min-w-0 max-w-2xl">
               <h1 className="font-display text-4xl font-semibold tracking-tight text-ink lg:text-5xl">
                 {isUs ? ut('hero.title') : t('heading.1.title')}
               </h1>
@@ -620,6 +619,8 @@ export default function App() {
                 {isUs ? ut('hero.blurb') : t('heading.1.blurb')}
               </p>
             </div>
+            {/* The whole island, in the flow and vertically centred, so nothing is clipped. */}
+            <img src="/brand/voxel-landscape-mini.png" alt="" className="ds-hero-land hidden sm:block" />
           </div>
         ) : (
           <div className="mb-8 max-w-2xl no-print">

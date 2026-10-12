@@ -212,8 +212,8 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
     border-bottom: 1px solid var(--border-soft);
   }
   .ds-hero-land {
-    position: absolute; right: -12px; bottom: 0; width: 440px; max-width: 42%;
-    height: auto; opacity: .92; pointer-events: none; image-rendering: pixelated;
+    flex: 0 0 auto; width: 300px; max-width: 34%; height: auto; margin: -16px 0;
+    opacity: .95; pointer-events: none; image-rendering: pixelated;
   }
 
   /* Footer terrain band — a pixel skyline divider over a forest bar. */
