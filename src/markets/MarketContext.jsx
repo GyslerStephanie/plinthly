@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, useState } from 'react'
 import { decodeState } from '../lib/share'
 import { setFormatMarket } from '../lib/format'
+import { setTrackMarket } from '../lib/track'
 import {
   getMarket,
   isMarketId,
@@ -56,6 +57,7 @@ export function MarketProvider({ children }) {
   // so safe to do during render (StrictMode double-renders are harmless).
   const market = getMarket(marketId)
   setFormatMarket(market)
+  setTrackMarket(market.id)
 
   const value = useMemo(
     () => ({
