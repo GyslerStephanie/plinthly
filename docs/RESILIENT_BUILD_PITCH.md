@@ -1,32 +1,43 @@
-# Plinthly Resilient — product pitch and build strategy
+# Plinthly Resilient — pitch and build plan
 
-_Working name. Draft 2026-10-12. Figures marked (est.) are hypotheses to validate, not sourced data._
+_Working name. Draft 2 on 2026-10-12. Figures marked (est.) are hypotheses, not sourced data._
 
-## One line
+## The thesis
 
-A free scenario explorer that shows a US homeowner what a tighter, Swiss-grade building envelope costs today and saves over 10, 20 and 30 years in energy, insurance and rebuilds, compared with the stick-frame box that is the US default.
+**The American dream does not have to be built large. It can be built well.**
 
-## The problem
+The typical US house has grown by roughly half in floor area since the 1970s while its envelope has barely changed: stick frame, batt insulation, double-pane glass, asphalt shingles, a gas furnace. It is cheap to build and expensive to own. It leaks heat, it grows mould, and it is the first thing to go in a hurricane, hailstorm or wildfire.
 
-- **The US default house is built for 1975 energy and 1975 weather.** 2x6 stick framing, batt insulation, double-pane windows, asphalt shingles, a gas furnace. It is cheap to build and expensive to own: leaky, moisture-prone, and the first thing to go in a hurricane, hailstorm or wildfire.
-- **Energy prices are volatile and every quote assumes they are flat.** A builder's "payback" uses today's gas price. Nobody shows a homeowner the 30-year bill under a high-oil or high-electricity path.
-- **Insurance is becoming the real cost of ownership.** Premiums in Florida, Texas, Colorado and California already rival property tax. Insurers are leaving markets, non-renewing, and pricing hazard per house. Resilience is starting to earn discounts (IBHS FORTIFIED in hurricane states, wildfire hardening in California) but owners do not know that or how much.
-- **Nobody sells the comparison.** Builders sell what they know how to build. Suppliers sell their product. Energy auditors sell audits. No neutral tool puts build quality, energy path, hazard and insurance on one 30-year table.
+Switzerland settled this decades ago. Minergie and SIA standards, mass walls, triple glazing, 0.6 air changes per hour, houses that are smaller and last longer. Plinthly already models that side for Swiss buyers. This track brings the argument to the US in the language a US owner understands: dollars per square foot, monthly cost, and what is still standing in 30 years.
 
-Switzerland solved the envelope question decades ago (Minergie, SIA standards, mass walls, triple glazing, 0.6 air changes per hour). Plinthly already models that side. The gap is translating it for a US buyer who thinks in $/sq ft and monthly payment.
+## What winning looks like
+
+This is not a product to scale. The win is one person who uses the explorer, sees the numbers, and chooses to build or retrofit to a Swiss-grade envelope. One to five such people over a few years would make the track a success, and each of them is a client, a case study and a quiet argument that quality beats size.
+
+The explorer is a tool of soft influence. It should be free, shareable, honest and a little beautiful, so that the climate-minded person who was never going to pay still comes away with a different idea of what a good house is.
 
 ## The product
 
 **Entry point: "Compare how to build."** A third door next to "Can I buy?" and the rent-vs-buy comparison, reachable without going through the mortgage flow.
 
-**Inputs (five minutes, all optional beyond the first three):**
-1. State, then county or ZIP for hazard.
-2. Home size and type: existing home to retrofit, or new build.
-3. Time horizon: 10, 20 or 30 years.
-4. Fuel mix today: electricity, natural gas, heating oil, propane.
-5. Energy price path: EIA reference, high-price, low-price, or a user slider for annual escalation.
+### The signature scenario: same budget, smaller and better
 
-**Five build archetypes, side by side:**
+Put two houses side by side at the same all-in budget:
+
+- A 2,800 sq ft code-built stick-frame house.
+- A 1,800 sq ft Swiss-grade house: Minergie-P or PHIUS envelope, mass or CLT structure, triple glazing, heat pump and ERV, no combustion.
+
+Then show 10, 20 and 30 years of energy under three price paths, insurance in the chosen state, expected hazard loss for the county, a mould and moisture risk score, and total cost of ownership. Nobody else shows this comparison, and it is where the cultural argument lives.
+
+### Inputs, five minutes
+
+1. State, then county or ZIP for hazard.
+2. Budget, or home size and whether this is a new build or a retrofit.
+3. Time horizon: 10, 20 or 30 years.
+4. Fuel today: electricity, natural gas, heating oil, propane.
+5. Energy price path: EIA reference, high-price, low-price, or a slider for annual escalation.
+
+### Five build archetypes
 
 | Archetype | What it is | Air-tightness | Wall R |
 |---|---|---|---|
@@ -34,115 +45,76 @@ Switzerland solved the envelope question decades ago (Minergie, SIA standards, m
 | B. Code-built new home | 2021 IECC stick frame | ~3 ACH50 | R-20 |
 | C. Deep envelope retrofit | Exterior continuous insulation, air sealing, triple-pane, heat pump | ~1.5 ACH50 | R-30+ |
 | D. Swiss / Passive-grade new build | Minergie-P or PHIUS, ICF, masonry or CLT, ERV, no combustion | ≤0.6 ACH50 | R-40+ |
-| E. Resilience package on top of B, C or D | FORTIFIED Roof/Home, wildfire hardening, flood vents or elevation | n/a | n/a |
+| E. Resilience package on B, C or D | FORTIFIED Roof/Home, wildfire hardening, flood vents or elevation | n/a | n/a |
 
-**Outputs on one screen:**
-- Energy cost per year and cumulative over the horizon, under the chosen price path, with the A-vs-D gap called out.
+### Outputs on one screen
+
+- Energy per year and cumulative over the horizon, with the A-vs-D gap called out.
 - Total cost of ownership: build or retrofit premium, energy, insurance, maintenance, expected hazard loss.
-- Insurance line: state baseline premium, estimated discount for FORTIFIED or hardening where a programme exists, flag where insurers are retreating.
+- Insurance: state baseline, estimated discount for FORTIFIED or wildfire hardening where a programme exists, a flag where insurers are retreating.
 - Expected annual loss from the FEMA National Risk Index for the county, and how the archetype changes it.
 - Moisture and mould risk as a qualitative score (climate zone × wall assembly × ventilation).
 - Comfort, carbon and resale premium as secondary rows.
-- A shareable link and a printable "resilience brief" an owner can hand to a builder, lender or insurance agent.
+- A shareable link and a printable brief the owner can hand to a builder, lender or insurance agent.
 
-The AI advisor runs scenarios on this model the same way it does on the rent-vs-buy comparison today.
+The AI advisor runs scenarios on this model as it does on the rent-vs-buy comparison today.
+
+### What it is not
+
+No structural engineering, no product-level quotes, no regional labour rates, no paid placement. Archetypes with ranges and sources, as Plinthly does now. The indicative framing and the "take this to a professional" step stay.
 
 ## Who it is for
 
-1. **Owners of multiple homes or high-value homes in hazard states** (FL, TX, CO, CA, NC, LA). They already feel insurance pain and can fund a better build. Primary paying segment.
-2. **People about to build or do a major renovation** who want a neutral second opinion before signing a builder's spec.
-3. **The curious and climate-minded** who will play, share and feed the waitlist. Volume segment, free forever.
-4. Later, **professionals**: architects, PHIUS builders, insurance agents and lenders who want to show clients the numbers. B2B tier.
+- **The one person.** Someone planning a build or a major renovation, often in a hazard state (FL, TX, CO, CA, NC, LA), with the means to choose quality over size and tired of the insurance bill. They are the client.
+- **The climate-minded.** People who will run scenarios, share the link and change how they talk about houses. They are the influence.
+- **Builders, architects and agents** who meet the first group. They are the referral path, both ways.
 
-The honest limit: most US buyers optimise for monthly payment and will not pay for this. The free tier serves them and earns reach. Revenue comes from segments 1, 2 and 4.
+## How it earns, if it earns
 
-## Why now
+Not affiliate fees and not a Pro tier. The explorer is free and stays free, with nothing in it ranked or placed for money.
 
-- Federal energy credits ended after 2025 and IRA rebate rollout is uneven, so owners need to see payback without subsidy.
-- 2024 and 2025 were record years for insured losses; several states are in open insurance crises.
-- IBHS FORTIFIED, PHIUS and the 2021 IECC give the tool recognised standards to anchor to, so it is not inventing a scale.
-- Plinthly already has the engines, data and brand position ("an honest picture before you talk to brokers, banks or builders").
+Revenue, when it comes, is a person: the serious owner who writes "I want this, who builds it?" That becomes design consulting, owner's representation, or an introduction to a Swiss or PHIUS builder, paid directly. A simple "talk to Stephanie" step at the end of the brief is the entire sales funnel.
 
-## Business model
+If a supplier or builder later wants to be listed, list them because they are good and say so plainly. Nothing else.
 
-**Free: the scenario explorer.** Everything above, no account. This is the acquisition engine, like the mortgage calculator.
+## Inside Plinthly, as a third track
 
-**Revenue layer 1: partner referrals.** Suppliers of exactly the things archetypes C, D and E need, shown next to the relevant line with clear "partner" labelling and a referral link or quote request:
-- Windows: triple-pane makers (Alpen, Zola, European imports).
-- Insulation and air sealing: mineral wool, exterior CI systems, aerobarrier.
-- Structure: ICF (Nudura, Fox Blocks), CLT, SIP makers.
-- Certified builders and raters: PHIUS, HERS, FORTIFIED evaluators.
-- Resilience: impact windows, Class 4 roofing, ember-resistant vents.
-Typical lead fees in building products run $50 to $300 per qualified lead or 2 to 8 percent affiliate (est.). Ranking stays independent and the disclosure is explicit, or the "honest" brand dies.
+The US retrofit configurator, state energy prices, HERS tiers, insurance rates, the compare model, share links, learn layer and advisor tools already exist. The self-builder track is a stubbed entry point in today's onboarding; this is that track, done properly. One brand, one data pipeline, one feedback loop.
 
-**Revenue layer 2: Pro.** Saved projects, the printable resilience brief with sources, multi-home portfolio view, county-level hazard. Suggested pricing to test: $19 per brief or $12 per month (est.).
+Code shape: engine and data under `src/markets/us/resilience/`, components under `components/us/`, a new onboarding branch, two or three advisor tools, one conformance suite. No new dependencies.
 
-**Revenue layer 3: B2B.** White-label or API for insurers (resilience discount justification), lenders (green or resilient mortgage products), and builder marketing. Only after the free tool has traffic and the data is defensible.
+## Build plan
 
-## Inside Plinthly or separate?
+The plan ends when the tool is live and in front of ten people who might care. No kill review, no growth targets.
 
-**Recommendation: build it inside Plinthly as a third track, with its own entry point. Spin out only on evidence.**
+**Step 1, a week: write the argument.** The landing route inside Plinthly with the thesis, the same-budget comparison described in words, and a way to leave an email. Share it with ten people. This is the cheapest version of the whole idea and tells you whether the framing lands.
 
-Why inside:
-- The US retrofit configurator, state energy prices, HERS tiers, insurance rates, the compare model, share links, learn layer and advisor tools already exist. A separate product rebuilds 60 percent of this.
-- One brand, one domain, one data refresh pipeline, one analytics and feedback loop.
-- The self-builder and investor tracks are stubbed entry points in the current onboarding. This is the self-builder track, done properly.
-- Cross-sell both ways: a mortgage user sees "what if you built tighter," a build user sees "can you afford it."
+**Step 2, about a month: the explorer.** Energy price paths from EIA state prices (already in the data) and the Annual Energy Outlook cases. The five archetypes on energy and total cost, reusing the retrofit configurator for archetype C. The same-budget scenario. Share link and advisor scenarios.
 
-What separate would buy, and why it is not worth it yet:
-- A name that signals resilience and insurance rather than mortgages. Solve with a dedicated landing route and copy, not a second product.
-- A B2B audience (insurers, builders) that may not want a consumer brand. Revisit when there is a B2B conversation to have.
+**Step 3, about a month: hazard and insurance.** FEMA National Risk Index by county. Insurance baseline from the state data, FORTIFIED and wildfire-hardening discounts where they exist, insurer-retreat flags. The mould and moisture score. The printable brief with sources, ending in "talk to Stephanie."
 
-Spin-out triggers: a partner or B2B deal wants its own domain; the resilience track reaches half of Plinthly's traffic; or the data layer becomes a product on its own.
+**Step 4, ongoing: put it in front of people.** Ten direct shares, two or three builder or architect conversations, one post that tells the "build well, not large" story. Then wait for the one email.
 
-Code shape, so it stays a module: engine and data under the US market folder (`src/markets/us/resilience/`), components under `components/us/`, a new onboarding branch, two or three advisor tools, one conformance suite. No new dependencies.
+**Signals worth noticing:** the brief gets printed, a scenario link gets shared, a builder says "can I use this with clients," one person writes.
 
-## Roadmap
-
-**Weeks 0 to 2: validate before building.**
-- Ten conversations: five owners in hazard states with a second home or a planned build, two PHIUS or FORTIFIED builders, two insurance agents, one lender.
-- Landing route inside Plinthly with the pitch and a waitlist. Measure signups.
-- Lock the five archetypes and the data source for every number.
-
-**Weeks 3 to 6: MVP, energy and envelope.**
-- Energy price paths: EIA state prices (already in the data) × EIA Annual Energy Outlook reference, high and low cases × horizon.
-- Archetype comparison for energy and total cost. Reuse the retrofit configurator for archetype C.
-- Share link, print view, advisor scenarios.
-- Ship behind the new entry point. Watch scenarios run and share rate.
-
-**Weeks 7 to 10: resilience and insurance.**
-- FEMA National Risk Index by county, hazard-specific expected annual loss.
-- Insurance baseline from the existing state data, FORTIFIED and wildfire-hardening discounts where programmes exist, insurer-retreat flags.
-- Moisture and mould score by climate zone and assembly.
-- The printable resilience brief.
-
-**Weeks 11 to 14: partners and Pro.**
-- Partner directory with ten suppliers approached, first referral agreements, tracked links.
-- Pro gate on the brief and saved projects.
-- First B2B conversations using real usage numbers.
-
-**Metrics that decide the next step:** scenarios run per visitor, share rate, waitlist to active, partner click-through, briefs bought. A kill or pivot review at week 14.
-
-## Data sources to use
+## Data sources
 
 - EIA: state electricity, gas, heating oil and propane prices; Annual Energy Outlook price cases.
 - RECS and HERS reference points (already in Plinthly) for consumption by tier.
-- FEMA National Risk Index for county hazard and expected annual loss.
-- NOAA billion-dollar disaster database for the narrative.
-- IBHS FORTIFIED standards and state discount tables; California Safer from Wildfires framework.
-- PHIUS and Minergie-P for archetype D targets; 2021 IECC for archetype B.
-- NAHB and RSMeans or state cost benchmarks (already in Plinthly) for build premiums; PHIUS and ICF industry studies for the premium range (5 to 15 percent, est.).
-- NerdWallet and Insurify state premiums (already in Plinthly), with the known disagreement for FL, TX and CO shown as a range.
+- FEMA National Risk Index for county hazard and expected annual loss; NOAA billion-dollar disaster database for the narrative.
+- IBHS FORTIFIED standards and state discount tables; California Safer from Wildfires.
+- PHIUS and Minergie-P for archetype D; 2021 IECC for archetype B.
+- NAHB, RSMeans and the state cost benchmarks already in Plinthly for build premiums; PHIUS and ICF studies for the premium range, 5 to 15 percent (est.).
+- NerdWallet and Insurify state premiums (already in Plinthly), with the FL, TX and CO disagreement shown as a range.
+- US Census Characteristics of New Housing for the floor-area-over-time story.
 
-## Risks and open questions
+## Risks
 
-- **Data confidence.** County hazard is coarse and build premiums vary wildly. Show ranges and sources on every line, as Plinthly does now.
-- **Liability.** This is not engineering or insurance advice. Keep the indicative framing and the "take this to a professional" step.
-- **Referral conflict.** The moment ranking follows fees the brand is gone. Independent ranking, labelled partners, no pay-to-rank.
-- **Small paying niche.** If segment 1 does not convert, the B2B route is the backup, and the free tool still grows Plinthly.
-- **Scope creep.** Resist modelling structural engineering, specific products or regional labour. Archetypes, not quotes.
-- **Open:** Does the first version include new build only or retrofit too? (Recommend both, since the configurator exists.) Which three states first? (Recommend FL, TX, CO: worst insurance, three different hazards.)
+- **Data confidence.** County hazard is coarse and premiums vary widely. Ranges and sources on every line.
+- **Liability.** Not engineering or insurance advice. Keep the indicative framing.
+- **Preaching.** The tool must stay neutral in tone and let the numbers carry the argument, or the people it is meant to reach will close the tab.
+- **Scope creep.** Archetypes, not quotes. Resist modelling specific products.
 
 ## The pitch in three sentences
 
-Climate risk has turned the house itself into the biggest line in the cost of owning it, and the US default build was never designed for that. Plinthly Resilient lets anyone compare a code-built box, a deep retrofit and a Swiss-grade envelope on energy, insurance, hazard loss and total cost over 30 years, free, with sources. It earns by connecting the people who act on those numbers with the windows, insulation, structure and builders that deliver them, and by selling the brief they take to their lender and insurer.
+Climate risk has made the house itself the biggest line in the cost of owning it, and the US default build was never designed for that. Plinthly Resilient lets anyone compare a code-built box, a deep retrofit and a Swiss-grade envelope on energy, insurance, hazard loss and total cost over 30 years, free and with sources, including the house most people never consider: smaller, tighter and built to last. It exists to change what a few people think a good house is, and to find the one who wants to build it.
