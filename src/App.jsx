@@ -39,7 +39,7 @@ import Landing from './components/Landing/Landing'
 import { buildAdvisorContext } from './lib/advisorContext'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
-import { track } from './lib/track'
+import { track, limitedBy } from './lib/track'
 
 const PHASE_NUMBERS = [1, 2, 3, 4, 5]
 
@@ -109,7 +109,7 @@ function calc(values) {
 
 export default function App() {
   const { t, lang, setLang, languages } = useI18n()
-  const { marketId, market, setMarket } = useMarket()
+  const { marketId, market, setMarket, detectedCountry } = useMarket()
   const isUs = marketId === 'us'
   const [usValues, setUsValues] = useState(US_EXAMPLE_VALUES) // US Phase 1 inputs (example until edited)
   const [showCountry, setShowCountry] = useState(false) // front door step 1: country confirm
@@ -121,7 +121,10 @@ export default function App() {
   // result. The pre-filled example doesn't count, or every visit would.
   const usOwnResult = !!usRes && !isExampleValues(usValues)
   useEffect(() => {
-    if (usOwnResult) track('calculation_completed', undefined, { once: true })
+    if (!usOwnResult) return
+    track('calculation_completed', undefined, { once: true })
+    const constraint = limitedBy(usRes)
+    if (constraint) track('result_limited_by', { constraint }, { once: 'result_limited_by' })
   }, [usOwnResult])
   const [phase, setPhase] = useState(1)
   const [maxVisited, setMaxVisited] = useState(1)
@@ -300,13 +303,22 @@ export default function App() {
   const shouldCompute = (v) => hasIncome(v) && (hasEquity(v) || showWithoutEquity)
   const previewResult = phase1
 
+  // CH: first own-numbers result → calculation_completed + what limits it.
+  const trackFirstResult = (result) => {
+    track('calculation_completed', undefined, { once: true })
+    const constraint = limitedBy(result)
+    if (constraint) track('result_limited_by', { constraint }, { once: 'result_limited_by' })
+  }
+
   const handleValuesChange = (next) => {
+    if (next.canton !== values.canton) track('region_selected', { market: 'ch', region: next.canton })
     setValues(next)
     // Adding any equity makes the opt-in CTA moot; clearing income resets it.
     if (!hasIncome(next)) setShowWithoutEquity(false)
     const ok = shouldCompute(next)
-    setPhase1(ok ? calc(next) : null)
-    if (ok) track('calculation_completed', undefined, { once: true })
+    const result = ok ? calc(next) : null
+    setPhase1(result)
+    if (ok) trackFirstResult(result)
   }
 
   // CTA in the empty panel: the buyer has income but no equity and wants to see
@@ -314,20 +326,38 @@ export default function App() {
   const handleShowWithoutEquity = () => {
     setShowWithoutEquity(true)
     if (hasIncome(values)) {
-      setPhase1(calc(values))
-      track('calculation_completed', undefined, { once: true })
+      const result = calc(values)
+      setPhase1(result)
+      trackFirstResult(result)
     }
   }
 
   // Phase 3 canton is the single source of truth once we're past Phase 1;
   // mirror it back so the Phase 1 tax note stays consistent if revisited.
   const handleExploreChange = (next) => {
+    if (next.canton && next.canton !== explore.canton) track('region_selected', { market: 'ch', region: next.canton })
     setExplore(next)
     if (next.canton !== values.canton) {
       const nv = { ...values, canton: next.canton }
       setValues(nv)
       if (phase1) setPhase1(calc(nv))
     }
+  }
+
+  // US: state picked in Phase 1 (form) or Phases 3/4 (pickers). User changes only.
+  const handleUsValuesChange = (next) => {
+    if (next.region !== usValues.region) track('region_selected', { market: 'us', region: next.region })
+    setUsValues(next)
+  }
+  const handleUsRegionChange = (region) => {
+    if (region !== usValues.region) track('region_selected', { market: 'us', region })
+    setUsValues((v) => ({ ...v, region }))
+  }
+
+  // Compare is a parallel surface; record where it was opened from.
+  const openCompare = (source) => {
+    track('compare_opened', { source })
+    setShowCompare(true)
   }
 
   const goToPhase = (n) => {
@@ -382,7 +412,7 @@ export default function App() {
     setShowOnboarding(false)
 
     if (dest === 'compare') {
-      setShowCompare(true)
+      openCompare('onboarding')
       return
     }
     if (dest === 'build') {
@@ -439,6 +469,7 @@ export default function App() {
     setMaxVisited(1)
   }
   const chooseCountry = (id) => {
+    track('country_confirmed', { detected: detectedCountry || 'none', chosen: id })
     switchMarket(id)
     setShowCountry(false)
     setShowOnboarding(true)
@@ -462,6 +493,13 @@ export default function App() {
   // Landing, country confirm or onboarding covers the app: hold the toast and
   // the advisor (and its 8 s tooltip) until the visitor can actually see them.
   const frontDoorOpen = showLanding || showCountry || showOnboarding
+
+  // Once per phase per load, when the phase is actually visible (not under the
+  // front door). Covers both markets: every phase change goes through `phase`.
+  useEffect(() => {
+    if (frontDoorOpen) return
+    track('phase_viewed', { phase }, { once: `phase_viewed:${phase}` })
+  }, [phase, frontDoorOpen])
   const hasResultNow = isUs ? !!usRes : !!phase1
   const showRouteNudge = phase === 1 && !hasResultNow && !!routeIntent
 
@@ -564,16 +602,16 @@ export default function App() {
         )}
 
         {/* United States — Phase 1 on the US engine; later phases not built yet */}
-        {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={setUsValues} onCompare={() => setShowCompare(true)} />}
+        {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={handleUsValuesChange} onCompare={() => openCompare('phase1')} />}
         {isUs && phase === 2 && usRes && (
-          <UsDreamPhase values={usValues} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => setShowCompare(true)} />
+          <UsDreamPhase values={usValues} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => openCompare('dream')} />
         )}
         {isUs && usRes && phase === 3 && (
           <UsExplorePhase
             explore={usExplore}
             onExploreChange={setUsExplore}
             region={usValues.region}
-            onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
+            onRegionChange={handleUsRegionChange}
           />
         )}
         {isUs && usRes && phase === 4 && (
@@ -581,7 +619,7 @@ export default function App() {
             explore={usExplore}
             onExploreChange={setUsExplore}
             region={usValues.region}
-            onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
+            onRegionChange={handleUsRegionChange}
             onBuild={openBuild}
           />
         )}
@@ -616,9 +654,9 @@ export default function App() {
                     result={previewResult}
                     renovation={renovation}
                     onNavigate={goToPhase}
-                    onCompare={() => setShowCompare(true)}
+                    onCompare={() => openCompare('phase1')}
                   />
-                  <HowItWorks course={chPhase1Course(previewResult)} />
+                  <HowItWorks course={chPhase1Course(previewResult)} cardId="phase1" />
                 </div>
               ) : (
                 <EmptyResult
@@ -632,7 +670,7 @@ export default function App() {
 
         {/* Phase 2 — Calculate dream price */}
         {phase === 2 && phase1 && !isUs && (
-          <DreamPricePhase result={phase1} values={values} onValuesChange={handleValuesChange} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => setShowCompare(true)} />
+          <DreamPricePhase result={phase1} values={values} onValuesChange={handleValuesChange} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => openCompare('dream')} />
         )}
 
         {/* Phase 3 — exploration */}
@@ -849,7 +887,7 @@ export default function App() {
 
       {/* Vercel Speed Insights — anonymous Web Vitals, no PII */}
       <SpeedInsights />
-      {/* Vercel Web Analytics — cookieless pageviews + the 5 product events */}
+      {/* Vercel Web Analytics — cookieless pageviews + product events (src/lib/track.js) */}
       {/* Strip the hash: it holds the visitor's numbers, which never leave the device. */}
       <Analytics beforeSend={(e) => ({ ...e, url: e.url.split('#')[0] })} />
     </div>

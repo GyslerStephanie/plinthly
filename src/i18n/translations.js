@@ -3370,3 +3370,49 @@ const localeKeys = {
 for (const lng of Object.keys(localeKeys)) {
   Object.assign(translations[lng], localeKeys[lng])
 }
+
+// "My country isn't listed" on the country confirm step (CountryConfirm). The
+// pick is recorded as an anonymous market_requested event; the market is not
+// changed. Country names come from Intl.DisplayNames, not from here.
+const countryRequestKeys = {
+  en: {
+    countryRequest: {
+      link: 'My country isn’t listed',
+      label: 'Which country are you buying in?',
+      placeholder: 'Choose a country',
+      other: 'Other',
+      thanks: 'Thanks, we’ll use this to decide where to go next.',
+    },
+  },
+  de: {
+    countryRequest: {
+      link: 'Mein Land ist nicht aufgeführt',
+      label: 'In welchem Land möchten Sie kaufen?',
+      placeholder: 'Land wählen',
+      other: 'Anderes Land',
+      thanks: 'Danke, das hilft uns bei der Entscheidung, welches Land wir als Nächstes aufnehmen.',
+    },
+  },
+  fr: {
+    countryRequest: {
+      link: 'Mon pays n’est pas dans la liste',
+      label: 'Dans quel pays souhaitez-vous acheter ?',
+      placeholder: 'Choisir un pays',
+      other: 'Autre pays',
+      thanks: 'Merci, cela nous aidera à choisir le prochain pays à ajouter.',
+    },
+  },
+  it: {
+    countryRequest: {
+      link: 'Il mio paese non è nella lista',
+      label: 'In quale paese vuoi comprare?',
+      placeholder: 'Scegli un paese',
+      other: 'Altro paese',
+      thanks: 'Grazie, ci aiuterà a decidere quale paese aggiungere dopo.',
+    },
+  },
+}
+
+for (const lng of Object.keys(countryRequestKeys)) {
+  Object.assign(translations[lng], countryRequestKeys[lng])
+}

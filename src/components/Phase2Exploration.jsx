@@ -11,6 +11,7 @@ import { money, int, groupDigits, currencySymbol } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
 import { T } from './Trans'
 import { Card, Indicative, Pill, SELECT_CHEVRON } from './ui'
+import { trackOutbound } from '../lib/track'
 
 const PRIORITY_VALUES = ['energy', 'solar', 'heating', 'minergie']
 
@@ -251,6 +252,7 @@ export default function Phase2Exploration({ explore, onChange }) {
             href={subsidies.cantonal.url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackOutbound('rebate')}
             className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-teal-700 hover:text-teal-900"
           >
             {t('phase2.openProgramme')}

@@ -63,6 +63,7 @@ export function buildActionPlan(profile) {
         labelKey: 'actionPlan.subsidiesLink',
         labelVars: { canton: canton.name_en },
         url: canton.gebaeudeprogramm.url,
+        kind: 'rebate', // outbound_click analytics kind (never the URL)
       },
     })
   }

@@ -8,6 +8,7 @@ import { T } from './Trans'
 import { Card, Row, Indicative, Pill } from './ui'
 import InfoTerm from './InfoTerm'
 import RetrofitConfigurator from './RetrofitConfigurator'
+import { trackOutbound } from '../lib/track'
 
 function OptionShell({ tag, title, subtitle, chosen, onChoose, t, children }) {
   return (
@@ -237,6 +238,7 @@ export default function Phase3Options({ explore, onChange }) {
                 href={build.planningPortal}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackOutbound('other')}
                 className="mt-2 inline-flex text-sm font-medium text-teal-700 hover:text-teal-900"
               >
                 {t('phase3.cantonalPortal', { canton: canton?.name_en })}

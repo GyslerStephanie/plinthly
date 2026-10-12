@@ -1,4 +1,5 @@
 import { useI18n } from '../i18n/I18nContext'
+import { track, trackOutbound } from '../lib/track'
 
 /**
  * "How is this calculated?" crash-course card: 3–4 plain steps with the user's
@@ -6,14 +7,19 @@ import { useI18n } from '../i18n/I18nContext'
  * crowds the result. Content comes from src/lib/learn.js (Swiss cards in
  * en/de/fr/it, US cards in English).
  */
-export default function HowItWorks({ course: card }) {
+export default function HowItWorks({ course: card, cardId = 'other' }) {
   const { t, lang } = useI18n()
   if (!card) return null
   // Swiss cards built without a language carry their translations; show the
   // one for the UI language (US cards have none and stay English).
   const course = (card.i18n && card.i18n[lang]) || card
   return (
-    <details className="group rounded-xl border border-line bg-white p-5 shadow-sm no-print">
+    <details
+      className="group rounded-xl border border-line bg-white p-5 shadow-sm no-print"
+      onToggle={(e) => {
+        if (e.currentTarget.open) track('how_it_works_opened', { card: cardId })
+      }}
+    >
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-ink">
         <span className="flex items-center gap-2">
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-teal-50 text-xs font-bold text-teal-800" aria-hidden="true">?</span>
@@ -35,7 +41,7 @@ export default function HowItWorks({ course: card }) {
           <ul className="mt-1.5 space-y-1">
             {course.links.map((l) => (
               <li key={l.url} className="text-sm">
-                <a href={l.url} target="_blank" rel="noreferrer" className="font-medium">{l.label} →</a>
+                <a href={l.url} target="_blank" rel="noreferrer" className="font-medium" onClick={() => trackOutbound('guide')}>{l.label} →</a>
               </li>
             ))}
           </ul>
