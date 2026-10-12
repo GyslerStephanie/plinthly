@@ -8,7 +8,7 @@ the git branches, not the specs folder, not someone's memory.
 it merges, flip it to `✅ Shipped`. When you shelve an idea, mark it `💡 Idea` or
 delete the row. One row per feature. Link each one to its spec in `docs/specs/`.
 
-_Last synced: 2026-10-12 (#31, #32 merged)_
+_Last synced: 2026-10-12 (#31, #32, #33 merged)_
 
 ## Status legend
 
@@ -38,6 +38,7 @@ _Last synced: 2026-10-12 (#31, #32 merged)_
 | Compare overlay (rent-vs-buy + 4 scenarios) | ✅ Shipped | `lib/compare/model.js`, `components/Compare/CompareView.jsx` | — |
 | AI advisor (narrates the numbers) | ✅ Shipped | `api/advisor.js`, `lib/advisorContext.js`, `components/AdvisorFab.jsx` | — |
 | Comment layer (ask the advisor on the figure) | ✅ Shipped | `components/Comments/CommentLayer.jsx`, `lib/advisorClient.js` | [spec](docs/specs/COMMENT_LAYER_SPEC.md) |
+| Navigation: journey steps + tool chips on every screen (Compare, How to build; overlays included; `cp` in the hash) | ✅ Shipped | `components/PhaseNav.jsx` | #33 |
 | Mortgage payoff panel ("over time") | ✅ Shipped | `lib/mortgagePayoff.js`, `components/MortgagePayoffPanel.jsx` | — |
 | Pillar 3a / 2nd-pillar equity model | ✅ Shipped | `lib/affordability.js` | — |
 | Feedback capture → Google Sheet | ✅ Shipped | `api/feedback.js`, `components/FeedbackSection.jsx` | [setup](docs/FEEDBACK_SETUP.md) |
