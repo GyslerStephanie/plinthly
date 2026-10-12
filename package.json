@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Swiss Sustainable Real Estate Explorer — MVP",
+  "description": "Sustainable Real Estate Explorer — MVP",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
