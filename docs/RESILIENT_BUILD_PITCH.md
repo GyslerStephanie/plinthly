@@ -80,6 +80,8 @@ Two things the explorer should say out loud. First, the premium is mostly in the
 
 ## Wall assemblies that bring Swiss quality to a US site
 
+_The explorer spec, [docs/specs/RESILIENT_BUILD_SPEC.md](specs/RESILIENT_BUILD_SPEC.md), turns these into data records with layers, R-values, airtightness and cost ranges; the [Swiss envelope reference](SWISS_ENVELOPE_US_REFERENCE.md) has the sources and drawings._
+
 Each is built today in the US by ordinary crews or regional prefab shops, with US-available materials. Costs are the added cost per square foot of wall over a code 2x6 wall (est.).
 
 1. **2x6 frame with exterior continuous mineral wool.** 3 to 4 inches of Rockwool Comfortboard outside the sheathing, taped sheathing as the air barrier, ventilated rainscreen, fibre cement or wood siding. R-30 to R-35, non-combustible, dries both ways. The closest thing to a Swiss ventilated façade, and the one assembly that also works as a retrofit over an existing house. About $8 to $15 per sq ft of wall added.

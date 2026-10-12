@@ -82,6 +82,7 @@ export const translations = {
         dreamer: 'The Dreamer',
         explorer: 'Ready Explorer',
         mover: 'The Mover',
+        builder: 'The Builder',
       },
       dest: {
         learn: { phase: 'Phase 1 · Your budget', copy: 'Learn the basics and see what you could afford.', target: 'the calculator' },
@@ -89,6 +90,7 @@ export const translations = {
         afford: { phase: 'Phase 1 · Your budget', copy: 'Your maximum purchase price, honestly.', target: 'the calculator' },
         dream: { phase: 'Phase 2 · Dream price', copy: 'Reverse-engineer your dream price, plus a savings path and a reality check.', target: 'your dream price' },
         looking: { phase: 'Phases 3–4 · Options & action plan', copy: 'Options, subsidies and energy — then your action plan.', target: 'your options' },
+        build: { phase: 'Compare how to build', copy: 'A code-built house, a deep retrofit and a Swiss-grade envelope side by side: cost, energy over 30 years, what the better envelope changes.', target: 'the build comparison' },
       },
       why: {
         dream: 'We’ll show the gap to your target and how much to save — or an honest reality check if it’s a stretch.',
@@ -111,6 +113,7 @@ export const translations = {
           afford: 'seeing what you can afford',
           dream: 'working toward a price you have in mind',
           looking: 'actively looking',
+          build: 'building or renovating, and weighing how to build',
         },
         city: { area: 'with a specific area in mind', region: 'with a region in mind', notyet: 'still open on where' },
       },
@@ -775,6 +778,7 @@ export const translations = {
         dreamer: 'Der/die Träumer:in',
         explorer: 'Bereite:r Erkunder:in',
         mover: 'Der/die Umziehende',
+        builder: 'Bauherr:in',
       },
       dest: {
         learn: { phase: 'Phase 1 · Ihr Budget', copy: 'Lernen Sie die Grundlagen und sehen Sie, was Sie sich leisten könnten.', target: 'zum Rechner' },
@@ -782,6 +786,7 @@ export const translations = {
         afford: { phase: 'Phase 1 · Ihr Budget', copy: 'Ihr maximaler Kaufpreis – ehrlich gerechnet.', target: 'zum Rechner' },
         dream: { phase: 'Phase 2 · Wunschpreis', copy: 'Rechnen Sie Ihren Wunschpreis rückwärts – mit Sparplan und Realitätscheck.', target: 'zu Ihrem Wunschpreis' },
         looking: { phase: 'Phasen 3–4 · Optionen & Aktionsplan', copy: 'Optionen, Förderungen und Energie – dann Ihr Aktionsplan.', target: 'zu Ihren Optionen' },
+        build: { phase: 'Bauweisen vergleichen', copy: 'Ein Haus nach US-Norm, eine tiefe Sanierung und eine Gebäudehülle nach Schweizer Standard nebeneinander: Kosten, Energie über 30 Jahre, was die bessere Hülle verändert.', target: 'zum Bauvergleich' },
       },
       why: {
         dream: 'Wir zeigen die Lücke zu Ihrem Ziel und wie viel Sie sparen müssen – oder einen ehrlichen Realitätscheck, wenn es knapp wird.',
@@ -804,6 +809,7 @@ export const translations = {
           afford: 'schauen, was Sie sich leisten können',
           dream: 'arbeiten auf einen Preis hin, den Sie im Kopf haben',
           looking: 'aktiv auf der Suche',
+          build: 'am Bauen oder Sanieren und wägen ab, wie Sie bauen',
         },
         city: { area: 'mit einer bestimmten Gegend im Kopf', region: 'mit einer Region im Kopf', notyet: 'noch offen, wo' },
       },
@@ -1468,6 +1474,7 @@ export const translations = {
         dreamer: 'Le·la Rêveur·se',
         explorer: 'Explorateur·rice prêt·e',
         mover: 'Celui·celle qui déménage',
+        builder: 'Le bâtisseur',
       },
       dest: {
         learn: { phase: 'Phase 1 · Votre budget', copy: 'Apprenez les bases et voyez ce que vous pourriez vous permettre.', target: 'au calculateur' },
@@ -1475,6 +1482,7 @@ export const translations = {
         afford: { phase: 'Phase 1 · Votre budget', copy: 'Votre prix d’achat maximum, honnêtement.', target: 'au calculateur' },
         dream: { phase: 'Phase 2 · Prix de rêve', copy: 'Rétro-ingénierez votre prix de rêve, avec un plan d’épargne et un test de réalité.', target: 'à votre prix de rêve' },
         looking: { phase: 'Phases 3–4 · Options & plan d’action', copy: 'Options, subventions et énergie – puis votre plan d’action.', target: 'à vos options' },
+        build: { phase: 'Comparer les modes de construction', copy: 'Une maison aux normes américaines, une rénovation profonde et une enveloppe de qualité suisse côte à côte : coût, énergie sur 30 ans, ce que change la meilleure enveloppe.', target: 'à la comparaison des constructions' },
       },
       why: {
         dream: 'Nous montrerons l’écart avec votre objectif et combien épargner – ou un test de réalité honnête si c’est ambitieux.',
@@ -1497,6 +1505,7 @@ export const translations = {
           afford: 'en train de voir ce que vous pouvez vous permettre',
           dream: 'en train de viser un prix que vous avez en tête',
           looking: 'en recherche active',
+          build: 'en train de construire ou de rénover, et vous pesez comment construire',
         },
         city: { area: 'avec un endroit précis en tête', region: 'avec une région en tête', notyet: 'encore ouvert·e sur le où' },
       },
@@ -2160,6 +2169,7 @@ export const translations = {
         dreamer: 'Il·la Sognatore·trice',
         explorer: 'Esploratore·trice pronto·a',
         mover: 'Chi trasloca',
+        builder: 'Il costruttore',
       },
       dest: {
         learn: { phase: 'Fase 1 · Il tuo budget', copy: 'Impara le basi e vedi cosa potresti permetterti.', target: 'al calcolatore' },
@@ -2167,6 +2177,7 @@ export const translations = {
         afford: { phase: 'Fase 1 · Il tuo budget', copy: 'Il tuo prezzo d’acquisto massimo, onestamente.', target: 'al calcolatore' },
         dream: { phase: 'Fase 2 · Prezzo dei sogni', copy: 'Ricostruisci a ritroso il prezzo dei sogni, con un piano di risparmio e un controllo di realtà.', target: 'al tuo prezzo dei sogni' },
         looking: { phase: 'Fasi 3–4 · Opzioni & piano d’azione', copy: 'Opzioni, sussidi ed energia – poi il tuo piano d’azione.', target: 'alle tue opzioni' },
+        build: { phase: 'Confronta i modi di costruire', copy: 'Una casa a norma USA, una ristrutturazione profonda e un involucro di qualità svizzera fianco a fianco: costi, energia su 30 anni, cosa cambia con l’involucro migliore.', target: 'al confronto delle costruzioni' },
       },
       why: {
         dream: 'Ti mostreremo il divario rispetto al tuo obiettivo e quanto risparmiare – o un onesto controllo di realtà se è ambizioso.',
@@ -2189,6 +2200,7 @@ export const translations = {
           afford: 'stai vedendo cosa puoi permetterti',
           dream: 'stai puntando a un prezzo che hai in mente',
           looking: 'in ricerca attiva',
+          build: 'state costruendo o ristrutturando e valutate come costruire',
         },
         city: { area: 'con una zona precisa in mente', region: 'con una regione in mente', notyet: 'ancora aperto·a sul dove' },
       },

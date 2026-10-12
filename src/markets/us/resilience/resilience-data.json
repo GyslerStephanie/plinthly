@@ -1,0 +1,618 @@
+{
+  "meta": {
+    "version": "0.1",
+    "last_updated": "2026-10-12",
+    "notes": "Resilient-build explorer data (phase 1: energy and cost). Every figure is an indicative 2026 estimate marked for sourcing; the UI says so. Costs are hard construction cost, excluding land and soft costs. Added wall cost is per square foot of WALL over a 2021-code 2x6 wall; premium share of house is the cross-check band the computed premium must fall in. HERS equivalents bridge each archetype to the existing energy model (home.js annualEnergyCost) until a wall-by-wall heat-loss model replaces them. See docs/specs/RESILIENT_BUILD_SPEC.md and docs/SWISS_ENVELOPE_US_REFERENCE.md."
+  },
+  "geometry": {
+    "wall_area_factor": {
+      "1": 1.2,
+      "2": 0.9
+    },
+    "window_area_pct": 15,
+    "notes": "Exterior wall area as a multiple of floor area: a one-storey rectangle has more wall per floor; two storeys share a roof and a slab. Window area 15% of floor area is a common US design rule (IECC prescriptive path limits windows to 15% of wall area in some paths; 15% of floor area is a typical single-family outcome). Same convention as retrofit.js (roof ≈ 50% of living area)."
+  },
+  "windows": {
+    "double_per_sqft_usd": {
+      "low": 40,
+      "high": 60
+    },
+    "triple_per_sqft_usd": {
+      "low": 80,
+      "high": 150
+    },
+    "notes": "Installed cost per square foot of window. Double-pane builder windows vs triple-pane tilt-turn (Alpen Tyrol, Zola, INTUS). Owner reports put Zola packages at $60–110/sq ft (dated).",
+    "sources": [
+      "https://www.phius.org/products/w-101007",
+      "https://www.greenbuildingadvisor.com/question/help-me-choose-my-high-performance-windows-please"
+    ]
+  },
+  "systems": {
+    "erv_usd": {
+      "low": 4000,
+      "high": 9000
+    },
+    "heatpump_new_build_increment_usd": {
+      "low": 2000,
+      "high": 6000
+    },
+    "hpwh_new_build_increment_usd": {
+      "low": 800,
+      "high": 2000
+    },
+    "notes": "ERV: ducted energy-recovery ventilator installed (Zehnder ComfoAir Q class at the top of the range, Broan/Renewaire at the bottom). On a NEW build a heat pump replaces a furnace plus air conditioner the house would have needed anyway, so only the increment counts; on a retrofit (archetype C) the full measure cost from us-home-data.json measures applies via upgradeLedger.",
+    "sources": [
+      "https://zehnderamerica.com/",
+      "https://www.energysage.com/heat-pumps/costs-and-benefits-air-source-heat-pumps"
+    ]
+  },
+  "price_paths": {
+    "ref": {
+      "label": "EIA reference",
+      "escalation_pct": 2.0,
+      "note": "Nominal residential energy prices roughly track inflation in the AEO reference case."
+    },
+    "high": {
+      "label": "High price",
+      "escalation_pct": 3.5,
+      "note": "AEO high oil and gas price case, plus the electricity price rises seen 2021–2026."
+    },
+    "low": {
+      "label": "Low price",
+      "escalation_pct": 1.0,
+      "note": "AEO low price case."
+    },
+    "notes": "Annual nominal escalation applied to the whole energy bill. Placeholder values read off the EIA Annual Energy Outlook 2025 residential price trajectories; replace with per-fuel paths when the fuel input ships.",
+    "sources": [
+      "https://www.eia.gov/outlooks/aeo/"
+    ]
+  },
+  "state_climate": {
+    "CA": "mixed",
+    "NY": "cold",
+    "TX": "hot",
+    "FL": "hot",
+    "WA": "mixed",
+    "MA": "cold",
+    "CO": "cold",
+    "IL": "cold",
+    "GA": "hot",
+    "notes": "Coarse climate bucket per state, used only to pick the default Swiss-grade wall: cold and mixed → double-stud, hot → ICF."
+  },
+  "archetypes": [
+    {
+      "id": "A",
+      "key": "older",
+      "label": "Older existing home",
+      "sub": "The house most people already own",
+      "wall": "older",
+      "new_build": false,
+      "windows": "double",
+      "systems": [],
+      "hers": 130,
+      "hers_note": "Typical existing home, RESNET benchmark (us-home-data.json hers.typical_existing)."
+    },
+    {
+      "id": "B",
+      "key": "code",
+      "label": "Code-built new home",
+      "sub": "What a builder quotes by default",
+      "wall": "code2x6",
+      "new_build": true,
+      "windows": "double",
+      "systems": [],
+      "hers": 58,
+      "hers_note": "A 2021 IECC home models around HERS 55–60 (RESNET 2026 trends put the average rated new home at 53, which includes above-code homes)."
+    },
+    {
+      "id": "C",
+      "key": "retrofit",
+      "label": "Deep envelope retrofit",
+      "sub": "Archetype A, wrapped and sealed",
+      "wall": "ext_mw",
+      "retrofit_of": "A",
+      "new_build": false,
+      "windows": "triple",
+      "systems": [
+        "erv",
+        "heatpump",
+        "hpwh"
+      ],
+      "hers": 65,
+      "hers_note": "Exterior insulation, air sealing to ~1.5 ACH50, triple-pane, heat pump and ERV typically halve an older home's energy use (est.)."
+    },
+    {
+      "id": "D",
+      "key": "swiss",
+      "label": "Swiss / Passive-grade new build",
+      "sub": "Minergie-P or PHIUS envelope",
+      "wall_by_climate": {
+        "cold": "double_stud",
+        "mixed": "double_stud",
+        "hot": "icf"
+      },
+      "wall_options": [
+        "double_stud",
+        "ext_mw",
+        "icf",
+        "aac",
+        "prefab_timber",
+        "sips"
+      ],
+      "new_build": true,
+      "windows": "triple",
+      "systems": [
+        "erv",
+        "heatpump",
+        "hpwh"
+      ],
+      "hers": 30,
+      "hers_note": "PHIUS-certified homes without solar typically rate HERS 25–40 (est.)."
+    }
+  ],
+  "wall_assemblies": [
+    {
+      "id": "older",
+      "label": "Pre-2000 stick frame",
+      "short": "Older stick frame",
+      "swiss_equivalent": null,
+      "layers": [
+        "siding",
+        "building paper",
+        "board or plywood sheathing",
+        "2x4 studs, R-11 batt or empty",
+        "gypsum"
+      ],
+      "thickness_in": {
+        "low": 5,
+        "high": 5
+      },
+      "r_whole_wall": {
+        "low": 9,
+        "high": 11
+      },
+      "ach50_typical": {
+        "low": 7,
+        "high": 10
+      },
+      "added_cost_per_sqft_wall_usd": null,
+      "premium_pct_of_house": null,
+      "minergie_p_as_drawn": false,
+      "climate_zones": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "retrofit_capable": false,
+      "baseline": true,
+      "hazard_fit": {
+        "hurricane": "poor",
+        "wildfire": "poor",
+        "hail": "poor",
+        "flood": "poor"
+      },
+      "vapour_open": true,
+      "noncombustible": false,
+      "note": "The house most US owners already have. The starting point for a retrofit.",
+      "sources": []
+    },
+    {
+      "id": "code2x6",
+      "label": "Code 2x6 stick frame (2021 IECC)",
+      "short": "Code 2x6",
+      "swiss_equivalent": null,
+      "layers": [
+        "siding",
+        "water-resistive barrier",
+        "OSB sheathing",
+        "2x6 studs, R-20 batt",
+        "gypsum"
+      ],
+      "thickness_in": {
+        "low": 7,
+        "high": 7
+      },
+      "r_whole_wall": {
+        "low": 16,
+        "high": 18
+      },
+      "ach50_typical": {
+        "low": 2.5,
+        "high": 3.0
+      },
+      "added_cost_per_sqft_wall_usd": {
+        "low": 0,
+        "high": 0
+      },
+      "premium_pct_of_house": {
+        "low": 0,
+        "high": 0
+      },
+      "minergie_p_as_drawn": false,
+      "base_wall_cost_per_sqft_usd": {
+        "low": 18,
+        "high": 30
+      },
+      "climate_zones": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "retrofit_capable": false,
+      "baseline": true,
+      "hazard_fit": {
+        "hurricane": "neutral",
+        "wildfire": "poor",
+        "hail": "neutral",
+        "flood": "neutral"
+      },
+      "vapour_open": true,
+      "noncombustible": false,
+      "note": "What a US builder quotes by default. The baseline every premium is measured against.",
+      "sources": [
+        "https://www.iccsafe.org/products-and-services/i-codes/2021-i-codes/iecc/"
+      ]
+    },
+    {
+      "id": "ext_mw",
+      "label": "2x6 + exterior mineral wool",
+      "short": "Exterior mineral wool",
+      "swiss_equivalent": "Hinterlüftete Fassade (ventilated façade)",
+      "layers": [
+        "cladding",
+        "vertical strapping (ventilated rainscreen)",
+        "3–4 in Rockwool Comfortboard 80",
+        "water and air barrier on plywood",
+        "2x6 studs, dense-pack cellulose or mineral wool",
+        "smart vapour retarder",
+        "gypsum"
+      ],
+      "thickness_in": {
+        "low": 11,
+        "high": 12
+      },
+      "r_whole_wall": {
+        "low": 30,
+        "high": 36
+      },
+      "ach50_typical": {
+        "low": 1.0,
+        "high": 1.5
+      },
+      "added_cost_per_sqft_wall_usd": {
+        "low": 8,
+        "high": 15
+      },
+      "premium_pct_of_house": {
+        "low": 3,
+        "high": 8
+      },
+      "minergie_p_as_drawn": false,
+      "climate_zones": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "retrofit_capable": true,
+      "hazard_fit": {
+        "hurricane": "neutral",
+        "wildfire": "good",
+        "hail": "neutral",
+        "flood": "neutral"
+      },
+      "vapour_open": true,
+      "noncombustible": true,
+      "note": "The US version of the Swiss ventilated façade, and the only wall here that also works as a retrofit over an existing house. Close to Minergie-P; a 5 in board or a 2x8 cavity gets there. In low-cost states the wall's share of the house runs toward the top of the band.",
+      "sources": [
+        "https://www.rockwool.com/syssiteassets/o2-rockwool/documentation/technical-guides/residential/comfortboard-80-residential-installation-guide.pdf",
+        "https://www.buildingscience.com/documents/insights/bsi-001-the-perfect-wall"
+      ]
+    },
+    {
+      "id": "double_stud",
+      "label": "Double-stud wall, dense-pack cellulose",
+      "short": "Double-stud",
+      "swiss_equivalent": "Holzrahmenbau (site-built timber frame)",
+      "layers": [
+        "siding",
+        "strapping (rainscreen)",
+        "vapour-open water-resistive barrier",
+        "taped plywood (air barrier)",
+        "2x4 outer wall",
+        "gap",
+        "2x4 inner wall; 12 in dense-pack cellulose through both",
+        "smart vapour retarder",
+        "gypsum"
+      ],
+      "thickness_in": {
+        "low": 13,
+        "high": 14
+      },
+      "r_whole_wall": {
+        "low": 40,
+        "high": 45
+      },
+      "ach50_typical": {
+        "low": 0.6,
+        "high": 1.0
+      },
+      "added_cost_per_sqft_wall_usd": {
+        "low": 3,
+        "high": 6
+      },
+      "premium_pct_of_house": {
+        "low": 2,
+        "high": 4
+      },
+      "minergie_p_as_drawn": true,
+      "climate_zones": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "retrofit_capable": false,
+      "hazard_fit": {
+        "hurricane": "neutral",
+        "wildfire": "poor",
+        "hail": "neutral",
+        "flood": "neutral"
+      },
+      "vapour_open": true,
+      "noncombustible": false,
+      "note": "The standard Passive House wall in New England and the Pacific Northwest. Cheapest route to R-40 and beyond; needs a dense-pack installer who has done a 12 in cavity.",
+      "sources": [
+        "https://www.finehomebuilding.com/project-guides/framing/thick-walls-faster-cheaper-better-insulated",
+        "https://www.greenbuildingadvisor.com/question/cost-of-a-double-stud-wall-with-dense-packed-cellulose"
+      ]
+    },
+    {
+      "id": "icf",
+      "label": "Insulated concrete forms (ICF)",
+      "short": "ICF",
+      "swiss_equivalent": "Beton mit Aussendämmung (concrete, exterior-insulated)",
+      "layers": [
+        "stucco, fibre cement or brick veneer",
+        "(for Minergie-P: 2–3 in exterior mineral wool)",
+        "2.5 in EPS form face",
+        "6–8 in reinforced concrete",
+        "2.5 in EPS form face",
+        "furring",
+        "gypsum"
+      ],
+      "thickness_in": {
+        "low": 11,
+        "high": 16
+      },
+      "r_whole_wall": {
+        "low": 22,
+        "high": 24
+      },
+      "ach50_typical": {
+        "low": 0.6,
+        "high": 1.0
+      },
+      "added_cost_per_sqft_wall_usd": {
+        "low": 10,
+        "high": 18
+      },
+      "premium_pct_of_house": {
+        "low": 5,
+        "high": 10
+      },
+      "minergie_p_as_drawn": false,
+      "climate_zones": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "retrofit_capable": false,
+      "hazard_fit": {
+        "hurricane": "good",
+        "wildfire": "good",
+        "hail": "good",
+        "flood": "neutral"
+      },
+      "vapour_open": false,
+      "noncombustible": true,
+      "note": "The nearest US equivalent to Swiss concrete construction. Airtight by nature, hurricane and wildfire rated. R-35 to R-48 with thicker-foam forms or added exterior mineral wool.",
+      "sources": [
+        "https://nudura.com/resources/r-value-thermal-mass",
+        "https://www.greenbuildingadvisor.com/question/is-it-necessary-to-go-beyond-the-standard-icf-r23"
+      ]
+    },
+    {
+      "id": "aac",
+      "label": "Autoclaved aerated concrete (AAC) block",
+      "short": "AAC block",
+      "swiss_equivalent": "Ytong / Hebel Porenbeton (aerated concrete block)",
+      "layers": [
+        "mineral render or stucco",
+        "(for Minergie-P: 2–4 in exterior mineral wool)",
+        "8–12 in AAC block, thin-bed mortar",
+        "interior plaster or gypsum"
+      ],
+      "thickness_in": {
+        "low": 9,
+        "high": 16
+      },
+      "r_whole_wall": {
+        "low": 11,
+        "high": 17
+      },
+      "ach50_typical": {
+        "low": 0.6,
+        "high": 1.0
+      },
+      "added_cost_per_sqft_wall_usd": {
+        "low": 12,
+        "high": 20
+      },
+      "premium_pct_of_house": {
+        "low": 5,
+        "high": 12
+      },
+      "minergie_p_as_drawn": false,
+      "climate_zones": [
+        1,
+        2,
+        3
+      ],
+      "retrofit_capable": false,
+      "hazard_fit": {
+        "hurricane": "good",
+        "wildfire": "good",
+        "hail": "good",
+        "flood": "good"
+      },
+      "vapour_open": true,
+      "noncombustible": true,
+      "note": "The Ytong system used across Switzerland and Germany, made in the US by one plant in Florida. Fireproof, termite-proof, does not grow mould. Needs exterior insulation to reach Swiss numbers.",
+      "sources": [
+        "https://www.aerconaac.com/",
+        "https://icc-es.org/wp-content/uploads/report-directory/ESR-1652.pdf",
+        "https://www.thisoldhouse.com/masonry/autoclaved-aerated-concrete-aac"
+      ]
+    },
+    {
+      "id": "prefab_timber",
+      "label": "Prefab timber panel or CLT + wood fibre",
+      "short": "Prefab timber / CLT",
+      "swiss_equivalent": "Holzbau (prefabricated timber construction)",
+      "layers": [
+        "cladding",
+        "ventilated cavity",
+        "2–6 in wood-fibre board (TimberHP, Gutex)",
+        "10–14 in insulated timber-frame panel, or 3.5–4 in CLT",
+        "service cavity",
+        "gypsum or exposed wood"
+      ],
+      "thickness_in": {
+        "low": 14,
+        "high": 20
+      },
+      "r_whole_wall": {
+        "low": 35,
+        "high": 50
+      },
+      "ach50_typical": {
+        "low": 0.3,
+        "high": 0.6
+      },
+      "added_cost_per_sqft_wall_usd": {
+        "low": 15,
+        "high": 40
+      },
+      "premium_pct_of_house": {
+        "low": 5,
+        "high": 35
+      },
+      "minergie_p_as_drawn": true,
+      "climate_zones": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "retrofit_capable": false,
+      "hazard_fit": {
+        "hurricane": "neutral",
+        "wildfire": "poor",
+        "hail": "neutral",
+        "flood": "neutral"
+      },
+      "vapour_open": true,
+      "noncombustible": false,
+      "note": "This is Swiss Holzbau: factory-built, two weeks to weathertight. Bensonwood and Unity Homes (NH), Ecocor (ME) and Build SMART ship it. CLT for a single house is still priced as a niche.",
+      "sources": [
+        "https://www.timberhp.com/",
+        "https://bensonwood.com/",
+        "https://www.ecocor.us/",
+        "https://www.buildsmartna.com/"
+      ]
+    },
+    {
+      "id": "sips",
+      "label": "Structural insulated panels (SIPs)",
+      "short": "SIPs",
+      "swiss_equivalent": null,
+      "layers": [
+        "cladding",
+        "rainscreen",
+        "water-resistive barrier",
+        "OSB skin",
+        "6.5–12 in EPS or polyurethane core",
+        "OSB skin",
+        "gypsum"
+      ],
+      "thickness_in": {
+        "low": 8,
+        "high": 13
+      },
+      "r_whole_wall": {
+        "low": 25,
+        "high": 45
+      },
+      "ach50_typical": {
+        "low": 0.6,
+        "high": 1.0
+      },
+      "added_cost_per_sqft_wall_usd": {
+        "low": 8,
+        "high": 14
+      },
+      "premium_pct_of_house": {
+        "low": 5,
+        "high": 10
+      },
+      "minergie_p_as_drawn": false,
+      "climate_zones": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "retrofit_capable": false,
+      "hazard_fit": {
+        "hurricane": "neutral",
+        "wildfire": "poor",
+        "hail": "neutral",
+        "flood": "neutral"
+      },
+      "vapour_open": false,
+      "noncombustible": false,
+      "note": "A cheaper middle ground outside wildfire zones. Airtight when every panel joint is sealed; the OSB skins must never get wet.",
+      "sources": [
+        "https://www.sips.org/"
+      ]
+    }
+  ],
+  "sources": [
+    "https://www.bauteilkatalog.ch/",
+    "https://database.passivehouse.com/",
+    "https://phius.org/find-professional",
+    "https://research-hub.nrel.gov/en/publications/measure-guideline-incorporating-thick-layers-of-exterior-rigid-in/"
+  ]
+}
