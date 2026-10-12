@@ -96,7 +96,21 @@ export function track(name, props, { once = false } = {}) {
   }
 }
 
-export const OUTBOUND_KINDS = ['lender', 'rebate', 'counselor', 'guide', 'other']
+/**
+ * Small enum for `result_limited_by`: what caps an affordability result.
+ * Swiss engine: bindingConstraint 'equity' → cash, 'income' → income.
+ * US engine: `limit` 'cash' → cash, 'front_end' (28% housing) → income,
+ * 'back_end' (36% total debt, binds only when debts bite) → debt.
+ */
+export function limitedBy(result) {
+  if (!result) return null
+  if (result.market === 'us' && result.limit) {
+    return { cash: 'cash', front_end: 'income', back_end: 'debt' }[result.limit] || null
+  }
+  return { equity: 'cash', income: 'income' }[result.bindingConstraint] || null
+}
+
+export const OUTBOUND_KINDS =['lender', 'rebate', 'counselor', 'guide', 'other']
 
 /** onClick helper for external links that matter for conversion. Never pass
  *  the URL; only its kind. Unknown kinds are recorded as 'other'. */

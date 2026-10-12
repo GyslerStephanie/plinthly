@@ -4,7 +4,9 @@
  * that drops non-primitive / long props, and trackOutbound's kind enum.
  * Run: npm run test:track
  */
-import { track, trackOutbound, setSender, setTrackMarket, sanitizeProps, MAX_PROP_LENGTH } from '../src/lib/track.js'
+import { track, trackOutbound, setSender, setTrackMarket, sanitizeProps, limitedBy, MAX_PROP_LENGTH } from '../src/lib/track.js'
+import { calculateAffordability as chCalc } from '../src/lib/affordability.js'
+import { calculateAffordability as usCalc } from '../src/markets/us/affordability.js'
 
 let pass = 0
 let fail = 0
@@ -87,6 +89,23 @@ trackOutbound('https://example.com/bank')
 check('trackOutbound sends known kinds', eq(sent.slice(0, 5).map((e) => e.props.kind), ['lender', 'rebate', 'counselor', 'guide', 'other']))
 check('trackOutbound maps unknown kinds (and URLs) to other', sent[5].props.kind === 'other')
 check('trackOutbound event name', sent.every((e) => e.name === 'outbound_click'))
+
+// ── limitedBy: engine constraint → small enum ────────────────────────────────
+check('CH equity → cash', limitedBy({ bindingConstraint: 'equity' }) === 'cash')
+check('CH income → income', limitedBy({ bindingConstraint: 'income' }) === 'income')
+check('US cash → cash', limitedBy({ market: 'us', limit: 'cash', bindingConstraint: 'equity' }) === 'cash')
+check('US front_end → income', limitedBy({ market: 'us', limit: 'front_end', bindingConstraint: 'income' }) === 'income')
+check('US back_end → debt', limitedBy({ market: 'us', limit: 'back_end', bindingConstraint: 'income' }) === 'debt')
+check('no result → null', limitedBy(null) === null)
+// Real engines agree with the mapping.
+const ch = chCalc({ grossIncome: 150000, savings: 40000, pillar3a: 0, pillar2: 0, downPct: 20, canton: 'ZH', householdSize: 2 })
+check('CH engine: little cash binds on cash', limitedBy(ch) === 'cash')
+const usCash = usCalc({ grossIncome: 200000, savings: 20000, monthlyDebts: 0, state: 'CA' })
+check('US engine: little cash binds on cash', limitedBy(usCash) === 'cash')
+const usDebt = usCalc({ grossIncome: 90000, savings: 500000, monthlyDebts: 1500, state: 'TX' })
+check('US engine: heavy debts bind on debt', limitedBy(usDebt) === 'debt')
+const usInc = usCalc({ grossIncome: 90000, savings: 500000, monthlyDebts: 0, state: 'TX' })
+check('US engine: no debts, ample cash binds on income', limitedBy(usInc) === 'income')
 
 setSender(null)
 console.log(`track conformance: ${pass} passed, ${fail} failed`)
