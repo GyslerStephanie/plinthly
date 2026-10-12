@@ -18,7 +18,7 @@ const COPY = {
     confirm: 'Yes, I’m buying in {name}',
     other: 'Or choose another country',
     otherSoon: 'More countries coming. Not listed? You can still explore, but the numbers won’t fit your rules.',
-    privacy: 'We guessed from your browser’s time zone. Nothing is sent anywhere, and you can change country any time from the top-right of the page.',
+    privacy: 'We guessed from your browser’s time zone. We count which country was guessed, but your numbers never leave this device. You can change country any time from the top-right of the page.',
     pick: 'Which country are you buying in?',
     summary: {
       us: 'US conventional-loan rules · prices in USD · square feet · 9 states to start.',
