@@ -48,9 +48,6 @@ const COPY = {
       durFew: 'If you only plan to stay a few years, closing costs weigh more. Worth knowing before you buy.',
     },
   },
-  landing: {
-    sub: 'Compare different scenarios or see what you can buy, build or upgrade in the US',
-  },
   hero: {
     title: 'Can I buy?',
     blurb: 'Get an honest picture of your buying power under US lending rules, before you talk to a lender, agent, or builder. No account needed, nothing saved, nothing sold to you.',

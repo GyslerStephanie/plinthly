@@ -316,7 +316,7 @@ export const translations = {
       disclaimer: 'Illustrative only — not licensed financial advice. Verify with an independent advisor.',
     },
     header: {
-      tagline: 'Swiss Sustainable Real Estate Explorer',
+      tagline: 'Sustainable Real Estate Explorer',
       badge: 'No selling · No sign-up · Just honest numbers',
     },
     lang: { label: 'Language' },
@@ -1008,7 +1008,7 @@ export const translations = {
       disclaimer: 'Nur illustrativ — keine lizenzierte Finanzberatung. Mit einer Fachperson prüfen.',
     },
     header: {
-      tagline: 'Schweizer Explorer für nachhaltige Immobilien',
+      tagline: 'Explorer für nachhaltige Immobilien',
       badge: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
     },
     lang: { label: 'Sprache' },
@@ -1701,7 +1701,7 @@ export const translations = {
       disclaimer: 'À titre indicatif uniquement — pas un conseil financier agréé. À vérifier avec un conseiller indépendant.',
     },
     header: {
-      tagline: 'Explorateur immobilier durable suisse',
+      tagline: 'Explorateur immobilier durable',
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
     },
     lang: { label: 'Langue' },
@@ -2393,7 +2393,7 @@ export const translations = {
       disclaimer: 'Solo illustrativo — non consulenza finanziaria autorizzata. Verifica con un consulente indipendente.',
     },
     header: {
-      tagline: 'Explorer immobiliare sostenibile svizzero',
+      tagline: 'Explorer immobiliare sostenibile',
       badge: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',
     },
     lang: { label: 'Lingua' },
