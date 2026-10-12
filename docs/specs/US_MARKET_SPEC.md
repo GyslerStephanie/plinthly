@@ -247,4 +247,3 @@ US rules and data. Steps continue the build order:
 - Sustainable-home rebate amounts change often (Austin, SAWS, Aurora windows);
   recheck before launch.
 - French and Italian learn copy needs a native review.
-- Advisor default model is still `claude-haiku-4-5`; update before adding an API key.

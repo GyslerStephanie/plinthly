@@ -49,7 +49,7 @@ Check these on every backend change, even a one-line diff. Each is a **Blocker**
 | 500 | `{error:'server_error'}` | fetch/parse throw |
 
 Env: `ANTHROPIC_API_KEY` (absence → mock mode), `ADVISOR_MODEL` (default
-`claude-haiku-4-5`).
+`claude-haiku-5-5`).
 
 **Mock mode is a feature**, not a misconfiguration: it makes the whole advisor
 UI testable without a key. Verify it still returns a context-aware reply after
