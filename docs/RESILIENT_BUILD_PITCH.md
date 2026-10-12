@@ -63,6 +63,34 @@ The AI advisor runs scenarios on this model as it does on the rent-vs-buy compar
 
 No structural engineering, no product-level quotes, no regional labour rates, no paid placement. Archetypes with ranges and sources, as Plinthly does now. The indicative framing and the "take this to a professional" step stay.
 
+## What it costs per square foot
+
+Hard construction cost only, 2026 US dollars, excluding land, site work and soft costs. Ranges are national; coastal metros run 30 to 60 percent higher. All figures (est.) until sourced from NAHB, RSMeans and PHIUS project data.
+
+| Build | $ per sq ft of floor area | Premium over code |
+|---|---|---|
+| B. Code-built stick frame | $150 to $250 | baseline |
+| C. Deep envelope retrofit on an existing home | $50 to $100 added | n/a |
+| D1. Passive-grade stick frame (double-stud or exterior mineral wool, PHIUS) | $175 to $300 | 5 to 15 % |
+| D2. ICF or AAC masonry, exterior-insulated | $190 to $320 | 8 to 20 % |
+| D3. CLT or prefab timber panel, wood-fibre insulated | $250 to $400 | 15 to 35 % |
+| Swiss reference: Minergie-P single-family new build | CHF 3,000 to 4,500 per m², about $320 to $480 per sq ft | Swiss labour, not comparable one to one |
+
+Two things the explorer should say out loud. First, the premium is mostly in the envelope and windows; structure, kitchens and finishes cost the same either way, so the smaller house pays for the better envelope. Second, triple-pane tilt-turn windows run $80 to $150 per sq ft of glass against $40 to $60 for a double-pane builder window (est.), which is why window area matters more than wall type.
+
+## Wall assemblies that bring Swiss quality to a US site
+
+Each is built today in the US by ordinary crews or regional prefab shops, with US-available materials. Costs are the added cost per square foot of wall over a code 2x6 wall (est.).
+
+1. **2x6 frame with exterior continuous mineral wool.** 3 to 4 inches of Rockwool Comfortboard outside the sheathing, taped sheathing as the air barrier, ventilated rainscreen, fibre cement or wood siding. R-30 to R-35, non-combustible, dries both ways. The closest thing to a Swiss ventilated façade, and the one assembly that also works as a retrofit over an existing house. About $8 to $15 per sq ft of wall added.
+2. **Double-stud wall with dense-pack cellulose.** Two 2x4 walls 12 inches apart, cellulose blown in, plywood sheathing taped, a smart vapour retarder inside. R-40 and up from cheap materials and any framing crew. The standard Passive House wall in New England and the Pacific Northwest. About $3 to $6 per sq ft of wall added.
+3. **ICF, insulated concrete forms.** Foam blocks stacked and filled with a 6-inch concrete core (Nudura, Fox Blocks, Amvic). Mass wall, airtight, hurricane and wildfire rated, quiet. R-23 to R-28 nominal with much better real performance; add exterior mineral wool for R-40. The nearest US equivalent to Swiss concrete construction, and the natural choice for Florida, Texas and the Gulf. About 5 to 10 percent on the house.
+4. **AAC, autoclaved aerated concrete block.** The Ytong and Hebel system used all over Switzerland and Germany, made in the US (Aercon in Florida). 8 to 12 inch solid mineral block, mortar-thin joints, exterior mineral wool or mineral render. Fireproof, termite-proof, does not grow mould, and masons already know it. R-10 to R-12 for the block plus exterior insulation. Best fit for hot-humid and hurricane climates. About 5 to 12 percent on the house.
+5. **CLT or prefab timber-frame panels with wood-fibre insulation.** Factory-built wall panels, cross-laminated timber or a deep timber frame, with wood-fibre board outside (TimberHP in Maine, Gutex and Steico imported). This is Swiss Holzbau. Prefab shops already doing it: Bensonwood and Unity Homes (NH), Ecocor (ME), Build SMART (MO). Two weeks to weathertight. About 15 to 35 percent on the house, less when the prefab speed is counted.
+6. **SIPs, structural insulated panels.** OSB skins over a foam core, R-25 to R-45, airtight by nature, fast. Cheaper than CLT, less massive, needs careful joint sealing. A reasonable middle ground outside wildfire zones. About 5 to 10 percent on the house.
+
+Common to all six: triple-pane tilt-turn windows (Alpen, Zola, or European imports), a heat pump, an energy-recovery ventilator, air-tightness tested by blower door, and a roof built to the same standard (Class 4 shingles or standing-seam metal, FORTIFIED where it pays). The explorer should let the user pick the wall and show the cost and performance deltas rather than bury them in the archetype.
+
 ## Who it is for
 
 - **The one person.** Someone planning a build or a major renovation, often in a hazard state (FL, TX, CO, CA, NC, LA), with the means to choose quality over size and tired of the insurance bill. They are the client.
