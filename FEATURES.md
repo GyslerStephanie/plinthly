@@ -56,6 +56,7 @@ _Last synced: 2026-10-11 (#22, #23, #24 merged)_
 | Feature | Status | Branch | Notes |
 |---|---|---|---|
 | IA audit | 🔨 Building | `docs/ia-audit` | Information-architecture review |
+| Comment layer (ask the advisor on the figure) | 🔨 Building | `feature/comment-layer` | Pins, threads, resolve, comments panel; shared agent loop with the bubble. [spec](docs/specs/COMMENT_LAYER_SPEC.md) |
 
 ## Ideas / backlog
 

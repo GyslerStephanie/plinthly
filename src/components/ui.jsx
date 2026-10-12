@@ -38,7 +38,7 @@ export function Card({ title, children, tone = 'default', className = '' }) {
 /** Label/value line used across the result panels. */
 export function Row({ label, value, sub, strong }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-1.5">
+    <div className="flex items-baseline justify-between gap-4 py-1.5" data-anchor={typeof label === 'string' ? label : undefined}>
       <span
         className={
           'text-sm ' + (strong ? 'font-semibold text-slate-900' : 'text-slate-600')

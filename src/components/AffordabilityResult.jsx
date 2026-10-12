@@ -321,7 +321,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
               ● {t(stateMeta.labelKey)}
             </span>
           </div>
-          <p className="ds-figure mt-1 text-4xl font-medium text-ink">
+          <p className="ds-figure mt-1 text-4xl font-medium text-ink" data-anchor={t('result.headlineLabel')} data-anchor-value={money(result.maxPrice)}>
             {money(result.maxPrice)}
           </p>
           {/* Actionable, state-specific lead message */}

@@ -52,9 +52,19 @@ const SWISS_RULES =
   `the 2nd-mortgage slice above ${pctOf(R.AMORT_TARGET_LTV)} LTV amortises within ${R.AMORT_YEARS} years; ` +
   `the Pillar 3a maximum is ${chf(R.PILLAR3A_MAX)} for employees with a pension fund.`
 
+/** A comment pinned to a figure on screen: tell the model what it points at. */
+function anchorLine(ctx) {
+  const a = ctx && ctx.anchor
+  if (!a || typeof a.label !== 'string') return null
+  const where = a.screen ? ` on the "${String(a.screen).slice(0, 60)}" screen` : ''
+  const value = a.value != null ? ` (currently ${String(a.value).slice(0, 40)})` : ''
+  return `PINNED: the user left this comment on the figure "${a.label.slice(0, 80)}"${value}${where}. Answer about that figure first: what it is, why it is this value given their numbers, and what would move it. Then address anything else they asked.`
+}
+
 function buildSystemPrompt(ctx, mode, surface) {
   const lang = { en: 'English', de: 'German', fr: 'French', it: 'Italian' }[ctx.lang] || 'English'
   const facts = JSON.stringify(ctx, null, 0)
+  const pinned = anchorLine(ctx)
   if (ctx.market === 'us') {
     return [
       ...usPromptRules(),
@@ -62,6 +72,7 @@ function buildSystemPrompt(ctx, mode, surface) {
       'Reply in English. Be concise, concrete, and encouraging. No markdown headers; short paragraphs or tight bullet lists.',
       usToolsPrompt(surface),
       mode === 'plan' ? usPlanTask() : "TASK: answer the user's question grounded in their numbers.",
+      ...(pinned ? [pinned] : []),
       'CONTEXT:',
       facts,
     ].join('\n\n')
@@ -80,6 +91,7 @@ function buildSystemPrompt(ctx, mode, surface) {
     mode === 'plan'
       ? 'TASK: produce a short, structured savings roadmap to close the gap: the equity gap, Pillar 3a optimisation, any income gap, and any debt/hard-equity flag. Use only figures present in CONTEXT or a tool result. Never compute a monthly savings target, a timeline or any other figure yourself; if a figure is not in the context, describe the step without a number or suggest the user try it as a what-if.'
       : 'TASK: answer the user\'s question grounded in their numbers.',
+    ...(pinned ? [pinned] : []),
     'CONTEXT:',
     facts,
   ].join('\n\n')

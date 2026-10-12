@@ -53,6 +53,18 @@ function narrateExplain(p) {
 }
 
 export function mockAgentTurn(ctx, messages, mode, surface) {
+  const turn = mockAgentTurnInner(ctx, messages, mode, surface)
+  // A comment pinned to a figure: say which one, so the preview reads like the
+  // live answer will. Tool-use legs pass through untouched.
+  const a = ctx && ctx.anchor
+  if (a && a.label && turn && turn.reply && turn.stop !== 'tool_use') {
+    const value = a.value != null ? ` (${a.value})` : ''
+    return { ...turn, reply: `About "${a.label}"${value}: ${turn.reply}` }
+  }
+  return turn
+}
+
+function mockAgentTurnInner(ctx, messages, mode, surface) {
   const lastMsg = messages[messages.length - 1]
   const market = ctx.market === 'us' ? 'us' : 'ch'
   // Glossary questions work on every screen, in both markets.

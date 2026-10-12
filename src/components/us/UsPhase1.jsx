@@ -245,7 +245,7 @@ const STATUS_STYLE = {
 
 export function Row({ label, value, strong }) {
   return (
-    <div className={'flex items-baseline justify-between gap-4 py-1.5 text-sm ' + (strong ? 'border-t border-line pt-2.5 font-semibold text-ink' : 'text-body')}>
+    <div className={'flex items-baseline justify-between gap-4 py-1.5 text-sm ' + (strong ? 'border-t border-line pt-2.5 font-semibold text-ink' : 'text-body')} data-anchor={typeof label === 'string' ? label : undefined}>
       <span>{label}</span>
       <span className="ds-figure tabular-nums text-ink">{value}</span>
     </div>
@@ -303,7 +303,7 @@ function UsResult({ result: r }) {
             ● {ut(`result.status.${state}`)}
           </span>
         </div>
-        <p className="ds-figure mt-3 text-5xl font-medium tracking-tight text-ink">{money(r.maxPrice)}</p>
+        <p className="ds-figure mt-3 text-5xl font-medium tracking-tight text-ink" data-anchor={ut('result.eyebrow')} data-anchor-value={money(r.maxPrice)}>{money(r.maxPrice)}</p>
         <p className="mt-3 text-base leading-relaxed text-ink">{ut(`result.headline.${r.limit}`, ruleVars)}</p>
         {r.viable && <LenderStretch r={r} />}
         {!r.viable && r.shortfall && (
