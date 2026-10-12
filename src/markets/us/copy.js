@@ -72,6 +72,12 @@ const COPY = {
     exampleNote: 'These are example numbers so you can see how it works. Replace them with yours.',
     exampleClear: 'Clear example',
   },
+  stateRequest: {
+    link: 'My state isn’t listed',
+    label: 'Which state are you buying in?',
+    placeholder: 'Choose a state',
+    thanks: 'Thanks, we’ll use this to decide which states to add next.',
+  },
   result: {
     eyebrow: 'Your estimated maximum purchase price',
     empty: 'Enter your income and savings to see what you could buy.',

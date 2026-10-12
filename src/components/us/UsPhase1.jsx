@@ -10,6 +10,9 @@ import {
 import { ut } from '../../markets/us/copy'
 import usData from '../../markets/us/us-data.json'
 import CompareCta from '../CompareCta'
+import RequestPicker from '../RequestPicker'
+import { unlistedStateOptions } from '../../markets/us/allStates'
+import { track } from '../../lib/track'
 import HowItWorks from '../HowItWorks'
 import { usPhase1Course } from '../../lib/learn'
 
@@ -216,6 +219,15 @@ function UsForm({ values, onChange }) {
           ))}
         </select>
       </Field>
+      <RequestPicker
+        className="-mt-2"
+        linkText={ut('stateRequest.link')}
+        label={ut('stateRequest.label')}
+        placeholder={ut('stateRequest.placeholder')}
+        options={unlistedStateOptions}
+        thanks={ut('stateRequest.thanks')}
+        onPick={(region) => track('region_requested', { market: 'us', region })}
+      />
       <Field id="us-hoa" label={ut('form.hoa')} hint={ut('form.hoaHint')}>
         <MoneyInput id="us-hoa" value={values.hoaMonthly} onChange={set('hoaMonthly')} suffix="/mo" />
       </Field>

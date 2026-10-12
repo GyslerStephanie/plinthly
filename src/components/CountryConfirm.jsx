@@ -3,6 +3,24 @@ import { useDialogFocus } from '../lib/useDialogFocus'
 import { marketList, marketName, getMarket } from '../markets'
 import { useMarket } from '../markets/MarketContext'
 import { ut } from '../markets/us/copy'
+import { track } from '../lib/track'
+import RequestPicker from './RequestPicker'
+
+// Likely next markets for "My country isn't listed" (ISO 3166 alpha-2). The
+// supported markets (CH, US) are left out; anything else goes under "Other".
+const REQUEST_COUNTRIES = [
+  'DE', 'AT', 'FR', 'IT', 'GB', 'IE', 'NL', 'BE', 'LU', 'ES', 'PT', 'SE', 'NO', 'DK', 'FI',
+  'PL', 'CZ', 'CA', 'MX', 'BR', 'AU', 'NZ', 'SG', 'HK', 'JP', 'IN', 'AE', 'ZA', 'IL', 'CN',
+]
+
+/** Country name in the UI language; the bare code when Intl can't name it. */
+function countryLabel(code, lang) {
+  try {
+    return new Intl.DisplayNames([lang], { type: 'region' }).of(code) || code
+  } catch {
+    return code
+  }
+}
 
 /**
  * Country confirm — the first step of the front door (spec: auto-detect, then
@@ -15,11 +33,17 @@ import { ut } from '../markets/us/copy'
  */
 export default function CountryConfirm({ onChoose, onSkip }) {
   const dialogRef = useDialogFocus()
-  const { lang } = useI18n()
+  const { lang, t } = useI18n()
   const { detectedMarketId, marketId } = useMarket()
   const guess = detectedMarketId ? getMarket(detectedMarketId) : null
   const others = marketList.filter((m) => !guess || m.id !== guess.id)
   const name = (m) => marketName(m, lang)
+  const requestOptions = [
+    ...REQUEST_COUNTRIES.map((code) => ({ value: code, label: countryLabel(code, lang) })).sort((a, b) =>
+      a.label.localeCompare(b.label, lang),
+    ),
+    { value: 'other', label: t('countryRequest.other') },
+  ]
 
   return (
     <div
@@ -101,6 +125,15 @@ export default function CountryConfirm({ onChoose, onSkip }) {
               {ut('country.otherSoon')}
             </li>
           </ul>
+          <RequestPicker
+            className="mt-3"
+            linkText={t('countryRequest.link')}
+            label={t('countryRequest.label')}
+            placeholder={t('countryRequest.placeholder')}
+            options={requestOptions}
+            thanks={t('countryRequest.thanks')}
+            onPick={(country) => track('market_requested', { country })}
+          />
         </section>
 
         <p className="mt-6 text-sm text-muted">{ut('country.privacy')}</p>
