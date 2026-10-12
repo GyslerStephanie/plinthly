@@ -29,6 +29,7 @@ const KEYS = [
   ['dp', 'dreamPrice'],
   ['ph', 'phase'],
   ['rs', 'residentStatus'], // onboarding: 'expat' | 'national' (drives tax notes)
+  ['cp', 'compareOpen'], // '1' while the Compare surface is open (both markets)
   // US-only inputs (gi, sv, dn, ct and ph are shared with Switzerland)
   ['md', 'monthlyDebts'],
   ['rt', 'ratePct'],

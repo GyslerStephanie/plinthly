@@ -31,6 +31,7 @@ import { groupDigits } from './lib/format'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
+import PhaseNav from './components/PhaseNav'
 import AdvisorFab from './components/AdvisorFab'
 import CommentLayer from './components/Comments/CommentLayer'
 import CompareView from './components/Compare/CompareView'
@@ -42,7 +43,6 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 import { track, limitedBy } from './lib/track'
 
-const PHASE_NUMBERS = [1, 2, 3, 4, 5]
 
 /** Explorer inputs under their hash names; `bx` only while it is open. */
 function usBuildHash(b, open) {
@@ -195,6 +195,7 @@ export default function App() {
         retrofit: s.buildRetrofit === '1' ? '1' : '',
       })
       if (s.buildOpen === '1') setShowBuild(true)
+      else if (s.compareOpen === '1') setShowCompare(true)
       if (usResult(next)) {
         const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
         setPhase(target)
@@ -224,6 +225,7 @@ export default function App() {
     })
     if (s.dreamPrice) setDreamPrice(s.dreamPrice)
     if (s.residentStatus) setResidentStatus(s.residentStatus)
+    if (s.compareOpen === '1') setShowCompare(true)
 
     const restoredEquity =
       Number(String(nextValues.savings).replace(/[^0-9.]/g, '')) +
@@ -260,7 +262,7 @@ export default function App() {
     if (isUs) {
       // US links carry only US inputs (ct holds the state code).
       const { region, ...rest } = usValues
-      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, showBuild) })
+      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, showBuild), compareOpen: showCompare ? '1' : '' })
       return
     }
     syncHash({
@@ -276,8 +278,9 @@ export default function App() {
       phase,
       residentStatus,
       market: marketId,
+      compareOpen: showCompare ? '1' : '',
     })
-  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore, usBuild, showBuild])
+  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore, usBuild, showBuild, showCompare])
 
   const flatState = {
     ...values,
@@ -359,6 +362,7 @@ export default function App() {
   // Compare is a parallel surface; record where it was opened from.
   const openCompare = (source) => {
     track('compare_opened', { source })
+    setShowBuild(false)
     setShowCompare(true)
   }
 
@@ -395,6 +399,23 @@ export default function App() {
   // the mapped destination (spec §4/§7). Phases 2–5 need a Phase-1 result; on a
   // cold entry there is none yet, so Dreamer/Ready-Explorer land on Phase 1 with
   // a nudge (spec §9) instead of a dead phase.
+  // The parallel tools shown beside the journey steps (PhaseNav). Compare in
+  // both markets; the build explorer where it exists (US).
+  const navTools = [
+    { id: 'compare', label: t('nav.compare'), active: showCompare, onSelect: () => openCompare('nav') },
+    ...(isUs ? [{ id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild() }] : []),
+  ]
+
+  /** The same navigation row inside an overlay: a step closes it and jumps. */
+  const overlayNav = (
+    <PhaseNav
+      current={0}
+      maxVisited={maxVisited}
+      onJump={(n) => { setShowCompare(false); setShowBuild(false); goToPhase(n) }}
+      tools={navTools}
+    />
+  )
+
   const openBuild = () => {
     setShowCompare(false)
     setShowBuild(true)
@@ -571,6 +592,7 @@ export default function App() {
             current={phase}
             maxVisited={maxVisited}
             onJump={goToPhase}
+            tools={navTools}
           />
         </div>
 
@@ -853,6 +875,7 @@ export default function App() {
           seeded from the user's real numbers so it doesn't re-ask. */}
       {showCompare && (
         <CompareView
+          nav={overlayNav}
           onClose={() => setShowCompare(false)}
           seedYear={compareHorizon}
           region={isUs ? usValues.region : undefined}
@@ -884,6 +907,7 @@ export default function App() {
           surface like Compare; its inputs ride in the hash so it is shareable. */}
       {isUs && showBuild && (
         <ResilienceExplore
+          nav={overlayNav}
           build={usBuild}
           onChange={setUsBuild}
           region={usValues.region}
@@ -921,60 +945,6 @@ export default function App() {
   )
 }
 
-function PhaseNav({ current, maxVisited, onJump }) {
-  const { t } = useI18n()
-  return (
-    <nav aria-label={t('nav.label')}>
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
-        {PHASE_NUMBERS.map((n, i) => {
-          const active = n === current
-          const done = n < current
-          const reachable = n <= maxVisited
-          return (
-            <li key={n} className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => reachable && onJump(n)}
-                disabled={!reachable}
-                // Without this the current step is conveyed by colour alone.
-                aria-current={active ? 'step' : undefined}
-                className={
-                  'flex items-center gap-2 rounded-full py-0.5 pr-2 ' +
-                  (reachable ? 'cursor-pointer' : 'cursor-not-allowed')
-                }
-              >
-                <span
-                  className={
-                    'flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ' +
-                    (active
-                      ? 'bg-teal-700 text-white'
-                      : done
-                      ? 'bg-teal-100 text-teal-700'
-                      : 'bg-slate-100 text-slate-400')
-                  }
-                >
-                  {n}
-                </span>
-                <span
-                  className={
-                    active ? 'font-medium text-slate-900' : 'text-slate-400'
-                  }
-                >
-                  {t(`nav.${n}`)}
-                </span>
-              </button>
-              {i < PHASE_NUMBERS.length - 1 && (
-                <span aria-hidden="true" className="mx-1 hidden text-slate-300 sm:inline">
-                  →
-                </span>
-              )}
-            </li>
-          )
-        })}
-      </ol>
-    </nav>
-  )
-}
 
 function EmptyResult({ hasIncome = false, onShowWithoutEquity }) {
   const { t } = useI18n()
