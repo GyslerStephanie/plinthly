@@ -48,8 +48,12 @@ function GeakTrajectory({ order, baseline, current, t }) {
 
 function MeasureToggle({ id, checked, onToggle, detail, t }) {
   return (
+    // A checkbox in behaviour, so it says so: role + checked state. The ✓ box
+    // is decoration (it is always in the DOM, transparent when off).
     <button
       type="button"
+      role="checkbox"
+      aria-checked={checked}
       onClick={onToggle}
       className={
         'w-full rounded-xl border p-3 text-left transition ' +
@@ -58,6 +62,7 @@ function MeasureToggle({ id, checked, onToggle, detail, t }) {
     >
       <div className="flex items-start gap-3">
         <span
+          aria-hidden="true"
           className={
             'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border text-xs ' +
             (checked ? 'border-teal-600 bg-teal-600 text-white' : 'border-slate-300 bg-white text-transparent')

@@ -180,10 +180,11 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
       {/* ── Price input ── */}
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700">{t('check.priceLabel')}</label>
+          <label htmlFor="dream-price" className="block text-sm font-medium text-slate-700">{t('check.priceLabel')}</label>
           <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
             <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
             <input
+              id="dream-price"
               type="text" inputMode="numeric"
               value={groupDigits(price)}
               onChange={(e) => setPrice(groupDigits(e.target.value))}
@@ -206,9 +207,12 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
           </label>
           {showAssessed && (
             <div className="mt-2 space-y-1">
+              <label htmlFor="dream-assessed" className="block text-sm font-medium text-slate-700">{t('check.assessedLabel')}</label>
               <div className="flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
                 <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
                 <input
+                  id="dream-assessed"
+                  aria-describedby="dream-assessed-hint"
                   type="text" inputMode="numeric"
                   value={groupDigits(assessed)}
                   onChange={(e) => setAssessed(groupDigits(e.target.value))}
@@ -216,15 +220,15 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
                   className="w-full rounded-r-lg bg-transparent py-2.5 pr-3 text-right tabular-nums text-slate-900 placeholder:text-slate-300 focus:outline-none"
                 />
               </div>
-              <p className="text-xs leading-relaxed text-slate-500">{t('check.assessedHint')}</p>
+              <p id="dream-assessed-hint" className="text-xs leading-relaxed text-slate-500">{t('check.assessedHint')}</p>
             </div>
           )}
         </div>
 
         {/* ── Optional: property type ── */}
         <div>
-          <label className="block text-sm font-medium text-slate-700">{t('check.propTypeLabel')}</label>
-          <div className="mt-1.5 grid grid-cols-3 gap-2">
+          <p id="dream-proptype-label" className="block text-sm font-medium text-slate-700">{t('check.propTypeLabel')}</p>
+          <div role="group" aria-labelledby="dream-proptype-label" className="mt-1.5 grid grid-cols-3 gap-2">
             {[
               { val: 'primary',    key: 'check.propTypePrimary' },
               { val: 'holiday',    key: 'check.propTypeHoliday' },
@@ -232,6 +236,7 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
             ].map(({ val, key }) => (
               <button
                 key={val} type="button"
+                aria-pressed={propType === val}
                 onClick={() => setPropType(val)}
                 className={
                   'rounded-lg border px-2 py-2 text-xs font-medium transition ' +
@@ -248,10 +253,12 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
 
         {/* ── Optional: existing obligations ── */}
         <div>
-          <label className="block text-sm font-medium text-slate-700">{t('check.obligationsLabel')}</label>
+          <label htmlFor="dream-obligations" className="block text-sm font-medium text-slate-700">{t('check.obligationsLabel')}</label>
           <div className="mt-1.5 flex items-center rounded-lg border border-slate-300 bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
             <span className="select-none pl-3 pr-2 text-sm text-slate-400">{currencySymbol()}</span>
             <input
+              id="dream-obligations"
+              aria-describedby="dream-obligations-hint"
               type="text" inputMode="numeric"
               value={groupDigits(obligations)}
               onChange={(e) => setObligations(groupDigits(e.target.value))}
@@ -260,7 +267,7 @@ export default function DreamPricePhase({ result, values, onValuesChange, onNavi
             />
             <span className="select-none pr-3 text-sm text-slate-400">/mo</span>
           </div>
-          <p className="mt-1 text-xs text-slate-500">{t('check.obligationsHint')}</p>
+          <p id="dream-obligations-hint" className="mt-1 text-xs text-slate-500">{t('check.obligationsHint')}</p>
           {!obligations && (
             <p className="mt-0.5 text-xs italic text-amber-700">{t('check.obligationsSkipped')}</p>
           )}
