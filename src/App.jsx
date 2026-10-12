@@ -33,6 +33,7 @@ import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
+import ResilienceExplore from './components/us/ResilienceExplore'
 import Onboarding from './components/Onboarding/Onboarding'
 import Landing from './components/Landing/Landing'
 import { buildAdvisorContext } from './lib/advisorContext'
@@ -41,6 +42,21 @@ import { Analytics } from '@vercel/analytics/react'
 import { track } from './lib/track'
 
 const PHASE_NUMBERS = [1, 2, 3, 4, 5]
+
+/** Explorer inputs under their hash names; `bx` only while it is open. */
+function usBuildHash(b, open) {
+  return {
+    buildOpen: open ? '1' : '',
+    buildMode: b.mode,
+    buildSqft: b.sqft,
+    buildBudget: b.budget,
+    buildStoreys: b.storeys,
+    buildHorizon: b.horizon,
+    buildPath: b.path,
+    buildWallD: b.wallD,
+    buildRetrofit: b.retrofit,
+  }
+}
 const LAST_PHASE = 5
 const ONBOARDED_KEY = 'plinthly.onboarded'
 
@@ -72,6 +88,8 @@ const DEFAULT_VALUES = {
 const US_PHASE_COPY = { 2: 'dream', 3: 'explore', 4: 'options', 5: 'plan' }
 
 const US_DEFAULT_EXPLORE = { budget: '', chosenOption: '', measures: undefined }
+// "Compare how to build" — the resilient-build explorer's inputs (hash keys b*).
+const US_DEFAULT_BUILD = { mode: 'size', sqft: '2,000', budget: '500,000', storeys: '2', horizon: '30', path: 'ref', wallD: '', retrofit: '' }
 
 const DEFAULT_EXPLORE = {
   budget: '',
@@ -96,6 +114,8 @@ export default function App() {
   const [usValues, setUsValues] = useState(US_EXAMPLE_VALUES) // US Phase 1 inputs (example until edited)
   const [showCountry, setShowCountry] = useState(false) // front door step 1: country confirm
   const [usExplore, setUsExplore] = useState(US_DEFAULT_EXPLORE) // US Phases 3–5
+  const [usBuild, setUsBuild] = useState(US_DEFAULT_BUILD) // US resilient-build explorer inputs
+  const [showBuild, setShowBuild] = useState(false) // "Compare how to build" parallel surface (US)
   const usRes = isUs ? usResult(usValues) : null
   // US funnel: count a calculation once the visitor's own numbers give a
   // result. The pre-filled example doesn't count, or every visit would.
@@ -159,6 +179,17 @@ export default function App() {
       setUsValues(next)
       if (s.dreamPrice) setDreamPrice(s.dreamPrice)
       setUsExplore({ budget: s.budget ?? '', chosenOption: s.chosenOption ?? '', measures: s.measures })
+      setUsBuild({
+        mode: s.buildMode === 'budget' ? 'budget' : 'size',
+        sqft: s.buildSqft ? groupDigits(s.buildSqft) : US_DEFAULT_BUILD.sqft,
+        budget: s.buildBudget ? groupDigits(s.buildBudget) : US_DEFAULT_BUILD.budget,
+        storeys: s.buildStoreys === '1' ? '1' : '2',
+        horizon: s.buildHorizon ?? US_DEFAULT_BUILD.horizon,
+        path: s.buildPath ?? US_DEFAULT_BUILD.path,
+        wallD: s.buildWallD ?? '',
+        retrofit: s.buildRetrofit === '1' ? '1' : '',
+      })
+      if (s.buildOpen === '1') setShowBuild(true)
       if (usResult(next)) {
         const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
         setPhase(target)
@@ -224,7 +255,7 @@ export default function App() {
     if (isUs) {
       // US links carry only US inputs (ct holds the state code).
       const { region, ...rest } = usValues
-      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore })
+      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, showBuild) })
       return
     }
     syncHash({
@@ -241,7 +272,7 @@ export default function App() {
       residentStatus,
       market: marketId,
     })
-  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore])
+  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore, usBuild, showBuild])
 
   const flatState = {
     ...values,
@@ -332,6 +363,12 @@ export default function App() {
   // the mapped destination (spec §4/§7). Phases 2–5 need a Phase-1 result; on a
   // cold entry there is none yet, so Dreamer/Ready-Explorer land on Phase 1 with
   // a nudge (spec §9) instead of a dead phase.
+  const openBuild = () => {
+    setShowCompare(false)
+    setShowBuild(true)
+    track('build_explorer_opened')
+  }
+
   const completeOnboarding = ({ focus, persona, dest, seed }) => {
     markOnboarded()
     if (seed?.residentStatus) setResidentStatus(seed.residentStatus)
@@ -346,6 +383,10 @@ export default function App() {
 
     if (dest === 'compare') {
       setShowCompare(true)
+      return
+    }
+    if (dest === 'build') {
+      openBuild()
       return
     }
     const hasResult = isUs ? !!usRes : !!phase1
@@ -392,6 +433,8 @@ export default function App() {
     setRouteIntent(null)
     setUsValues(US_EXAMPLE_VALUES)
     setUsExplore(US_DEFAULT_EXPLORE)
+    setUsBuild(US_DEFAULT_BUILD)
+    setShowBuild(false)
     setPhase(1)
     setMaxVisited(1)
   }
@@ -539,6 +582,7 @@ export default function App() {
             onExploreChange={setUsExplore}
             region={usValues.region}
             onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
+            onBuild={openBuild}
           />
         )}
         {isUs && usRes && phase === 5 && (
@@ -694,12 +738,12 @@ export default function App() {
           and two FABs would stack (both announced by a screen reader). */}
       {/* "New to mortgages?" — points to Ask Plinthly AI and vetted guides
           wherever the advisor is available. Re-mounts per phase. */}
-      {(isUs ? usRes : previewResult) && !showCompare && !frontDoorOpen && (
+      {(isUs ? usRes : previewResult) && !showCompare && !showBuild && !frontDoorOpen && (
         <LearnToast key={phase} links={learnLinks(marketId)} />
       )}
 
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
-      {isUs && usRes && !showCompare && !frontDoorOpen && (
+      {isUs && usRes && !showCompare && !showBuild && !frontDoorOpen && (
         <AdvisorFab
           tipKey={phase}
           context={buildUsAdvisorContext(
@@ -769,6 +813,19 @@ export default function App() {
                   price: phase1?.maxPrice || undefined,
                 }
           }
+        />
+      )}
+
+      {/* Compare how to build — the resilient-build explorer (US). A parallel
+          surface like Compare; its inputs ride in the hash so it is shareable. */}
+      {isUs && showBuild && (
+        <ResilienceExplore
+          build={usBuild}
+          onChange={setUsBuild}
+          region={usValues.region}
+          onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
+          onClose={() => setShowBuild(false)}
+          shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, true) })}
         />
       )}
 

@@ -27,6 +27,8 @@ const FOCUS = {
   dream: { dest: 'dream', personaKey: 'dreamer' },
   // looking persona depends on whether a city is known (Ready Explorer / Mover)
   looking: { dest: 'looking', personaKey: 'explorer' },
+  // US only: building or renovating → the resilient-build explorer
+  build: { dest: 'build', personaKey: 'builder' },
 }
 
 const AGE_OPTS = ['18_29', '30_39', '40_49', '50_64', '65_plus']
@@ -39,13 +41,14 @@ const CITY_OPTS = ['area', 'region', 'notyet']
 
 // US variant: Q4 asks about first-time buying (it decides the 3% programs)
 // instead of residency, and Q5 picks a state instead of a canton.
-const US_FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking']
+const US_FOCUS_OPTS = ['learn', 'compare', 'afford', 'dream', 'looking', 'build']
 const US_WHO_OPTS = ['first', 'owned']
 const US_CITY_OPTS = ['state', 'notyet']
 
 function buildWhyUs(a) {
   const out = []
   if (a.focus === 'dream') out.push(ut('onboarding.why.dream'))
+  if (a.focus === 'build') out.push(ut('onboarding.why.build'))
   if (a.who === 'first') out.push(ut('onboarding.why.firstTime'))
   if (a.dur === 'few') out.push(ut('onboarding.why.durFew'))
   if (a.focus === 'afford' || a.focus === 'learn') out.push(ut('onboarding.why.afford'))

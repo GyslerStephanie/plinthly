@@ -46,7 +46,7 @@ function RouteCard({ id, letter, chosen, onChoose, children }) {
   )
 }
 
-export default function UsOptionsPhase({ explore, onExploreChange, region, onRegionChange }) {
+export default function UsOptionsPhase({ explore, onExploreChange, region, onRegionChange, onBuild }) {
   const budget = num(explore.budget)
   const st = region ? getState(region) : null
   const size = sizeFromBudget(region, budget)
@@ -158,6 +158,11 @@ export default function UsOptionsPhase({ explore, onExploreChange, region, onReg
           <Row label={ut('options.buildEfficient')} value={`${money(build.efficientPremium.low)}–${money(build.efficientPremium.high)}`} />
           <p className="mt-3 text-xs text-muted">{ut('options.buildTime', { months: Math.round(build.timelineMonths) })}</p>
           <p className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">{ut('options.buildLand')}</p>
+          {onBuild && (
+            <button type="button" onClick={onBuild} className="mt-3 text-left text-sm font-medium text-teal-800 hover:underline">
+              {ut('options.buildExplorer')}
+            </button>
+          )}
         </RouteCard>
       </div>
 

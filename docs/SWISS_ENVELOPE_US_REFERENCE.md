@@ -228,7 +228,7 @@ Swiss houses run hydronic floor heating in a screed at 28 to 35°C (82 to 95°F)
 
 | Wall | Added cost per sq ft of wall (est.) | Share of house (est.) | Reaches Minergie-P as drawn? |
 |---|---|---|---|
-| 1. 2x6 + exterior mineral wool | $8 to $15 | 3 to 6 % | Close; yes with 5 in board or 2x8 cavity |
+| 1. 2x6 + exterior mineral wool | $8 to $15 | 3 to 8 % | Close; yes with 5 in board or 2x8 cavity |
 | 2. Double-stud, cellulose | $3 to $6 | 2 to 4 % | Yes |
 | 3. ICF | $10 to $18 | 5 to 10 % | With added exterior insulation or XR35 forms |
 | 4. AAC | $12 to $20 | 5 to 12 % | With 3 to 4 in exterior mineral wool |

@@ -33,6 +33,16 @@ const KEYS = [
   ['md', 'monthlyDebts'],
   ['rt', 'ratePct'],
   ['ho', 'hoaMonthly'],
+  // US resilient-build explorer ("Compare how to build")
+  ['bx', 'buildOpen'], // '1' when the explorer is open
+  ['bm', 'buildMode'], // 'size' | 'budget'
+  ['bs', 'buildSqft'],
+  ['bb', 'buildBudget'],
+  ['bz', 'buildStoreys'], // '1' | '2'
+  ['bh', 'buildHorizon'], // 10 | 20 | 30
+  ['bp', 'buildPath'], // 'ref' | 'high' | 'low' | a custom % number
+  ['bw', 'buildWallD'], // wall id override for archetype D
+  ['br', 'buildRetrofit'], // '1' = I own the house (retrofit framing)
 ]
 
 // Numeric inputs are displayed with thousands separators (e.g. "1,250,000").
@@ -41,6 +51,7 @@ const KEYS = [
 const NUMERIC_KEYS = new Set([
   'grossIncome', 'savings', 'pillar3a', 'pillar2', 'downPct',
   'householdSize', 'budget', 'dreamPrice', 'monthlyDebts', 'ratePct', 'hoaMonthly',
+  'buildSqft', 'buildBudget',
 ])
 
 /** Build a shareable URL hash from the flat state object. */
@@ -68,7 +79,7 @@ export function decodeState(hash = window.location.hash.replace(/^#/, '')) {
   return out
 }
 
-const US_ONLY = ['monthlyDebts', 'ratePct', 'hoaMonthly']
+const US_ONLY = ['monthlyDebts', 'ratePct', 'hoaMonthly', 'buildOpen']
 const US_STATES = new Set(Object.keys(usData.states))
 
 /** Write state to the URL hash without adding a history entry. */
