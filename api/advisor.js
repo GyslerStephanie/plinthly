@@ -23,7 +23,7 @@ import { RULE_CONSTANTS as R } from '../src/lib/affordability.js'
 import { usPromptRules, usToolsPrompt, usPlanTask } from '../src/markets/us/advisor.js'
 import { mockAgentTurn } from '../src/lib/advisorMock.js'
 
-const MODEL = process.env.ADVISOR_MODEL || 'claude-haiku-4-5' // Haiku — verify id
+const MODEL = process.env.ADVISOR_MODEL || 'claude-haiku-5-5' // current Haiku; override with ADVISOR_MODEL
 const MAX_TOKENS = 800
 const MAX_MESSAGES = 16
 const MAX_CHARS = 1500
