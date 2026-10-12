@@ -23,4 +23,12 @@
   the real app, clickable and commentable inside Claude. To refresh it after code changes:
   `node scripts/build-prototype.mjs <scratch>/proto`, then publish `plinthly-prototype.html` to that URL
   with `root` = the out dir and the printed `files` map. `/api/*` (advisor, feedback) doesn't run there.
+- **Comment layer prototype** (interaction mock, canned answers): https://claude.ai/artifact/4BiGjWaqFVrBxU5mL5LZYJ —
+  the clickable mock that settled pins, threads, resolve and the comments panel before the feature shipped (#32).
+  Shipped code: `src/components/Comments/CommentLayer.jsx`, spec `docs/specs/COMMENT_LAYER_SPEC.md`. Iterate the
+  mock there for UX changes, then build approved changes in the code.
+- **Resilient build track** (pitch and reference pages, same content as `docs/RESILIENT_BUILD_PITCH.md` and
+  `docs/SWISS_ENVELOPE_US_REFERENCE.md`): pitch https://claude.ai/artifact/X9BbPXjRwN17aixuAU52wM ·
+  Swiss envelope reference https://claude.ai/artifact/5FuW8cxkFR5bbKe2ug2KWC. Edit the markdown in `docs/`
+  first, then republish the page to the same URL.
 - Never create a second canvas or prototype for this app; update the ones above.
