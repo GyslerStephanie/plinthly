@@ -594,6 +594,11 @@ export default function App() {
             onJump={goToPhase}
             tools={navTools}
           />
+          {/* "New to mortgages?" — a slim bar under the navigation once a
+              result exists; dismissable for the visit. */}
+          {(isUs ? usRes : previewResult) && !showCompare && !showBuild && (
+            <LearnToast key={phase} links={learnLinks(marketId)} className="mt-4" />
+          )}
         </div>
 
         {showRouteNudge && (
@@ -802,9 +807,6 @@ export default function App() {
           and two FABs would stack (both announced by a screen reader). */}
       {/* "New to mortgages?" — points to Ask Plinthly AI and vetted guides
           wherever the advisor is available. Re-mounts per phase. */}
-      {(isUs ? usRes : previewResult) && !showCompare && !showBuild && !frontDoorOpen && (
-        <LearnToast key={phase} links={learnLinks(marketId)} />
-      )}
 
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
       {isUs && usRes && !showCompare && !showBuild && !frontDoorOpen && (
