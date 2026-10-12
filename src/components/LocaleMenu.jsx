@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { marketList, marketName } from '../markets'
 import { useMarket } from '../markets/MarketContext'
+import { track } from '../lib/track'
 
 /**
  * Country + language in one header menu (top-right, where people look for
@@ -158,6 +159,7 @@ export default function LocaleMenu({ onSwitch, languages }) {
                         type="button"
                         aria-pressed={on}
                         onClick={() => {
+                          if (l.code !== lang) track('language_changed', { from: lang, to: l.code })
                           setLang(l.code)
                           close()
                         }}

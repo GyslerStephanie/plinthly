@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { Card } from './ui'
+import { track } from '../lib/track'
 
 const GOAL_OPTIONS = [
   { value: 'first_home', key: 'feedback.goalFirstHome' },
@@ -75,6 +76,8 @@ export default function FeedbackSection({ feedback, onSubmit }) {
 
   const submit = () => {
     if (!canSubmit) return
+    // Categorical goal only; the free-text message never goes to analytics.
+    track('feedback_submitted', { goal })
     onSubmit({
       goal,
       strategy,

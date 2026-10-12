@@ -41,6 +41,7 @@ _Last synced: 2026-10-11 (#22, #23, #24 merged)_
 | Pillar 3a / 2nd-pillar equity model | ✅ Shipped | `lib/affordability.js` | — |
 | Feedback capture → Google Sheet | ✅ Shipped | `api/feedback.js`, `components/FeedbackSection.jsx` | [setup](docs/FEEDBACK_SETUP.md) |
 | Analytics + Speed Insights | ✅ Shipped | `lib/track.js` | — |
+| Product analytics events (funnel, demand, learn layer, outbound; privacy guard) | 🔨 Building on `feat/analytics-events` | `lib/track.js`, `components/RequestPicker.jsx`, `scripts/track.conformance.mjs` | [analytics](docs/ANALYTICS.md) |
 | Digital Naturalism design system | ✅ Shipped | `src/index.css` (`@theme`), `components/ui.jsx` | — |
 | Shareable / restorable URL state | ✅ Shipped | `lib/share.js` | — |
 | i18n (en / de / fr / it) | ✅ Shipped | `i18n/translations.js` | US is English-only by design (`src/markets/us/copy.js`) |

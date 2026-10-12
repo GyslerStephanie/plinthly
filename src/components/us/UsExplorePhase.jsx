@@ -4,6 +4,7 @@ import { stateOptions, getState } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { MoneyInput } from './UsPhase1'
 import { Indicative } from '../ui'
+import { trackOutbound } from '../../lib/track'
 
 /**
  * US Phase 3 — "What should I look for?". UI only: every figure comes from
@@ -128,7 +129,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
                   <StatusPill status={sh.ira_rebates.status} />
                 </div>
                 <p className="mt-1 text-sm text-body">
-                  <a href={sh.ira_rebates.url} target="_blank" rel="noreferrer" className="font-medium">{sh.ira_rebates.program}</a>: {sh.ira_rebates.note}
+                  <a href={sh.ira_rebates.url} target="_blank" rel="noreferrer" className="font-medium" onClick={() => trackOutbound('rebate')}>{sh.ira_rebates.program}</a>: {sh.ira_rebates.note}
                 </p>
               </div>
               <div>
@@ -136,7 +137,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
                 <ul className="mt-1 space-y-1.5">
                   {sh.programs.map((p) => (
                     <li key={p.name} className="text-sm text-body">
-                      <a href={p.url} target="_blank" rel="noreferrer" className="font-medium">{p.name}</a>: {p.gist}
+                      <a href={p.url} target="_blank" rel="noreferrer" className="font-medium" onClick={() => trackOutbound('rebate')}>{p.name}</a>: {p.gist}
                     </li>
                   ))}
                 </ul>
@@ -145,7 +146,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
                 <h3 className="ds-eyebrow text-xs text-muted">{ut('explore.netMetering')}</h3>
                 <p className="mt-1 text-sm text-body">{sh.net_metering}</p>
               </div>
-              <a href={homeData.links.dsire} target="_blank" rel="noreferrer" className="inline-block text-sm font-medium">
+              <a href={homeData.links.dsire} target="_blank" rel="noreferrer" className="inline-block text-sm font-medium" onClick={() => trackOutbound('rebate')}>
                 {ut('explore.allIncentives')} →
               </a>
             </div>

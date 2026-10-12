@@ -5,7 +5,7 @@ import { impliedSize } from '../lib/exploration'
 import { computeLedger, selectedMeasures } from '../lib/retrofit'
 import { money, int } from '../lib/format'
 import { useI18n } from '../i18n/I18nContext'
-import { track } from '../lib/track'
+import { track, trackOutbound } from '../lib/track'
 import { Card, Pill } from './ui'
 import BankInquiry from './BankInquiry'
 import FeedbackSection from './FeedbackSection'
@@ -109,6 +109,7 @@ export default function Phase4ActionPlan({ phase1, explore, shareUrl, feedback, 
                       href={step.link.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackOutbound(step.link.kind)}
                       className="mt-2 inline-flex text-sm font-medium text-teal-700 hover:text-teal-900"
                     >
                       {t(step.link.labelKey, step.link.labelVars)} ↗

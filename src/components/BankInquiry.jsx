@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/I18nContext'
 import { useAppState } from '../state/AppStateContext'
 import banksData from '../data/banks.json'
 import { Card, Row, Pill } from './ui'
+import { trackOutbound } from '../lib/track'
 
 const toNum = (v) => {
   const n = parseFloat(String(v).replace(/[^0-9.]/g, ''))
@@ -114,6 +115,7 @@ export default function BankInquiry() {
           <p className="mt-1 flex-1 text-sm leading-relaxed text-slate-600">{t('bank.optionADesc')}</p>
           <a
             href={mailto}
+            onClick={() => trackOutbound('lender')}
             className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-teal-700 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-teal-800"
           >
             {t('bank.emailBtn')}
@@ -142,6 +144,7 @@ export default function BankInquiry() {
                   href={b.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackOutbound('lender')}
                   className="shrink-0 text-sm font-medium text-teal-700 hover:text-teal-900"
                 >
                   {t('bank.visit')} ↗

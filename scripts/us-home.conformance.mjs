@@ -93,6 +93,8 @@ for (const option of ['upgrade', 'new', 'build', undefined]) {
   const plan = buildUsActionPlan({ result: viable, state: 'TX', budget: 315000, option, measures: DEFAULT_MEASURES })
   check(`plan (${option || 'no route'}): 3–5 steps`, plan.length >= 3 && plan.length <= 5)
   check(`plan (${option || 'no route'}): every link is https`, plan.every((s) => s.links.every((l) => /^https:\/\//.test(l.url))))
+  // outbound_click analytics kind (OUTBOUND_KINDS in src/lib/track.js).
+  check(`plan (${option || 'no route'}): every link has an outbound kind`, plan.every((s) => s.links.every((l) => ['lender', 'rebate', 'counselor', 'guide', 'other'].includes(l.kind))))
   check(`plan (${option || 'no route'}): no CHF / canton / pillar`, !/CHF|canton|pillar/i.test(JSON.stringify(plan)))
 }
 check('plan: viable buyer starts with pre-approval', buildUsActionPlan({ result: viable, state: 'TX', budget: 315000 })[0].title.startsWith('Get pre-approved'))

@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { useMarket } from '../markets/MarketContext'
 import { getTerm, linkFor } from '../lib/learn'
+import { track, trackOutbound } from '../lib/track'
 
 /**
  * Inline glossary term. Renders a dotted-underlined trigger; on click it reveals
@@ -68,7 +69,7 @@ export default function GlossaryTerm({ id, term, def, children }) {
     id ? (
       <span className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-slate-100 pt-2 text-xs">
         {link && (
-          <a href={link.url} target="_blank" rel="noreferrer" className="font-medium">
+          <a href={link.url} target="_blank" rel="noreferrer" className="font-medium" onClick={() => trackOutbound('guide')}>
             {t('learnMore')} →
           </a>
         )}
@@ -91,7 +92,11 @@ export default function GlossaryTerm({ id, term, def, children }) {
         type="button"
         aria-expanded={open}
         aria-describedby={open ? tooltipId : undefined}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          // Glossary terms only (by id); explicit InfoTerm text is never sent.
+          if (!open && id) track('glossary_opened', { term: id })
+          setOpen((v) => !v)
+        }}
         className="cursor-help rounded-sm border-b border-dotted border-teal-500 text-teal-800 hover:text-teal-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
       >
         {label}

@@ -16,6 +16,7 @@ import { useDialogFocus } from '../../lib/useDialogFocus'
 import HowItWorks from '../HowItWorks'
 import LearnToast from '../LearnToast'
 import { compareCourse, learnLinks } from '../../lib/learn'
+import { track } from '../../lib/track'
 
 // One colour per option, the SAME on every tab so nothing swaps meaning when you
 // switch scenarios. No red — neither line is inherently "bad" (renting isn't a
@@ -173,6 +174,11 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
   // Read-only view with a visible back button — Escape has nothing to discard.
   const dialogRef = useDialogFocus({ onClose })
   const [scenario, setScenario] = useState('rent_vs_buy')
+  // User picks only (tabs + the save/invest nudge), not advisor what-ifs.
+  const selectScenario = (id) => {
+    if (id !== scenario) track('compare_scenario_selected', { scenario: id })
+    setScenario(id)
+  }
   // Onboarding can seed the default time horizon from the user's duration answer.
   const [year, setYear] = useState(() =>
     seedYear ? Math.max(5, Math.min(MAX_YEARS, seedYear)) : 10,
@@ -282,7 +288,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
               <button
                 key={sc.id}
                 type="button"
-                onClick={() => setScenario(sc.id)}
+                onClick={() => selectScenario(sc.id)}
                 className={
                   'flex items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-3.5 text-sm transition ' +
                   (on
@@ -374,7 +380,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
         {isRentBuy && (
           <button
             type="button"
-            onClick={() => setScenario('save_invest')}
+            onClick={() => selectScenario('save_invest')}
             className="mt-3 flex w-full items-center gap-3 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-left text-sm text-teal-900 transition hover:border-teal-300"
           >
             <span aria-hidden="true">💡</span>
@@ -384,7 +390,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
         )}
 
         <div className="mt-4">
-          <HowItWorks course={compareCourse(isUs ? 'us' : 'ch')} />
+          <HowItWorks course={compareCourse(isUs ? 'us' : 'ch')} cardId="compare" />
         </div>
 
         {/* Assumptions */}
