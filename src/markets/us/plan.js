@@ -18,7 +18,8 @@ const L = home.links
  * @param {number} p.budget        Budget explored in Phase 3/4.
  * @param {string} [p.option]      'upgrade' | 'new' | 'build'
  * @param {string[]} [p.measures]  Upgrade measures (when option = 'upgrade').
- * @returns {Array<{title, body, tone, links: Array<{label, url}>}>}
+ * @returns {Array<{title, body, tone, links: Array<{label, url, kind}>}>}  kind feeds
+ *   the outbound_click analytics event (lender | rebate | counselor | guide | other).
  */
 export function buildUsActionPlan({ result, state, budget, option, measures = [] }) {
   const steps = []
@@ -46,7 +47,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
       title: 'Get pre-approved and compare three lenders',
       body: `You can comfortably afford about ${usd(result.maxPrice)}. Ask at least three lenders for a Loan Estimate for the same loan and compare the rate, points and closing costs line by line.`,
       tone: 'teal',
-      links: [{ label: 'How to read a Loan Estimate (CFPB)', url: L.cfpb_loan_estimate }],
+      links: [{ label: 'How to read a Loan Estimate (CFPB)', url: L.cfpb_loan_estimate, kind: 'guide' }],
     })
   }
 
@@ -57,7 +58,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
       title: 'Check first-time buyer help in your state',
       body: `${prog.name}: ${prog.offer} These programs usually require their own mortgage through a participating lender and a homebuyer class.`,
       tone: 'teal',
-      links: [{ label: prog.name, url: prog.url }],
+      links: [{ label: prog.name, url: prog.url, kind: 'rebate' }],
     })
   }
 
@@ -75,7 +76,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
           ? `Your state's rebate program is open: up to ${usd(r.upTo)} back if your household income qualifies.`
           : 'Check utility rebates; the state rebate program is not open right now.'),
       tone: 'default',
-      links: [{ label: r.program, url: r.url }, { label: 'All incentives by ZIP (DSIRE)', url: L.dsire }],
+      links: [{ label: r.program, url: r.url, kind: 'rebate' }, { label: 'All incentives by ZIP (DSIRE)', url: L.dsire, kind: 'rebate' }],
     })
   } else if (option === 'new' && size) {
     const n = optionNewCertified(state, budget, size.mid)
@@ -83,7 +84,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
       title: 'Ask for the HERS score or ENERGY STAR certificate',
       body: `A certified new home should save about ${usd(n.annualSaving)}/yr in energy versus a typical existing home here. Ask the builder for the HERS rating and certificate before you sign.`,
       tone: 'default',
-      links: [{ label: 'ENERGY STAR new homes', url: L.energy_star_new_homes }, { label: 'Find a HERS rater', url: L.resnet_rater }],
+      links: [{ label: 'ENERGY STAR new homes', url: L.energy_star_new_homes, kind: 'guide' }, { label: 'Find a HERS rater', url: L.resnet_rater, kind: 'other' }],
     })
   } else if (option === 'build' && size) {
     const b = optionBuild(state, size.mid)
@@ -91,7 +92,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
       title: 'Price the lot and get three builder bids',
       body: `Construction runs about ${usd(b.perSqft.low)}–${usd(b.perSqft.high)} per sq ft here, before land. Budget another ${usd(b.softCosts.low)}–${usd(b.softCosts.high)} for design, permits and contingency, and about ${Math.round(b.timelineMonths)} months to build.`,
       tone: 'default',
-      links: [{ label: 'DOE Zero Energy Ready homes', url: L.doe_zerh }],
+      links: [{ label: 'DOE Zero Energy Ready homes', url: L.doe_zerh, kind: 'guide' }],
     })
   }
 
@@ -100,7 +101,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
     title: 'Inspect before you commit',
     body: `A home inspection costs about ${usd(home.costs.inspection_usd.low)}–${usd(home.costs.inspection_usd.high)}. Ask for a DOE Home Energy Score too: a 1–10 rating with upgrade suggestions.`,
     tone: 'default',
-    links: [{ label: 'Home Energy Score', url: L.home_energy_score }],
+    links: [{ label: 'Home Energy Score', url: L.home_energy_score, kind: 'guide' }],
   })
 
   // 5. Free, independent advice.
@@ -108,7 +109,7 @@ export function buildUsActionPlan({ result, state, budget, option, measures = []
     title: 'Talk to a HUD-approved housing counselor',
     body: 'Free or low-cost, independent advice on your budget, credit and assistance programs before you sign anything.',
     tone: 'default',
-    links: [{ label: 'Find a counselor (HUD)', url: L.hud_counselors }],
+    links: [{ label: 'Find a counselor (HUD)', url: L.hud_counselors, kind: 'counselor' }],
   })
 
   return steps.slice(0, 5)

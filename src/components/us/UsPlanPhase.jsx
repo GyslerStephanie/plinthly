@@ -3,7 +3,7 @@ import { money } from '../../lib/format'
 import { buildUsActionPlan } from '../../markets/us/plan'
 import { ut } from '../../markets/us/copy'
 import { selectedUsMeasures } from './UsOptionsPhase'
-import { track } from '../../lib/track'
+import { track, trackOutbound } from '../../lib/track'
 
 /** US Phase 5 — personalised action plan. Steps come from src/markets/us/plan.js. */
 
@@ -66,7 +66,7 @@ export default function UsPlanPhase({ result, explore, region, shareUrl }) {
                 {s.links.length > 0 && (
                   <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
                     {s.links.map((l) => (
-                      <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="font-medium">{l.label} →</a>
+                      <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="font-medium" onClick={() => trackOutbound(l.kind)}>{l.label} →</a>
                     ))}
                   </p>
                 )}

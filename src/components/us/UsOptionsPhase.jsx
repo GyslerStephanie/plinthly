@@ -7,6 +7,7 @@ import { ut } from '../../markets/us/copy'
 import { Row } from './UsPhase1'
 import { StatusPill } from './UsExplorePhase'
 import { Indicative } from '../ui'
+import { trackOutbound } from '../../lib/track'
 import UsSustainability from './UsSustainability'
 
 /**
@@ -135,7 +136,7 @@ export default function UsOptionsPhase({ explore, onExploreChange, region, onReg
                 {led.rebates.status === 'open'
                   ? ut('options.rebatesOpen', { amount: money(led.rebates.upTo) })
                   : ut('options.rebatesClosed', { status: ut(`explore.status.${led.rebates.status}`).toLowerCase(), amount: money(led.rebates.upToIfOpen) })}{' '}
-                <a href={led.rebates.url} target="_blank" rel="noreferrer">{ut('options.rebatesLink')}</a>
+                <a href={led.rebates.url} target="_blank" rel="noreferrer" onClick={() => trackOutbound('rebate')}>{ut('options.rebatesLink')}</a>
               </div>
             )}
           </div>

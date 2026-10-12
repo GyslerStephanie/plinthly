@@ -3,6 +3,7 @@ import { sustainabilityFor } from '../../markets/us/home'
 import { getState } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { Indicative } from '../ui'
+import { trackOutbound } from '../../lib/track'
 
 /**
  * US Phase 4: "More ways to make your home sustainable". Water, yard,
@@ -50,7 +51,7 @@ export default function UsSustainability({ region }) {
                     <span>
                       {ut('sustain.costLabel')}: <span className="ds-figure tabular-nums text-ink">{costLabel(m.cost)}</span>
                     </span>
-                    <a href={m.link.url} target="_blank" rel="noreferrer" className="font-medium">{m.link.label} →</a>
+                    <a href={m.link.url} target="_blank" rel="noreferrer" className="font-medium" onClick={() => trackOutbound('guide')}>{m.link.label} →</a>
                   </p>
                 </li>
               ))}
@@ -73,7 +74,7 @@ export default function UsSustainability({ region }) {
             <dd className="inline text-body">
               {state.landscape_rebate ? (
                 <>
-                  <a href={state.landscape_rebate.url} target="_blank" rel="noreferrer" className="font-medium">{state.landscape_rebate.name}</a>
+                  <a href={state.landscape_rebate.url} target="_blank" rel="noreferrer" className="font-medium" onClick={() => trackOutbound('rebate')}>{state.landscape_rebate.name}</a>
                   {': '}
                   {state.landscape_rebate.amount}
                 </>
