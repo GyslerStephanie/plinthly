@@ -270,6 +270,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
     >
       <div className="mx-auto max-w-3xl px-5 py-8 md:px-8">
         {nav && <div className="mb-6 no-print">{nav}</div>}
+        <LearnToast links={learnLinks(isUs ? 'us' : 'ch', 'compare')} className="mb-6" />
         <button
           type="button"
           onClick={onClose}
@@ -571,8 +572,6 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           z-50`, so an instance rendered by App would be painted over; `inline`
           lifts this one above it. It gets the Compare toolset, so it answers
           from the scenario model rather than the Phase 1 engine. */}
-      <LearnToast inline links={learnLinks(isUs ? 'us' : 'ch', 'compare')} />
-
       {/* Both markets get the Compare toolset for their own model: the US one
           runs run_us_compare_scenario on markets/us/compare.js, the Swiss one
           run_compare_scenario on lib/compare/model.js. `values` (US form

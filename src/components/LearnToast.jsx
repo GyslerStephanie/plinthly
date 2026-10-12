@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { askAdvisor } from './GlossaryTerm'
 import { localizeLinks } from '../lib/learn'
@@ -7,15 +7,16 @@ import { track, trackOutbound } from '../lib/track'
 const DISMISS_KEY = 'plinthly.learnToastDismissed'
 
 /**
- * "New to mortgages?" — the discoverable entry to the learn layer. Bottom-left
- * (the advisor button owns bottom-right): points to Ask Plinthly AI and a few
- * vetted guides. Shows on each page; dismissing hides it for the rest of the
- * visit (sessionStorage), so it informs without nagging.
+ * "New to mortgages?" — the discoverable entry to the learn layer, as a slim
+ * bar in the page flow (under the navigation) rather than a floating card:
+ * title and one line of copy on the left, Ask Plinthly AI and the vetted
+ * guides on the right, and an × to dismiss. Dismissing hides it for the rest
+ * of the visit (sessionStorage), so it informs without nagging.
  *
  * @param {Array<{label, url}>} links  Vetted guides (src/data/courses.json).
- * @param {boolean} [inline]           Mounted inside an overlay (Compare) → sit above it.
+ * @param {string} [className]
  */
-export default function LearnToast({ links: rawLinks = [], inline = false }) {
+export default function LearnToast({ links: rawLinks = [], className = '' }) {
   const { t, lang } = useI18n()
   // Swiss guide labels in the UI language (URLs unchanged; US links pass through).
   const links = localizeLinks(rawLinks, lang)
@@ -26,14 +27,8 @@ export default function LearnToast({ links: rawLinks = [], inline = false }) {
       return false
     }
   })
-  const [shown, setShown] = useState(false)
-  // Appear a moment after the page settles, so it doesn't compete with first paint.
-  useEffect(() => {
-    const id = setTimeout(() => setShown(true), 1200)
-    return () => clearTimeout(id)
-  }, [])
 
-  if (hidden || !shown) return null
+  if (hidden) return null
   const dismiss = () => {
     track('learn_toast', { action: 'dismissed' })
     setHidden(true)
@@ -47,21 +42,15 @@ export default function LearnToast({ links: rawLinks = [], inline = false }) {
   return (
     <aside
       aria-label={t('learnToast.title')}
-      className={`learn-toast fixed bottom-5 left-5 w-[22rem] max-w-[calc(100vw-7rem)] rounded-2xl border border-line bg-card p-4 shadow-[var(--shadow-float)] no-print ${inline ? 'z-[60]' : 'z-40'}`}
+      className={`learn-toast flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-line bg-card px-4 py-3 shadow-sm no-print ${className}`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <p className="font-display text-base font-semibold text-ink">{t('learnToast.title')}</p>
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label={t('learnToast.dismiss')}
-          className="-mr-1 -mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted hover:bg-surface hover:text-ink"
-        >
-          <span aria-hidden="true" className="text-lg leading-none">×</span>
-        </button>
+      <div className="min-w-0 flex-1 basis-64">
+        <p className="text-sm text-body">
+          <span className="font-display text-base font-semibold text-ink">{t('learnToast.title')}</span>
+          <span className="ml-2">{t('learnToast.body')}</span>
+        </p>
       </div>
-      <p className="mt-1 text-sm leading-relaxed text-body">{t('learnToast.body')}</p>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
         <button
           type="button"
           onClick={() => {
@@ -72,27 +61,30 @@ export default function LearnToast({ links: rawLinks = [], inline = false }) {
         >
           {t('advisorTip')}
         </button>
+        {links.slice(0, 3).map((l) => (
+          <a
+            key={l.url}
+            href={l.url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm font-medium"
+            onClick={() => {
+              track('learn_toast', { action: 'link' })
+              trackOutbound('guide')
+            }}
+          >
+            {l.label} →
+          </a>
+        ))}
       </div>
-      {links.length > 0 && (
-        <ul className="mt-3 space-y-1 border-t border-line pt-2.5">
-          {links.slice(0, 3).map((l) => (
-            <li key={l.url} className="text-sm">
-              <a
-                href={l.url}
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium"
-                onClick={() => {
-                  track('learn_toast', { action: 'link' })
-                  trackOutbound('guide')
-                }}
-              >
-                {l.label} →
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+      <button
+        type="button"
+        onClick={dismiss}
+        aria-label={t('learnToast.dismiss')}
+        className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted hover:bg-surface hover:text-ink"
+      >
+        <span aria-hidden="true" className="text-lg leading-none">×</span>
+      </button>
     </aside>
   )
 }
