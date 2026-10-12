@@ -359,7 +359,7 @@ export const translations = {
       badge: 'No selling · No sign-up · Just honest numbers',
     },
     lang: { label: 'Language' },
-    nav: { label: 'Your progress', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan' },
+    nav: { label: 'Your progress', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan', tools: 'Tools', compare: 'Compare', build: 'How to build' },
     heading: {
       1: {
         title: 'Can I buy?',
@@ -1090,7 +1090,7 @@ export const translations = {
       badge: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
     },
     lang: { label: 'Sprache' },
-    nav: { label: 'Ihr Fortschritt', 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan' },
+    nav: { label: 'Ihr Fortschritt', 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan', tools: 'Werkzeuge', compare: 'Vergleich', build: 'Bauweisen' },
     heading: {
       1: {
         title: 'Kann ich kaufen?',
@@ -1822,7 +1822,7 @@ export const translations = {
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
     },
     lang: { label: 'Langue' },
-    nav: { label: 'Votre progression', 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action" },
+    nav: { label: 'Votre progression', 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action", tools: 'Outils', compare: 'Comparer', build: 'Construction' },
     heading: {
       1: {
         title: 'Puis-je acheter ?',
@@ -2553,7 +2553,7 @@ export const translations = {
       badge: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',
     },
     lang: { label: 'Lingua' },
-    nav: { label: 'I tuoi progressi', 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione' },
+    nav: { label: 'I tuoi progressi', 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione', tools: 'Strumenti', compare: 'Confronta', build: 'Costruzione' },
     heading: {
       1: {
         title: 'Posso comprare?',

@@ -31,6 +31,7 @@ import { groupDigits } from './lib/format'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
+import PhaseNav from './components/PhaseNav'
 import AdvisorFab from './components/AdvisorFab'
 import CommentLayer from './components/Comments/CommentLayer'
 import CompareView from './components/Compare/CompareView'
@@ -42,7 +43,6 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Analytics } from '@vercel/analytics/react'
 import { track, limitedBy } from './lib/track'
 
-const PHASE_NUMBERS = [1, 2, 3, 4, 5]
 
 /** Explorer inputs under their hash names; `bx` only while it is open. */
 function usBuildHash(b, open) {
@@ -395,6 +395,13 @@ export default function App() {
   // the mapped destination (spec §4/§7). Phases 2–5 need a Phase-1 result; on a
   // cold entry there is none yet, so Dreamer/Ready-Explorer land on Phase 1 with
   // a nudge (spec §9) instead of a dead phase.
+  // The parallel tools shown beside the journey steps (PhaseNav). Compare in
+  // both markets; the build explorer where it exists (US).
+  const navTools = [
+    { id: 'compare', label: t('nav.compare'), active: showCompare, onSelect: () => openCompare('nav') },
+    ...(isUs ? [{ id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild() }] : []),
+  ]
+
   const openBuild = () => {
     setShowCompare(false)
     setShowBuild(true)
@@ -571,6 +578,7 @@ export default function App() {
             current={phase}
             maxVisited={maxVisited}
             onJump={goToPhase}
+            tools={navTools}
           />
         </div>
 
@@ -921,60 +929,6 @@ export default function App() {
   )
 }
 
-function PhaseNav({ current, maxVisited, onJump }) {
-  const { t } = useI18n()
-  return (
-    <nav aria-label={t('nav.label')}>
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-2 text-sm">
-        {PHASE_NUMBERS.map((n, i) => {
-          const active = n === current
-          const done = n < current
-          const reachable = n <= maxVisited
-          return (
-            <li key={n} className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => reachable && onJump(n)}
-                disabled={!reachable}
-                // Without this the current step is conveyed by colour alone.
-                aria-current={active ? 'step' : undefined}
-                className={
-                  'flex items-center gap-2 rounded-full py-0.5 pr-2 ' +
-                  (reachable ? 'cursor-pointer' : 'cursor-not-allowed')
-                }
-              >
-                <span
-                  className={
-                    'flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ' +
-                    (active
-                      ? 'bg-teal-700 text-white'
-                      : done
-                      ? 'bg-teal-100 text-teal-700'
-                      : 'bg-slate-100 text-slate-400')
-                  }
-                >
-                  {n}
-                </span>
-                <span
-                  className={
-                    active ? 'font-medium text-slate-900' : 'text-slate-400'
-                  }
-                >
-                  {t(`nav.${n}`)}
-                </span>
-              </button>
-              {i < PHASE_NUMBERS.length - 1 && (
-                <span aria-hidden="true" className="mx-1 hidden text-slate-300 sm:inline">
-                  →
-                </span>
-              )}
-            </li>
-          )
-        })}
-      </ol>
-    </nav>
-  )
-}
 
 function EmptyResult({ hasIncome = false, onShowWithoutEquity }) {
   const { t } = useI18n()
