@@ -8,7 +8,7 @@ the git branches, not the specs folder, not someone's memory.
 it merges, flip it to `✅ Shipped`. When you shelve an idea, mark it `💡 Idea` or
 delete the row. One row per feature. Link each one to its spec in `docs/specs/`.
 
-_Last synced: 2026-10-12 (#31, #32, #33 merged)_
+_Last synced: 2026-10-12 (#31, #32, #33, #34 merged)_
 
 ## Status legend
 
@@ -48,7 +48,7 @@ _Last synced: 2026-10-12 (#31, #32, #33 merged)_
 | Shareable / restorable URL state | ✅ Shipped | `lib/share.js` | — |
 | i18n (en / de / fr / it) | ✅ Shipped | `i18n/translations.js` | US is English-only by design (`src/markets/us/copy.js`) |
 | US market (country picker, all 5 phases, Compare with advisor scenarios, US advisor, sustainable-home ideas) | ✅ Shipped | `src/markets/` (registry, detection), `src/markets/us/` (engines + sourced data for 9 states), `components/us/` | [spec](docs/specs/US_MARKET_SPEC.md) |
-| Learn layer v1 (glossary, explain_term, "How is this calculated?", "New to mortgages?") | ✅ Shipped | `data/glossary.json`, `lib/learn.js`, `data/*.i18n.json` (Swiss content in de/fr/it; US in English) | [spec](docs/specs/US_MARKET_SPEC.md) step 15 |
+| Learn layer v1 (glossary, explain_term, "How is this calculated?", "New to mortgages?" as a dismissable bar under the navigation since #34) | ✅ Shipped | `data/glossary.json`, `lib/learn.js`, `data/*.i18n.json` (Swiss content in de/fr/it; US in English) | [spec](docs/specs/US_MARKET_SPEC.md) step 15 |
 | Advisor agent (tool use on the app's engines) | ✅ Shipped | `lib/advisorTools.js`, `lib/advisorMock.js`, `components/AdvisorFab.jsx`, `api/advisor.js` | [spec](docs/specs/ADVISOR_AGENT_SPEC.md) |
 | QA skill suite | ✅ Shipped | `.claude/skills/` (five `qa-*` skills + `plinthly-qa` router, shared PROJECT_CONTEXT) | — |
 | Repo organization + AI docs | ✅ Shipped | `docs/`, `plinthly.md`, `FEATURES.md` | — |
