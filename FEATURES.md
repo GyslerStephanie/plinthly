@@ -64,4 +64,4 @@ and `docs/specs/F1-F4_FEATURE_SPEC.md` for candidate features from research.
 
 | Feature | Status | Notes |
 |---|---|---|
-| _(none tracked yet)_ | 💡 Idea | — |
+| Resilient build track (US): envelope archetypes × energy price paths × hazard + insurance over 10/20/30 years | 💡 Idea | Pitch and build strategy in [docs/RESILIENT_BUILD_PITCH.md](docs/RESILIENT_BUILD_PITCH.md); recommended as a third track inside Plinthly, not a separate product |
