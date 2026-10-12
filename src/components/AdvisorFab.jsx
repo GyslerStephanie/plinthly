@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { track } from '../lib/track'
-import { runAdvisorTool } from '../lib/advisorTools'
+import { runAdvisorTurn } from '../lib/advisorClient'
 import { money } from '../lib/format'
 import { ut } from '../markets/us/copy'
-import { mockAgentTurn } from '../lib/advisorMock'
 
 /**
  * Floating "Ask the advisor" button + chat drawer (Push 2).
@@ -35,15 +34,17 @@ import { mockAgentTurn } from '../lib/advisorMock'
  *                                        layer at the same z-index needs to sit
  *                                        above it rather than beside it).
  */
-const MAX_TOOL_ROUNDTRIPS = 3
-
 // How long the "Ask Plinthly AI" tooltip stays up after a page load or phase change.
 const TIP_MS = 8000
 
-export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false, tipKey }) {
+export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false, tipKey, consented: consentedProp, onConsent }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
-  const [consented, setConsented] = useState(false)
+  // Consent is shared with the comment layer when the App owns it; an instance
+  // mounted on its own (Compare) keeps a local gate.
+  const [localConsent, setLocalConsent] = useState(false)
+  const consented = consentedProp ?? localConsent
+  const setConsented = () => (onConsent ? onConsent() : setLocalConsent(true))
   const [messages, setMessages] = useState([]) // {role, content}
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
@@ -117,33 +118,6 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
       : `(Preview) Your current max is ${money(context.maxPrice)}. Connect an API key for live answers.`
   }
 
-  /**
-   * POST one leg of the conversation. When no server answers (local `vite`
-   * without the API bridge, or the claude.ai prototype, which has no /api), run
-   * the same preview mock the server uses, in the browser — so the tool loop
-   * still works on the real engine. Nothing leaves the device in that case.
-   */
-  // The preview mock stands in only when there is no advisor API at all (no
-  // server, a 404, or a non-JSON page). A real API that refuses (rate limit,
-  // daily cap, upstream error) says so: a made-up answer would hide it.
-  async function post(history, mode) {
-    const mock = () => ({ mock: true, ...mockAgentTurn(context, history, mode, surface) })
-    let res
-    try {
-      res = await fetch('/api/advisor', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ context, messages: history, mode, surface }),
-      })
-    } catch {
-      return mock()
-    }
-    const ct = res.headers.get('content-type') || ''
-    if (res.status === 404 || !ct.includes('application/json')) return mock()
-    if (!res.ok) return { reply: t('advisor.errorNote'), error: true }
-    return res.json()
-  }
-
   async function send(text, mode) {
     const planLabel = isUs ? ut('advisor.planButton') : t('advisor.planButton')
     const userMsg = mode === 'plan' ? { role: 'user', content: planLabel } : { role: 'user', content: text }
@@ -156,36 +130,16 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
     let reply = ''
     let isMock = false
     try {
-      // --- the agent loop ---------------------------------------------------
-      // Keep going while the model asks for a calculation, up to a hard cap so
-      // a model that keeps probing can't spin.
-      let history = next
-      let data = await post(history, mode)
-      isMock = !!data.mock
-
-      for (let hop = 0; data.stop === 'tool_use' && hop < MAX_TOOL_ROUNDTRIPS; hop++) {
-        const results = []
-        for (const call of data.toolUse || []) {
-          // The engine runs HERE, in the browser, on the user's own numbers.
-          const outcome = runAdvisorTool(call.name, call.input, { values: values || {}, compare, market: context.market === 'us' ? 'us' : 'ch' })
-          track('advisor_tool_run', { tool: call.name, ok: outcome.ok })
-          if (outcome.ok && outcome.scenario) setScenario(outcome.scenario)
-          results.push({
-            type: 'tool_result',
-            tool_use_id: call.id,
-            // lib/ is pure and has no i18n, so it returns model-side keys
-            // ("own", "buyLater"). Translate them here so the model writes the
-            // user's own words back to them, in their own language.
-            content: JSON.stringify(withLabels(outcome.content)),
-            ...(outcome.ok ? {} : { is_error: true }),
-          })
-        }
-        history = [...history, { role: 'assistant', content: data.assistant }, { role: 'user', content: results }]
-        data = await post(history, mode)
-        isMock = isMock || !!data.mock
-      }
-
-      reply = data.reply || t('advisor.errorNote')
+      // The agent loop lives in lib/advisorClient.js (shared with the comment
+      // layer): the model picks the inputs, the engine runs here in the browser.
+      const turn = await runAdvisorTurn({
+        context, messages: next, mode, surface, values, compare,
+        labelResult: withLabels,
+        onScenario: setScenario,
+        onToolRun: ({ name, ok }) => track('advisor_tool_run', { tool: name, ok }),
+      })
+      isMock = turn.mock
+      reply = turn.error ? t('advisor.errorNote') : turn.reply || t('advisor.errorNote')
     } catch {
       reply = clientMock(mode)
       isMock = true
@@ -225,7 +179,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
               <p className="text-sm font-semibold text-ink">{t('advisor.consentTitle')}</p>
               <p className="text-sm leading-relaxed text-body">{t('advisor.consentBody')}</p>
               <div className="mt-1 flex gap-2">
-                <button type="button" onClick={() => setConsented(true)} className="rounded-full bg-teal-600 px-4 py-2 text-sm font-bold text-on-primary transition hover:bg-teal-700">
+                <button type="button" onClick={() => setConsented()} className="rounded-full bg-teal-600 px-4 py-2 text-sm font-bold text-on-primary transition hover:bg-teal-700">
                   {t('advisor.consentAccept')}
                 </button>
                 <button type="button" onClick={() => setOpen(false)} className="rounded-full border border-line px-4 py-2 text-sm font-medium text-body hover:border-ink">

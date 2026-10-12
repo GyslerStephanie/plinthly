@@ -32,6 +32,7 @@ import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import AdvisorFab from './components/AdvisorFab'
+import CommentLayer from './components/Comments/CommentLayer'
 import CompareView from './components/Compare/CompareView'
 import ResilienceExplore from './components/us/ResilienceExplore'
 import Onboarding from './components/Onboarding/Onboarding'
@@ -116,6 +117,7 @@ export default function App() {
   const [usExplore, setUsExplore] = useState(US_DEFAULT_EXPLORE) // US Phases 3–5
   const [usBuild, setUsBuild] = useState(US_DEFAULT_BUILD) // US resilient-build explorer inputs
   const [showBuild, setShowBuild] = useState(false) // "Compare how to build" parallel surface (US)
+  const [advisorConsented, setAdvisorConsented] = useState(false) // one gate for the bubble and the comment layer
   const usRes = isUs ? usResult(usValues) : null
   // US funnel: count a calculation once the visitor's own numbers give a
   // result. The pre-filled example doesn't count, or every visit would.
@@ -541,6 +543,8 @@ export default function App() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {/* Comment layer toolbar (portal target; empty until a result exists) */}
+            <div id="comment-toolbar" className="hidden sm:block" />
             <button
               type="button"
               onClick={startOver}
@@ -782,8 +786,19 @@ export default function App() {
 
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
       {isUs && usRes && !showCompare && !showBuild && !frontDoorOpen && (
+        <CommentLayer
+          context={buildUsAdvisorContext(usRes, lang, phase === 2 && dreamPrice ? dreamPlan(usInput(usValues), dreamPrice) : null)}
+          values={usValues}
+          screen={phase === 1 ? ut('hero.title') : ut(`${US_PHASE_COPY[phase]}.title`)}
+          consented={advisorConsented}
+          onConsent={() => setAdvisorConsented(true)}
+        />
+      )}
+      {isUs && usRes && !showCompare && !showBuild && !frontDoorOpen && (
         <AdvisorFab
           tipKey={phase}
+          consented={advisorConsented}
+          onConsent={() => setAdvisorConsented(true)}
           context={buildUsAdvisorContext(
             usRes,
             lang,
@@ -806,8 +821,19 @@ export default function App() {
       )}
 
       {previewResult && !showCompare && !isUs && !frontDoorOpen && (
+        <CommentLayer
+          context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
+          values={values}
+          screen={t(`heading.${phase}.title`)}
+          consented={advisorConsented}
+          onConsent={() => setAdvisorConsented(true)}
+        />
+      )}
+      {previewResult && !showCompare && !isUs && !frontDoorOpen && (
         <AdvisorFab
           tipKey={phase}
+          consented={advisorConsented}
+          onConsent={() => setAdvisorConsented(true)}
           context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
           values={values}
           onApplyScenario={(overrides) => {
