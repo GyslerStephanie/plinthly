@@ -156,7 +156,7 @@ function PctField({ label, sub, value, onChange }) {
   )
 }
 
-export default function CompareView({ onClose, seed = {}, seedYear, region, usAdvisor }) {
+export default function CompareView({ onClose, seed = {}, seedYear, region, usAdvisor, nav = null }) {
   const { t: tBase, lang } = useI18n()
   const { marketId } = useMarket()
   const isUs = marketId === 'us'
@@ -269,6 +269,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
       style={{ background: 'var(--surface-page)' }}
     >
       <div className="mx-auto max-w-3xl px-5 py-8 md:px-8">
+        {nav && <div className="mb-6 no-print">{nav}</div>}
         <button
           type="button"
           onClick={onClose}

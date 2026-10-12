@@ -156,7 +156,7 @@ function Column({ c, horizon, onPickWall }) {
   )
 }
 
-export default function ResilienceExplore({ build, onChange, region, onRegionChange, onClose, shareUrl }) {
+export default function ResilienceExplore({ build, onChange, region, onRegionChange, onClose, shareUrl, nav = null }) {
   const dialogRef = useDialogFocus({ onClose })
   const [copied, setCopied] = useState(false)
   const set = (patch) => onChange({ ...build, ...patch })
@@ -195,6 +195,7 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
   return (
     <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="build-title" className="fixed inset-0 z-50 overflow-y-auto bg-surface-page" style={{ background: 'var(--surface-page)' }}>
       <div className="mx-auto max-w-6xl px-5 py-8 md:px-8">
+        {nav && <div className="mb-6 no-print">{nav}</div>}
         <button type="button" onClick={onClose} className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-ink">
           ← {ut('build.back')}
         </button>

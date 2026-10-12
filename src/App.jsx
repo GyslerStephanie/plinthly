@@ -195,6 +195,7 @@ export default function App() {
         retrofit: s.buildRetrofit === '1' ? '1' : '',
       })
       if (s.buildOpen === '1') setShowBuild(true)
+      else if (s.compareOpen === '1') setShowCompare(true)
       if (usResult(next)) {
         const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
         setPhase(target)
@@ -224,6 +225,7 @@ export default function App() {
     })
     if (s.dreamPrice) setDreamPrice(s.dreamPrice)
     if (s.residentStatus) setResidentStatus(s.residentStatus)
+    if (s.compareOpen === '1') setShowCompare(true)
 
     const restoredEquity =
       Number(String(nextValues.savings).replace(/[^0-9.]/g, '')) +
@@ -260,7 +262,7 @@ export default function App() {
     if (isUs) {
       // US links carry only US inputs (ct holds the state code).
       const { region, ...rest } = usValues
-      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, showBuild) })
+      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, showBuild), compareOpen: showCompare ? '1' : '' })
       return
     }
     syncHash({
@@ -276,8 +278,9 @@ export default function App() {
       phase,
       residentStatus,
       market: marketId,
+      compareOpen: showCompare ? '1' : '',
     })
-  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore, usBuild, showBuild])
+  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore, usBuild, showBuild, showCompare])
 
   const flatState = {
     ...values,
@@ -359,6 +362,7 @@ export default function App() {
   // Compare is a parallel surface; record where it was opened from.
   const openCompare = (source) => {
     track('compare_opened', { source })
+    setShowBuild(false)
     setShowCompare(true)
   }
 
@@ -401,6 +405,16 @@ export default function App() {
     { id: 'compare', label: t('nav.compare'), active: showCompare, onSelect: () => openCompare('nav') },
     ...(isUs ? [{ id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild() }] : []),
   ]
+
+  /** The same navigation row inside an overlay: a step closes it and jumps. */
+  const overlayNav = (
+    <PhaseNav
+      current={0}
+      maxVisited={maxVisited}
+      onJump={(n) => { setShowCompare(false); setShowBuild(false); goToPhase(n) }}
+      tools={navTools}
+    />
+  )
 
   const openBuild = () => {
     setShowCompare(false)
@@ -861,6 +875,7 @@ export default function App() {
           seeded from the user's real numbers so it doesn't re-ask. */}
       {showCompare && (
         <CompareView
+          nav={overlayNav}
           onClose={() => setShowCompare(false)}
           seedYear={compareHorizon}
           region={isUs ? usValues.region : undefined}
@@ -892,6 +907,7 @@ export default function App() {
           surface like Compare; its inputs ride in the hash so it is shareable. */}
       {isUs && showBuild && (
         <ResilienceExplore
+          nav={overlayNav}
           build={usBuild}
           onChange={setUsBuild}
           region={usValues.region}
