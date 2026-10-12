@@ -1,6 +1,6 @@
 # Feature spec: Comment layer (ask the advisor on the figure)
 
-**Status:** 🔨 Building
+**Status:** ✅ Shipped (merged in #32, 2026-10-12)
 **Branch:** `feature/comment-layer`
 **Owner:** Stephanie
 **Date:** 2026-10-12
@@ -79,7 +79,7 @@ builds. The advisor narrates; it never computes.
 - [ ] Consent accepted in the bubble is honoured by the layer and vice versa
 - [ ] Threads survive resize and scroll; print view hides the layer
 - [ ] `npm run test:all` passes; `plinthly-qa` run, no Blockers or Majors
-- [ ] `FEATURES.md` row flipped to ✅ Shipped
+- [x] `FEATURES.md` row flipped to ✅ Shipped
 
 ## Out of scope
 
