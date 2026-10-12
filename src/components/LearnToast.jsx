@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
 import { askAdvisor } from './GlossaryTerm'
 import { localizeLinks } from '../lib/learn'
+import { track, trackOutbound } from '../lib/track'
 
 const DISMISS_KEY = 'plinthly.learnToastDismissed'
 
@@ -34,6 +35,7 @@ export default function LearnToast({ links: rawLinks = [], inline = false }) {
 
   if (hidden || !shown) return null
   const dismiss = () => {
+    track('learn_toast', { action: 'dismissed' })
     setHidden(true)
     try {
       sessionStorage.setItem(DISMISS_KEY, '1')
@@ -62,7 +64,10 @@ export default function LearnToast({ links: rawLinks = [], inline = false }) {
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button
           type="button"
-          onClick={() => askAdvisor('')}
+          onClick={() => {
+            track('learn_toast', { action: 'ask' })
+            askAdvisor('')
+          }}
           className="rounded-full bg-teal-800 px-3.5 py-1.5 text-sm font-semibold text-on-primary transition hover:bg-teal-900"
         >
           {t('advisorTip')}
@@ -72,7 +77,18 @@ export default function LearnToast({ links: rawLinks = [], inline = false }) {
         <ul className="mt-3 space-y-1 border-t border-line pt-2.5">
           {links.slice(0, 3).map((l) => (
             <li key={l.url} className="text-sm">
-              <a href={l.url} target="_blank" rel="noreferrer" className="font-medium">{l.label} →</a>
+              <a
+                href={l.url}
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium"
+                onClick={() => {
+                  track('learn_toast', { action: 'link' })
+                  trackOutbound('guide')
+                }}
+              >
+                {l.label} →
+              </a>
             </li>
           ))}
         </ul>

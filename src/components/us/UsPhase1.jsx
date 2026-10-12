@@ -92,7 +92,7 @@ export default function UsPhase1({ values, onChange, onCompare }) {
         {result ? (
           <div className="space-y-5">
             <UsResult result={result} />
-            <HowItWorks course={usPhase1Course(result)} />
+            <HowItWorks course={usPhase1Course(result)} cardId="phase1" />
             {onCompare && <CompareCta onCompare={onCompare} />}
           </div>
         ) : (

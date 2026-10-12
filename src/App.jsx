@@ -612,7 +612,7 @@ export default function App() {
                     onNavigate={goToPhase}
                     onCompare={() => openCompare('phase1')}
                   />
-                  <HowItWorks course={chPhase1Course(previewResult)} />
+                  <HowItWorks course={chPhase1Course(previewResult)} cardId="phase1" />
                 </div>
               ) : (
                 <EmptyResult
