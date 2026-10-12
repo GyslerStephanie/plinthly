@@ -3,6 +3,7 @@ import { money } from '../../lib/format'
 import { buildUsActionPlan } from '../../markets/us/plan'
 import { ut } from '../../markets/us/copy'
 import { selectedUsMeasures } from './UsOptionsPhase'
+import { track } from '../../lib/track'
 
 /** US Phase 5 — personalised action plan. Steps come from src/markets/us/plan.js. */
 
@@ -27,6 +28,7 @@ export default function UsPlanPhase({ result, explore, region, shareUrl }) {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
+      track('result_shared', { method: 'link' })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -83,7 +85,10 @@ export default function UsPlanPhase({ result, explore, region, shareUrl }) {
         <button type="button" onClick={copy} className="rounded-lg border border-line bg-card px-4 py-2.5 text-sm font-medium text-ink transition hover:border-slate-400">
           {copied ? '✓ ' + ut('plan.copied') : ut('plan.share')}
         </button>
-        <button type="button" onClick={() => window.print()} className="rounded-lg border border-line bg-card px-4 py-2.5 text-sm font-medium text-ink transition hover:border-slate-400">
+        <button type="button" onClick={() => {
+            track('result_shared', { method: 'pdf' })
+            window.print()
+          }} className="rounded-lg border border-line bg-card px-4 py-2.5 text-sm font-medium text-ink transition hover:border-slate-400">
           {ut('plan.print')}
         </button>
       </div>

@@ -16,7 +16,7 @@ import { ut } from './markets/us/copy'
 import { usDataMeta, getState } from './markets/us/affordability'
 import CountryConfirm from './components/CountryConfirm'
 import LocaleMenu from './components/LocaleMenu'
-import UsPhase1, { US_DEFAULT_VALUES, US_EXAMPLE_VALUES, usResult } from './components/us/UsPhase1'
+import UsPhase1, { US_DEFAULT_VALUES, US_EXAMPLE_VALUES, usResult, isExampleValues } from './components/us/UsPhase1'
 import UsExplorePhase from './components/us/UsExplorePhase'
 import UsOptionsPhase from './components/us/UsOptionsPhase'
 import UsPlanPhase from './components/us/UsPlanPhase'
@@ -97,6 +97,12 @@ export default function App() {
   const [showCountry, setShowCountry] = useState(false) // front door step 1: country confirm
   const [usExplore, setUsExplore] = useState(US_DEFAULT_EXPLORE) // US Phases 3–5
   const usRes = isUs ? usResult(usValues) : null
+  // US funnel: count a calculation once the visitor's own numbers give a
+  // result. The pre-filled example doesn't count, or every visit would.
+  const usOwnResult = !!usRes && !isExampleValues(usValues)
+  useEffect(() => {
+    if (usOwnResult) track('calculation_completed', undefined, { once: true })
+  }, [usOwnResult])
   const [phase, setPhase] = useState(1)
   const [maxVisited, setMaxVisited] = useState(1)
   const [values, setValues] = useState(DEFAULT_VALUES)
