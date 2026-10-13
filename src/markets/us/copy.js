@@ -132,7 +132,7 @@ const COPY = {
   },
   dream: {
     title: 'Calculate your dream price',
-    blurb: 'Test a specific home price against your situation, and see exactly what it would take to get there.',
+    blurb: '', // removed on request (prototype comment, 2026-10-13): the title says enough
     priceLabel: 'Home price you have in mind',
     priceHint: 'Asking price of a home you like, or a round number you’re aiming for.',
     empty: 'Type a price to see whether it works for you, and what would close the gap if it doesn’t.',
