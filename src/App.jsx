@@ -627,9 +627,11 @@ export default function App() {
             <h1 className="text-2xl font-semibold tracking-tight text-ink">
               {isUs ? ut(`${US_PHASE_COPY[phase]}.title`) : t(`heading.${phase}.title`)}
             </h1>
-            <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
-              {isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)}
-            </p>
+            {(isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)) && (
+              <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
+                {isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)}
+              </p>
+            )}
           </div>
         )}
 
