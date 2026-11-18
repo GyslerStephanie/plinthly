@@ -419,3 +419,26 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
 @media (prefers-reduced-motion: no-preference) {
   .learn-toast { animation: advisor-tip-in 280ms var(--ease-out) both; }
 }
+
+/* Airy clouds behind the "Can I buy?" card (HeroClouds): they drift across the
+   card's own width (container units), far ones slower and paler. */
+.ds-hero-clouds {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  container-type: inline-size;
+}
+.ds-hero-cloud { position: absolute; left: 0; transform: translateX(-20cqw); }
+@media (prefers-reduced-motion: no-preference) {
+  .ds-hero-cloud {
+    animation-name: ds-cloud-drift; animation-timing-function: linear; animation-iteration-count: infinite;
+  }
+  @keyframes ds-cloud-drift {
+    from { transform: translateX(-20cqw); }
+    to { transform: translateX(110cqw); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-hero-cloud:nth-child(1) { transform: translateX(18cqw); }
+  .ds-hero-cloud:nth-child(2) { transform: translateX(44cqw); }
+  .ds-hero-cloud:nth-child(3) { transform: translateX(62cqw); }
+  .ds-hero-cloud:nth-child(4) { transform: translateX(30cqw); }
+}
