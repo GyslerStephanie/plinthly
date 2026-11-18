@@ -120,7 +120,7 @@ export function Indicative({ children }) {
   return (
     <p className="mt-3 flex items-start gap-1.5 text-xs leading-relaxed text-slate-400">
       <span aria-hidden>ⓘ</span>
-      <span>{children || 'Indicative ranges only — not live listings or a quote.'}</span>
+      <span>{children || 'Indicative ranges only, not live listings or a quote.'}</span>
     </p>
   )
 }

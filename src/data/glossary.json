@@ -16,7 +16,7 @@
   },
   "tragbarkeit": {
     "term": "Tragbarkeit",
-    "definition": "The Swiss affordability test a bank applies before lending. Your modelled annual housing costs — interest at a notional 5% rate, amortisation and about 1% maintenance — must stay under one third of your gross income.",
+    "definition": "The Swiss affordability test a bank applies before lending. Your modelled annual housing costs (interest at a notional 5% rate, amortisation and about 1% maintenance) must stay under one third of your gross income.",
     "markets": [
       "ch"
     ],
@@ -75,7 +75,7 @@
   },
   "pillar2": {
     "term": "Pillar 2 (BVG/LPP)",
-    "definition": "Your occupational pension fund. You can withdraw or pledge part of it toward buying a home, but it counts as 'soft' equity — at least 10% of the price must still come from genuine cash savings.",
+    "definition": "Your occupational pension fund. You can withdraw or pledge part of it toward buying a home, but it counts as 'soft' equity: at least 10% of the price must still come from genuine cash savings.",
     "markets": [
       "ch"
     ],
@@ -135,7 +135,7 @@
   },
   "solidarschuldnerschaft": {
     "term": "Solidarschuldnerschaft",
-    "definition": "Joint and several liability. When two people take a mortgage together, each is fully liable for the entire debt — not just their half. If one cannot pay, the bank can pursue the other for the full amount.",
+    "definition": "Joint and several liability. When two people take a mortgage together, each is fully liable for the entire debt, not just their half. If one cannot pay, the bank can pursue the other for the full amount.",
     "markets": [
       "ch"
     ],

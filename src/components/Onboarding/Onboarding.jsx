@@ -89,7 +89,7 @@ function buildReflect(a, t, isUs = false) {
     .filter(Boolean)
     .join(', ')
   if (desc.length) {
-    return `${t('onboarding.reflect.youre')} ${desc.join(', ')} — ${tail}.`
+    return `${t('onboarding.reflect.youre')} ${desc.join(', ')}, ${tail}.`
   }
   return `${t('onboarding.reflect.leadNoDesc')} ${tail}.`
 }

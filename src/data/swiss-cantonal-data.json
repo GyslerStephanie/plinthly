@@ -11,7 +11,7 @@
       "Wüest Partner Immo-Monitoring 2025",
       "Bundesamt für Energie (SFOE)"
     ],
-    "notes": "All figures are indicative and should be verified against current official sources before use in production. Eigenmietwert abolished by Swiss voters September 2025 — cantonal implementation timelines vary and are flagged below. Mortgage affordability rules based on FINMA guidelines and Swiss Bankers Association self-regulation."
+    "notes": "All figures are indicative and should be verified against current official sources before use in production. Eigenmietwert abolished by Swiss voters September 2025: cantonal implementation timelines vary and are flagged below. Mortgage affordability rules based on FINMA guidelines and Swiss Bankers Association self-regulation."
   },
 
   "mortgage_rules": {
@@ -25,7 +25,7 @@
     "amortization_years": 15,
     "pillar3a_max_contribution_chf": 7258,
     "pillar3a_max_self_employed_chf": 36288,
-    "notes": "Housing cost = notional interest (5% of mortgage) + amortization + maintenance (1% of property value). Must not exceed 1/3 gross income. Second mortgage (the portion above the 1st-mortgage ceiling — per SBA self-regulation, 67% LTV) must be amortized within 15 years. This threshold is config-driven: some banks apply a stricter 65%; adjust amortization_target_pct here if the SBA rule changes. Equity (per UBS/moneyland/key4): 20% of price must be equity, of which at least 10% must be 'hard' equity = cash + Pillar 3a (NOT the 2nd pillar); the 2nd pillar (BVG) may cover up to a further 10% ('soft'). pillar3a_max_contribution_chf is the annual Saeule 3a maximum for employees with a pension fund (2026: CHF 7'258); pillar3a_max_self_employed_chf is the cap without a pension fund (2026: 20% of income up to CHF 36'288). Verify both yearly."
+    "notes": "Housing cost = notional interest (5% of mortgage) + amortization + maintenance (1% of property value). Must not exceed 1/3 gross income. Second mortgage (the portion above the 1st-mortgage ceiling: per SBA self-regulation, 67% LTV) must be amortized within 15 years. This threshold is config-driven: some banks apply a stricter 65%; adjust amortization_target_pct here if the SBA rule changes. Equity (per UBS/moneyland/key4): 20% of price must be equity, of which at least 10% must be 'hard' equity = cash + Pillar 3a (NOT the 2nd pillar); the 2nd pillar (BVG) may cover up to a further 10% ('soft'). pillar3a_max_contribution_chf is the annual Saeule 3a maximum for employees with a pension fund (2026: CHF 7'258); pillar3a_max_self_employed_chf is the cap without a pension fund (2026: 20% of income up to CHF 36'288). Verify both yearly."
   },
 
   "compare_assumptions": {
@@ -38,7 +38,7 @@
   "eigenmietwert": {
     "status": "abolished_by_referendum",
     "referendum_date": "2025-09-28",
-    "federal_abolition_effective": "TBD — cantonal implementation in progress",
+    "federal_abolition_effective": "TBD: cantonal implementation in progress",
     "notes": "Swiss voters approved abolition in September 2025. Federal and cantonal implementation timelines are being finalized. Mortgage interest deductions will also be phased out under the new regime. Buyers should verify current status with a tax advisor in their canton.",
     "transitional_guidance": "Until cantonal implementation is confirmed, the old Eigenmietwert system may still apply in some cantons. Platform should flag this uncertainty clearly."
   },
@@ -65,7 +65,7 @@
         "available": true,
         "url": "https://www.energiezukunft.eu",
         "key_measures": ["building envelope insulation", "window replacement", "heat pump", "solar thermal", "PV systems"],
-        "notes": "ZH has strong program. Check current budget availability — can have waiting periods."
+        "notes": "ZH has strong program. Check current budget availability: can have waiting periods."
       },
       "minergie_context": "High adoption canton. Minergie label increasingly expected by buyers in premium segments.",
       "market_notes": "Highest prices in Switzerland. Strong demand, low vacancy. Winterthur offers lower entry point within canton."
@@ -94,7 +94,7 @@
         "key_measures": ["insulation", "heat pump", "solar thermal", "windows"],
         "notes": "Strong cantonal program. GVB (Gebäudeversicherung Bern) is an active PropTech investor in this space."
       },
-      "minergie_context": "Good adoption. Federal city — some heritage constraints on older buildings.",
+      "minergie_context": "Good adoption. Federal city: some heritage constraints on older buildings.",
       "market_notes": "More affordable than Zurich. Federal employment base creates stable demand."
     },
 
@@ -311,7 +311,7 @@
         "notes": "Italian-language program. Lugano area significantly more expensive than rest of canton."
       },
       "minergie_context": "Growing adoption. Italian building traditions create interesting renovation opportunities.",
-      "market_notes": "Unique market — Mediterranean climate, Italian culture, Swiss legal system. Lugano is expensive; other areas more accessible."
+      "market_notes": "Unique market: Mediterranean climate, Italian culture, Swiss legal system. Lugano is expensive; other areas more accessible."
     },
 
     "GR": {
@@ -323,7 +323,7 @@
         "house_chf_per_m2": { "low": 3800, "mid": 6500, "high": 18000 },
         "new_build_premium_pct": 12,
         "minergie_premium_pct": 10,
-        "source": "Wüest Partner Immo-Monitoring 2025, indicative — wide range due to resort vs. valley market split"
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative: wide range due to resort vs. valley market split"
       },
       "tax": {
         "cantonal_income_tax_rate_approx_pct": 11.5,
@@ -337,7 +337,7 @@
         "key_measures": ["insulation", "heat pump", "solar", "windows"],
         "notes": "Wide price range: Chur (affordable) vs. Davos/St. Moritz (premium resort market). Lex Koller restrictions apply to non-residents for second homes."
       },
-      "minergie_context": "Important in alpine climate context — energy efficiency directly impacts heating costs.",
+      "minergie_context": "Important in alpine climate context: energy efficiency directly impacts heating costs.",
       "market_notes": "Lex Koller restricts non-EU/EFTA residents from buying second homes. Resort markets have very high prices and separate dynamics."
     },
 
@@ -350,7 +350,7 @@
         "house_chf_per_m2": { "low": 3200, "mid": 5500, "high": 14000 },
         "new_build_premium_pct": 11,
         "minergie_premium_pct": 10,
-        "source": "Wüest Partner Immo-Monitoring 2025, indicative — wide range due to resort vs. valley split"
+        "source": "Wüest Partner Immo-Monitoring 2025, indicative: wide range due to resort vs. valley split"
       },
       "tax": {
         "cantonal_income_tax_rate_approx_pct": 13.0,
@@ -482,49 +482,49 @@
     "classes": {
       "A": {
         "label": "A",
-        "description": "Highest efficiency — Minergie-A / Plusenergie standard",
+        "description": "Highest efficiency: Minergie-A / Plusenergie standard",
         "typical_heating_cost_chf_per_m2_per_year": 5,
         "co2_kg_per_m2_per_year": 2,
         "notes": "Net zero or energy positive. Very rare in existing stock."
       },
       "B": {
         "label": "B",
-        "description": "Excellent — Minergie-P standard",
+        "description": "Excellent: Minergie-P standard",
         "typical_heating_cost_chf_per_m2_per_year": 12,
         "co2_kg_per_m2_per_year": 6,
         "notes": "Passive house standard. Increasingly common in new builds post-2015."
       },
       "C": {
         "label": "C",
-        "description": "Good — Minergie standard",
+        "description": "Good: Minergie standard",
         "typical_heating_cost_chf_per_m2_per_year": 22,
         "co2_kg_per_m2_per_year": 12,
         "notes": "Standard Minergie label. Common in new builds and well-renovated existing buildings."
       },
       "D": {
         "label": "D",
-        "description": "Average — SIA 380/1 2009 compliant",
+        "description": "Average: SIA 380/1 2009 compliant",
         "typical_heating_cost_chf_per_m2_per_year": 38,
         "co2_kg_per_m2_per_year": 22,
         "notes": "Meets current minimum standards. Typical of buildings renovated in the 2000s."
       },
       "E": {
         "label": "E",
-        "description": "Below average — partial renovation or older stock",
+        "description": "Below average: partial renovation or older stock",
         "typical_heating_cost_chf_per_m2_per_year": 58,
         "co2_kg_per_m2_per_year": 35,
         "notes": "Common in 1980s-1990s buildings. Renovation subsidy eligible."
       },
       "F": {
         "label": "F",
-        "description": "Poor — minimal or no renovation",
+        "description": "Poor: minimal or no renovation",
         "typical_heating_cost_chf_per_m2_per_year": 80,
         "co2_kg_per_m2_per_year": 50,
         "notes": "Typical of unrenovated 1960s-1970s buildings. Strong renovation case."
       },
       "G": {
         "label": "G",
-        "description": "Very poor — pre-1960 unrenovated or oil/gas heating dominant",
+        "description": "Very poor: pre-1960 unrenovated or oil/gas heating dominant",
         "typical_heating_cost_chf_per_m2_per_year": 110,
         "co2_kg_per_m2_per_year": 70,
         "notes": "Significant energy cost and regulatory risk. Heating replacement likely mandatory within 10 years under cantonal energy laws."
@@ -545,7 +545,7 @@
       },
       "MINERGIE_P": {
         "label": "Minergie-P",
-        "description": "Passive house standard — very low energy demand",
+        "description": "Passive house standard: very low energy demand",
         "construction_cost_premium_pct": 15,
         "renovation_cost_premium_pct": 25,
         "annual_energy_saving_pct_vs_unrenovated": 80,
@@ -554,7 +554,7 @@
       },
       "MINERGIE_A": {
         "label": "Minergie-A",
-        "description": "Net zero energy — building produces as much as it consumes",
+        "description": "Net zero energy: building produces as much as it consumes",
         "construction_cost_premium_pct": 20,
         "renovation_cost_premium_pct": 35,
         "annual_energy_saving_pct_vs_unrenovated": 95,
