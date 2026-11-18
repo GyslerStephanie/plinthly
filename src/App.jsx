@@ -35,6 +35,7 @@ import PhaseNav from './components/PhaseNav'
 import AdvisorFab from './components/AdvisorFab'
 import CommentLayer from './components/Comments/CommentLayer'
 import CompareView from './components/Compare/CompareView'
+import { PageHeader } from './components/ui'
 import ResilienceExplore from './components/us/ResilienceExplore'
 import Onboarding from './components/Onboarding/Onboarding'
 import Landing from './components/Landing/Landing'
@@ -407,6 +408,43 @@ export default function App() {
   ]
 
   /** The same navigation row inside an overlay: a step closes it and jumps. */
+  // The site header. Rendered once for the page and again inside the tool
+  // overlays (Compare, How to build), which cover the page, so the header
+  // stays put as you tab between the journey and the tools.
+  const renderHeader = ({ withToolbar = true } = {}) => (
+    <header className="border-b border-slate-200 bg-white">
+      <div className="ds-page-bar flex items-center justify-between gap-3 py-4">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/brand/plinthly-mark.png"
+            alt=""
+            className="h-9 w-9"
+            style={{ imageRendering: 'pixelated' }}
+          />
+          <div>
+            <p className="ds-wordmark text-lg leading-tight text-ink">Plinthly</p>
+            <p className="text-xs leading-tight text-muted">
+              {isUs ? ut('header.tagline') : t('header.tagline')}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          {/* Comment layer toolbar (portal target; empty until a result exists).
+              Only the page header carries the slot; overlay copies don't. */}
+          {withToolbar && <div id="comment-toolbar" className="hidden sm:block" />}
+          <button
+            type="button"
+            onClick={startOver}
+            className="whitespace-nowrap text-xs font-medium text-muted underline-offset-4 transition hover:text-ink hover:underline"
+          >
+            {t('onboarding.startOver')}
+          </button>
+          <LocaleMenu onSwitch={switchMarket} languages={marketLanguages} />
+        </div>
+      </div>
+    </header>
+  )
+
   const overlayNav = (
     <PhaseNav
       current={0}
@@ -546,37 +584,8 @@ export default function App() {
 
   return (
     <AppStateProvider value={appState}>
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-3 px-5 py-4 md:px-8 lg:px-[60px]">
-          <div className="flex items-center gap-2.5">
-            <img
-              src="/brand/plinthly-mark.png"
-              alt=""
-              className="h-9 w-9"
-              style={{ imageRendering: 'pixelated' }}
-            />
-            <div>
-              <p className="ds-wordmark text-lg leading-tight text-ink">Plinthly</p>
-              <p className="text-xs leading-tight text-muted">
-                {isUs ? ut('header.tagline') : t('header.tagline')}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Comment layer toolbar (portal target; empty until a result exists) */}
-            <div id="comment-toolbar" className="hidden sm:block" />
-            <button
-              type="button"
-              onClick={startOver}
-              className="whitespace-nowrap text-xs font-medium text-muted underline-offset-4 transition hover:text-ink hover:underline"
-            >
-              {t('onboarding.startOver')}
-            </button>
-            <LocaleMenu onSwitch={switchMarket} languages={marketLanguages} />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-surface-page text-slate-900">
+      {renderHeader()}
 
       {mtNotice && !isUs && (
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-xs text-amber-800 no-print">
@@ -586,8 +595,8 @@ export default function App() {
 
       {!isUs && <StickySummaryBar />}
 
-      <main className="mx-auto max-w-[1320px] px-5 py-10 md:px-8 lg:px-[60px] lg:py-16">
-        <div className="mb-8 no-print">
+      <main className="ds-page">
+        <div className="ds-page-nav no-print">
           <PhaseNav
             current={phase}
             maxVisited={maxVisited}
@@ -610,7 +619,7 @@ export default function App() {
         )}
 
         {phase === 1 ? (
-          <div className="ds-hero mb-8 flex items-center justify-between gap-8 overflow-hidden rounded-2xl border border-line px-6 py-10 shadow-sm no-print lg:px-10 lg:py-12">
+          <div className="ds-hero mb-[var(--space-block)] flex items-center justify-between gap-8 overflow-hidden rounded-2xl border border-line px-6 py-10 shadow-sm no-print lg:px-10 lg:py-12">
             <div className="min-w-0 max-w-2xl">
               <h1 className="font-display text-4xl font-semibold tracking-tight text-ink lg:text-5xl">
                 {isUs ? ut('hero.title') : t('heading.1.title')}
@@ -623,16 +632,10 @@ export default function App() {
             <img src="/brand/voxel-landscape-mini.png" alt="" className="ds-hero-land hidden sm:block" />
           </div>
         ) : (
-          <div className="mb-8 max-w-2xl no-print">
-            <h1 className="text-2xl font-semibold tracking-tight text-ink">
-              {isUs ? ut(`${US_PHASE_COPY[phase]}.title`) : t(`heading.${phase}.title`)}
-            </h1>
-            {(isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)) && (
-              <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
-                {isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)}
-              </p>
-            )}
-          </div>
+          <PageHeader
+            title={isUs ? ut(`${US_PHASE_COPY[phase]}.title`) : t(`heading.${phase}.title`)}
+            intro={isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)}
+          />
         )}
 
         {/* United States — Phase 1 on the US engine; later phases not built yet */}
@@ -668,10 +671,10 @@ export default function App() {
 
         {/* Phase 1 — two-column on desktop: inputs left, live output right */}
         {phase === 1 && !isUs && (
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
+          <div className="ds-split">
             <div>
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:p-7">
-                <h2 className="mb-5 text-lg font-bold text-slate-900">
+              <div className="ds-card">
+                <h2 className="ds-section-title">
                   {t('form.title')}
                 </h2>
                 <AffordabilityForm
@@ -881,6 +884,7 @@ export default function App() {
       {showCompare && (
         <CompareView
           nav={overlayNav}
+          header={renderHeader({ withToolbar: false })}
           onClose={() => setShowCompare(false)}
           seedYear={compareHorizon}
           region={isUs ? usValues.region : undefined}
@@ -913,6 +917,7 @@ export default function App() {
       {isUs && showBuild && (
         <ResilienceExplore
           nav={overlayNav}
+          header={renderHeader({ withToolbar: false })}
           build={usBuild}
           onChange={setUsBuild}
           region={usValues.region}

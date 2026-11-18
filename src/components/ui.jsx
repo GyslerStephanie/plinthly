@@ -15,16 +15,40 @@ export const SELECT_CHEVRON = {
 // (design system: "no colored backgrounds larger than a badge"). The `slate`
 // tone uses the grey surface for section alternation.
 const TONES = {
-  default: 'border-line bg-white',
-  teal: 'border-line bg-white',
-  amber: 'border-line bg-white',
-  slate: 'border-line bg-surface',
+  default: '',
+  teal: '',
+  amber: '',
+  slate: 'bg-surface',
+}
+
+/**
+ * Title block every screen opens with — journey steps 2–5 and the tools
+ * (Compare, How to build) share it, so the title sits in the same place and
+ * size as you tab. `onBack` adds the small "← back" link above the title.
+ */
+export function PageHeader({ id, title, intro, onBack, backLabel, className = '' }) {
+  return (
+    <div className={`ds-page-head no-print ${className}`}>
+      {onBack && (
+        <button type="button" onClick={onBack} className="ds-page-back">
+          ← {backLabel}
+        </button>
+      )}
+      <h1 id={id} className="ds-page-title">{title}</h1>
+      {intro && <p className="ds-page-intro">{intro}</p>}
+    </div>
+  )
+}
+
+/** Section heading inside a card (sans, 18px bold). */
+export function SectionTitle({ children, className = '', as: Tag = 'h2' }) {
+  return <Tag className={`ds-section-title ${className}`}>{children}</Tag>
 }
 
 /** Bordered content card with an optional uppercase section title. */
 export function Card({ title, children, tone = 'default', className = '' }) {
   return (
-    <section className={`rounded-xl border p-5 shadow-sm ${TONES[tone]} ${className}`}>
+    <section className={`ds-card ${TONES[tone]} ${className}`}>
       {title && (
         <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           {title}

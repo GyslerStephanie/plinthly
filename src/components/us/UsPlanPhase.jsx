@@ -38,7 +38,7 @@ export default function UsPlanPhase({ result, explore, region, shareUrl }) {
 
   return (
     <div className="space-y-6">
-      <section className="grid grid-cols-1 gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 ds-card sm:grid-cols-3">
         <div>
           <p className="text-xs text-muted">{ut('plan.max')}</p>
           <p className="ds-figure mt-1 text-xl font-medium text-ink">{money(result.maxPrice)}</p>

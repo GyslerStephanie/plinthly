@@ -74,12 +74,7 @@ export default function PhaseNav({ current, maxVisited, onJump, tools = [] }) {
                   type="button"
                   onClick={tool.onSelect}
                   aria-current={tool.active ? 'page' : undefined}
-                  className={
-                    'rounded-full border px-3 py-1 text-sm transition ' +
-                    (tool.active
-                      ? 'border-teal-600 bg-teal-50 font-medium text-teal-800'
-                      : 'border-line bg-white text-slate-600 hover:border-slate-400 hover:text-ink')
-                  }
+                  className="ds-choice rounded-full px-3 py-1 text-sm"
                 >
                   {tool.label}
                 </button>

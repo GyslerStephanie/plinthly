@@ -83,9 +83,9 @@ export function usResult(values) {
 export default function UsPhase1({ values, onChange, onCompare }) {
   const result = usResult(values)
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:p-7">
-        <h2 className="mb-5 text-lg font-bold text-slate-900">{ut('form.title')}</h2>
+    <div className="ds-split">
+      <div className="ds-card">
+        <h2 className="ds-section-title">{ut('form.title')}</h2>
         <UsForm values={values} onChange={onChange} />
       </div>
       <div className="lg:sticky lg:top-6 lg:self-start">
@@ -296,7 +296,7 @@ function UsResult({ result: r }) {
   ]
   return (
     <div className="space-y-5">
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:p-7">
+      <section className="ds-card">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted">{ut('result.eyebrow')}</p>
           <span className={'rounded-full px-2.5 py-1 text-xs font-semibold ' + STATUS_STYLE[state]}>
@@ -316,7 +316,7 @@ function UsResult({ result: r }) {
         )}
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="ds-card">
         <h3 className="ds-eyebrow text-xs text-muted">{ut('result.limitsTitle')}</h3>
         <ul className="mt-3 space-y-2">
           {LIMITS.map(([key, price]) => {
@@ -340,7 +340,7 @@ function UsResult({ result: r }) {
         </p>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="ds-card">
         <h3 className="ds-eyebrow text-xs text-muted">{ut('result.upfrontTitle')}</h3>
         <div className="mt-2">
           <Row label={ut('result.downPayment', { pct: r.rules.downPct })} value={money(dp.total)} />
@@ -350,7 +350,7 @@ function UsResult({ result: r }) {
         </div>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="ds-card">
         <h3 className="ds-eyebrow text-xs text-muted">{ut('result.monthlyTitle')}</h3>
         <div className="mt-2">
           <Row label={ut('result.pi')} value={money(mc.principalAndInterest)} />
