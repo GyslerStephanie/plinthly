@@ -33,6 +33,7 @@ import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import ToolTabs from './components/ToolTabs'
 import BuildIsland from './components/hero/BuildIsland'
+import HeroClouds from './components/hero/HeroClouds'
 import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
 import { PageHeader } from './components/ui'
@@ -610,7 +611,8 @@ export default function App() {
 
         {phase === 1 ? (
           <div className="ds-hero mb-[var(--space-block)] flex items-center justify-between gap-8 overflow-hidden rounded-2xl border border-line px-6 py-10 shadow-sm no-print lg:px-10 lg:py-12">
-            <div className="min-w-0 max-w-2xl">
+            <HeroClouds />
+            <div className="relative z-10 min-w-0 max-w-2xl">
               <h1 className="font-display text-4xl font-semibold tracking-tight text-ink lg:text-5xl">
                 {isUs ? ut('hero.title') : t('heading.1.title')}
               </h1>
@@ -619,7 +621,7 @@ export default function App() {
               </p>
             </div>
             {/* The whole island, in the flow and vertically centred, so nothing is clipped. */}
-            <BuildIsland className="hidden sm:block" />
+            <BuildIsland className="relative z-10 hidden sm:block" />
           </div>
         ) : (
           <PageHeader
