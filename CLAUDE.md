@@ -25,8 +25,7 @@
   with `root` = the out dir and the printed `files` map. `/api/*` (advisor, feedback) doesn't run there.
 - **Comment layer prototype** (interaction mock, canned answers): https://claude.ai/artifact/4BiGjWaqFVrBxU5mL5LZYJ —
   the clickable mock that settled pins, threads, resolve and the comments panel before the feature shipped (#32).
-  Shipped code: `src/components/Comments/CommentLayer.jsx`, spec `docs/specs/COMMENT_LAYER_SPEC.md`. Iterate the
-  mock there for UX changes, then build approved changes in the code.
+  The feature shipped in #32 and was removed on 2026-11-18 (spec `docs/specs/COMMENT_LAYER_SPEC.md`; code in git history).
 - **Resilient build track** (pitch and reference pages, same content as `docs/RESILIENT_BUILD_PITCH.md` and
   `docs/SWISS_ENVELOPE_US_REFERENCE.md`): pitch https://claude.ai/artifact/X9BbPXjRwN17aixuAU52wM ·
   Swiss envelope reference https://claude.ai/artifact/5FuW8cxkFR5bbKe2ug2KWC. Edit the markdown in `docs/`

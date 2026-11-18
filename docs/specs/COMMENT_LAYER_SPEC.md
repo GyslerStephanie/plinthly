@@ -1,6 +1,6 @@
 # Feature spec: Comment layer (ask the advisor on the figure)
 
-**Status:** ✅ Shipped (merged in #32, 2026-10-12)
+**Status:** ❌ Removed (2026-11-18, at Stephanie's request; shipped in #32, 2026-10-12). Code is in git history.
 **Branch:** `feature/comment-layer`
 **Owner:** Stephanie
 **Date:** 2026-10-12

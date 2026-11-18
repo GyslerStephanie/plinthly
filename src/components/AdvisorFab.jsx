@@ -40,7 +40,7 @@ const TIP_MS = 8000
 export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false, tipKey, consented: consentedProp, onConsent }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
-  // Consent is shared with the comment layer when the App owns it; an instance
+  // Consent is owned by the App when it passes one in; an instance
   // mounted on its own (Compare) keeps a local gate.
   const [localConsent, setLocalConsent] = useState(false)
   const consented = consentedProp ?? localConsent
