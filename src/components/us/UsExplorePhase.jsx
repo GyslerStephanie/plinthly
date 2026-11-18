@@ -31,8 +31,8 @@ export function StatusPill({ status }) {
 
 function Card({ title, children }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      {title && <h2 className="mb-4 text-lg font-bold text-slate-900">{title}</h2>}
+    <section className="ds-card">
+      {title && <h2 className="ds-section-title">{title}</h2>}
       {children}
     </section>
   )
@@ -47,7 +47,7 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
 
   return (
     <div className="space-y-6">
-      <section className="grid max-w-3xl grid-cols-1 gap-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2">
+      <section className="grid max-w-3xl grid-cols-1 gap-5 ds-card sm:grid-cols-2">
         <div>
           <label htmlFor="us-budget" className="mb-1.5 block text-sm font-semibold text-ink">{ut('explore.budget')}</label>
           <MoneyInput id="us-budget" value={explore.budget} onChange={(v) => onExploreChange({ ...explore, budget: groupDigits(v) })} />

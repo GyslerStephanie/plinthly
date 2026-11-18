@@ -15,7 +15,7 @@ export default function HowItWorks({ course: card, cardId = 'other' }) {
   const course = (card.i18n && card.i18n[lang]) || card
   return (
     <details
-      className="group rounded-xl border border-line bg-white p-5 shadow-sm no-print"
+      className="group ds-card no-print"
       onToggle={(e) => {
         if (e.currentTarget.open) track('how_it_works_opened', { card: cardId })
       }}

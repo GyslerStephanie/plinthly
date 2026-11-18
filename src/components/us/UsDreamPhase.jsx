@@ -22,7 +22,7 @@ export default function UsDreamPhase({ values, dreamPrice, onDreamPriceChange, o
 
   return (
     <div className="space-y-6">
-      <section className="max-w-xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="max-w-xl ds-card">
         <label htmlFor="us-dream" className="mb-1.5 block text-sm font-semibold text-ink">
           {ut('dream.priceLabel')}
         </label>
@@ -135,7 +135,7 @@ function Bar({ label, sub, frac }) {
 
 function Progress({ plan }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="ds-card">
       <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.progressTitle')}</h3>
       <div className="mt-4 space-y-5">
         <Bar
@@ -160,7 +160,7 @@ function Progress({ plan }) {
 function Monthly({ plan }) {
   const m = plan.monthly
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="ds-card">
       <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.monthlyTitle', { price: money(plan.price) })}</h3>
       <div className="mt-2">
         <Row label={ut('result.pi')} value={money(m.principalAndInterest)} />
@@ -182,7 +182,7 @@ function Monthly({ plan }) {
 
 function Savings({ plan }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="ds-card">
       <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.savingsTitle')}</h3>
       <p className="mt-2 text-sm text-body">{ut('dream.savingsBody', { gap: money(plan.cash.gap) })}</p>
       <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -203,7 +203,7 @@ function Payoff({ plan, extra, onExtra }) {
   if (!p) return null
   const rows = payoffMilestones(p)
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="ds-card">
       <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.payoffTitle')}</h3>
       <p className="mt-2 text-sm text-body">
         {ut('dream.payoffBody', { loan: money(plan.monthly.loan), rate: Math.round(plan.monthly.rate * 10000) / 100 })}
