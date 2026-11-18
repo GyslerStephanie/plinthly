@@ -11,7 +11,6 @@ const COPY = {
     tagline: 'Sustainable Real Estate Explorer',
   },
   country: {
-    eyebrow: 'Before we start',
     title: 'Where will you buy your home?',
     intro: 'Whether you’re buying now or in a few years, pick the country the home will be in. Mortgage rules, taxes and prices differ by country, so we’ll use that country’s.',
     otherSoon: 'More countries coming. Not listed? You can still explore, but the numbers won’t fit your rules.',

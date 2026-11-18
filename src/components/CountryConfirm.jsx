@@ -71,8 +71,7 @@ export default function CountryConfirm({ onChoose, onSkip }) {
           )}
         </div>
 
-        <p className="ds-eyebrow text-xs text-teal-700">{ut('country.eyebrow')}</p>
-        <h1 id="country-title" className="mt-1 font-display text-4xl font-semibold tracking-tight text-ink">
+        <h1 id="country-title" className="font-display text-4xl font-semibold tracking-tight text-ink">
           {ut('country.title')}
         </h1>
         <p className="mt-2 text-base text-body">{ut('country.intro')}</p>
