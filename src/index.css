@@ -274,3 +274,50 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
 @media (prefers-reduced-motion: no-preference) {
   .learn-toast { animation: advisor-tip-in 280ms var(--ease-out) both; }
 }
+
+/* Journey stepper, first visit only (PhaseNav `intro`): steps rise in one by
+   one, a pulse walks 1→5 to preview the journey, and at 6 s the row folds
+   away into a compact "Step n of 5" pill. No motion for people who ask for less
+   (PhaseNav skips the intro entirely then). */
+@media (prefers-reduced-motion: no-preference) {
+  .stepper-intro > ol > li {
+    animation: stepper-in 560ms var(--ease-out) both;
+    animation-delay: calc(var(--i) * 110ms + 120ms);
+  }
+  .stepper-intro .stepper-arrow {
+    display: inline-block;
+    animation: stepper-arrow 420ms var(--ease-out) both;
+    animation-delay: calc(var(--i) * 110ms + 380ms);
+  }
+  .stepper-intro .stepper-dot {
+    animation: stepper-pulse 760ms var(--ease-out) both;
+    animation-delay: calc(var(--i) * 420ms + 1300ms);
+  }
+  .stepper-leaving {
+    animation: stepper-out 500ms cubic-bezier(0.55, 0, 0.75, 0.2) both;
+  }
+  .stepper-compact {
+    animation: stepper-compact-in 360ms var(--ease-out) both;
+  }
+  @keyframes stepper-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.94); filter: blur(3px); }
+    to { opacity: 1; transform: none; filter: none; }
+  }
+  @keyframes stepper-arrow {
+    from { opacity: 0; transform: translateX(-6px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes stepper-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgb(15 118 110 / 0.45); }
+    35% { transform: scale(1.22); }
+    100% { transform: scale(1); box-shadow: 0 0 0 10px rgb(15 118 110 / 0); }
+  }
+  @keyframes stepper-out {
+    from { opacity: 1; transform: none; filter: none; }
+    to { opacity: 0; transform: translateY(-8px) scale(0.98); filter: blur(2px); }
+  }
+  @keyframes stepper-compact-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+}

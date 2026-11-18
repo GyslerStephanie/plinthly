@@ -596,6 +596,7 @@ export default function App() {
             current={phase}
             maxVisited={maxVisited}
             onJump={goToPhase}
+            intro
           />
           {/* "New to mortgages?" — a slim bar under the navigation once a
               result exists; dismissable for the visit. */}
