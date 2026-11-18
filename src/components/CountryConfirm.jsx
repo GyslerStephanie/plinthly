@@ -104,7 +104,6 @@ export default function CountryConfirm({ onChoose, onSkip }) {
           />
         </section>
 
-        <p className="mt-6 text-sm text-muted">{ut('country.privacy')}</p>
       </div>
     </div>
   )

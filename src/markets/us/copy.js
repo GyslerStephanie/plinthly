@@ -14,7 +14,6 @@ const COPY = {
     title: 'Where will you buy your home?',
     intro: 'Whether you’re buying now or in a few years, pick the country the home will be in. Mortgage rules, taxes and prices differ by country, so we’ll use that country’s.',
     otherSoon: 'More countries coming. Not listed? You can still explore, but the numbers won’t fit your rules.',
-    privacy: 'We count which country your browser’s time zone suggests, but your numbers never leave this device. You can change country any time from the top-right of the page.',
     pick: 'Which country will you buy in?',
     continue: 'Continue',
   },
