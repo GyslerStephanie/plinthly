@@ -36,7 +36,7 @@ const HALO = { paintOrder: 'stroke', stroke: 'var(--paper-100)', strokeWidth: 3 
 /** Hand-rolled net-worth-over-time chart (SVG, matching the app's chart style):
  *  soft area fills, both trajectories, and value tags at the scrubbed year. */
 function TrajectoryChart({ A, B, year, labelA, labelB }) {
-  const W = 600
+  const W = 1000 // drawn wide: the breakdown spans the full page width
   const H = 200
   const padL = 8
   const padR = 8
@@ -55,7 +55,7 @@ function TrajectoryChart({ A, B, year, labelA, labelB }) {
   const anchor = x(year) > W * 0.82 ? 'end' : x(year) < W * 0.18 ? 'start' : 'middle'
   const aHigh = A[year] >= B[year]
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={`${labelA} vs ${labelB} over time`}>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minWidth: 560 }} role="img" aria-label={`${labelA} vs ${labelB} over time`}>
       <polygon points={area(B)} fill={OWN} opacity="0.06" />
       <polygon points={area(A)} fill={RENT} opacity="0.1" />
       <line x1={padL} y1={y(Math.max(0, min))} x2={W - padR} y2={y(Math.max(0, min))} stroke="var(--line)" strokeWidth="1" />
@@ -80,7 +80,7 @@ function TrajectoryChart({ A, B, year, labelA, labelB }) {
  *  the two are even (break-even). Clip-paths split the fill at zero, so a crossing
  *  needs no special-casing. */
 function DifferenceStrip({ A, B, year }) {
-  const W = 600
+  const W = 1000 // drawn wide: the breakdown spans the full page width
   const H = 76
   const padL = 8
   const padR = 8
@@ -102,7 +102,7 @@ function DifferenceStrip({ A, B, year }) {
   const dY = D[year - 1]
   const anchor = x(year) > W * 0.82 ? 'end' : x(year) < W * 0.18 ? 'start' : 'middle'
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Difference between the two options over time">
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minWidth: 560 }} role="img" aria-label="Difference between the two options over time">
       <defs>
         <clipPath id="gapAbove"><rect x="0" y="0" width={W} height={Math.max(0, y0)} /></clipPath>
         <clipPath id="gapBelow"><rect x="0" y={y0} width={W} height={Math.max(0, H - y0)} /></clipPath>
@@ -393,94 +393,6 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
             <div>
               <HowItWorks course={compareCourse(isUs ? 'us' : 'ch')} cardId="compare" />
             </div>
-            {/* Breakdown */}
-            <details open className="ds-card">
-              <summary className="ds-section-title mb-0 cursor-pointer">{t('compare.breakdown')}</summary>
-              <div className="mt-3 flex gap-4 text-xs text-muted">
-                <Legend color={RENT} label={labelA} />
-                <Legend color={OWN} label={labelB} dashed />
-              </div>
-              <p className="mt-1 text-xs text-faint">{t(`compare.cap.${scenario}`)}</p>
-              <div className="mt-2">
-                <TrajectoryChart A={s.A} B={s.B} year={year} labelA={labelA} labelB={labelB} />
-              </div>
-
-              <p className="ds-eyebrow mt-4 text-xs text-muted">{t('compare.gap')}</p>
-              <p className="text-xs text-faint">
-                {t('compare.gapCap', { a: labelA, b: labelB })}
-              </p>
-              <div className="mt-1.5">
-                <DifferenceStrip A={s.A} B={s.B} year={year} />
-              </div>
-
-              <div className="mt-3 overflow-x-auto">
-                <table className="w-full border-collapse text-xs">
-                  <thead>
-                    <tr className="ds-eyebrow border-b border-line text-[10px] text-faint">
-                      <th className="py-2 pr-2 text-left font-medium">{t('compare.colYear')}</th>
-                      {s.incCol && <th className="px-2 py-2 text-right font-medium">{t('compare.colIncome')}</th>}
-                      <th className="px-2 py-2 text-right font-medium">{labelA}</th>
-                      <th className="px-2 py-2 text-right font-medium">{labelB}</th>
-                      <th className="px-2 py-2 text-right font-medium">{t('compare.diff')}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="ds-figure">
-                    {Array.from({ length: year }, (_, i) => i + 1).map((k) => {
-                      const d = s.A[k] - s.B[k]
-                      const w = Math.max(2, (Math.abs(d) / maxAbs) * 48)
-                      const hl = k === year
-                      return (
-                        <tr key={k} className={'border-b border-line/60 ' + (hl ? 'bg-teal-50/70' : '')}>
-                          <td className={'py-1.5 pr-2 text-left ' + (hl ? 'border-l-2 border-teal-600 pl-2 font-semibold text-ink' : 'text-muted')}>{k}</td>
-                          {s.incCol && <td className="px-2 py-1.5 text-right text-body">{money(inputs.income * Math.pow(1 + inputs.incomeGrowthPct / 100, k - 1))}</td>}
-                          <td className="px-2 py-1.5 text-right text-ink">{money(s.A[k])}</td>
-                          <td className="px-2 py-1.5 text-right text-ink">{money(s.B[k])}</td>
-                          <td className="px-2 py-1.5 text-right">
-                            <span className="inline-flex items-center justify-end gap-1.5">
-                              {/* Colour the gap by the line that's ahead, not red/green — keeps the
-                                  buy line's meaning intact in the wealth lens (blue, not "loss"). */}
-                              <span style={{ color: d >= 0 ? RENT : OWN }}>{fK(d)}</span>
-                              <span className="inline-block h-2 rounded" style={{ width: w, background: d >= 0 ? RENT : OWN }} />
-                            </span>
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {scenario === 'buy_cheaper' && (
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="text-xs text-muted">{t('compare.cheaperAt')}</span>
-                  <div className={`${FIELD} w-24`}>
-                    <input
-                      inputMode="numeric"
-                      aria-label={t('compare.cheaperAt')}
-                      value={inputs.cheaperPricePct}
-                      onChange={(e) => setVal('cheaperPricePct', Math.min(100, Number(String(e.target.value).replace(/[^0-9]/g, '')) || 0))}
-                      className="ds-figure w-full bg-transparent py-2 pl-3 text-right text-sm text-ink focus:outline-none"
-                    />
-                  </div>
-                  <span className="text-xs text-faint">{t('compare.cheaperUnit')}</span>
-                </div>
-              )}
-
-              {scenario === 'buy_later' && (
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="text-xs text-muted">{t('compare.buyIn')}</span>
-                  <div className={`${FIELD} w-24`}>
-                    <input
-                      inputMode="numeric"
-                      value={inputs.buyInYear}
-                      onChange={(e) => setVal('buyInYear', Number(String(e.target.value).replace(/[^0-9]/g, '')) || 0)}
-                      className="ds-figure w-full bg-transparent py-2 pl-3 text-right text-sm text-ink focus:outline-none"
-                    />
-                    <span className="select-none px-2 text-xs text-faint">yr</span>
-                  </div>
-                </div>
-              )}
-            </details>
           </div>
           <div className="ds-stack lg:order-1">
             {/* Assumptions */}
@@ -567,6 +479,94 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
             </details>
           </div>
         </div>
+        {/* Breakdown: full width under both columns (assumptions and the result panels). */}
+        <details open className="ds-card mt-[var(--space-grid)]">
+          <summary className="ds-section-title mb-0 cursor-pointer">{t('compare.breakdown')}</summary>
+          <div className="mt-3 flex gap-4 text-xs text-muted">
+            <Legend color={RENT} label={labelA} />
+            <Legend color={OWN} label={labelB} dashed />
+          </div>
+          <p className="mt-1 text-xs text-faint">{t(`compare.cap.${scenario}`)}</p>
+          <div className="mt-2 overflow-x-auto">
+            <TrajectoryChart A={s.A} B={s.B} year={year} labelA={labelA} labelB={labelB} />
+          </div>
+
+          <p className="ds-eyebrow mt-4 text-xs text-muted">{t('compare.gap')}</p>
+          <p className="text-xs text-faint">
+            {t('compare.gapCap', { a: labelA, b: labelB })}
+          </p>
+          <div className="mt-1.5 overflow-x-auto">
+            <DifferenceStrip A={s.A} B={s.B} year={year} />
+          </div>
+
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full border-collapse text-xs">
+              <thead>
+                <tr className="ds-eyebrow border-b border-line text-[10px] text-faint">
+                  <th className="py-2 pr-2 text-left font-medium">{t('compare.colYear')}</th>
+                  {s.incCol && <th className="px-2 py-2 text-right font-medium">{t('compare.colIncome')}</th>}
+                  <th className="px-2 py-2 text-right font-medium">{labelA}</th>
+                  <th className="px-2 py-2 text-right font-medium">{labelB}</th>
+                  <th className="px-2 py-2 text-right font-medium">{t('compare.diff')}</th>
+                </tr>
+              </thead>
+              <tbody className="ds-figure">
+                {Array.from({ length: year }, (_, i) => i + 1).map((k) => {
+                  const d = s.A[k] - s.B[k]
+                  const w = Math.max(2, (Math.abs(d) / maxAbs) * 48)
+                  const hl = k === year
+                  return (
+                    <tr key={k} className={'border-b border-line/60 ' + (hl ? 'bg-teal-50/70' : '')}>
+                      <td className={'py-1.5 pr-2 text-left ' + (hl ? 'border-l-2 border-teal-600 pl-2 font-semibold text-ink' : 'text-muted')}>{k}</td>
+                      {s.incCol && <td className="px-2 py-1.5 text-right text-body">{money(inputs.income * Math.pow(1 + inputs.incomeGrowthPct / 100, k - 1))}</td>}
+                      <td className="px-2 py-1.5 text-right text-ink">{money(s.A[k])}</td>
+                      <td className="px-2 py-1.5 text-right text-ink">{money(s.B[k])}</td>
+                      <td className="px-2 py-1.5 text-right">
+                        <span className="inline-flex items-center justify-end gap-1.5">
+                          {/* Colour the gap by the line that's ahead, not red/green — keeps the
+                              buy line's meaning intact in the wealth lens (blue, not "loss"). */}
+                          <span style={{ color: d >= 0 ? RENT : OWN }}>{fK(d)}</span>
+                          <span className="inline-block h-2 rounded" style={{ width: w, background: d >= 0 ? RENT : OWN }} />
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {scenario === 'buy_cheaper' && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs text-muted">{t('compare.cheaperAt')}</span>
+              <div className={`${FIELD} w-24`}>
+                <input
+                  inputMode="numeric"
+                  aria-label={t('compare.cheaperAt')}
+                  value={inputs.cheaperPricePct}
+                  onChange={(e) => setVal('cheaperPricePct', Math.min(100, Number(String(e.target.value).replace(/[^0-9]/g, '')) || 0))}
+                  className="ds-figure w-full bg-transparent py-2 pl-3 text-right text-sm text-ink focus:outline-none"
+                />
+              </div>
+              <span className="text-xs text-faint">{t('compare.cheaperUnit')}</span>
+            </div>
+          )}
+
+          {scenario === 'buy_later' && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs text-muted">{t('compare.buyIn')}</span>
+              <div className={`${FIELD} w-24`}>
+                <input
+                  inputMode="numeric"
+                  value={inputs.buyInYear}
+                  onChange={(e) => setVal('buyInYear', Number(String(e.target.value).replace(/[^0-9]/g, '')) || 0)}
+                  className="ds-figure w-full bg-transparent py-2 pl-3 text-right text-sm text-ink focus:outline-none"
+                />
+                <span className="select-none px-2 text-xs text-faint">yr</span>
+              </div>
+            </div>
+          )}
+        </details>
 
         <p className="mt-[var(--space-block)] max-w-3xl text-xs leading-relaxed text-faint">{t('compare.disclaimer', { v: COMPARE_METHODOLOGY })}</p>
       </div>
