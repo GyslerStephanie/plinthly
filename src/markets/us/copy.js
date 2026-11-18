@@ -14,16 +14,9 @@ const COPY = {
     eyebrow: 'Before we start',
     title: 'Where will you buy your home?',
     intro: 'Whether you’re buying now or in a few years, pick the country the home will be in. Mortgage rules, taxes and prices differ by country, so we’ll use that country’s.',
-    detected: 'Your browser says you’re in',
-    confirm: 'Yes, I’m buying in {name}',
-    other: 'Buying somewhere else? Choose the country',
     otherSoon: 'More countries coming. Not listed? You can still explore, but the numbers won’t fit your rules.',
-    privacy: 'We guessed from your browser’s time zone. We count which country was guessed, but your numbers never leave this device. You can change country any time from the top-right of the page.',
+    privacy: 'We count which country your browser’s time zone suggests, but your numbers never leave this device. You can change country any time from the top-right of the page.',
     pick: 'Which country will you buy in?',
-    summary: {
-      us: 'US conventional-loan rules · prices in USD · square feet · 9 states to start.',
-      ch: 'Swiss mortgage rules · CHF · 16 cantons · EN / DE / FR / IT',
-    },
     continue: 'Continue',
   },
   onboarding: {
