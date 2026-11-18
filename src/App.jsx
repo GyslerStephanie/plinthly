@@ -602,6 +602,7 @@ export default function App() {
             current={phase}
             maxVisited={maxVisited}
             onJump={goToPhase}
+            intro
           />
           {/* Journey / Compare / How to build — same spot as in the tool
               overlays (overlayNav), so the tabs never move when you switch. */}
