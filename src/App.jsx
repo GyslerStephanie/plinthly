@@ -32,6 +32,7 @@ import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
 import PhaseNav from './components/PhaseNav'
+import ToolTabs from './components/ToolTabs'
 import AdvisorFab from './components/AdvisorFab'
 import CommentLayer from './components/Comments/CommentLayer'
 import CompareView from './components/Compare/CompareView'
@@ -399,21 +400,24 @@ export default function App() {
   // the mapped destination (spec §4/§7). Phases 2–5 need a Phase-1 result; on a
   // cold entry there is none yet, so Dreamer/Ready-Explorer land on Phase 1 with
   // a nudge (spec §9) instead of a dead phase.
-  // The parallel tools shown beside the journey steps (PhaseNav). Compare in
-  // both markets; the build explorer where it exists (US).
+  // The parallel tools, shown as tabs under the page heading (ToolTabs).
+  // Compare in both markets; the build explorer where it exists (US).
   const navTools = [
     { id: 'compare', label: t('nav.compare'), active: showCompare, onSelect: () => openCompare('nav') },
     ...(isUs ? [{ id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild() }] : []),
   ]
 
   /** The same navigation row inside an overlay: a step closes it and jumps. */
+  const closeTools = () => { setShowCompare(false); setShowBuild(false) }
   const overlayNav = (
-    <PhaseNav
-      current={0}
-      maxVisited={maxVisited}
-      onJump={(n) => { setShowCompare(false); setShowBuild(false); goToPhase(n) }}
-      tools={navTools}
-    />
+    <>
+      <PhaseNav
+        current={0}
+        maxVisited={maxVisited}
+        onJump={(n) => { closeTools(); goToPhase(n) }}
+      />
+      <ToolTabs className="mt-4" journeyActive={false} onJourney={closeTools} tools={navTools} />
+    </>
   )
 
   const openBuild = () => {
@@ -592,7 +596,6 @@ export default function App() {
             current={phase}
             maxVisited={maxVisited}
             onJump={goToPhase}
-            tools={navTools}
           />
           {/* "New to mortgages?" — a slim bar under the navigation once a
               result exists; dismissable for the visit. */}
@@ -634,6 +637,9 @@ export default function App() {
             )}
           </div>
         )}
+
+        {/* Journey / Compare / How to build — tabs under the page heading. */}
+        <ToolTabs className="-mt-2 mb-8 no-print" journeyActive={!showCompare && !showBuild} onJourney={closeTools} tools={navTools} />
 
         {/* United States — Phase 1 on the US engine; later phases not built yet */}
         {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={handleUsValuesChange} onCompare={() => openCompare('phase1')} />}

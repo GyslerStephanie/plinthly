@@ -1,10 +1,9 @@
 import { useI18n } from '../i18n/I18nContext'
 
 /**
- * The product's navigation: the five-step journey plus the parallel tools
- * (Compare, and in the US the build explorer). One row on every screen,
- * overlays included, so you always know where you are and can move between
- * the journey and the tools in one click.
+ * The five-step journey, one row on every screen (overlays included). The
+ * parallel tools (Compare, How to build) now live in ToolTabs under the page
+ * heading; the `tools` prop still renders them as chips if passed.
  *
  * Steps are reachable once visited (`maxVisited`), as before. Tools are always
  * reachable; the active one is highlighted.
