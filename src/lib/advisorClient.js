@@ -1,6 +1,6 @@
 /**
- * The advisor's agent loop, shared by the floating bubble (AdvisorFab) and the
- * comment layer (CommentLayer). Pure async, no React.
+ * The advisor's agent loop behind the floating bubble (AdvisorFab). Pure async,
+ * no React.
  *
  * One turn: POST the history to /api/advisor; while the model answers with a
  * tool_use block, run the tool HERE against src/lib/ (the engine never leaves
