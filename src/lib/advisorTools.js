@@ -52,7 +52,7 @@ export const RECOMPUTE_TOOL = {
       grossIncome: { type: 'number', description: 'Annual gross household income, CHF.' },
       savings: { type: 'number', description: 'Hard cash savings, CHF. Hard equity.' },
       pillar3a: { type: 'number', description: 'Pillar 3a balance, CHF. Hard equity.' },
-      pillar2: { type: 'number', description: '2nd pillar (BVG) available to pledge, CHF. Soft equity — counts toward the 20% only, never the 10% floor.' },
+      pillar2: { type: 'number', description: '2nd pillar (BVG) available to pledge, CHF. Soft equity: counts toward the 20% only, never the 10% floor.' },
       downPct: { type: 'number', description: 'Down-payment percentage, 20-90.' },
       canton: { type: 'string', description: `Canton code. One of: ${CANTON_CODES.join(', ')}.` },
       label: { type: 'string', description: 'Short human label for this scenario, max 40 chars, e.g. "Buying together".' },
@@ -95,7 +95,7 @@ export const COMPARE_TOOL = {
     'what the scenarios show ("which is ahead at year 10?", "what would it take ' +
     'for renting to win?") and to try a change the user asks about ("what if the ' +
     'mortgage rate were 3%?"). Every input is optional and inherited from what ' +
-    'is currently on the dashboard. Never estimate these figures yourself — the ' +
+    'is currently on the dashboard. Never estimate these figures yourself: the ' +
     'model is the only source.',
   input_schema: {
     type: 'object',
@@ -191,7 +191,7 @@ export function sanitiseCompareInput(raw) {
   }
 
   for (const key of Object.keys(raw)) {
-    if (!COMPARE_FIELDS.includes(key)) errors.push(`Unknown parameter "${key}" — ignored.`)
+    if (!COMPARE_FIELDS.includes(key)) errors.push(`Unknown parameter "${key}": ignored.`)
   }
 
   for (const [field, max] of Object.entries(COMPARE_NUMERIC)) {
@@ -199,7 +199,7 @@ export function sanitiseCompareInput(raw) {
     const value = typeof raw[field] === 'string' ? Number(raw[field].replace(/['\s,]/g, '')) : Number(raw[field])
     if (!Number.isFinite(value)) { errors.push(`"${field}" must be a number.`); continue }
     if (value < 0) { errors.push(`"${field}" cannot be negative.`); continue }
-    if (value > max) { errors.push(`"${field}" is outside the plausible range (max ${max}) — ignored.`); continue }
+    if (value > max) { errors.push(`"${field}" is outside the plausible range (max ${max}): ignored.`); continue }
     input[field] = value
   }
 
@@ -266,7 +266,7 @@ function runCompareTool(rawInput, compareCtx) {
     gap: Math.abs(Math.round(sum.diff)),
     ahead: winnerOf(sum),
     breakEvenYear: sum.breakEven,
-    lens: sum.costLens ? 'cumulative cost — LOWER is better' : 'net worth — HIGHER is better',
+    lens: sum.costLens ? 'cumulative cost: LOWER is better' : 'net worth: HIGHER is better',
   })
 
   return {
@@ -304,7 +304,7 @@ export function sanitiseScenarioInput(raw) {
   }
 
   for (const key of Object.keys(raw)) {
-    if (!ALLOWED_FIELDS.includes(key)) errors.push(`Unknown parameter "${key}" — ignored.`)
+    if (!ALLOWED_FIELDS.includes(key)) errors.push(`Unknown parameter "${key}": ignored.`)
   }
 
   for (const field of NUMERIC_FIELDS) {
@@ -325,7 +325,7 @@ export function sanitiseScenarioInput(raw) {
       continue
     }
     if (value > LIMITS[field]) {
-      errors.push(`"${field}" is implausibly large — ignored.`)
+      errors.push(`"${field}" is implausibly large: ignored.`)
       continue
     }
     input[field] = value
@@ -345,7 +345,7 @@ export function sanitiseScenarioInput(raw) {
   }
 
   const changed = Object.keys(input).filter((k) => k !== 'label')
-  if (changed.length === 0) errors.push('No usable change was supplied — nothing to recompute.')
+  if (changed.length === 0) errors.push('No usable change was supplied: nothing to recompute.')
 
   return { ok: changed.length > 0, input, errors }
 }

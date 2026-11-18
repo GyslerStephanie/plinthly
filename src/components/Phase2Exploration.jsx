@@ -284,7 +284,7 @@ export default function Phase2Exploration({ explore, onChange }) {
                 <tr key={m.label} className="text-slate-700">
                   <td className="px-3 py-2 font-medium text-slate-900">
                     {m.label}
-                    <span className="hidden text-xs font-normal text-slate-400 md:inline"> — {m.description}</span>
+                    <span className="hidden text-xs font-normal text-slate-400 md:inline"> · {m.description}</span>
                   </td>
                   <td className="px-3 py-2 tabular-nums">+{m.buildPremiumPct}%</td>
                   <td className="px-3 py-2 tabular-nums text-teal-700">−{m.energySavingPct}%</td>

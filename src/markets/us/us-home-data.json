@@ -2,7 +2,7 @@
   "meta": {
     "version": "1.0",
     "last_updated": "2026-10-11",
-    "notes": "Data for US Phases 3–5 (what to look for, options, action plan). Energy: EIA Electric Power Monthly (Jul 2026, preliminary) and EIA natural gas annual 2025; household energy cost per sq ft from EIA RECS 2020 (2020 dollars), escalated to today with one national factor. HERS reference points from RESNET / EPA / DOE. Upgrade costs are national ranges from contractor/marketplace data (regional labour varies ±30%). Incentive statuses change fast — every one links to the official page and is shown as 'check before relying on it'."
+    "notes": "Data for US Phases 3–5 (what to look for, options, action plan). Energy: EIA Electric Power Monthly (Jul 2026, preliminary) and EIA natural gas annual 2025; household energy cost per sq ft from EIA RECS 2020 (2020 dollars), escalated to today with one national factor. HERS reference points from RESNET / EPA / DOE. Upgrade costs are national ranges from contractor/marketplace data (regional labour varies ±30%). Incentive statuses change fast: every one links to the official page and is shown as 'check before relying on it'."
   },
   "energy": {
     "recs_to_today_factor": 1.39,
@@ -66,7 +66,7 @@
       "low": 2.7,
       "high": 9
     },
-    "notes": "Build premium: EPA ENERGY STAR v3.2 analysis ($1,010–$2,815 over a 2021-code home, ~0.3–0.7% of price) up to RMI's <3% for Zero Energy Ready. Resale: Freddie Mac 2019 (HERS-rated homes +2.7%), Kok & Kahn 2012 (green-labelled CA homes +9%) — correlation, not a guarantee. The federal 45L builder credit ended for homes acquired after 2026-06-30.",
+    "notes": "Build premium: EPA ENERGY STAR v3.2 analysis ($1,010–$2,815 over a 2021-code home, ~0.3–0.7% of price) up to RMI's <3% for Zero Energy Ready. Resale: Freddie Mac 2019 (HERS-rated homes +2.7%), Kok & Kahn 2012 (green-labelled CA homes +9%): correlation, not a guarantee. The federal 45L builder credit ended for homes acquired after 2026-06-30.",
     "sources": [
       "https://www.energystar.gov/sites/default/files/asset/document/ENERGY%20STAR%20Version%203.2%20Cost%20%20Savings%20Summary.pdf",
       "https://rmi.org/zero-energy-homes-are-ready-for-mainstream-markets/",

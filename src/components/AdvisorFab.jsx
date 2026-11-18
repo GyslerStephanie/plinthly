@@ -114,7 +114,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
         : '(Preview) Enter a dream price and I\'ll outline a savings roadmap.'
     }
     return d
-      ? `(Preview) Your max today is ${money(context.maxPrice)} vs a ${money(d.price)} goal — a ~${money(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
+      ? `(Preview) Your max today is ${money(context.maxPrice)} vs a ${money(d.price)} goal, a ~${money(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
       : `(Preview) Your current max is ${money(context.maxPrice)}. Connect an API key for live answers.`
   }
 

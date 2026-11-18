@@ -68,7 +68,7 @@ export function buildCompareAdvisorContext(scenario, inputs, year, onScreen, lan
     onScreen: {
       sideA: { key: onScreen.hA, value: Math.round(onScreen.a) },
       sideB: { key: onScreen.hB, value: Math.round(onScreen.b) },
-      lens: onScreen.costLens ? 'cumulative cost — LOWER is better' : 'net worth — HIGHER is better',
+      lens: onScreen.costLens ? 'cumulative cost: LOWER is better' : 'net worth: HIGHER is better',
     },
   }
 }

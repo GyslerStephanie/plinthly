@@ -139,7 +139,7 @@ export const SUSTAINABILITY_PRIORITIES = [
     label: 'Heating type',
     blurb:
       'Heat pump vs. oil/gas. Fossil systems carry rising cost and regulatory ' +
-      'risk — replacement may become mandatory.',
+      'risk: replacement may become mandatory.',
   },
   {
     value: 'minergie',

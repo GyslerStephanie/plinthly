@@ -20,16 +20,16 @@ const toNum = (v) => {
 function buildEmail({ price, income, savings, canton, viable }) {
   const statusEn = viable
     ? 'Indicative affordability: passes the standard Swiss affordability test (5% notional rate, costs under one third of income).'
-    : 'Indicative affordability: does not yet meet the standard affordability test — I would value advice on closing the gap.'
+    : 'Indicative affordability: does not yet meet the standard affordability test. I would value advice on closing the gap.'
   const statusDe = viable
     ? 'Indikative Tragbarkeit: besteht den üblichen Tragbarkeitstest (kalkulatorischer Zins 5 %, Kosten unter einem Drittel des Einkommens).'
-    : 'Indikative Tragbarkeit: erfüllt den Tragbarkeitstest noch nicht — ich wäre für eine Beratung dankbar.'
+    : 'Indikative Tragbarkeit: erfüllt den Tragbarkeitstest noch nicht. Ich wäre für eine Beratung dankbar.'
 
-  const subject = `Mortgage enquiry / Hypothekaranfrage — ${price} (${canton})`
+  const subject = `Mortgage enquiry / Hypothekaranfrage: ${price} (${canton})`
 
   const body = `To: [BANK EMAIL]  (replace with your chosen bank's mortgage contact address before sending)
 
-— English —
+ENGLISH
 
 Dear Sir or Madam,
 
@@ -47,7 +47,7 @@ Kind regards,
 [Your name]
 
 
-— Deutsch —
+DEUTSCH
 
 Sehr geehrte Damen und Herren,
 

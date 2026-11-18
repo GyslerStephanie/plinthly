@@ -18,17 +18,17 @@ export function mockReply(ctx, messages, mode) {
   if (mode === 'plan') {
     if (!d) return '(Preview mock) Enter a dream price first and I\'ll lay out a savings roadmap to reach it.'
     return [
-      `(Preview mock — no API key set yet) Here's an illustrative roadmap to your ${chf(d.price)} goal:`,
+      `(Preview mock, no API key set yet) Here's an illustrative roadmap to your ${chf(d.price)} goal:`,
       `• Equity gap: about ${chf(d.equityGap)}. Saving CHF 2'000/month closes it in roughly ${Math.max(1, Math.ceil((d.equityGap || 0) / 2000))} months.`,
       ctx.pillar3a && ctx.pillar3a.gap > 0
-        ? `• Max your Pillar 3a: you're ${chf(ctx.pillar3a.gap)} under the annual max — it counts as hard equity and saves ~${chf(ctx.pillar3a.taxSaving)}/year in tax.`
-        : `• Your Pillar 3a is already maxed — nice.`,
+        ? `• Max your Pillar 3a: you're ${chf(ctx.pillar3a.gap)} under the annual max. It counts as hard equity and saves ~${chf(ctx.pillar3a.taxSaving)}/year in tax.`
+        : `• Your Pillar 3a is already maxed. Nice.`,
       d.incomeGap > 0 ? `• Income: about ${chf(d.incomeGap)}/year more would clear the affordability rule.` : null,
-      'This is illustrative, not licensed advice — confirm with an independent advisor (VZ, hypotheke.ch, or your cantonal bank).',
+      'This is illustrative, not licensed advice: confirm with an independent advisor (VZ, hypotheke.ch, or your cantonal bank).',
     ].filter(Boolean).join('\n')
   }
   return [
-    '(Preview mock — no API key set yet) Once your Anthropic key is configured, I\'ll answer using your real numbers.',
+    '(Preview mock, no API key set yet) Once your Anthropic key is configured, I\'ll answer using your real numbers.',
     d ? `For reference: your max today is ${chf(ctx.maxPrice)} and your dream is ${chf(d.price)}, an equity gap of about ${chf(d.equityGap)}.` : `Your current max purchase price is ${chf(ctx.maxPrice)}.`,
   ].join(' ')
 }
@@ -105,24 +105,24 @@ function mockAgentTurnInner(ctx, messages, mode, surface) {
     // A zero delta is the most INTERESTING answer, not a boring one: it means the
     // lever the user reached for is not the one that binds. Say so plainly.
     const headline = delta.maxPrice === 0
-      ? `(Preview mock — no API key set) Changing your ${name} doesn't move your maximum — it stays at ${chf(scenario.maxPrice)}.`
-      : `(Preview mock — no API key set) Changing your ${name} ${delta.maxPrice > 0 ? 'raises' : 'lowers'} your maximum from ${chf(current.maxPrice)} to ${chf(scenario.maxPrice)} — a difference of ${chf(Math.abs(delta.maxPrice))}.`
+      ? `(Preview mock, no API key set) Changing your ${name} doesn't move your maximum, it stays at ${chf(scenario.maxPrice)}.`
+      : `(Preview mock, no API key set) Changing your ${name} ${delta.maxPrice > 0 ? 'raises' : 'lowers'} your maximum from ${chf(current.maxPrice)} to ${chf(scenario.maxPrice)}, a difference of ${chf(Math.abs(delta.maxPrice))}.`
     // Keyed by WHAT BINDS. Each line must name the lever that actually moves the
     // number for that constraint — getting this backwards is a wrong-advice bug,
     // not a copy nit.
     const EXPLAIN = {
-      equity: `Your equity is the cap: Swiss rules need ${pctOf(R.MIN_DOWN)} down, of which at least ${pctOf(R.MIN_LIQUID)} in real cash or Pillar 3a. More income cannot lift this number — more hard equity can.`,
-      income: `Your income is the cap: housing costs must stay under one third of gross income at the ${pctOf(R.NOTIONAL_RATE)} notional rate. More equity cannot lift this number — more income can.`,
+      equity: `Your equity is the cap: Swiss rules need ${pctOf(R.MIN_DOWN)} down, of which at least ${pctOf(R.MIN_LIQUID)} in real cash or Pillar 3a. More income cannot lift this number. More hard equity can.`,
+      income: `Your income is the cap: housing costs must stay under one third of gross income at the ${pctOf(R.NOTIONAL_RATE)} notional rate. More equity cannot lift this number. More income can.`,
     }
     const lines = [
       headline,
       delta.maxPrice === 0
         ? `You are ${scenario.bindingConstraint}-limited. ${EXPLAIN[scenario.bindingConstraint] || ''}`.trim()
         : delta.bindingConstraintChanged
-          ? `It also flips what constrains you — you are now ${scenario.bindingConstraint}-limited.`
+          ? `It also flips what constrains you: you are now ${scenario.bindingConstraint}-limited.`
           : `You remain ${scenario.bindingConstraint}-limited.`,
       `Annual housing cost would be ${chf(scenario.annualCosts.total)}, about ${scenario.annualCosts.incomeSharePct}% of gross income (the ceiling is ${chf(scenario.annualCosts.ceiling)}).`,
-      'Illustrative, not licensed advice — confirm with an independent advisor.',
+      'Illustrative, not licensed advice: confirm with an independent advisor.',
     ]
     return { reply: lines.join('\n\n') }
   }
@@ -143,7 +143,7 @@ function mockAgentTurnInner(ctx, messages, mode, surface) {
         toolUse: [{ id: 'mock_c1', name: 'run_compare_scenario', input }],
       }
     }
-    return { reply: '(Preview mock — no API key set) Ask me about the scenarios on screen — for example "what if rates were 3%?", "which is ahead at 15 years?", or "show me buying later".' }
+    return { reply: '(Preview mock, no API key set) Ask me about the scenarios on screen, for example "what if rates were 3%?", "which is ahead at 15 years?", or "show me buying later".' }
   }
   // The unit suffix must not be the start of another word ("250000 more" is not
   // 250 million) — the sanitiser would reject the result anyway, but a wrong
@@ -291,8 +291,8 @@ function narrateCompare(payload) {
   const changedKeys = Object.keys(changed || {})
   const chf = (n) => 'CHF ' + Math.round(Number(n) || 0).toLocaleString('de-CH')
 
-  const lines = ['(Preview mock — no API key set) ' +
-    `At year ${result.year}, ${side(result, result.ahead)} is ahead by ${chf(result.gap)} — ` +
+  const lines = ['(Preview mock, no API key set) ' +
+    `At year ${result.year}, ${side(result, result.ahead)} is ahead by ${chf(result.gap)}: ` +
     (cost ? 'this view compares what each path costs you, so lower is better.' : 'this view compares net worth, so higher is better.')]
 
   if (changedKeys.length) {
@@ -304,10 +304,10 @@ function narrateCompare(payload) {
   }
   lines.push(
     result.breakEvenYear
-      ? `The two paths cross at year ${result.breakEvenYear} — before that the other side is ahead.`
+      ? `The two paths cross at year ${result.breakEvenYear}. Before that the other side is ahead.`
       : 'The two paths never cross within the modelled horizon.',
   )
-  lines.push('Illustrative, not licensed advice — confirm with an independent advisor.')
+  lines.push('Illustrative, not licensed advice: confirm with an independent advisor.')
   return lines.join('\n\n')
 }
 
