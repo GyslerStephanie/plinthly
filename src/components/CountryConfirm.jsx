@@ -77,13 +77,13 @@ export default function CountryConfirm({ onChoose, onSkip }) {
         <p className="mt-2 text-base text-body">{ut('country.intro')}</p>
 
         <section className="mt-8" aria-label={ut('country.pick')}>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
             {choices.map((m) => (
               <button
                 key={m.id}
                 type="button"
                 onClick={() => onChoose(m.id)}
-                className="flex items-center justify-center gap-3 rounded-xl bg-teal-800 px-5 py-4 text-lg font-bold text-on-primary shadow-sm transition hover:bg-teal-900"
+                className="flex items-center justify-center gap-2.5 rounded-lg bg-teal-800 px-4 py-2.5 text-base font-bold text-on-primary shadow-sm transition hover:bg-teal-900"
               >
                 <span className="ds-figure rounded-md bg-white/15 px-2 py-1 text-xs font-medium" aria-hidden="true">
                   {m.countryCode}
