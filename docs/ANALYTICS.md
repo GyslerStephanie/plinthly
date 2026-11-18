@@ -56,7 +56,7 @@ fired.
 | `region_requested` | `market: 'us'`, `region` (USPS code) | UsPhase1, "My state isn't listed" | Expand |
 | `compare_opened` | `source`: `phase1` \| `dream` \| `onboarding` \| `other` | App `openCompare` | Improve |
 | `compare_scenario_selected` | `scenario` (scenario id) | CompareView tabs and the save/invest nudge (not advisor what-ifs) | Improve |
-| `learn_toast` | `action`: `dismissed` \| `ask` \| `link` | LearnToast | Improve |
+| `learn_toast` | `action`: `dismissed` \| `link` (`ask` until 2026-11-18) | LearnToast | Improve |
 | `glossary_opened` | `term` (glossary id) | GlossaryTerm (id-based terms only; InfoTerm text is never sent) | Improve |
 | `how_it_works_opened` | `card`: `phase1` \| `compare` | HowItWorks `<details>` onToggle | Improve |
 | `language_changed` | `from`, `to` (language codes) | LocaleMenu | Expand (language demand) |
