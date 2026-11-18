@@ -3270,10 +3270,11 @@ for (const lng of Object.keys(phaseKeys)) {
 const localeKeys = {
   en: {
     learnMore: 'Learn more',
-    learnToast: { title: 'New to mortgages?', body: 'Not sure what all these calculations mean, or need to brush up on mortgage 101? Ask Plinthly AI your questions, or follow these guides to learn more.', dismiss: 'Dismiss' },
+    learnToast: { title: 'New to mortgages?', dismiss: 'Dismiss' },
     advisorTip: 'Ask Plinthly AI',
     glossaryAsk: 'What does “{term}” mean for me?',
     glossaryClose: 'Close',
+    moreInfo: 'More about {label}',
     locale: {
       button: 'Country and language: {country}, {language}. Change',
       country: 'Country',
@@ -3295,10 +3296,11 @@ const localeKeys = {
   },
   de: {
     learnMore: 'Mehr erfahren',
-    learnToast: { title: 'Neu bei Hypotheken?', body: 'Sind Ihnen diese Berechnungen nicht ganz klar, oder möchten Sie Ihr Grundwissen zu Hypotheken auffrischen? Stellen Sie Plinthly AI Ihre Fragen oder folgen Sie diesen Leitfäden.', dismiss: 'Schliessen' },
+    learnToast: { title: 'Neu bei Hypotheken?', dismiss: 'Schliessen' },
     advisorTip: 'Fragen Sie Plinthly AI',
     glossaryAsk: 'Was bedeutet «{term}» für mich?',
     glossaryClose: 'Schliessen',
+    moreInfo: 'Mehr zu {label}',
     locale: {
       button: 'Land und Sprache: {country}, {language}. Ändern',
       country: 'Land',
@@ -3319,10 +3321,11 @@ const localeKeys = {
   },
   fr: {
     learnMore: 'En savoir plus',
-    learnToast: { title: 'Nouveau dans les hypothèques ?', body: 'Vous ne savez pas ce que signifient tous ces calculs, ou voulez revoir les bases des hypothèques ? Posez vos questions à Plinthly AI ou suivez ces guides.', dismiss: 'Fermer' },
+    learnToast: { title: 'Nouveau dans les hypothèques ?', dismiss: 'Fermer' },
     advisorTip: 'Demandez à Plinthly AI',
     glossaryAsk: 'Que signifie « {term} » pour moi ?',
     glossaryClose: 'Fermer',
+    moreInfo: 'En savoir plus : {label}',
     locale: {
       button: 'Pays et langue : {country}, {language}. Modifier',
       country: 'Pays',
@@ -3343,10 +3346,11 @@ const localeKeys = {
   },
   it: {
     learnMore: 'Scopri di più',
-    learnToast: { title: 'Nuovo ai mutui ipotecari?', body: 'Non sei sicuro di cosa significhino tutti questi calcoli, o vuoi ripassare le basi delle ipoteche? Fai le tue domande a Plinthly AI o segui queste guide.', dismiss: 'Chiudi' },
+    learnToast: { title: 'Nuovo ai mutui ipotecari?', dismiss: 'Chiudi' },
     advisorTip: 'Chiedi a Plinthly AI',
     glossaryAsk: 'Cosa significa «{term}» per me?',
     glossaryClose: 'Chiudi',
+    moreInfo: 'Altre informazioni: {label}',
     locale: {
       button: 'Paese e lingua: {country}, {language}. Modifica',
       country: 'Paese',

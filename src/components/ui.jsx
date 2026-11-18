@@ -1,4 +1,6 @@
+import { useEffect, useId, useRef, useState } from 'react'
 import { money } from '../lib/format'
+import { useI18n } from '../i18n/I18nContext'
 
 // Shared custom dropdown chevron for native <select>s — the browser's native
 // arrow had inconsistent spacing that clashed with the custom-styled forms.
@@ -122,5 +124,73 @@ export function Indicative({ children }) {
       <span aria-hidden>ⓘ</span>
       <span>{children || 'Indicative ranges only, not live listings or a quote.'}</span>
     </p>
+  )
+}
+
+/**
+ * Info tip: a small ⓘ button that reveals helper text on hover (mouse), tap or
+ * keyboard focus, instead of printing the text under every field. Closes on
+ * Escape, outside click or when the pointer leaves. Content may hold links or
+ * glossary terms.
+ *
+ * @param {string} label    What the tip is about (for the button's name).
+ * @param {ReactNode} children  The helper text.
+ * @param {'left'|'right'} [align]  Which edge the bubble lines up with.
+ */
+export function InfoTip({ label, children, align = 'left', className = '' }) {
+  const { t } = useI18n()
+  const [open, setOpen] = useState(false)
+  const wrapRef = useRef(null)
+  const id = useId()
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false) }
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('pointerdown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+  if (!children) return null
+  const hoverable = () => typeof window !== 'undefined' && window.matchMedia?.('(hover: hover)').matches
+  return (
+    <span
+      ref={wrapRef}
+      className={`ds-infotip ${className}`}
+      onMouseEnter={() => hoverable() && setOpen(true)}
+      onMouseLeave={() => hoverable() && setOpen(false)}
+    >
+      <button
+        type="button"
+        className="ds-infotip-btn"
+        aria-label={t('moreInfo', { label })}
+        aria-expanded={open}
+        aria-describedby={open ? id : undefined}
+        onClick={(e) => { e.preventDefault(); setOpen((v) => !v) }}
+      >
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
+          <circle cx="8" cy="4.9" r="0.95" fill="currentColor" />
+          <path d="M8 7.3v4.4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      </button>
+      {open && (
+        <span id={id} role="tooltip" className={`ds-infotip-bubble ${align === 'right' ? 'right-0' : 'left-0'}`}>
+          {children}
+        </span>
+      )}
+    </span>
+  )
+}
+
+/** A form label with its helper text behind an info tip. */
+export function FieldLabel({ htmlFor, label, hint, className = '' }) {
+  return (
+    <span className={`flex items-center gap-1.5 ${className}`}>
+      <label htmlFor={htmlFor} className="text-sm font-semibold text-ink">{label}</label>
+      {hint && <InfoTip label={label}>{hint}</InfoTip>}
+    </span>
   )
 }

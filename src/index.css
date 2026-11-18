@@ -230,6 +230,25 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
     flex: 0 0 auto; width: 300px; max-width: 34%; height: auto; margin: -16px 0;
     opacity: .95; pointer-events: none; image-rendering: pixelated;
   }
+  /* Island build-in (BuildIsland): bands drop in from the base up, then settle. */
+  .ds-build { position: relative; display: block; }
+  .ds-build img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+  .ds-build-ghost { visibility: hidden; }
+  .ds-build-layer { position: absolute; inset: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ds-build-layer { opacity: 0; animation: ds-layer-drop .42s cubic-bezier(.2,.9,.3,1.25) both; }
+    .ds-build { animation: ds-island-settle .5s var(--ease-out) 1.25s both; }
+  }
+  @keyframes ds-layer-drop {
+    0%   { opacity: 0; transform: translateY(-22px); }
+    60%  { opacity: 1; }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ds-island-settle {
+    0%   { transform: translateY(0); }
+    40%  { transform: translateY(3px); }
+    100% { transform: translateY(0); }
+  }
 
   /* Footer terrain band — a pixel skyline divider over a forest bar. */
   .ds-terrain-band {
@@ -299,6 +318,56 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
     color: var(--moss-800); font-weight: 500;
   }
 
+  /* Learn bar ("New to mortgages?"): icon, title, guide chips, ×. */
+  .ds-learn {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+    padding: 10px 12px 10px 14px; border-radius: var(--radius-xl);
+    border: 1px solid var(--border-default); background: var(--surface-card);
+    box-shadow: var(--shadow-xs);
+  }
+  .ds-learn-icon {
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    width: 34px; height: 34px; border-radius: var(--radius-lg);
+    background: var(--color-primary-tint); color: var(--color-primary);
+  }
+  .ds-learn-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text-strong); white-space: nowrap; }
+  .ds-learn-links { display: flex; flex-wrap: wrap; gap: 8px; flex: 1 1 auto; min-width: 0; margin: 0; padding: 0; list-style: none; }
+  .ds-learn-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px;
+    border: 1px solid var(--border-default); background: var(--surface-page);
+    font-size: 13px; font-weight: 500; color: var(--text-body); text-decoration: none;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .ds-learn-chip:hover { border-color: var(--moss-600); color: var(--moss-800); background: var(--color-primary-tint); }
+  .ds-learn-chip svg { color: var(--text-faint); }
+  .ds-learn-chip:hover svg { color: currentColor; }
+  .ds-learn-close {
+    display: inline-flex; align-items: center; justify-content: center; flex: none; margin-left: auto;
+    width: 30px; height: 30px; border-radius: var(--radius-lg); font-size: 18px; line-height: 1; color: var(--text-muted);
+  }
+  .ds-learn-close:hover { background: var(--surface-sunken); color: var(--text-strong); }
+  /* On phones the chips take their own row under the title. */
+  @media (max-width: 639px) { .ds-learn-links { order: 3; flex-basis: 100%; } }
+
+  /* Info tip: helper text behind a small ⓘ (InfoTip in ui.jsx). */
+  .ds-infotip { position: relative; display: inline-flex; vertical-align: middle; }
+  .ds-infotip-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; margin: -4px; border-radius: 999px;
+    color: var(--text-faint); transition: color .15s, background .15s;
+  }
+  .ds-infotip-btn:hover, .ds-infotip-btn[aria-expanded="true"] { color: var(--color-primary); background: var(--color-primary-tint); }
+  .ds-infotip-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+  .ds-infotip-bubble {
+    position: absolute; top: calc(100% + 8px); z-index: 40;
+    width: max-content; max-width: min(18rem, calc(100vw - 48px));
+    padding: 10px 12px; border-radius: var(--radius-lg);
+    border: 1px solid var(--border-default); background: var(--surface-card);
+    box-shadow: var(--shadow-float);
+    font-size: 13px; line-height: 1.5; font-weight: 400; color: var(--text-body); text-align: left;
+    white-space: normal;
+  }
+
   /* Brand wordmark in Spectral. */
   .ds-wordmark { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; }
 
@@ -349,51 +418,4 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
 /* "New to mortgages?" message: same gentle rise-in as the advisor tooltip. */
 @media (prefers-reduced-motion: no-preference) {
   .learn-toast { animation: advisor-tip-in 280ms var(--ease-out) both; }
-}
-
-/* Journey stepper, first visit only (PhaseNav `intro`): steps rise in one by
-   one, a pulse walks 1→5 to preview the journey, and at 6 s the row folds
-   away into a compact "Step n of 5" pill. No motion for people who ask for less
-   (PhaseNav skips the intro entirely then). */
-@media (prefers-reduced-motion: no-preference) {
-  .stepper-intro > ol > li {
-    animation: stepper-in 560ms var(--ease-out) both;
-    animation-delay: calc(var(--i) * 110ms + 120ms);
-  }
-  .stepper-intro .stepper-arrow {
-    display: inline-block;
-    animation: stepper-arrow 420ms var(--ease-out) both;
-    animation-delay: calc(var(--i) * 110ms + 380ms);
-  }
-  .stepper-intro .stepper-dot {
-    animation: stepper-pulse 760ms var(--ease-out) both;
-    animation-delay: calc(var(--i) * 420ms + 1300ms);
-  }
-  .stepper-leaving {
-    animation: stepper-out 500ms cubic-bezier(0.55, 0, 0.75, 0.2) both;
-  }
-  .stepper-compact {
-    animation: stepper-compact-in 360ms var(--ease-out) both;
-  }
-  @keyframes stepper-in {
-    from { opacity: 0; transform: translateY(10px) scale(0.94); filter: blur(3px); }
-    to { opacity: 1; transform: none; filter: none; }
-  }
-  @keyframes stepper-arrow {
-    from { opacity: 0; transform: translateX(-6px); }
-    to { opacity: 1; transform: none; }
-  }
-  @keyframes stepper-pulse {
-    0% { transform: scale(1); box-shadow: 0 0 0 0 rgb(15 118 110 / 0.45); }
-    35% { transform: scale(1.22); }
-    100% { transform: scale(1); box-shadow: 0 0 0 10px rgb(15 118 110 / 0); }
-  }
-  @keyframes stepper-out {
-    from { opacity: 1; transform: none; filter: none; }
-    to { opacity: 0; transform: translateY(-8px) scale(0.98); filter: blur(2px); }
-  }
-  @keyframes stepper-compact-in {
-    from { opacity: 0; transform: translateY(6px) scale(0.96); }
-    to { opacity: 1; transform: none; }
-  }
 }

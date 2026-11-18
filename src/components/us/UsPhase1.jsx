@@ -10,6 +10,7 @@ import {
 import { ut } from '../../markets/us/copy'
 import usData from '../../markets/us/us-data.json'
 import CompareCta from '../CompareCta'
+import { FieldLabel, InfoTip } from '../ui'
 import RequestPicker from '../RequestPicker'
 import { unlistedStateOptions } from '../../markets/us/allStates'
 import { track } from '../../lib/track'
@@ -84,17 +85,19 @@ export default function UsPhase1({ values, onChange, onCompare }) {
   const result = usResult(values)
   return (
     <div className="ds-split">
-      <div className="ds-card">
-        <h2 className="ds-section-title">{ut('form.title')}</h2>
-        <UsForm values={values} onChange={onChange} />
+      {/* Left: the form, then the explainer and the Compare prompt, so both
+          columns carry weight and the results column stays focused. */}
+      <div className="ds-stack">
+        <div className="ds-card">
+          <h2 className="ds-section-title">{ut('form.title')}</h2>
+          <UsForm values={values} onChange={onChange} />
+        </div>
+        {result && <HowItWorks course={usPhase1Course(result)} cardId="phase1" />}
+        {result && onCompare && <CompareCta onCompare={onCompare} />}
       </div>
       <div className="lg:sticky lg:top-6 lg:self-start">
         {result ? (
-          <div className="space-y-5">
-            <UsResult result={result} />
-            <HowItWorks course={usPhase1Course(result)} cardId="phase1" />
-            {onCompare && <CompareCta onCompare={onCompare} />}
-          </div>
+          <UsResult result={result} />
         ) : (
           <div className="flex min-h-72 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white/60 p-8 text-center text-sm text-slate-500">
             {ut('result.empty')}
@@ -108,11 +111,8 @@ export default function UsPhase1({ values, onChange, onCompare }) {
 function Field({ id, label, hint, children }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-semibold text-ink">
-        {label}
-      </label>
+      <FieldLabel htmlFor={id} label={label} hint={hint} className="mb-1.5" />
       {children}
-      {hint && <p className="mt-1.5 text-xs leading-relaxed text-muted">{hint}</p>}
     </div>
   )
 }
@@ -317,7 +317,12 @@ function UsResult({ result: r }) {
       </section>
 
       <section className="ds-card">
-        <h3 className="ds-eyebrow text-xs text-muted">{ut('result.limitsTitle')}</h3>
+        <h3 className="ds-eyebrow flex items-center gap-1.5 text-xs text-muted">
+          {ut('result.limitsTitle')}
+          <InfoTip label={ut('result.limitsTitle')}>
+            {ut('result.dti', { stretch: r.rules.backEndStretchPct, max: r.rules.backEndMaxPct, back: r.rules.backEndPct })}
+          </InfoTip>
+        </h3>
         <ul className="mt-3 space-y-2">
           {LIMITS.map(([key, price]) => {
             const binding = key === r.limit
@@ -335,9 +340,6 @@ function UsResult({ result: r }) {
             )
           })}
         </ul>
-        <p className="mt-3 text-xs leading-relaxed text-muted">
-          {ut('result.dti', { stretch: r.rules.backEndStretchPct, max: r.rules.backEndMaxPct, back: r.rules.backEndPct })}
-        </p>
       </section>
 
       <section className="ds-card">
@@ -351,7 +353,10 @@ function UsResult({ result: r }) {
       </section>
 
       <section className="ds-card">
-        <h3 className="ds-eyebrow text-xs text-muted">{ut('result.monthlyTitle')}</h3>
+        <h3 className="ds-eyebrow flex items-center gap-1.5 text-xs text-muted">
+          {ut('result.monthlyTitle')}
+          <InfoTip label={ut('result.monthlyTitle')}>{ut('result.maintenance', { amount: money(mc.maintenance) })}</InfoTip>
+        </h3>
         <div className="mt-2">
           <Row label={ut('result.pi')} value={money(mc.principalAndInterest)} />
           <Row label={ut('result.tax')} value={money(mc.propertyTax)} />
@@ -363,7 +368,6 @@ function UsResult({ result: r }) {
         <p className="mt-3 text-sm text-body">
           {ut('result.ratios', { housing: pct1(r.ratios.housing), debt: pct1(r.ratios.debt) })}
         </p>
-        <p className="mt-2 text-xs leading-relaxed text-muted">{ut('result.maintenance', { amount: money(mc.maintenance) })}</p>
         {r.flags.pmi && (
           <p className="mt-3 rounded-lg bg-surface px-3 py-2 text-xs leading-relaxed text-body">
             {ut('result.pmiNote', { rate: r.flags.pmiRatePct })}

@@ -31,8 +31,8 @@ import { groupDigits } from './lib/format'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
-import PhaseNav from './components/PhaseNav'
 import ToolTabs from './components/ToolTabs'
+import BuildIsland from './components/hero/BuildIsland'
 import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
 import { PageHeader } from './components/ui'
@@ -407,7 +407,7 @@ export default function App() {
     ...(isUs ? [{ id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild() }] : []),
   ]
 
-  /** The same navigation row inside an overlay: a step closes it and jumps. */
+  /** The same tab row inside an overlay; Your journey closes the tool. */
   const closeTools = () => { setShowCompare(false); setShowBuild(false) }
 
   // The site header. Rendered once for the page and again inside the tool
@@ -444,16 +444,7 @@ export default function App() {
     </header>
   )
 
-  const overlayNav = (
-    <>
-      <PhaseNav
-        current={0}
-        maxVisited={maxVisited}
-        onJump={(n) => { closeTools(); goToPhase(n) }}
-      />
-      <ToolTabs className="mt-4" journeyActive={false} onJourney={closeTools} tools={navTools} />
-    </>
-  )
+  const overlayNav = <ToolTabs journeyActive={false} onJourney={closeTools} tools={navTools} />
 
   const openBuild = () => {
     setShowCompare(false)
@@ -598,15 +589,10 @@ export default function App() {
 
       <main className="ds-page">
         <div className="ds-page-nav no-print">
-          <PhaseNav
-            current={phase}
-            maxVisited={maxVisited}
-            onJump={goToPhase}
-            intro
-          />
-          {/* Journey / Compare / How to build — same spot as in the tool
-              overlays (overlayNav), so the tabs never move when you switch. */}
-          <ToolTabs className="mt-4" journeyActive={!showCompare && !showBuild} onJourney={closeTools} tools={navTools} />
+          {/* Journey / Compare / How to build: the page's only navigation row,
+              in the same spot as in the tool overlays (overlayNav), so it never
+              moves when you switch. Steps move with Back / Next at the bottom. */}
+          <ToolTabs journeyActive={!showCompare && !showBuild} onJourney={closeTools} tools={navTools} />
           {/* "New to mortgages?" — a slim bar under the navigation once a
               result exists; dismissable for the visit. */}
           {(isUs ? usRes : previewResult) && !showCompare && !showBuild && (
@@ -633,7 +619,7 @@ export default function App() {
               </p>
             </div>
             {/* The whole island, in the flow and vertically centred, so nothing is clipped. */}
-            <img src="/brand/voxel-landscape-mini.png" alt="" className="ds-hero-land hidden sm:block" />
+            <BuildIsland className="hidden sm:block" />
           </div>
         ) : (
           <PageHeader
@@ -686,19 +672,21 @@ export default function App() {
                   onChange={handleValuesChange}
                 />
               </div>
+              {previewResult && (
+                <div className="mt-[var(--space-stack)]">
+                  <HowItWorks course={chPhase1Course(previewResult)} cardId="phase1" />
+                </div>
+              )}
             </div>
             {/* Sticky so the live result stays in view while scrolling inputs */}
             <div className="lg:sticky lg:top-6 lg:self-start">
               {previewResult ? (
-                <div className="space-y-5">
-                  <AffordabilityResult
-                    result={previewResult}
-                    renovation={renovation}
-                    onNavigate={goToPhase}
-                    onCompare={() => openCompare('phase1')}
-                  />
-                  <HowItWorks course={chPhase1Course(previewResult)} cardId="phase1" />
-                </div>
+                <AffordabilityResult
+                  result={previewResult}
+                  renovation={renovation}
+                  onNavigate={goToPhase}
+                  onCompare={() => openCompare('phase1')}
+                />
               ) : (
                 <EmptyResult
                   hasIncome={hasIncome(values)}

@@ -6,10 +6,10 @@ import { track, trackOutbound } from '../lib/track'
 const DISMISS_KEY = 'plinthly.learnToastDismissed'
 
 /**
- * "New to mortgages?" — the discoverable entry to the learn layer, as a slim
- * bar in the page flow (under the navigation) rather than a floating card:
- * title and one line of copy on the left, the vetted guides on the right
- * (the Ask Plinthly AI bubble sits bottom-right), and an × to dismiss. Dismissing hides it for the rest
+ * "New to mortgages?": the discoverable entry to the learn layer, as a slim
+ * bar in the page flow (under the navigation): a book icon and the title,
+ * the vetted guides as link chips, and an × to dismiss (the Ask Plinthly AI
+ * bubble sits bottom-right). Dismissing hides it for the rest
  * of the visit (sessionStorage), so it informs without nagging.
  *
  * @param {Array<{label, url}>} links  Vetted guides (src/data/courses.json).
@@ -39,40 +39,37 @@ export default function LearnToast({ links: rawLinks = [], className = '' }) {
   }
 
   return (
-    <aside
-      aria-label={t('learnToast.title')}
-      className={`learn-toast flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-line bg-card px-4 py-3 shadow-sm no-print ${className}`}
-    >
-      <div className="min-w-0 flex-1 basis-64">
-        <p className="text-sm text-body">
-          <span className="font-display text-base font-semibold text-ink">{t('learnToast.title')}</span>
-          <span className="ml-2">{t('learnToast.body')}</span>
-        </p>
-      </div>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+    <aside aria-label={t('learnToast.title')} className={`ds-learn no-print ${className}`}>
+      <span className="ds-learn-icon" aria-hidden="true">
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
+          <path d="M10 5.5C8.6 4.4 6.6 4 3.5 4v11c3.1 0 5.1.4 6.5 1.5 1.4-1.1 3.4-1.5 6.5-1.5V4c-3.1 0-5.1.4-6.5 1.5Z" />
+          <path d="M10 5.5v11" />
+        </svg>
+      </span>
+      <p className="ds-learn-title">{t('learnToast.title')}</p>
+      <ul className="ds-learn-links">
         {links.slice(0, 3).map((l) => (
-          <a
-            key={l.url}
-            href={l.url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm font-medium"
-            onClick={() => {
-              track('learn_toast', { action: 'link' })
-              trackOutbound('guide')
-            }}
-          >
-            {l.label} →
-          </a>
+          <li key={l.url}>
+            <a
+              href={l.url}
+              target="_blank"
+              rel="noreferrer"
+              className="ds-learn-chip"
+              onClick={() => {
+                track('learn_toast', { action: 'link' })
+                trackOutbound('guide')
+              }}
+            >
+              {l.label}
+              <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M4 2h6v6M10 2 3 9" />
+              </svg>
+            </a>
+          </li>
         ))}
-      </div>
-      <button
-        type="button"
-        onClick={dismiss}
-        aria-label={t('learnToast.dismiss')}
-        className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted hover:bg-surface hover:text-ink"
-      >
-        <span aria-hidden="true" className="text-lg leading-none">×</span>
+      </ul>
+      <button type="button" onClick={dismiss} aria-label={t('learnToast.dismiss')} className="ds-learn-close">
+        <span aria-hidden="true">×</span>
       </button>
     </aside>
   )

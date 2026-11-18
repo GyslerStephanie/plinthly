@@ -5,6 +5,7 @@ import { US_RULES } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { MoneyInput, Row, usInput } from './UsPhase1'
 import CompareCta from '../CompareCta'
+import { FieldLabel } from '../ui'
 
 /**
  * US Phase 2 — dream price. UI only: every figure comes from
@@ -23,11 +24,8 @@ export default function UsDreamPhase({ values, dreamPrice, onDreamPriceChange, o
   return (
     <div className="space-y-6">
       <section className="max-w-xl ds-card">
-        <label htmlFor="us-dream" className="mb-1.5 block text-sm font-semibold text-ink">
-          {ut('dream.priceLabel')}
-        </label>
+        <FieldLabel htmlFor="us-dream" label={ut('dream.priceLabel')} hint={ut('dream.priceHint')} className="mb-1.5" />
         <MoneyInput id="us-dream" value={dreamPrice} onChange={(v) => onDreamPriceChange(groupDigits(v))} />
-        <p className="mt-1.5 text-xs text-muted">{ut('dream.priceHint')}</p>
       </section>
 
       {!plan ? (
@@ -220,9 +218,8 @@ function Payoff({ plan, extra, onExtra }) {
             <Row label={ut('dream.pmiCancel')} value={ut('dream.pmiEndsValue', { years: Math.round((p.pmiCancelMonth / 12) * 10) / 10 })} />
           )}
           <div className="mt-4">
-            <label htmlFor="us-extra" className="mb-1.5 block text-sm font-semibold text-ink">{ut('dream.extraLabel')}</label>
+            <FieldLabel htmlFor="us-extra" label={ut('dream.extraLabel')} hint={ut('dream.extraHint')} className="mb-1.5" />
             <MoneyInput id="us-extra" value={extra} onChange={onExtra} suffix="/mo" />
-            <p className="mt-1.5 text-xs text-muted">{ut('dream.extraHint')}</p>
             {p.extraMonthly > 0 && p.interestSaved > 0 && (
               <p className="mt-3 rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-900">
                 {ut('dream.extraSaves', {
