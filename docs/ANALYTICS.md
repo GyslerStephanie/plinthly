@@ -32,10 +32,12 @@ Every event answers one of these. If a proposed event answers none, don't add it
   (`npm run test:track`) checks this.
 - The `<Analytics>` component strips the URL hash, which holds the visitor's
   numbers, before any pageview is sent.
-- Say what is counted where it happens. The country step tells visitors that
-  the guessed country is counted and their numbers never leave the device
-  (`country.privacy` in `src/markets/us/copy.js`). If an event starts sending
-  something new, update the copy that promises otherwise.
+- Say what is counted where it happens. Until 2026-11-18 the country step told
+  visitors that the guessed country is counted and their numbers never leave
+  the device (`country.privacy`). That note was removed from the country screen
+  at Stephanie's request, so **open item:** this disclosure has no home in the
+  UI right now; it should go somewhere visible (e.g. the footer). If an event
+  starts sending something new, update the copy that promises otherwise.
 
 ## Events
 
