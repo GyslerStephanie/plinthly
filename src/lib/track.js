@@ -35,7 +35,7 @@ import { track as vercelTrack } from '@vercel/analytics'
  *                             what caps the first own-numbers result (once).
  * - compare_opened            { source: 'phase1' | 'dream' | 'onboarding' | 'other' }
  * - compare_scenario_selected { scenario }  scenario id in Compare.
- * - learn_toast               { action: 'dismissed' | 'ask' | 'link' }
+ * - learn_toast               { action: 'dismissed' | 'link' }
  * - glossary_opened           { term }  glossary term id.
  * - how_it_works_opened       { card }  crash-course card id.
  * - language_changed          { from, to }  UI language codes.

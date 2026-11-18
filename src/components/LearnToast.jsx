@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useI18n } from '../i18n/I18nContext'
-import { askAdvisor } from './GlossaryTerm'
 import { localizeLinks } from '../lib/learn'
 import { track, trackOutbound } from '../lib/track'
 
@@ -9,8 +8,8 @@ const DISMISS_KEY = 'plinthly.learnToastDismissed'
 /**
  * "New to mortgages?" — the discoverable entry to the learn layer, as a slim
  * bar in the page flow (under the navigation) rather than a floating card:
- * title and one line of copy on the left, Ask Plinthly AI and the vetted
- * guides on the right, and an × to dismiss. Dismissing hides it for the rest
+ * title and one line of copy on the left, the vetted guides on the right
+ * (the Ask Plinthly AI bubble sits bottom-right), and an × to dismiss. Dismissing hides it for the rest
  * of the visit (sessionStorage), so it informs without nagging.
  *
  * @param {Array<{label, url}>} links  Vetted guides (src/data/courses.json).
@@ -51,16 +50,6 @@ export default function LearnToast({ links: rawLinks = [], className = '' }) {
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-        <button
-          type="button"
-          onClick={() => {
-            track('learn_toast', { action: 'ask' })
-            askAdvisor('')
-          }}
-          className="rounded-full bg-teal-800 px-3.5 py-1.5 text-sm font-semibold text-on-primary transition hover:bg-teal-900"
-        >
-          {t('advisorTip')}
-        </button>
         {links.slice(0, 3).map((l) => (
           <a
             key={l.url}
