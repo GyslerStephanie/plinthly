@@ -10,6 +10,10 @@ const COPY = {
   header: {
     tagline: 'Sustainable Real Estate Explorer',
   },
+  btn: {
+    // Step 3 → 4 (US step 4 covers energy, upgrades, incentives and how to build).
+    seeOptions: 'Continue to Sustainable Building Options →',
+  },
   country: {
     title: 'Where will you buy your home?',
     intro: 'Whether you’re buying now or in a few years, pick the country the home will be in. Mortgage rules, taxes and prices differ by country, so we’ll use that country’s.',
