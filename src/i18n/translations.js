@@ -359,7 +359,7 @@ export const translations = {
       badge: 'No selling · No sign-up · Just honest numbers',
     },
     lang: { label: 'Language' },
-    nav: { label: 'Your progress', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan', tools: 'Tools', compare: 'Compare', build: 'How to build' },
+    nav: { label: 'Your progress', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan', tools: 'Tools', compare: 'Compare Scenarios', build: 'How to build' },
     heading: {
       1: {
         title: 'Can I buy?',
