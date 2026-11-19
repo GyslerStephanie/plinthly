@@ -759,7 +759,7 @@ export default function App() {
                 : phase === 2
                 ? t('btn.continueExplore')
                 : phase === 3
-                ? t('btn.seeOptions')
+                ? isUs ? ut('btn.seeOptions') : t('btn.seeOptions')
                 : t('btn.buildPlan')}
             </button>
           ) : phase === 1 && !hasResultNow ? (

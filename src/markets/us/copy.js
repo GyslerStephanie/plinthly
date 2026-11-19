@@ -10,6 +10,10 @@ const COPY = {
   header: {
     tagline: 'Sustainable Real Estate Explorer',
   },
+  btn: {
+    // Step 3 → 4 (US step 4 covers energy, upgrades, incentives and how to build).
+    seeOptions: 'Continue to Sustainable Building Options →',
+  },
   country: {
     eyebrow: 'Before we start',
     title: 'Where do you want to buy?',
