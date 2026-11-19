@@ -347,6 +347,7 @@ const COPY = {
   },
   build: {
     back: 'Back',
+    step: 'Compare builds',
     title: 'Compare how to build for climate change',
     intro: 'Four ways to build or fix a house, side by side: what each costs up front, what it burns in energy over the years, and what a Swiss-grade envelope changes. Construction cost only; land is not included.',
     state: 'State',

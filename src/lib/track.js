@@ -33,7 +33,10 @@ import { track as vercelTrack } from '@vercel/analytics'
  * - phase_viewed              { phase: 1..5 }  once per phase per load.
  * - result_limited_by         { constraint: 'cash' | 'income' | 'debt' }
  *                             what caps the first own-numbers result (once).
- * - compare_opened            { source: 'phase1' | 'dream' | 'onboarding' | 'other' }
+ * - compare_opened            { source: 'phase1' | 'dream' | 'next_step' | 'nav' | 'onboarding' }
+ * - build_explorer_opened     { step }  How to Build for Climate Change opened.
+ * - build_step_viewed         { step: 'look' | 'options' | 'compare' | 'plan' }
+ *                             once per step per load.
  * - compare_scenario_selected { scenario }  scenario id in Compare.
  * - learn_toast               { action: 'dismissed' | 'link' }
  * - glossary_opened           { term }  glossary term id.

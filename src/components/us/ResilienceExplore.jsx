@@ -1,15 +1,14 @@
 import { useMemo, useState } from 'react'
 import { money, int } from '../../lib/format'
-import { useDialogFocus } from '../../lib/useDialogFocus'
 import { compareBuilds, getWall, HORIZONS, PRICE_PATHS, resilienceData } from '../../markets/us/resilience/model'
 import { getState, stateOptions } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
-import { Indicative, PageHeader, SELECT_CHEVRON } from '../ui'
+import { Indicative, SELECT_CHEVRON } from '../ui'
 import { track } from '../../lib/track'
 
 /**
- * "Compare how to build" — the resilient-build explorer (US), a parallel
- * surface like Compare. UI only: every figure comes from
+ * "Compare how to build" — the resilient-build explorer (US), one step of the
+ * How to Build for Climate Change tab (App renders the heading and step nav). UI only: every figure comes from
  * src/markets/us/resilience/model.js. State is owned by App (`build`) so the
  * hash can carry it; this component renders and edits it.
  */
@@ -153,8 +152,7 @@ function Column({ c, horizon, onPickWall }) {
   )
 }
 
-export default function ResilienceExplore({ build, onChange, region, onRegionChange, onClose, shareUrl, nav = null, header = null }) {
-  const dialogRef = useDialogFocus({ onClose })
+export default function ResilienceExplore({ build, onChange, region, onRegionChange, shareUrl }) {
   const [copied, setCopied] = useState(false)
   const set = (patch) => onChange({ ...build, ...patch })
   const st = region ? getState(region) : null
@@ -190,11 +188,8 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
   }
 
   return (
-    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="build-title" className="fixed inset-0 z-50 overflow-y-auto bg-surface-page" style={{ background: 'var(--surface-page)' }}>
-      {header}
-      <div className="ds-page">
-        {nav && <div className="ds-page-nav no-print">{nav}</div>}
-        <PageHeader id="build-title" title={ut('build.title')} intro={ut('build.intro')} onBack={onClose} backLabel={ut('build.back')} />
+    <div>
+      <div>
 
         {/* Inputs */}
         <div className="ds-card grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">

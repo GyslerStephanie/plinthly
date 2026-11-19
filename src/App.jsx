@@ -38,6 +38,8 @@ import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
 import { PageHeader } from './components/ui'
 import ResilienceExplore from './components/us/ResilienceExplore'
+import NextChoice from './components/NextChoice'
+import BuildSteps from './components/BuildSteps'
 import Onboarding from './components/Onboarding/Onboarding'
 import Landing from './components/Landing/Landing'
 import { buildAdvisorContext } from './lib/advisorContext'
@@ -60,7 +62,22 @@ function usBuildHash(b, open) {
     buildRetrofit: b.retrofit,
   }
 }
-const LAST_PHASE = 5
+// The journey is Can I buy? → dream price, then a choice (NextChoice). What to
+// look for, the real options and the action plan live in How to Build for
+// Climate Change (build steps below); old links with ph=3–5 open them there.
+const LAST_PHASE = 2
+const PHASE_TO_STEP = { 3: 'look', 4: 'options', 5: 'plan' }
+const BUILD_STEP_IDS = ['look', 'options', 'compare', 'plan']
+
+/** Which build step a restored link opens, or null for none. */
+function restoredBuildStep(s, isUs) {
+  const ids = isUs ? BUILD_STEP_IDS : BUILD_STEP_IDS.filter((id) => id !== 'compare')
+  if (ids.includes(s.buildStep)) return s.buildStep
+  const fromPhase = PHASE_TO_STEP[Number(s.phase)]
+  if (fromPhase) return fromPhase
+  if (s.buildOpen === '1') return isUs ? 'compare' : 'look'
+  return null
+}
 const ONBOARDED_KEY = 'plinthly.onboarded'
 
 /** Whether to show the onboarding front door: only on a cold first visit —
@@ -118,7 +135,8 @@ export default function App() {
   const [showCountry, setShowCountry] = useState(false) // front door step 1: country confirm
   const [usExplore, setUsExplore] = useState(US_DEFAULT_EXPLORE) // US Phases 3–5
   const [usBuild, setUsBuild] = useState(US_DEFAULT_BUILD) // US resilient-build explorer inputs
-  const [showBuild, setShowBuild] = useState(false) // "Compare how to build" parallel surface (US)
+  const [showBuild, setShowBuild] = useState(false) // How to Build for Climate Change tab (both markets)
+  const [buildStep, setBuildStep] = useState('look') // open step inside that tab
   const [advisorConsented, setAdvisorConsented] = useState(false) // consent gate for the advisor bubble
   const usRes = isUs ? usResult(usValues) : null
   // US funnel: count a calculation once the visitor's own numbers give a
@@ -196,8 +214,11 @@ export default function App() {
         wallD: s.buildWallD ?? '',
         retrofit: s.buildRetrofit === '1' ? '1' : '',
       })
-      if (s.buildOpen === '1') setShowBuild(true)
-      else if (s.compareOpen === '1') setShowCompare(true)
+      const step = restoredBuildStep(s, true)
+      if (step) {
+        setShowBuild(true)
+        setBuildStep(step)
+      } else if (s.compareOpen === '1') setShowCompare(true)
       if (usResult(next)) {
         const target = Math.min(LAST_PHASE, Math.max(1, Number(s.phase) || 1))
         setPhase(target)
@@ -227,7 +248,11 @@ export default function App() {
     })
     if (s.dreamPrice) setDreamPrice(s.dreamPrice)
     if (s.residentStatus) setResidentStatus(s.residentStatus)
-    if (s.compareOpen === '1') setShowCompare(true)
+    const step = restoredBuildStep(s, false)
+    if (step) {
+      setShowBuild(true)
+      setBuildStep(step)
+    } else if (s.compareOpen === '1') setShowCompare(true)
 
     const restoredEquity =
       Number(String(nextValues.savings).replace(/[^0-9.]/g, '')) +
@@ -264,7 +289,7 @@ export default function App() {
     if (isUs) {
       // US links carry only US inputs (ct holds the state code).
       const { region, ...rest } = usValues
-      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, showBuild), compareOpen: showCompare ? '1' : '' })
+      syncHash({ ...rest, canton: region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, showBuild), buildStep: showBuild ? buildStep : '', compareOpen: showCompare ? '1' : '' })
       return
     }
     syncHash({
@@ -281,8 +306,10 @@ export default function App() {
       residentStatus,
       market: marketId,
       compareOpen: showCompare ? '1' : '',
+      buildOpen: showBuild ? '1' : '',
+      buildStep: showBuild ? buildStep : '',
     })
-  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore, usBuild, showBuild, showCompare])
+  }, [values, explore, phase, dreamPrice, residentStatus, marketId, isUs, usValues, usExplore, usBuild, showBuild, buildStep, showCompare])
 
   const flatState = {
     ...values,
@@ -369,19 +396,13 @@ export default function App() {
   }
 
   const goToPhase = (n) => {
+    // Former phases 3–5 now live in How to Build for Climate Change.
+    if (PHASE_TO_STEP[n]) {
+      openBuild(PHASE_TO_STEP[n])
+      return
+    }
     if (n < 1 || n > LAST_PHASE) return
     if (n > 1 && !(isUs ? usRes : phase1)) return
-    // Entering exploration (phase 3) for the first time: seed budget + canton.
-    if (n === 3 && isUs) {
-      setUsExplore((e) => ({ ...e, budget: e.budget || groupDigits(usRes?.maxPrice || '') }))
-    }
-    if (n === 3 && !isUs) {
-      setExplore((e) => ({
-        ...e,
-        budget: e.budget || String(phase1?.maxPrice || ''),
-        canton: e.canton || values.canton,
-      }))
-    }
     if (n === 2) track('dream_price_opened', undefined, { once: true })
     setPhase(n)
     setMaxVisited((m) => Math.max(m, n))
@@ -405,7 +426,7 @@ export default function App() {
   // Compare in both markets; the build explorer where it exists (US).
   const navTools = [
     { id: 'compare', label: t('nav.compare'), active: showCompare, onSelect: () => openCompare('nav') },
-    ...(isUs ? [{ id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild() }] : []),
+    { id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild(buildStep) },
   ]
 
   /** The same tab row inside an overlay; Your journey closes the tool. */
@@ -447,10 +468,40 @@ export default function App() {
 
   const overlayNav = <ToolTabs journeyActive={false} onJourney={closeTools} tools={navTools} />
 
-  const openBuild = () => {
+  // How to Build for Climate Change: What to look for → Real options →
+  // (US) Compare builds → Action plan.
+  const buildSteps = [
+    { id: 'look', label: t('nav.3') },
+    { id: 'options', label: t('nav.4') },
+    ...(isUs ? [{ id: 'compare', label: ut('build.step') }] : []),
+    { id: 'plan', label: t('nav.5') },
+  ]
+
+  /** Open one build step. Steps that use the budget seed it (and the canton)
+   *  from the step 1 result the first time, as entering phase 3 used to. */
+  const openBuildStep = (step) => {
+    const id = buildSteps.some((s) => s.id === step) ? step : 'look'
+    if (id !== 'compare') {
+      if (isUs && usRes) {
+        setUsExplore((e) => ({ ...e, budget: e.budget || groupDigits(usRes.maxPrice || '') }))
+      }
+      if (!isUs && phase1) {
+        setExplore((e) => ({
+          ...e,
+          budget: e.budget || String(phase1.maxPrice || ''),
+          canton: e.canton || values.canton,
+        }))
+      }
+    }
+    setBuildStep(id)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const openBuild = (step = 'look') => {
     setShowCompare(false)
     setShowBuild(true)
-    track('build_explorer_opened')
+    openBuildStep(step)
+    track('build_explorer_opened', { step })
   }
 
   const completeOnboarding = ({ focus, persona, dest, seed }) => {
@@ -470,7 +521,7 @@ export default function App() {
       return
     }
     if (dest === 'build') {
-      openBuild()
+      openBuild(isUs ? 'compare' : 'look')
       return
     }
     const hasResult = isUs ? !!usRes : !!phase1
@@ -519,6 +570,7 @@ export default function App() {
     setUsExplore(US_DEFAULT_EXPLORE)
     setUsBuild(US_DEFAULT_BUILD)
     setShowBuild(false)
+    setBuildStep('look')
     setPhase(1)
     setMaxVisited(1)
   }
@@ -554,6 +606,10 @@ export default function App() {
     if (frontDoorOpen) return
     track('phase_viewed', { phase }, { once: `phase_viewed:${phase}` })
   }, [phase, frontDoorOpen])
+  useEffect(() => {
+    if (frontDoorOpen || !showBuild) return
+    track('build_step_viewed', { step: buildStep }, { once: `build_step_viewed:${buildStep}` })
+  }, [showBuild, buildStep, frontDoorOpen])
   const hasResultNow = isUs ? !!usRes : !!phase1
   const showRouteNudge = phase === 1 && !hasResultNow && !!routeIntent
 
@@ -601,6 +657,8 @@ export default function App() {
           )}
         </div>
 
+        {!showBuild && (
+        <>
         {showRouteNudge && (
           <div className="ds-callout mb-[var(--space-block)] text-sm text-body no-print">
             {routeIntent === 'dream'
@@ -630,37 +688,11 @@ export default function App() {
           />
         )}
 
-        {/* United States — Phase 1 on the US engine; later phases not built yet */}
+        {/* United States — Phase 1 and the dream price on the US engine */}
         {isUs && phase === 1 && <UsPhase1 values={usValues} onChange={handleUsValuesChange} onCompare={() => openCompare('phase1')} />}
         {isUs && phase === 2 && usRes && (
           <UsDreamPhase values={usValues} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => openCompare('dream')} />
         )}
-        {isUs && usRes && phase === 3 && (
-          <UsExplorePhase
-            explore={usExplore}
-            onExploreChange={setUsExplore}
-            region={usValues.region}
-            onRegionChange={handleUsRegionChange}
-          />
-        )}
-        {isUs && usRes && phase === 4 && (
-          <UsOptionsPhase
-            explore={usExplore}
-            onExploreChange={setUsExplore}
-            region={usValues.region}
-            onRegionChange={handleUsRegionChange}
-            onBuild={openBuild}
-          />
-        )}
-        {isUs && usRes && phase === 5 && (
-          <UsPlanPhase
-            result={usRes}
-            explore={usExplore}
-            region={usValues.region}
-            shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore })}
-          />
-        )}
-
         {/* Phase 1 — two-column on desktop: inputs left, live output right */}
         {phase === 1 && !isUs && (
           <div className="ds-split">
@@ -704,34 +736,9 @@ export default function App() {
           <DreamPricePhase result={phase1} values={values} onValuesChange={handleValuesChange} onNavigate={goToPhase} onDreamContext={setDreamContext} dreamPrice={dreamPrice} onDreamPriceChange={setDreamPrice} onCompare={() => openCompare('dream')} />
         )}
 
-        {/* Phase 3 — exploration */}
-        {phase === 3 && !isUs && (
-          <>
-            <PhaseContextBanner phase={3} />
-            <Phase2Exploration explore={explore} onChange={handleExploreChange} />
-          </>
-        )}
-
-        {/* Phase 4 — real options */}
-        {phase === 4 && !isUs && (
-          <>
-            <PhaseContextBanner phase={4} />
-            <Phase3Options explore={explore} onChange={handleExploreChange} phase1={phase1} />
-          </>
-        )}
-
-        {/* Phase 5 — action plan */}
-        {phase === 5 && phase1 && !isUs && (
-          <>
-            <PhaseContextBanner phase={5} />
-            <Phase4ActionPlan
-              phase1={phase1}
-              explore={explore}
-              shareUrl={shareableUrl(flatState)}
-              feedback={feedback}
-              onSubmitFeedback={handleFeedback}
-            />
-          </>
+        {/* After the dream price: what next? (Compare or How to build) */}
+        {phase === 2 && hasResultNow && (
+          <NextChoice onCompare={() => openCompare('next_step')} onBuild={() => openBuild('look')} />
         )}
 
         {/* Navigation */}
@@ -751,13 +758,7 @@ export default function App() {
               onClick={() => goToPhase(phase + 1)}
               className="rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
             >
-              {phase === 1
-                ? t('btn.continueDream')
-                : phase === 2
-                ? t('btn.continueExplore')
-                : phase === 3
-                ? isUs ? ut('btn.seeOptions') : t('btn.seeOptions')
-                : t('btn.buildPlan')}
+              {t('btn.continueDream')}
             </button>
           ) : phase === 1 && !hasResultNow ? (
             <span className="text-sm text-slate-400">{t('btn.runToContinue')}</span>
@@ -778,6 +779,126 @@ export default function App() {
             </div>
           </div>
         )}
+        </>
+        )}
+
+        {/* How to Build for Climate Change — what to look for, real options,
+            (US) compare builds, action plan. A tab of its own, in the page. */}
+        {showBuild && (() => {
+          const i = Math.max(0, buildSteps.findIndex((s) => s.id === buildStep))
+          const step = buildSteps[i].id
+          const prev = buildSteps[i - 1]
+          const next = buildSteps[i + 1]
+          const head = {
+            look: isUs ? [ut('explore.title'), ut('explore.blurb')] : [t('heading.3.title'), t('heading.3.blurb')],
+            options: isUs ? [ut('options.title'), ut('options.blurb')] : [t('heading.4.title'), t('heading.4.blurb')],
+            compare: [ut('build.title'), ut('build.intro')],
+            plan: isUs ? [ut('plan.title'), ut('plan.blurb')] : [t('heading.5.title'), t('heading.5.blurb')],
+          }[step]
+          const needsResult = step !== 'compare' && !hasResultNow
+          return (
+            <>
+              <PageHeader title={t('nav.build')} intro={t('hub.intro')} />
+              <BuildSteps steps={buildSteps} current={step} onSelect={openBuildStep} label={t('hub.steps')} />
+              <div className="mb-[var(--space-stack)]">
+                <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">{head[0]}</h2>
+                {head[1] && <p className="mt-1 max-w-3xl text-base leading-relaxed text-body">{head[1]}</p>}
+              </div>
+
+              {needsResult ? (
+                <div className="ds-callout text-sm text-body">
+                  <p>{t('hub.needResult')}</p>
+                  <button
+                    type="button"
+                    onClick={() => { closeTools(); goToPhase(1) }}
+                    className="mt-3 rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
+                  >
+                    {t('hub.needResultCta')}
+                  </button>
+                </div>
+              ) : isUs ? (
+                <>
+                  {step === 'look' && (
+                    <UsExplorePhase explore={usExplore} onExploreChange={setUsExplore} region={usValues.region} onRegionChange={handleUsRegionChange} />
+                  )}
+                  {step === 'options' && (
+                    <UsOptionsPhase
+                      explore={usExplore}
+                      onExploreChange={setUsExplore}
+                      region={usValues.region}
+                      onRegionChange={handleUsRegionChange}
+                      onBuild={() => openBuildStep('compare')}
+                    />
+                  )}
+                  {step === 'compare' && (
+                    <ResilienceExplore
+                      build={usBuild}
+                      onChange={setUsBuild}
+                      region={usValues.region}
+                      onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
+                      shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, true), buildStep: 'compare' })}
+                    />
+                  )}
+                  {step === 'plan' && (
+                    <UsPlanPhase
+                      result={usRes}
+                      explore={usExplore}
+                      region={usValues.region}
+                      shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore, buildOpen: '1', buildStep: 'plan' })}
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  {step === 'look' && (
+                    <>
+                      <PhaseContextBanner phase={3} />
+                      <Phase2Exploration explore={explore} onChange={handleExploreChange} />
+                    </>
+                  )}
+                  {step === 'options' && (
+                    <>
+                      <PhaseContextBanner phase={4} />
+                      <Phase3Options explore={explore} onChange={handleExploreChange} phase1={phase1} />
+                    </>
+                  )}
+                  {step === 'plan' && (
+                    <>
+                      <PhaseContextBanner phase={5} />
+                      <Phase4ActionPlan
+                        phase1={phase1}
+                        explore={explore}
+                        shareUrl={shareableUrl({ ...flatState, buildOpen: '1', buildStep: 'plan' })}
+                        feedback={feedback}
+                        onSubmitFeedback={handleFeedback}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+
+              {/* Step navigation inside the tab; before the first step is the journey. */}
+              <div className="mt-10 flex items-center justify-between gap-3 no-print">
+                <button
+                  type="button"
+                  onClick={() => (prev ? openBuildStep(prev.id) : closeTools())}
+                  className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:text-slate-900"
+                >
+                  ← {prev ? prev.label : t('hub.toJourney')}
+                </button>
+                {next && (
+                  <button
+                    type="button"
+                    onClick={() => openBuildStep(next.id)}
+                    className="rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
+                  >
+                    {next.label} →
+                  </button>
+                )}
+              </div>
+            </>
+          )
+        })()}
       </main>
 
       <footer className="mt-12">
@@ -809,15 +930,15 @@ export default function App() {
           wherever the advisor is available. Re-mounts per phase. */}
 
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
-      {isUs && usRes && !showCompare && !showBuild && !frontDoorOpen && (
+      {isUs && usRes && !showCompare && !frontDoorOpen && (
         <AdvisorFab
-          tipKey={phase}
+          tipKey={showBuild ? buildStep : phase}
           consented={advisorConsented}
           onConsent={() => setAdvisorConsented(true)}
           context={buildUsAdvisorContext(
             usRes,
             lang,
-            phase === 2 && dreamPrice ? dreamPlan(usInput(usValues), dreamPrice) : null,
+            phase === 2 && !showBuild && dreamPrice ? dreamPlan(usInput(usValues), dreamPrice) : null,
           )}
           values={usValues}
           onApplyScenario={(overrides) => {
@@ -837,10 +958,10 @@ export default function App() {
 
       {previewResult && !showCompare && !isUs && !frontDoorOpen && (
         <AdvisorFab
-          tipKey={phase}
+          tipKey={showBuild ? buildStep : phase}
           consented={advisorConsented}
           onConsent={() => setAdvisorConsented(true)}
-          context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
+          context={buildAdvisorContext(previewResult, lang, phase === 2 && !showBuild ? dreamContext : null)}
           values={values}
           onApplyScenario={(overrides) => {
             // The advisor only ever previews; this is the one path that writes
@@ -885,21 +1006,6 @@ export default function App() {
                   price: phase1?.maxPrice || undefined,
                 }
           }
-        />
-      )}
-
-      {/* Compare how to build — the resilient-build explorer (US). A parallel
-          surface like Compare; its inputs ride in the hash so it is shareable. */}
-      {isUs && showBuild && (
-        <ResilienceExplore
-          nav={overlayNav}
-          header={renderHeader()}
-          build={usBuild}
-          onChange={setUsBuild}
-          region={usValues.region}
-          onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
-          onClose={() => setShowBuild(false)}
-          shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, true) })}
         />
       )}
 

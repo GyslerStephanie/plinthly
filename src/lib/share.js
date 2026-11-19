@@ -34,8 +34,9 @@ const KEYS = [
   ['md', 'monthlyDebts'],
   ['rt', 'ratePct'],
   ['ho', 'hoaMonthly'],
-  // US resilient-build explorer ("Compare how to build")
-  ['bx', 'buildOpen'], // '1' when the explorer is open
+  // How to Build for Climate Change (both markets) and the US build explorer
+  ['bx', 'buildOpen'], // '1' while the How to build tab is open
+  ['bt', 'buildStep'], // 'look' | 'options' | 'compare' (US) | 'plan'
   ['bm', 'buildMode'], // 'size' | 'budget'
   ['bs', 'buildSqft'],
   ['bb', 'buildBudget'],
@@ -80,7 +81,7 @@ export function decodeState(hash = window.location.hash.replace(/^#/, '')) {
   return out
 }
 
-const US_ONLY = ['monthlyDebts', 'ratePct', 'hoaMonthly', 'buildOpen']
+const US_ONLY = ['monthlyDebts', 'ratePct', 'hoaMonthly']
 const US_STATES = new Set(Object.keys(usData.states))
 
 /** Write state to the URL hash without adding a history entry. */
