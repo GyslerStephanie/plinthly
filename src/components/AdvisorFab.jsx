@@ -40,7 +40,7 @@ const TIP_MS = 8000
 export default function AdvisorFab({ context, values, compare, surface = 'phase1', onApplyScenario, inline = false, tipKey, consented: consentedProp, onConsent }) {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
-  // Consent is shared with the comment layer when the App owns it; an instance
+  // Consent is owned by the App when it passes one in; an instance
   // mounted on its own (Compare) keeps a local gate.
   const [localConsent, setLocalConsent] = useState(false)
   const consented = consentedProp ?? localConsent
@@ -114,7 +114,7 @@ export default function AdvisorFab({ context, values, compare, surface = 'phase1
         : '(Preview) Enter a dream price and I\'ll outline a savings roadmap.'
     }
     return d
-      ? `(Preview) Your max today is ${money(context.maxPrice)} vs a ${money(d.price)} goal — a ~${money(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
+      ? `(Preview) Your max today is ${money(context.maxPrice)} vs a ${money(d.price)} goal, a ~${money(d.equityGap)} equity gap. Connect an API key for live, tailored answers.`
       : `(Preview) Your current max is ${money(context.maxPrice)}. Connect an API key for live answers.`
   }
 

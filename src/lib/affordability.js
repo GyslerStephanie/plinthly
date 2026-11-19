@@ -259,7 +259,7 @@ function computeShortfall({
       message:
         savingsGap > 0
           ? `You're about ${formatGap(savingsGap)} short on equity to buy a ` +
-            `CHF 200,000 property — the minimum where the numbers start to work.`
+            `CHF 200,000 property: the minimum where the numbers start to work.`
           : `Your equity is close. Small changes in price or savings could ` +
             `tip this into viable territory.`,
     }

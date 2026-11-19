@@ -14,6 +14,7 @@ import { money, groupDigits, currencySymbol } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
 import { useDialogFocus } from '../../lib/useDialogFocus'
 import HowItWorks from '../HowItWorks'
+import { PageHeader } from '../ui'
 import LearnToast from '../LearnToast'
 import { compareCourse, learnLinks } from '../../lib/learn'
 import { track } from '../../lib/track'
@@ -35,7 +36,7 @@ const HALO = { paintOrder: 'stroke', stroke: 'var(--paper-100)', strokeWidth: 3 
 /** Hand-rolled net-worth-over-time chart (SVG, matching the app's chart style):
  *  soft area fills, both trajectories, and value tags at the scrubbed year. */
 function TrajectoryChart({ A, B, year, labelA, labelB }) {
-  const W = 600
+  const W = 1000 // drawn wide: the breakdown spans the full page width
   const H = 200
   const padL = 8
   const padR = 8
@@ -54,7 +55,7 @@ function TrajectoryChart({ A, B, year, labelA, labelB }) {
   const anchor = x(year) > W * 0.82 ? 'end' : x(year) < W * 0.18 ? 'start' : 'middle'
   const aHigh = A[year] >= B[year]
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={`${labelA} vs ${labelB} over time`}>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minWidth: 560 }} role="img" aria-label={`${labelA} vs ${labelB} over time`}>
       <polygon points={area(B)} fill={OWN} opacity="0.06" />
       <polygon points={area(A)} fill={RENT} opacity="0.1" />
       <line x1={padL} y1={y(Math.max(0, min))} x2={W - padR} y2={y(Math.max(0, min))} stroke="var(--line)" strokeWidth="1" />
@@ -79,7 +80,7 @@ function TrajectoryChart({ A, B, year, labelA, labelB }) {
  *  the two are even (break-even). Clip-paths split the fill at zero, so a crossing
  *  needs no special-casing. */
 function DifferenceStrip({ A, B, year }) {
-  const W = 600
+  const W = 1000 // drawn wide: the breakdown spans the full page width
   const H = 76
   const padL = 8
   const padR = 8
@@ -101,7 +102,7 @@ function DifferenceStrip({ A, B, year }) {
   const dY = D[year - 1]
   const anchor = x(year) > W * 0.82 ? 'end' : x(year) < W * 0.18 ? 'start' : 'middle'
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Difference between the two options over time">
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ minWidth: 560 }} role="img" aria-label="Difference between the two options over time">
       <defs>
         <clipPath id="gapAbove"><rect x="0" y="0" width={W} height={Math.max(0, y0)} /></clipPath>
         <clipPath id="gapBelow"><rect x="0" y={y0} width={W} height={Math.max(0, H - y0)} /></clipPath>
@@ -156,7 +157,7 @@ function PctField({ label, sub, value, onChange }) {
   )
 }
 
-export default function CompareView({ onClose, seed = {}, seedYear, region, usAdvisor, nav = null }) {
+export default function CompareView({ onClose, seed = {}, seedYear, region, usAdvisor, nav = null, header = null }) {
   const { t: tBase, lang } = useI18n()
   const { marketId } = useMarket()
   const isUs = marketId === 'us'
@@ -268,22 +269,22 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
       className="fixed inset-0 z-50 overflow-y-auto bg-surface-page"
       style={{ background: 'var(--surface-page)' }}
     >
-      <div className="mx-auto max-w-3xl px-5 py-8 md:px-8">
-        {nav && <div className="mb-6 no-print">{nav}</div>}
-        <LearnToast links={learnLinks(isUs ? 'us' : 'ch', 'compare')} className="mb-6" />
-        <button
-          type="button"
-          onClick={onClose}
-          className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-ink"
-        >
-          ← {t('compare.back')}
-        </button>
-
-        <h1 id="compare-title" className="font-display text-3xl font-semibold tracking-tight text-ink">{t('compare.title')}</h1>
-        <p className="mt-2 text-sm text-muted">{t('compare.intro')}</p>
+      {header}
+      <div className="ds-page">
+        <div className="ds-page-nav no-print">
+          {nav}
+          <LearnToast links={learnLinks(isUs ? 'us' : 'ch', 'compare')} className={nav ? 'mt-4' : ''} />
+        </div>
+        <PageHeader
+          id="compare-title"
+          title={t('compare.title')}
+          intro={t('compare.intro')}
+          onBack={onClose}
+          backLabel={t('compare.back')}
+        />
 
         {/* Scenario tabs */}
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mb-[var(--space-stack)] flex flex-wrap gap-2">
           {SCENARIOS.map((sc, i) => {
             const on = sc.id === scenario
             return (
@@ -291,12 +292,8 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
                 key={sc.id}
                 type="button"
                 onClick={() => selectScenario(sc.id)}
-                className={
-                  'flex items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-3.5 text-sm transition ' +
-                  (on
-                    ? 'border-teal-600 bg-teal-50 font-medium text-teal-800 shadow-sm'
-                    : 'border-line bg-white text-muted hover:border-stone-400 hover:text-body')
-                }
+                aria-pressed={on}
+                className="ds-choice flex items-center gap-2 rounded-full py-1.5 pl-1.5 pr-3.5 text-sm"
               >
                 <span className={'flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold ' + (on ? 'bg-teal-700 text-white' : 'bg-surface text-faint')}>{i + 1}</span>
                 {t(`compare.scn.${sc.id}`)}
@@ -305,186 +302,192 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           })}
         </div>
 
-        {/* Time horizon — the scrubber (signature "explore over time" control) */}
-        <div className="mt-4 rounded-xl border border-line bg-surface px-5 py-4">
-          <div className="flex items-baseline justify-between">
-            <span className="ds-eyebrow text-xs text-muted">{t('compare.horizon')}</span>
-            <span className="ds-figure text-2xl text-ink">{t('compare.years', { n: year })}</span>
-          </div>
-          <input
-            type="range"
-            min="5"
-            max="25"
-            step="1"
-            value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
-            className="ds-range mt-3"
-            style={{ '--val': `${((year - 5) / 20) * 100}%` }}
-            aria-label={t('compare.horizon')}
-          />
-          <div className="mt-2 flex justify-between">
-            {[5, 10, 15, 20, 25].map((y) => (
-              <button
-                key={y}
-                type="button"
-                onClick={() => setYear(y)}
-                className={
-                  'ds-figure text-[11px] tabular-nums transition ' +
-                  (year === y ? 'font-semibold text-ink' : 'text-faint hover:text-muted')
-                }
-              >
-                {y}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* True-cost lens toggle (Rent vs Buy only) — Cash cost vs incl. opportunity cost */}
-        {isRentBuy && (
-          <div className="mt-4">
-            <div className="inline-flex overflow-hidden rounded-lg border border-line bg-white">
-              {[['lensCash', false], ['lensTrue', true]].map(([k, on]) => (
-                <button
-                  key={k}
-                  type="button"
-                  aria-pressed={trueCost === on}
-                  onClick={() => setInputs((p) => ({ ...p, trueCost: on }))}
-                  className={
-                    'px-4 py-1.5 text-sm transition ' +
-                    (trueCost === on ? 'bg-teal-700 font-medium text-white' : 'text-muted hover:text-body')
-                  }
-                >
-                  {t(`compare.${k}`)}
-                </button>
-              ))}
+        {/* Same split as Phase 1: inputs left, results right (results first on mobile). */}
+        <div className="ds-split">
+          <div className="ds-stack lg:order-2">
+            {/* Time horizon — the scrubber (signature "explore over time" control) */}
+            <div className="ds-panel">
+              <div className="flex items-baseline justify-between">
+                <span className="ds-eyebrow text-xs text-muted">{t('compare.horizon')}</span>
+                <span className="ds-figure text-2xl text-ink">{t('compare.years', { n: year })}</span>
+              </div>
+              <input
+                type="range"
+                min="5"
+                max="25"
+                step="1"
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+                className="ds-range mt-3"
+                style={{ '--val': `${((year - 5) / 20) * 100}%` }}
+                aria-label={t('compare.horizon')}
+              />
+              <div className="mt-2 flex justify-between">
+                {[5, 10, 15, 20, 25].map((y) => (
+                  <button
+                    key={y}
+                    type="button"
+                    onClick={() => setYear(y)}
+                    className={
+                      'ds-figure text-[11px] tabular-nums transition ' +
+                      (year === y ? 'font-semibold text-ink' : 'text-faint hover:text-muted')
+                    }
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
             </div>
-            {trueCost && <p className="mt-1.5 text-xs text-faint">{t('compare.lensHint')}</p>}
-          </div>
-        )}
 
-        {/* Key takeaway */}
-        <div className="mt-4 rounded-xl border border-line bg-white p-5 shadow-sm">
-          <p className="ds-eyebrow text-xs text-faint">★ {t('compare.takeaway')} · {t(`compare.scn.${scenario}`)}</p>
-          <p className="mt-2 text-base leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: story }} />
-          <p className="mt-4 text-xs text-faint">{t(s.costLens ? 'compare.metricsCost' : 'compare.metricsWealth', { n: year })}</p>
-          <div className="mt-1.5 grid grid-cols-3 gap-3">
-            <Metric label={labelA} value={money(a)} accent={RENT} />
-            <Metric label={labelB} value={money(b)} accent={OWN} />
-            <Metric label={t('compare.diff')} value={fK(diff)} />
-          </div>
-        </div>
-
-        {/* Wealth-view bridge — carries the opportunity-cost figure to Save + Invest.
-            NOTE: round1k() drops the sign, and the copy asserts investing wins. That
-            holds only while investReturn > appreciation (the default). If a user sets
-            appreciation above their return, opp goes negative (owning wins) but the
-            line still reads "investing earned more" — reword sign-aware if we surface it. */}
-        {isRentBuy && (
-          <button
-            type="button"
-            onClick={() => selectScenario('save_invest')}
-            className="mt-3 flex w-full items-center gap-3 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-left text-sm text-teal-900 transition hover:border-teal-300"
-          >
-            <span aria-hidden="true">💡</span>
-            <span dangerouslySetInnerHTML={{ __html: t('compare.bridge', { amount: `<b>${round1k(s.opp[year])}</b>` }) }} />
-            <span className="ml-auto whitespace-nowrap font-medium text-teal-700">{t('compare.bridgeGo')}</span>
-          </button>
-        )}
-
-        <div className="mt-4">
-          <HowItWorks course={compareCourse(isUs ? 'us' : 'ch')} cardId="compare" />
-        </div>
-
-        {/* Assumptions */}
-        <details open className="mt-4 rounded-xl border border-line bg-white p-4">
-          <summary className="cursor-pointer text-sm font-semibold text-ink">{t('compare.assume')}</summary>
-          <p className="mt-2 text-xs text-faint">{t('compare.assumeCaption')}</p>
-
-          <p className="ds-eyebrow mt-4 text-xs text-muted">{t('compare.grpKnow')}</p>
-          <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {cashField('income', t('compare.fIncome'))}
-            {cashField('cash', t('compare.fCash'))}
-            {cashField('rentMonthly', t('compare.fRent'))}
-            {cashField('price', t('compare.fPrice'))}
-            {cashField('savingMonthly', t('compare.fSave'))}
-          </div>
-
-          <p className="ds-eyebrow mt-5 text-xs text-muted">
-            {t('compare.grpFuture')} <span className="ml-1 font-normal normal-case tracking-normal text-faint">{t('compare.grpFutureTag')}</span>
-          </p>
-          <div className={'mt-3 rounded-lg bg-surface p-3 ' + (investActive ? '' : 'opacity-50')}>
-            {pct('investReturnPct', t('compare.sInvest'), t('compare.sInvestSub'))}
-            {investActive ? (
-              <>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {[['presetCautious', 2], ['presetBalanced', 4], ['presetGrowth', 6]].map(([k, v]) => (
+            {/* True-cost lens toggle (Rent vs Buy only) — Cash cost vs incl. opportunity cost */}
+            {isRentBuy && (
+              <div>
+                <div className="inline-flex overflow-hidden rounded-lg border border-line bg-white">
+                  {[['lensCash', false], ['lensTrue', true]].map(([k, on]) => (
                     <button
-                      key={v}
+                      key={k}
                       type="button"
-                      onClick={() => setInputs((p) => ({ ...p, investReturnPct: v }))}
-                      className={'rounded-full border px-2.5 py-0.5 text-xs transition ' + (inputs.investReturnPct === v ? 'border-teal-600 bg-teal-50 text-teal-800' : 'border-line bg-white text-muted')}
+                      aria-pressed={trueCost === on}
+                      onClick={() => setInputs((p) => ({ ...p, trueCost: on }))}
+                      className={
+                        'px-4 py-1.5 text-sm transition ' +
+                        (trueCost === on ? 'bg-teal-700 font-medium text-white' : 'text-muted hover:text-body')
+                      }
                     >
                       {t(`compare.${k}`)}
                     </button>
                   ))}
                 </div>
-                <p className="mt-2 text-xs text-faint">{t('compare.investHint')}</p>
-              </>
-            ) : (
-              <p className="mt-2 text-xs italic text-faint">{t('compare.investOff')}</p>
-            )}
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {pct('mortgageRatePct', t('compare.sRate'))}
-            <div>{pct('appreciationPct', t('compare.sAppr'))}<p className="mt-0.5 text-xs text-faint">{t('compare.apprHint')}</p></div>
-            {pct('rentInflationPct', t('compare.sInfl'))}
-            {pct('incomeGrowthPct', t('compare.sIncg'))}
-          </div>
-
-          {isUs ? (
-            <>
-              <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpCosts')}</p>
-              <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {pct('propertyTaxPct', t('compare.fTax'))}
-                {pct('insurancePct', t('compare.fIns'))}
+                {trueCost && <p className="mt-1.5 text-xs text-faint">{t('compare.lensHint')}</p>}
               </div>
-            </>
-          ) : (
-          <>
-          <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpTax')}</p>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            {[['old', 'regimeOld'], ['new', 'regimeNew']].map(([val, k]) => (
+            )}
+
+            {/* Key takeaway */}
+            <div className="ds-card">
+              <p className="ds-eyebrow text-xs text-faint">★ {t('compare.takeaway')} · {t(`compare.scn.${scenario}`)}</p>
+              <p className="mt-2 text-base leading-relaxed text-body" dangerouslySetInnerHTML={{ __html: story }} />
+              <p className="mt-4 text-xs text-faint">{t(s.costLens ? 'compare.metricsCost' : 'compare.metricsWealth', { n: year })}</p>
+              <div className="mt-1.5 grid grid-cols-3 gap-3">
+                <Metric label={labelA} value={money(a)} accent={RENT} />
+                <Metric label={labelB} value={money(b)} accent={OWN} />
+                <Metric label={t('compare.diff')} value={fK(diff)} />
+              </div>
+            </div>
+
+            {/* Wealth-view bridge — carries the opportunity-cost figure to Save + Invest.
+                NOTE: round1k() drops the sign, and the copy asserts investing wins. That
+                holds only while investReturn > appreciation (the default). If a user sets
+                appreciation above their return, opp goes negative (owning wins) but the
+                line still reads "investing earned more" — reword sign-aware if we surface it. */}
+            {isRentBuy && (
               <button
-                key={val}
                 type="button"
-                onClick={() => setInputs((p) => ({ ...p, regime: val }))}
-                className={'rounded-lg border px-3 py-1.5 text-xs transition ' + (inputs.regime === val ? 'border-teal-600 bg-teal-50 text-teal-800' : 'border-line bg-white text-muted')}
+                onClick={() => selectScenario('save_invest')}
+                className="ds-callout flex w-full items-center gap-3 text-left text-sm text-body"
               >
-                {t(`compare.${k}`)}
+                <span aria-hidden="true">💡</span>
+                <span dangerouslySetInnerHTML={{ __html: t('compare.bridge', { amount: `<b>${round1k(s.opp[year])}</b>` }) }} />
+                <span className="ml-auto whitespace-nowrap font-medium text-teal-700">{t('compare.bridgeGo')}</span>
               </button>
-            ))}
-            <div className="min-w-[140px]">{pct('marginalTaxPct', t('compare.sTax'))}</div>
+            )}
+            <div>
+              <HowItWorks course={compareCourse(isUs ? 'us' : 'ch')} cardId="compare" />
+            </div>
           </div>
-          </>
-          )}
+          <div className="ds-stack lg:order-1">
+            {/* Assumptions */}
+            <details open className="ds-card">
+              <summary className="ds-section-title mb-0 cursor-pointer">{t('compare.assume')}</summary>
+              <p className="mt-2 text-xs text-faint">{t('compare.assumeCaption')}</p>
 
-          <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpStructure')}</p>
-          <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {pct('downPaymentPct', t('compare.fDown'))}
-            {pct('maintenancePct', t('compare.fMaint'))}
+              <p className="ds-eyebrow mt-4 text-xs text-muted">{t('compare.grpKnow')}</p>
+              <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {cashField('income', t('compare.fIncome'))}
+                {cashField('cash', t('compare.fCash'))}
+                {cashField('rentMonthly', t('compare.fRent'))}
+                {cashField('price', t('compare.fPrice'))}
+                {cashField('savingMonthly', t('compare.fSave'))}
+              </div>
+
+              <p className="ds-eyebrow mt-5 text-xs text-muted">
+                {t('compare.grpFuture')} <span className="ml-1 font-normal normal-case tracking-normal text-faint">{t('compare.grpFutureTag')}</span>
+              </p>
+              <div className={'mt-3 rounded-lg bg-surface p-3 ' + (investActive ? '' : 'opacity-50')}>
+                {pct('investReturnPct', t('compare.sInvest'), t('compare.sInvestSub'))}
+                {investActive ? (
+                  <>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {[['presetCautious', 2], ['presetBalanced', 4], ['presetGrowth', 6]].map(([k, v]) => (
+                        <button
+                          key={v}
+                          type="button"
+                          onClick={() => setInputs((p) => ({ ...p, investReturnPct: v }))}
+                          aria-pressed={inputs.investReturnPct === v}
+                      className="ds-choice rounded-full px-2.5 py-0.5 text-xs"
+                        >
+                          {t(`compare.${k}`)}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-2 text-xs text-faint">{t('compare.investHint')}</p>
+                  </>
+                ) : (
+                  <p className="mt-2 text-xs italic text-faint">{t('compare.investOff')}</p>
+                )}
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {pct('mortgageRatePct', t('compare.sRate'))}
+                <div>{pct('appreciationPct', t('compare.sAppr'))}<p className="mt-0.5 text-xs text-faint">{t('compare.apprHint')}</p></div>
+                {pct('rentInflationPct', t('compare.sInfl'))}
+                {pct('incomeGrowthPct', t('compare.sIncg'))}
+              </div>
+
+              {isUs ? (
+                <>
+                  <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpCosts')}</p>
+                  <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {pct('propertyTaxPct', t('compare.fTax'))}
+                    {pct('insurancePct', t('compare.fIns'))}
+                  </div>
+                </>
+              ) : (
+              <>
+              <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpTax')}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                {[['old', 'regimeOld'], ['new', 'regimeNew']].map(([val, k]) => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => setInputs((p) => ({ ...p, regime: val }))}
+                    aria-pressed={inputs.regime === val}
+                    className="ds-choice rounded-lg px-3 py-1.5 text-xs"
+                  >
+                    {t(`compare.${k}`)}
+                  </button>
+                ))}
+                <div className="min-w-[140px]">{pct('marginalTaxPct', t('compare.sTax'))}</div>
+              </div>
+              </>
+              )}
+
+              <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpStructure')}</p>
+              <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {pct('downPaymentPct', t('compare.fDown'))}
+                {pct('maintenancePct', t('compare.fMaint'))}
+              </div>
+              <p className="mt-2 text-xs text-faint">{t('compare.structureHint')}</p>
+            </details>
           </div>
-          <p className="mt-2 text-xs text-faint">{t('compare.structureHint')}</p>
-        </details>
-
-        {/* Breakdown */}
-        <details open className="mt-4 rounded-xl border border-line bg-white p-4">
-          <summary className="cursor-pointer text-sm font-semibold text-ink">{t('compare.breakdown')}</summary>
+        </div>
+        {/* Breakdown: full width under both columns (assumptions and the result panels). */}
+        <details open className="ds-card mt-[var(--space-grid)]">
+          <summary className="ds-section-title mb-0 cursor-pointer">{t('compare.breakdown')}</summary>
           <div className="mt-3 flex gap-4 text-xs text-muted">
             <Legend color={RENT} label={labelA} />
             <Legend color={OWN} label={labelB} dashed />
           </div>
           <p className="mt-1 text-xs text-faint">{t(`compare.cap.${scenario}`)}</p>
-          <div className="mt-2">
+          <div className="mt-2 overflow-x-auto">
             <TrajectoryChart A={s.A} B={s.B} year={year} labelA={labelA} labelB={labelB} />
           </div>
 
@@ -492,7 +495,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           <p className="text-xs text-faint">
             {t('compare.gapCap', { a: labelA, b: labelB })}
           </p>
-          <div className="mt-1.5">
+          <div className="mt-1.5 overflow-x-auto">
             <DifferenceStrip A={s.A} B={s.B} year={year} />
           </div>
 
@@ -565,7 +568,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           )}
         </details>
 
-        <p className="mt-4 text-xs leading-relaxed text-faint">{t('compare.disclaimer', { v: COMPARE_METHODOLOGY })}</p>
+        <p className="mt-[var(--space-block)] max-w-3xl text-xs leading-relaxed text-faint">{t('compare.disclaimer', { v: COMPARE_METHODOLOGY })}</p>
       </div>
 
       {/* The advisor, mounted INSIDE the overlay. Compare is `fixed inset-0

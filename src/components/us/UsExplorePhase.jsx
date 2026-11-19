@@ -3,7 +3,7 @@ import { sizeFromBudget, efficiencyTable, homeData } from '../../markets/us/home
 import { stateOptions, getState } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { MoneyInput } from './UsPhase1'
-import { Indicative } from '../ui'
+import { Indicative, FieldLabel } from '../ui'
 import { trackOutbound } from '../../lib/track'
 
 /**
@@ -31,8 +31,8 @@ export function StatusPill({ status }) {
 
 function Card({ title, children }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      {title && <h2 className="mb-4 text-lg font-bold text-slate-900">{title}</h2>}
+    <section className="ds-card">
+      {title && <h2 className="ds-section-title">{title}</h2>}
       {children}
     </section>
   )
@@ -47,11 +47,10 @@ export default function UsExplorePhase({ explore, onExploreChange, region, onReg
 
   return (
     <div className="space-y-6">
-      <section className="grid max-w-3xl grid-cols-1 gap-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2">
+      <section className="grid max-w-3xl grid-cols-1 gap-5 ds-card sm:grid-cols-2">
         <div>
-          <label htmlFor="us-budget" className="mb-1.5 block text-sm font-semibold text-ink">{ut('explore.budget')}</label>
+          <FieldLabel htmlFor="us-budget" label={ut('explore.budget')} hint={ut('explore.budgetHint')} className="mb-1.5" />
           <MoneyInput id="us-budget" value={explore.budget} onChange={(v) => onExploreChange({ ...explore, budget: groupDigits(v) })} />
-          <p className="mt-1.5 text-xs text-muted">{ut('explore.budgetHint')}</p>
         </div>
         <div>
           <label htmlFor="us-explore-state" className="mb-1.5 block text-sm font-semibold text-ink">{ut('explore.state')}</label>

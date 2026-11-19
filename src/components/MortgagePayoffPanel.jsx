@@ -21,7 +21,7 @@ function CashField({ label, sub, value, onChange, suffix }) {
     <label className="block text-xs text-muted">
       <span>
         {label}
-        {sub && <span className="ml-1 text-faint">— {sub}</span>}
+        {sub && <span className="ml-1 text-faint"> · {sub}</span>}
       </span>
       <div className="mt-1 flex items-center rounded-lg border border-line bg-white focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100">
         <span className="select-none pl-2.5 pr-1 text-xs text-faint">{currencySymbol()}</span>
@@ -211,7 +211,7 @@ export default function MortgagePayoffPanel({ price, mortgage, income = 0 }) {
       <div className="mt-5">
         <div className="flex items-center justify-between">
           <label htmlFor="payoffExtra" className="text-sm font-medium text-slate-700">
-            {t('payoff.extraLabel')} <span className="font-normal text-faint">— {t('payoff.extraSub')}</span>
+            {t('payoff.extraLabel')} <span className="font-normal text-faint"> · {t('payoff.extraSub')}</span>
           </label>
           <span className="tabular-nums text-sm font-semibold text-teal-700">
             {extra > 0 ? `${money(extra)}/mo` : t('payoff.extraOff')}

@@ -10,20 +10,15 @@ const COPY = {
   header: {
     tagline: 'Sustainable Real Estate Explorer',
   },
+  btn: {
+    // Step 3 → 4 (US step 4 covers energy, upgrades, incentives and how to build).
+    seeOptions: 'Continue to Sustainable Building Options →',
+  },
   country: {
-    eyebrow: 'Before we start',
-    title: 'Where do you want to buy?',
-    intro: 'Mortgage rules, taxes and prices are different in every country. We’ll use the right ones for you.',
-    detected: 'Looks like you’re in',
-    confirm: 'Yes, I’m buying in {name}',
-    other: 'Or choose another country',
+    title: 'Where will you buy your home?',
+    intro: 'Whether you’re buying now or in a few years, pick the country the home will be in. Mortgage rules, taxes and prices differ by country, so we’ll use that country’s.',
     otherSoon: 'More countries coming. Not listed? You can still explore, but the numbers won’t fit your rules.',
-    privacy: 'We guessed from your browser’s time zone. We count which country was guessed, but your numbers never leave this device. You can change country any time from the top-right of the page.',
-    pick: 'Which country are you buying in?',
-    summary: {
-      us: 'US conventional-loan rules · prices in USD · square feet · 9 states to start.',
-      ch: 'Swiss mortgage rules · CHF · 16 cantons · EN / DE / FR / IT',
-    },
+    pick: 'Which country will you buy in?',
     continue: 'Continue',
   },
   onboarding: {
@@ -352,7 +347,7 @@ const COPY = {
   },
   build: {
     back: 'Back',
-    title: 'Compare how to build',
+    title: 'Compare how to build for climate change',
     intro: 'Four ways to build or fix a house, side by side: what each costs up front, what it burns in energy over the years, and what a Swiss-grade envelope changes. Construction cost only; land is not included.',
     state: 'State',
     pickState: 'Pick a state to see the comparison.',

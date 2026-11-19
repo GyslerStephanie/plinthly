@@ -26,7 +26,7 @@ export default function UsSustainability({ region }) {
   const { state } = data
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm" aria-labelledby="us-sustain-title">
+    <section className="ds-card" aria-labelledby="us-sustain-title">
       <h2 id="us-sustain-title" className="text-lg font-bold text-slate-900">{ut('sustain.title')}</h2>
       <p className="mt-1 max-w-3xl text-sm text-body">{ut('sustain.intro')}</p>
 

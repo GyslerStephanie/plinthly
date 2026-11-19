@@ -4,7 +4,7 @@ import { useDialogFocus } from '../../lib/useDialogFocus'
 import { compareBuilds, getWall, HORIZONS, PRICE_PATHS, resilienceData } from '../../markets/us/resilience/model'
 import { getState, stateOptions } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
-import { Indicative, SELECT_CHEVRON } from '../ui'
+import { Indicative, PageHeader, SELECT_CHEVRON } from '../ui'
 import { track } from '../../lib/track'
 
 /**
@@ -32,10 +32,7 @@ function Pills({ options, value, onChange, label, name }) {
             aria-checked={on}
             name={name}
             onClick={() => onChange(o.value)}
-            className={
-              'rounded-full border px-3 py-1.5 text-sm transition ' +
-              (on ? 'border-teal-600 bg-teal-50 font-medium text-teal-800 shadow-sm' : 'border-line bg-white text-muted hover:border-stone-400 hover:text-body')
-            }
+            className="ds-choice rounded-full px-3 py-1.5 text-sm"
           >
             {o.label}
           </button>
@@ -127,7 +124,7 @@ function WallCard({ wall, premium, pickable, onPick, idPrefix }) {
 function Column({ c, horizon, onPickWall }) {
   const swiss = c.id === 'D'
   return (
-    <section className={'flex min-w-0 flex-col rounded-xl border bg-white p-5 shadow-sm ' + (swiss ? 'border-teal-700 ring-2 ring-teal-100' : 'border-line')}>
+    <section className={'ds-card flex min-w-0 flex-col ' + (swiss ? 'border-teal-700 ring-2 ring-teal-100' : '')}>
       <p className="ds-eyebrow text-xs text-muted">{c.id}</p>
       <h2 className="mt-1 text-base font-bold text-ink">{c.label}</h2>
       <p className="text-xs text-muted">{c.sub}</p>
@@ -156,7 +153,7 @@ function Column({ c, horizon, onPickWall }) {
   )
 }
 
-export default function ResilienceExplore({ build, onChange, region, onRegionChange, onClose, shareUrl, nav = null }) {
+export default function ResilienceExplore({ build, onChange, region, onRegionChange, onClose, shareUrl, nav = null, header = null }) {
   const dialogRef = useDialogFocus({ onClose })
   const [copied, setCopied] = useState(false)
   const set = (patch) => onChange({ ...build, ...patch })
@@ -194,16 +191,13 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
 
   return (
     <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="build-title" className="fixed inset-0 z-50 overflow-y-auto bg-surface-page" style={{ background: 'var(--surface-page)' }}>
-      <div className="mx-auto max-w-6xl px-5 py-8 md:px-8">
-        {nav && <div className="mb-6 no-print">{nav}</div>}
-        <button type="button" onClick={onClose} className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition hover:text-ink">
-          ← {ut('build.back')}
-        </button>
-        <h1 id="build-title" className="font-display text-3xl font-semibold tracking-tight text-ink">{ut('build.title')}</h1>
-        <p className="mt-2 max-w-3xl text-sm text-muted">{ut('build.intro')}</p>
+      {header}
+      <div className="ds-page">
+        {nav && <div className="ds-page-nav no-print">{nav}</div>}
+        <PageHeader id="build-title" title={ut('build.title')} intro={ut('build.intro')} onBack={onClose} backLabel={ut('build.back')} />
 
         {/* Inputs */}
-        <div className="mt-6 grid grid-cols-1 gap-5 rounded-xl border border-line bg-white p-5 shadow-sm md:grid-cols-2 xl:grid-cols-4">
+        <div className="ds-card grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
           <label className="block">
             <span className="text-sm text-body">{ut('build.state')}</span>
             <select id="build-state" value={region || ''} onChange={(e) => onRegionChange(e.target.value)} className={'mt-1 w-full ' + SEL} style={SELECT_CHEVRON}>
@@ -267,14 +261,14 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
           </label>
         </div>
 
-        {!st && <p className="mt-6 text-sm text-muted">{ut('build.pickState')}</p>}
+        {!st && <p className="mt-[var(--space-stack)] text-sm text-muted">{ut('build.pickState')}</p>}
 
         {result && (
           <>
             {/* Headline: code box vs Swiss-grade */}
             {result.bVsD && (
-              <section className="mt-6 rounded-xl border border-teal-200 bg-teal-50/60 p-5">
-                <p className="ds-eyebrow text-[10px] text-teal-700">{ut('build.summary.title')}</p>
+              <section className="ds-callout mt-[var(--space-stack)]">
+                <p className="ds-eyebrow text-xs text-teal-700">{ut('build.summary.title')}</p>
                 <p className="mt-2 text-base leading-relaxed text-ink">
                   {result.mode === 'budget'
                     ? ut('build.summary.budgetLead', { sqft: int(Math.abs(result.bVsD.sqftDelta)), amount: money(result.bVsD.energySaved), n: horizon })
@@ -289,15 +283,15 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
               </section>
             )}
 
-            <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-[var(--space-stack)] grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
               {result.columns.map((c) => (
                 <Column key={c.id} c={c} horizon={horizon} onPickWall={(id) => set({ wallD: id })} />
               ))}
             </div>
 
             {/* Compact table */}
-            <section className="mt-6 rounded-xl border border-line bg-white p-5 shadow-sm">
-              <h2 className="mb-3 text-lg font-bold text-ink">{ut('build.table.title')}</h2>
+            <section className="ds-card mt-[var(--space-stack)]">
+              <h2 className="ds-section-title">{ut('build.table.title')}</h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>

@@ -72,7 +72,22 @@
   --shadow-float:0 2px 4px rgba(34,44,17,.06), 0 14px 36px rgba(95,91,79,.18);
   --shadow-inset:inset 0 1px 2px rgba(34,44,17,.07);
   --ease-out:cubic-bezier(0.22,0.61,0.36,1);
+
+  /* ---- Page layout (one frame for every tab: journey steps and tools) ----
+     The header, the nav row, the page title and the first card sit at the
+     same x/y on every screen, so tabbing between them never shifts. */
+  --page-max:1320px;
+  --page-gutter:20px;        /* md 32 · lg 60 (see media queries below) */
+  --page-pad-top:40px;       /* lg 64 */
+  --page-pad-bottom:64px;
+  --space-block:32px;        /* nav → title → content */
+  --space-stack:20px;        /* between stacked cards */
+  --space-grid:32px;         /* column gap in two-column pages; lg 40 */
+  --card-pad:24px;
+  --callout-rule:3px;
 }
+@media (min-width:768px)  { :root { --page-gutter:32px; } }
+@media (min-width:1024px) { :root { --page-gutter:60px; --page-pad-top:64px; --space-grid:40px; } }
 
 /* ============================================================
    Tailwind theme remap — re-skins the utility classes the app
@@ -215,6 +230,25 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
     flex: 0 0 auto; width: 300px; max-width: 34%; height: auto; margin: -16px 0;
     opacity: .95; pointer-events: none; image-rendering: pixelated;
   }
+  /* Island build-in (BuildIsland): bands drop in from the base up, then settle. */
+  .ds-build { position: relative; display: block; }
+  .ds-build img { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+  .ds-build-ghost { visibility: hidden; }
+  .ds-build-layer { position: absolute; inset: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ds-build-layer { opacity: 0; animation: ds-layer-drop .42s cubic-bezier(.2,.9,.3,1.25) both; }
+    .ds-build { animation: ds-island-settle .5s var(--ease-out) 1.25s both; }
+  }
+  @keyframes ds-layer-drop {
+    0%   { opacity: 0; transform: translateY(-22px); }
+    60%  { opacity: 1; }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ds-island-settle {
+    0%   { transform: translateY(0); }
+    40%  { transform: translateY(3px); }
+    100% { transform: translateY(0); }
+  }
 
   /* Footer terrain band — a pixel skyline divider over a forest bar. */
   .ds-terrain-band {
@@ -222,6 +256,117 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
     background: url('/brand/terrain-band.png') repeat-x bottom / auto 80px;
   }
   .ds-footer-bar { background: var(--surface-moss); color: var(--text-on-dark); }
+
+  /* ---- Page frame & components (shared by journey steps and tools) ------ */
+  .ds-page {
+    max-width: var(--page-max); margin-inline: auto;
+    padding: var(--page-pad-top) var(--page-gutter) var(--page-pad-bottom);
+  }
+  .ds-page-bar { max-width: var(--page-max); margin-inline: auto; padding-inline: var(--page-gutter); }
+  .ds-page-nav  { margin-bottom: var(--space-block); }
+  .ds-page-head { margin-bottom: var(--space-block); max-width: 42rem; }
+  .ds-page-back {
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px;
+    font-size: 13px; font-weight: 500; color: var(--text-muted); transition: color .15s;
+  }
+  .ds-page-back:hover { color: var(--text-strong); }
+  .ds-page-title {
+    font-family: var(--font-display); font-weight: 600; letter-spacing: -0.015em;
+    font-size: 32px; line-height: 1.2; color: var(--text-strong);
+  }
+  .ds-page-intro { margin-top: 8px; font-size: 15px; line-height: 1.6; color: var(--text-body); }
+  @media (min-width:1024px) {
+    .ds-page-title { font-size: 42px; line-height: 1.1; }
+    .ds-page-intro { margin-top: 12px; font-size: 18px; line-height: 1.5; }
+  }
+
+  /* Two-column page body: inputs left, results right (stacks on mobile). */
+  .ds-split { display: grid; grid-template-columns: minmax(0,1fr); gap: var(--space-grid); }
+  @media (min-width:1024px) { .ds-split { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .ds-stack > * + * { margin-top: var(--space-stack); }
+
+  /* Card: the one surface for content blocks. */
+  .ds-card {
+    border: 1px solid var(--border-default); border-radius: var(--radius-xl);
+    background: var(--surface-card); padding: var(--card-pad); box-shadow: var(--shadow-sm);
+  }
+  /* Sunken panel inside or beside a card (controls, metrics). */
+  .ds-panel {
+    border: 1px solid var(--border-default); border-radius: var(--radius-xl);
+    background: var(--surface-sunken); padding: 16px 20px;
+  }
+  .ds-section-title { font-family: var(--font-sans); font-size: 18px; line-height: 1.4; font-weight: 700; color: var(--text-strong); margin-bottom: 16px; }
+
+  /* Callout: emphasis without a coloured fill (no fills larger than a badge) —
+     a card with a moss rule on the leading edge. */
+  .ds-callout {
+    border: 1px solid var(--border-default); border-left: var(--callout-rule) solid var(--color-primary);
+    border-radius: var(--radius-xl); background: var(--surface-card);
+    padding: 16px 20px; box-shadow: var(--shadow-xs);
+  }
+  button.ds-callout { transition: border-color .15s, box-shadow .15s; }
+  button.ds-callout:hover { border-color: var(--border-strong); border-left-color: var(--color-primary-hover); box-shadow: var(--shadow-sm); }
+
+  /* Segmented / pill choice — shared by scenario tabs, presets and toggles. */
+  .ds-choice {
+    border: 1px solid var(--border-default); background: var(--surface-card);
+    color: var(--text-muted); transition: border-color .15s, color .15s, background .15s;
+  }
+  .ds-choice:hover { border-color: var(--border-strong); color: var(--text-body); }
+  .ds-choice[aria-pressed="true"], .ds-choice[aria-checked="true"], .ds-choice[aria-current] {
+    border-color: var(--moss-600); background: var(--color-primary-tint);
+    color: var(--moss-800); font-weight: 500;
+  }
+
+  /* Learn bar ("New to mortgages?"): icon, title, guide chips, ×. */
+  .ds-learn {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+    padding: 10px 12px 10px 14px; border-radius: var(--radius-xl);
+    border: 1px solid var(--border-default); background: var(--surface-card);
+    box-shadow: var(--shadow-xs);
+  }
+  .ds-learn-icon {
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    width: 34px; height: 34px; border-radius: var(--radius-lg);
+    background: var(--color-primary-tint); color: var(--color-primary);
+  }
+  .ds-learn-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--text-strong); white-space: nowrap; }
+  .ds-learn-links { display: flex; flex-wrap: wrap; gap: 8px; flex: 1 1 auto; min-width: 0; margin: 0; padding: 0; list-style: none; }
+  .ds-learn-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px;
+    border: 1px solid var(--border-default); background: var(--surface-page);
+    font-size: 13px; font-weight: 500; color: var(--text-body); text-decoration: none;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .ds-learn-chip:hover { border-color: var(--moss-600); color: var(--moss-800); background: var(--color-primary-tint); }
+  .ds-learn-chip svg { color: var(--text-faint); }
+  .ds-learn-chip:hover svg { color: currentColor; }
+  .ds-learn-close {
+    display: inline-flex; align-items: center; justify-content: center; flex: none; margin-left: auto;
+    width: 30px; height: 30px; border-radius: var(--radius-lg); font-size: 18px; line-height: 1; color: var(--text-muted);
+  }
+  .ds-learn-close:hover { background: var(--surface-sunken); color: var(--text-strong); }
+  /* On phones the chips take their own row under the title. */
+  @media (max-width: 639px) { .ds-learn-links { order: 3; flex-basis: 100%; } }
+
+  /* Info tip: helper text behind a small ⓘ (InfoTip in ui.jsx). */
+  .ds-infotip { position: relative; display: inline-flex; vertical-align: middle; }
+  .ds-infotip-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; margin: -4px; border-radius: 999px;
+    color: var(--text-faint); transition: color .15s, background .15s;
+  }
+  .ds-infotip-btn:hover, .ds-infotip-btn[aria-expanded="true"] { color: var(--color-primary); background: var(--color-primary-tint); }
+  .ds-infotip-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+  .ds-infotip-bubble {
+    position: absolute; top: calc(100% + 8px); z-index: 40;
+    width: max-content; max-width: min(18rem, calc(100vw - 48px));
+    padding: 10px 12px; border-radius: var(--radius-lg);
+    border: 1px solid var(--border-default); background: var(--surface-card);
+    box-shadow: var(--shadow-float);
+    font-size: 13px; line-height: 1.5; font-weight: 400; color: var(--text-body); text-align: left;
+    white-space: normal;
+  }
 
   /* Brand wordmark in Spectral. */
   .ds-wordmark { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; }
@@ -273,4 +418,27 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
 /* "New to mortgages?" message: same gentle rise-in as the advisor tooltip. */
 @media (prefers-reduced-motion: no-preference) {
   .learn-toast { animation: advisor-tip-in 280ms var(--ease-out) both; }
+}
+
+/* Airy clouds behind the "Can I buy?" card (HeroClouds): they drift across the
+   card's own width (container units), far ones slower and paler. */
+.ds-hero-clouds {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  container-type: inline-size;
+}
+.ds-hero-cloud { position: absolute; left: 0; transform: translateX(-20cqw); }
+@media (prefers-reduced-motion: no-preference) {
+  .ds-hero-cloud {
+    animation-name: ds-cloud-drift; animation-timing-function: linear; animation-iteration-count: infinite;
+  }
+  @keyframes ds-cloud-drift {
+    from { transform: translateX(-20cqw); }
+    to { transform: translateX(110cqw); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-hero-cloud:nth-child(1) { transform: translateX(18cqw); }
+  .ds-hero-cloud:nth-child(2) { transform: translateX(44cqw); }
+  .ds-hero-cloud:nth-child(3) { transform: translateX(62cqw); }
+  .ds-hero-cloud:nth-child(4) { transform: translateX(30cqw); }
 }

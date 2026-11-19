@@ -167,8 +167,8 @@ export default function UsOptionsPhase({ explore, onExploreChange, region, onReg
         </RouteCard>
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-bold text-slate-900">{ut('options.compareTitle')}</h2>
+      <section className="ds-card">
+        <h2 className="ds-section-title">{ut('options.compareTitle')}</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

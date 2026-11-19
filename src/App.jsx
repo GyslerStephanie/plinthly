@@ -31,10 +31,12 @@ import { groupDigits } from './lib/format'
 import { AppStateProvider, deriveAppState } from './state/AppStateContext'
 import PhaseContextBanner from './components/PhaseContextBanner'
 import StickySummaryBar from './components/StickySummaryBar'
-import PhaseNav from './components/PhaseNav'
+import ToolTabs from './components/ToolTabs'
+import BuildIsland from './components/hero/BuildIsland'
+import HeroClouds from './components/hero/HeroClouds'
 import AdvisorFab from './components/AdvisorFab'
-import CommentLayer from './components/Comments/CommentLayer'
 import CompareView from './components/Compare/CompareView'
+import { PageHeader } from './components/ui'
 import ResilienceExplore from './components/us/ResilienceExplore'
 import Onboarding from './components/Onboarding/Onboarding'
 import Landing from './components/Landing/Landing'
@@ -117,7 +119,7 @@ export default function App() {
   const [usExplore, setUsExplore] = useState(US_DEFAULT_EXPLORE) // US Phases 3–5
   const [usBuild, setUsBuild] = useState(US_DEFAULT_BUILD) // US resilient-build explorer inputs
   const [showBuild, setShowBuild] = useState(false) // "Compare how to build" parallel surface (US)
-  const [advisorConsented, setAdvisorConsented] = useState(false) // one gate for the bubble and the comment layer
+  const [advisorConsented, setAdvisorConsented] = useState(false) // consent gate for the advisor bubble
   const usRes = isUs ? usResult(usValues) : null
   // US funnel: count a calculation once the visitor's own numbers give a
   // result. The pre-filled example doesn't count, or every visit would.
@@ -399,22 +401,51 @@ export default function App() {
   // the mapped destination (spec §4/§7). Phases 2–5 need a Phase-1 result; on a
   // cold entry there is none yet, so Dreamer/Ready-Explorer land on Phase 1 with
   // a nudge (spec §9) instead of a dead phase.
-  // The parallel tools shown beside the journey steps (PhaseNav). Compare in
-  // both markets; the build explorer where it exists (US).
+  // The parallel tools, shown as tabs under the step row on every page (ToolTabs).
+  // Compare in both markets; the build explorer where it exists (US).
   const navTools = [
     { id: 'compare', label: t('nav.compare'), active: showCompare, onSelect: () => openCompare('nav') },
     ...(isUs ? [{ id: 'build', label: t('nav.build'), active: showBuild, onSelect: () => openBuild() }] : []),
   ]
 
-  /** The same navigation row inside an overlay: a step closes it and jumps. */
-  const overlayNav = (
-    <PhaseNav
-      current={0}
-      maxVisited={maxVisited}
-      onJump={(n) => { setShowCompare(false); setShowBuild(false); goToPhase(n) }}
-      tools={navTools}
-    />
+  /** The same tab row inside an overlay; Your journey closes the tool. */
+  const closeTools = () => { setShowCompare(false); setShowBuild(false) }
+
+  // The site header. Rendered once for the page and again inside the tool
+  // overlays (Compare, How to build), which cover the page, so the header
+  // stays put as you tab between the journey and the tools.
+  const renderHeader = () => (
+    <header className="border-b border-slate-200 bg-white">
+      <div className="ds-page-bar flex items-center justify-between gap-3 py-4">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/brand/plinthly-mark.png"
+            alt=""
+            className="h-9 w-9"
+            style={{ imageRendering: 'pixelated' }}
+          />
+          <div>
+            <p className="ds-wordmark text-lg leading-tight text-ink">Plinthly</p>
+            <p className="text-xs leading-tight text-muted">
+              {isUs ? ut('header.tagline') : t('header.tagline')}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={startOver}
+            className="whitespace-nowrap text-xs font-medium text-muted underline-offset-4 transition hover:text-ink hover:underline"
+          >
+            {t('onboarding.startOver')}
+          </button>
+          <LocaleMenu onSwitch={switchMarket} languages={marketLanguages} />
+        </div>
+      </div>
+    </header>
   )
+
+  const overlayNav = <ToolTabs journeyActive={false} onJourney={closeTools} tools={navTools} />
 
   const openBuild = () => {
     setShowCompare(false)
@@ -546,37 +577,8 @@ export default function App() {
 
   return (
     <AppStateProvider value={appState}>
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-3 px-5 py-4 md:px-8 lg:px-[60px]">
-          <div className="flex items-center gap-2.5">
-            <img
-              src="/brand/plinthly-mark.png"
-              alt=""
-              className="h-9 w-9"
-              style={{ imageRendering: 'pixelated' }}
-            />
-            <div>
-              <p className="ds-wordmark text-lg leading-tight text-ink">Plinthly</p>
-              <p className="text-xs leading-tight text-muted">
-                {isUs ? ut('header.tagline') : t('header.tagline')}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Comment layer toolbar (portal target; empty until a result exists) */}
-            <div id="comment-toolbar" className="hidden sm:block" />
-            <button
-              type="button"
-              onClick={startOver}
-              className="whitespace-nowrap text-xs font-medium text-muted underline-offset-4 transition hover:text-ink hover:underline"
-            >
-              {t('onboarding.startOver')}
-            </button>
-            <LocaleMenu onSwitch={switchMarket} languages={marketLanguages} />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-surface-page text-slate-900">
+      {renderHeader()}
 
       {mtNotice && !isUs && (
         <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-xs text-amber-800 no-print">
@@ -586,14 +588,12 @@ export default function App() {
 
       {!isUs && <StickySummaryBar />}
 
-      <main className="mx-auto max-w-[1320px] px-5 py-10 md:px-8 lg:px-[60px] lg:py-16">
-        <div className="mb-8 no-print">
-          <PhaseNav
-            current={phase}
-            maxVisited={maxVisited}
-            onJump={goToPhase}
-            tools={navTools}
-          />
+      <main className="ds-page">
+        <div className="ds-page-nav no-print">
+          {/* Journey / Compare / How to build: the page's only navigation row,
+              in the same spot as in the tool overlays (overlayNav), so it never
+              moves when you switch. Steps move with Back / Next at the bottom. */}
+          <ToolTabs journeyActive={!showCompare && !showBuild} onJourney={closeTools} tools={navTools} />
           {/* "New to mortgages?" — a slim bar under the navigation once a
               result exists; dismissable for the visit. */}
           {(isUs ? usRes : previewResult) && !showCompare && !showBuild && (
@@ -602,7 +602,7 @@ export default function App() {
         </div>
 
         {showRouteNudge && (
-          <div className="mb-6 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900 no-print">
+          <div className="ds-callout mb-[var(--space-block)] text-sm text-body no-print">
             {routeIntent === 'dream'
               ? t('onboarding.nudge.dream')
               : t('onboarding.nudge.looking')}
@@ -610,8 +610,9 @@ export default function App() {
         )}
 
         {phase === 1 ? (
-          <div className="ds-hero mb-8 flex items-center justify-between gap-8 overflow-hidden rounded-2xl border border-line px-6 py-10 shadow-sm no-print lg:px-10 lg:py-12">
-            <div className="min-w-0 max-w-2xl">
+          <div className="ds-hero mb-[var(--space-block)] flex items-center justify-between gap-8 overflow-hidden rounded-2xl border border-line px-6 py-10 shadow-sm no-print lg:px-10 lg:py-12">
+            <HeroClouds />
+            <div className="relative z-10 min-w-0 max-w-2xl">
               <h1 className="font-display text-4xl font-semibold tracking-tight text-ink lg:text-5xl">
                 {isUs ? ut('hero.title') : t('heading.1.title')}
               </h1>
@@ -620,19 +621,13 @@ export default function App() {
               </p>
             </div>
             {/* The whole island, in the flow and vertically centred, so nothing is clipped. */}
-            <img src="/brand/voxel-landscape-mini.png" alt="" className="ds-hero-land hidden sm:block" />
+            <BuildIsland className="relative z-10 hidden sm:block" />
           </div>
         ) : (
-          <div className="mb-8 max-w-2xl no-print">
-            <h1 className="text-2xl font-semibold tracking-tight text-ink">
-              {isUs ? ut(`${US_PHASE_COPY[phase]}.title`) : t(`heading.${phase}.title`)}
-            </h1>
-            {(isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)) && (
-              <p className="mt-2 text-base leading-relaxed text-body lg:mt-3 lg:text-lg">
-                {isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)}
-              </p>
-            )}
-          </div>
+          <PageHeader
+            title={isUs ? ut(`${US_PHASE_COPY[phase]}.title`) : t(`heading.${phase}.title`)}
+            intro={isUs ? ut(`${US_PHASE_COPY[phase]}.blurb`) : t(`heading.${phase}.blurb`)}
+          />
         )}
 
         {/* United States — Phase 1 on the US engine; later phases not built yet */}
@@ -668,10 +663,10 @@ export default function App() {
 
         {/* Phase 1 — two-column on desktop: inputs left, live output right */}
         {phase === 1 && !isUs && (
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
+          <div className="ds-split">
             <div>
-              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:p-7">
-                <h2 className="mb-5 text-lg font-bold text-slate-900">
+              <div className="ds-card">
+                <h2 className="ds-section-title">
                   {t('form.title')}
                 </h2>
                 <AffordabilityForm
@@ -679,19 +674,21 @@ export default function App() {
                   onChange={handleValuesChange}
                 />
               </div>
+              {previewResult && (
+                <div className="mt-[var(--space-stack)]">
+                  <HowItWorks course={chPhase1Course(previewResult)} cardId="phase1" />
+                </div>
+              )}
             </div>
             {/* Sticky so the live result stays in view while scrolling inputs */}
             <div className="lg:sticky lg:top-6 lg:self-start">
               {previewResult ? (
-                <div className="space-y-5">
-                  <AffordabilityResult
-                    result={previewResult}
-                    renovation={renovation}
-                    onNavigate={goToPhase}
-                    onCompare={() => openCompare('phase1')}
-                  />
-                  <HowItWorks course={chPhase1Course(previewResult)} cardId="phase1" />
-                </div>
+                <AffordabilityResult
+                  result={previewResult}
+                  renovation={renovation}
+                  onNavigate={goToPhase}
+                  onCompare={() => openCompare('phase1')}
+                />
               ) : (
                 <EmptyResult
                   hasIncome={hasIncome(values)}
@@ -759,7 +756,7 @@ export default function App() {
                 : phase === 2
                 ? t('btn.continueExplore')
                 : phase === 3
-                ? t('btn.seeOptions')
+                ? isUs ? ut('btn.seeOptions') : t('btn.seeOptions')
                 : t('btn.buildPlan')}
             </button>
           ) : phase === 1 && !hasResultNow ? (
@@ -813,15 +810,6 @@ export default function App() {
 
       {/* AI advisor — US: narrates the US engine; what-ifs run on it in the browser. */}
       {isUs && usRes && !showCompare && !showBuild && !frontDoorOpen && (
-        <CommentLayer
-          context={buildUsAdvisorContext(usRes, lang, phase === 2 && dreamPrice ? dreamPlan(usInput(usValues), dreamPrice) : null)}
-          values={usValues}
-          screen={phase === 1 ? ut('hero.title') : ut(`${US_PHASE_COPY[phase]}.title`)}
-          consented={advisorConsented}
-          onConsent={() => setAdvisorConsented(true)}
-        />
-      )}
-      {isUs && usRes && !showCompare && !showBuild && !frontDoorOpen && (
         <AdvisorFab
           tipKey={phase}
           consented={advisorConsented}
@@ -848,15 +836,6 @@ export default function App() {
       )}
 
       {previewResult && !showCompare && !isUs && !frontDoorOpen && (
-        <CommentLayer
-          context={buildAdvisorContext(previewResult, lang, phase === 2 ? dreamContext : null)}
-          values={values}
-          screen={t(`heading.${phase}.title`)}
-          consented={advisorConsented}
-          onConsent={() => setAdvisorConsented(true)}
-        />
-      )}
-      {previewResult && !showCompare && !isUs && !frontDoorOpen && (
         <AdvisorFab
           tipKey={phase}
           consented={advisorConsented}
@@ -881,6 +860,7 @@ export default function App() {
       {showCompare && (
         <CompareView
           nav={overlayNav}
+          header={renderHeader()}
           onClose={() => setShowCompare(false)}
           seedYear={compareHorizon}
           region={isUs ? usValues.region : undefined}
@@ -913,6 +893,7 @@ export default function App() {
       {isUs && showBuild && (
         <ResilienceExplore
           nav={overlayNav}
+          header={renderHeader()}
           build={usBuild}
           onChange={setUsBuild}
           region={usValues.region}

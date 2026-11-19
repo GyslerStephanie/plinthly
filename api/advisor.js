@@ -69,7 +69,7 @@ function buildSystemPrompt(ctx, mode, surface) {
     return [
       ...usPromptRules(),
       'CRITICAL: every number you state must come from the CONTEXT object below or a tool result. Never invent or estimate a figure. If a question needs a number you do not have, say so and suggest the user adjust their inputs in the tool.',
-      'Reply in English. Be concise, concrete, and encouraging. No markdown headers; short paragraphs or tight bullet lists.',
+      'Reply in English. Be concise, concrete, and encouraging. No markdown headers; short paragraphs or tight bullet lists. Never use em dashes (—); use a comma, colon or full stop instead.',
       usToolsPrompt(surface),
       mode === 'plan' ? usPlanTask() : "TASK: answer the user's question grounded in their numbers.",
       ...(pinned ? [pinned] : []),
@@ -82,10 +82,10 @@ function buildSystemPrompt(ctx, mode, surface) {
     SWISS_RULES,
     'CRITICAL: every number you state must come from the CONTEXT object below. Never invent or estimate a figure that is not derivable from it. If a question needs a number you do not have, say so and suggest the user adjust their inputs in the tool.',
     'You are NOT a licensed advisor. Frame everything as illustrative. When you give a plan, end by pointing the user to an independent advisor (e.g. VZ VermögensZentrum, hypotheke.ch, or their cantonal bank).',
-    `Reply in ${lang}. Be concise, concrete, and encouraging. Use CHF figures. No markdown headers; short paragraphs or tight bullet lists.`,
+    `Reply in ${lang}. Be concise, concrete, and encouraging. Use CHF figures. No markdown headers; short paragraphs or tight bullet lists. Never use em dashes (—); use a comma, colon or full stop instead.`,
     surface === 'compare'
-      ? 'TOOLS: you have `run_compare_scenario`, which runs the rent-vs-buy comparison model behind the dashboard the user is looking at. CALL IT for any question about what the scenarios show, and for any "what if" about price, rent, rates, returns, appreciation, the horizon, or which scenario to run — do not estimate. Pass only what changes; the rest is inherited from the dashboard. Mind the lens: `rent_vs_buy` compares CUMULATIVE COST, where LOWER wins; the others compare NET WORTH, where HIGHER wins. The result tells you which side is ahead — use that field rather than comparing the numbers yourself.'
-      : 'TOOLS: you have `recompute_affordability`. When the user asks any "what if" about their income, savings, Pillar 3a, 2nd pillar, down-payment percentage or canton, CALL IT — do not estimate. Pass only the fields that change; the rest are inherited.',
+      ? 'TOOLS: you have `run_compare_scenario`, which runs the rent-vs-buy comparison model behind the dashboard the user is looking at. CALL IT for any question about what the scenarios show, and for any "what if" about price, rent, rates, returns, appreciation, the horizon, or which scenario to run: do not estimate. Pass only what changes; the rest is inherited from the dashboard. Mind the lens: `rent_vs_buy` compares CUMULATIVE COST, where LOWER wins; the others compare NET WORTH, where HIGHER wins. The result tells you which side is ahead: use that field rather than comparing the numbers yourself.'
+      : 'TOOLS: you have `recompute_affordability`. When the user asks any "what if" about their income, savings, Pillar 3a, 2nd pillar, down-payment percentage or canton, CALL IT: do not estimate. Pass only the fields that change; the rest are inherited.',
     'You also have `explain_term`: for any "what is / what does … mean" question, call it and explain in plain everyday words from the returned glossary definition, including its learn-more link. Never define a term from memory.',
     'Scenario figures may come ONLY from a tool result in this conversation; never state a scenario number you did not receive from a tool. After a result, give the new figure, the delta, and what it means in one short paragraph.',
     mode === 'plan'
