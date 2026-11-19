@@ -426,13 +426,13 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
   position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
   container-type: inline-size;
 }
-.ds-hero-cloud { position: absolute; left: 0; transform: translateX(-20cqw); }
+.ds-hero-cloud { position: absolute; left: 0; transform: translateX(-35cqw); }
 @media (prefers-reduced-motion: no-preference) {
   .ds-hero-cloud {
     animation-name: ds-cloud-drift; animation-timing-function: linear; animation-iteration-count: infinite;
   }
   @keyframes ds-cloud-drift {
-    from { transform: translateX(-20cqw); }
+    from { transform: translateX(-35cqw); }
     to { transform: translateX(110cqw); }
   }
 }
@@ -441,4 +441,6 @@ body { margin: 0; background: var(--surface-page); color: var(--text-body); }
   .ds-hero-cloud:nth-child(2) { transform: translateX(44cqw); }
   .ds-hero-cloud:nth-child(3) { transform: translateX(62cqw); }
   .ds-hero-cloud:nth-child(4) { transform: translateX(30cqw); }
+  .ds-hero-cloud:nth-child(5) { transform: translateX(70cqw); }
+  .ds-hero-cloud:nth-child(6) { transform: translateX(6cqw); }
 }
