@@ -279,8 +279,6 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           id="compare-title"
           title={t('compare.title')}
           intro={t('compare.intro')}
-          onBack={onClose}
-          backLabel={t('compare.back')}
         />
 
         {/* Scenario tabs */}
@@ -569,6 +567,17 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
         </details>
 
         <p className="mt-[var(--space-block)] max-w-3xl text-xs leading-relaxed text-faint">{t('compare.disclaimer', { v: COMPARE_METHODOLOGY })}</p>
+
+        {/* Back sits bottom-left, as on every journey and build step. */}
+        <div className="mt-10 flex items-center justify-between no-print">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:text-slate-900"
+          >
+            ← {t('hub.toJourney')}
+          </button>
+        </div>
       </div>
 
       {/* The advisor, mounted INSIDE the overlay. Compare is `fixed inset-0
