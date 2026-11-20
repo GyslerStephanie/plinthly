@@ -16,3 +16,6 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Raw downloaded datasets (e.g. FEMA NRI); only derived files under src/ are committed
+data/raw/

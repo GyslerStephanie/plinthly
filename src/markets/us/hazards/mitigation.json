@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "notes": "What a wind-resistant build changes, from published studies. Only figures with a source are used. The loss reduction applied in the app combines claim frequency and claim severity: 1 − (1 − frequency cut) × (1 − severity cut), at the low and high ends of the reported ranges. Applied to hurricane losses only; the study measured hurricane claims.",
+    "last_updated": "2026-11-20"
+  },
+  "fortified_hurricane": {
+    "claim_frequency_cut": { "low": 0.55, "high": 0.74 },
+    "claim_severity_cut": { "low": 0.15, "high": 0.40 },
+    "basis": "FORTIFIED homes vs conventionally built homes after Hurricane Sally (2020), claims from 88 insurers. University of Alabama Center for Risk and Insurance Research, 2025. Reported ranges differ between summaries; these span them.",
+    "sources": [
+      "https://culverhouse.ua.edu/?p=29203",
+      "https://www.insurancebusinessmag.com/us/news/property/ibhscertified-homes-prove-resilience-in-realworld-hurricane-test-546333.aspx",
+      "https://newsroom.statefarm.com/how-stronger-homes-can-help-protect-families-from-severe-weather/"
+    ]
+  },
+  "above_code_bcr": {
+    "hurricane_wind": 5,
+    "basis": "Building new homes to the IBHS FORTIFIED Home Hurricane standard: about $5 saved for every $1 spent (national, along the Gulf and Atlantic coasts). NIBS Natural Hazard Mitigation Saves, 2019.",
+    "sources": ["https://www.NIBS.org/files/pdfs/ms_v3_exceeds_hurricanewinds.pdf"]
+  },
+  "sea_level_rise_viewer": "https://coast.noaa.gov/slr/"
+}
