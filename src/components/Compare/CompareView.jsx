@@ -14,9 +14,8 @@ import { money, groupDigits, currencySymbol } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
 import { useDialogFocus } from '../../lib/useDialogFocus'
 import HowItWorks from '../HowItWorks'
-import { PageHeader } from '../ui'
-import LearnToast from '../LearnToast'
-import { compareCourse, learnLinks } from '../../lib/learn'
+import { Indicative, PageHeader } from '../ui'
+import { compareCourse } from '../../lib/learn'
 import { track } from '../../lib/track'
 
 // One colour per option, the SAME on every tab so nothing swaps meaning when you
@@ -273,7 +272,6 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
       <div className="ds-page">
         <div className="ds-page-nav no-print">
           {nav}
-          <LearnToast links={learnLinks(isUs ? 'us' : 'ch', 'compare')} className={nav ? 'mt-4' : ''} />
         </div>
         <PageHeader
           id="compare-title"
@@ -396,7 +394,6 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
             {/* Assumptions */}
             <details open className="ds-card">
               <summary className="ds-section-title mb-0 cursor-pointer">{t('compare.assume')}</summary>
-              <p className="mt-2 text-xs text-faint">{t('compare.assumeCaption')}</p>
 
               <p className="ds-eyebrow mt-4 text-xs text-muted">{t('compare.grpKnow')}</p>
               <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -566,7 +563,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
           )}
         </details>
 
-        <p className="mt-[var(--space-block)] max-w-3xl text-xs leading-relaxed text-faint">{t('compare.disclaimer', { v: COMPARE_METHODOLOGY })}</p>
+        <div className="mt-[var(--space-block)]"><Indicative>{t('compare.assumeCaption')} {t('compare.disclaimer', { v: COMPARE_METHODOLOGY })}</Indicative></div>
 
         {/* Back sits bottom-left, as on every journey and build step. */}
         <div className="mt-10 flex items-center justify-between no-print">

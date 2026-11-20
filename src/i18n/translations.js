@@ -3327,6 +3327,7 @@ const localeKeys = {
     glossaryAsk: 'What does “{term}” mean for me?',
     glossaryClose: 'Close',
     moreInfo: 'More about {label}',
+    indicative: { short: 'Estimates, not quotes' },
     locale: {
       button: 'Country and language: {country}, {language}. Change',
       country: 'Country',
@@ -3353,6 +3354,7 @@ const localeKeys = {
     glossaryAsk: 'Was bedeutet «{term}» für mich?',
     glossaryClose: 'Schliessen',
     moreInfo: 'Mehr zu {label}',
+    indicative: { short: 'Schätzungen, keine Offerten' },
     locale: {
       button: 'Land und Sprache: {country}, {language}. Ändern',
       country: 'Land',
@@ -3378,6 +3380,7 @@ const localeKeys = {
     glossaryAsk: 'Que signifie « {term} » pour moi ?',
     glossaryClose: 'Fermer',
     moreInfo: 'En savoir plus : {label}',
+    indicative: { short: 'Estimations, pas des devis' },
     locale: {
       button: 'Pays et langue : {country}, {language}. Modifier',
       country: 'Pays',
@@ -3403,6 +3406,7 @@ const localeKeys = {
     glossaryAsk: 'Cosa significa «{term}» per me?',
     glossaryClose: 'Chiudi',
     moreInfo: 'Altre informazioni: {label}',
+    indicative: { short: 'Stime, non preventivi' },
     locale: {
       button: 'Paese e lingua: {country}, {language}. Modifica',
       country: 'Paese',

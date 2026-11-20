@@ -235,7 +235,7 @@ function BeyondEnergy({ result, horizon, stateName }) {
         </table>
       </div>
       <p className="mt-3 text-sm text-body">{ut('build.beyond.energyOnly')}</p>
-      <p className="mt-2 text-xs leading-relaxed text-muted">{ut('build.beyond.note')}</p>
+      <Indicative>{ut('build.beyond.note')}</Indicative>
       <p className="mt-2 text-xs text-muted">
         {ut('build.beyond.sources')}:{' '}
         {sources.map((u, i) => (
@@ -304,7 +304,7 @@ function Payback({ payback, horizon }) {
           </div>
         </>
       )}
-      <p className="mt-3 text-xs text-faint">{ut('build.payback.note')}</p>
+      <p className="mt-3 text-xs text-muted">{ut('build.payback.note')}</p>
     </section>
   )
 }
@@ -444,38 +444,7 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
               ))}
             </div>
 
-            {/* Compact table */}
-            <section className="ds-card mt-[var(--space-stack)]">
-              <h2 className="ds-section-title">{ut('build.table.title')}</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-line text-left text-xs text-muted">
-                      <th className="py-2 pr-3 font-medium">{ut('build.table.house')}</th>
-                      <th className="py-2 pr-3 font-medium">{ut('build.table.wall')}</th>
-                      <th className="py-2 pr-3 text-right font-medium">{ut('build.col.sqft')}</th>
-                      <th className="py-2 pr-3 text-right font-medium">{ut('build.table.upfront')}</th>
-                      <th className="py-2 pr-3 text-right font-medium">{ut('build.table.energy', { n: horizon })}</th>
-                      <th className="py-2 text-right font-medium">{ut('build.table.total', { n: horizon })}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.columns.map((c) => (
-                      <tr key={c.id} className="border-b border-line last:border-b-0">
-                        <td className="py-2 pr-3 font-medium text-ink">{c.id} · {c.label}</td>
-                        <td className="py-2 pr-3 text-body">{c.wall.short}</td>
-                        <td className="ds-figure py-2 pr-3 text-right tabular-nums text-ink">{int(c.sqft)}</td>
-                        <td className="ds-figure py-2 pr-3 text-right tabular-nums text-ink">{c.upfront.mid > 0 ? money(c.upfront.mid) : '—'}</td>
-                        <td className="ds-figure py-2 pr-3 text-right tabular-nums text-ink">{money(c.energy.cumulative)}</td>
-                        <td className="ds-figure py-2 text-right tabular-nums text-ink">{money(c.tco.mid)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <Indicative>{ut('build.indicative')}</Indicative>
-              <p className="mt-2 text-xs text-muted">{ut('build.next')} · {resilienceData.meta.last_updated}</p>
-            </section>
+            <Indicative>{ut('build.indicative')} {resilienceData.meta.last_updated}.</Indicative>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <button type="button" onClick={copy} className="rounded-lg border border-line bg-white px-4 py-2 text-sm font-medium text-ink transition hover:border-slate-400">
