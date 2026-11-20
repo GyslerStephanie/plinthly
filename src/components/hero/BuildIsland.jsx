@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
-// Timber-and-glass house with a green roof and solar panels on the voxel island.
-const SRC = '/brand/voxel-island-house.svg'
+const SRC = '/brand/voxel-landscape-mini.png'
 const LAYERS = 8
 const SEEN_KEY = 'plinthly.islandBuilt'
 

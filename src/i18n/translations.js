@@ -336,7 +336,7 @@ export const translations = {
       badge: 'No selling · No sign-up · Just honest numbers',
     },
     lang: { label: 'Language' },
-    nav: { label: 'Your progress', journey: 'Sustainable home journey', stepOf: 'Step {n} of {total}', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan', tools: 'Tools', compare: 'Compare Scenarios', build: 'How to Build for Climate Change' },
+    nav: { label: 'Your progress', journey: 'Sustainable home journey', stepOf: 'Step {n} of {total}', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan', tools: 'Tools', compare: 'Investment Scenarios', build: 'Building for Climate Resiliency' },
     heading: {
       1: {
         title: 'Can I buy?',
@@ -1044,7 +1044,7 @@ export const translations = {
       badge: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
     },
     lang: { label: 'Sprache' },
-    nav: { label: 'Ihr Fortschritt', journey: 'Weg zum nachhaltigen Zuhause', stepOf: 'Schritt {n} von {total}', 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan', tools: 'Werkzeuge', compare: 'Vergleich', build: 'Bauweisen' },
+    nav: { label: 'Ihr Fortschritt', journey: 'Weg zum nachhaltigen Zuhause', stepOf: 'Schritt {n} von {total}', 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan', tools: 'Werkzeuge', compare: 'Investitionsszenarien', build: 'Klimaresilient bauen' },
     heading: {
       1: {
         title: 'Kann ich kaufen?',
@@ -1753,7 +1753,7 @@ export const translations = {
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
     },
     lang: { label: 'Langue' },
-    nav: { label: 'Votre progression', journey: 'Parcours vers un logement durable', stepOf: 'Étape {n} sur {total}', 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action", tools: 'Outils', compare: 'Comparer', build: 'Construction' },
+    nav: { label: 'Votre progression', journey: 'Parcours vers un logement durable', stepOf: 'Étape {n} sur {total}', 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action", tools: 'Outils', compare: 'Scénarios d’investissement', build: 'Construire pour la résilience climatique' },
     heading: {
       1: {
         title: 'Puis-je acheter ?',
@@ -2461,7 +2461,7 @@ export const translations = {
       badge: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',
     },
     lang: { label: 'Lingua' },
-    nav: { label: 'I tuoi progressi', journey: 'Percorso verso una casa sostenibile', stepOf: 'Passo {n} di {total}', 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione', tools: 'Strumenti', compare: 'Confronta', build: 'Costruzione' },
+    nav: { label: 'I tuoi progressi', journey: 'Percorso verso una casa sostenibile', stepOf: 'Passo {n} di {total}', 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione', tools: 'Strumenti', compare: 'Scenari di investimento', build: 'Costruire per la resilienza climatica' },
     heading: {
       1: {
         title: 'Posso comprare?',
