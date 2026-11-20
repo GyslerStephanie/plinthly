@@ -34,6 +34,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 6.521608719e-06,
     "buildingLossPerYear": 6817785
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 7.798271417e-05,
+    "buildingLossPerYear": 81524265
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.426433135e-06,
+    "buildingLossPerYear": 6718287
    }
   },
   "AK": {
@@ -64,6 +74,16 @@
     "rating": "Relatively Moderate",
     "buildingLossRate": 0.00017130822957,
     "buildingLossPerYear": 30674020
+   },
+   "earthquake": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.002299232734311,
+    "buildingLossPerYear": 462173993
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.75804528e-07,
+    "buildingLossPerYear": 35339
    }
   },
   "AZ": {
@@ -94,6 +114,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.000178952293751,
     "buildingLossPerYear": 216665477
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.0998359629e-05,
+    "buildingLossPerYear": 69313607
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.0853890058e-05,
+    "buildingLossPerYear": 28343232
    }
   },
   "AR": {
@@ -124,6 +154,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 1.871927949e-05,
     "buildingLossPerYear": 11171641
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000306102077979,
+    "buildingLossPerYear": 182681318
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.3993914084e-05,
+    "buildingLossPerYear": 26255510
    }
   },
   "CA": {
@@ -154,6 +194,16 @@
     "rating": "Very High",
     "buildingLossRate": 0.000247386511574,
     "buildingLossPerYear": 1706431467
+   },
+   "earthquake": {
+    "rating": "Very High",
+    "buildingLossRate": 0.001316383166308,
+    "buildingLossPerYear": 10193818145
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.095858456e-06,
+    "buildingLossPerYear": 8486117
    }
   },
   "CO": {
@@ -184,6 +234,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.000194486268171,
     "buildingLossPerYear": 201314527
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.8255202798e-05,
+    "buildingLossPerYear": 32831840
+   },
+   "hail": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000264787046857,
+    "buildingLossPerYear": 307675938
    }
   },
   "CT": {
@@ -214,6 +274,16 @@
     "rating": "Very Low",
     "buildingLossRate": 3.3206276e-07,
     "buildingLossPerYear": 263258
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.762745494e-05,
+    "buildingLossPerYear": 29830915
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.500101611e-06,
+    "buildingLossPerYear": 1189275
    }
   },
   "DE": {
@@ -244,6 +314,16 @@
     "rating": "Very Low",
     "buildingLossRate": 2.64714524e-06,
     "buildingLossPerYear": 657395
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.9865293362e-05,
+    "buildingLossPerYear": 9900198
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.5241677e-07,
+    "buildingLossPerYear": 62686
    }
   },
   "DC": {
@@ -274,6 +354,16 @@
     "rating": "Very Low",
     "buildingLossRate": 2.560918e-08,
     "buildingLossPerYear": 11073
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.8798985732e-05,
+    "buildingLossPerYear": 12452330
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 9.560129983e-06,
+    "buildingLossPerYear": 4133684
    }
   },
   "FL": {
@@ -304,6 +394,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 2.6863336704e-05,
     "buildingLossPerYear": 98112147
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.795145954e-06,
+    "buildingLossPerYear": 13860896
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.932364821e-06,
+    "buildingLossPerYear": 21666595
    }
   },
   "GA": {
@@ -334,6 +434,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 5.705149044e-06,
     "buildingLossPerYear": 12768850
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.4479030191e-05,
+    "buildingLossPerYear": 121931004
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.3009328425e-05,
+    "buildingLossPerYear": 51497806
    }
   },
   "HI": {
@@ -364,6 +474,16 @@
     "rating": "Relatively Moderate",
     "buildingLossRate": 0.000173285870544,
     "buildingLossPerYear": 44324441
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000640746087644,
+    "buildingLossPerYear": 163895141
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.60022773e-07,
+    "buildingLossPerYear": 40932
    }
   },
   "ID": {
@@ -394,6 +514,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.00037397493059,
     "buildingLossPerYear": 136542556
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000106200727612,
+    "buildingLossPerYear": 43527616
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 8.371219649e-06,
+    "buildingLossPerYear": 3431043
    }
   },
   "IL": {
@@ -424,6 +554,16 @@
     "rating": "Very Low",
     "buildingLossRate": 1.49069192e-07,
     "buildingLossPerYear": 449220
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 9.6478526114e-05,
+    "buildingLossPerYear": 290738234
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.6488059107e-05,
+    "buildingLossPerYear": 79821820
    }
   },
   "IN": {
@@ -454,6 +594,16 @@
     "rating": "Very Low",
     "buildingLossRate": 3.95081524e-07,
     "buildingLossPerYear": 608020
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 8.5156025855e-05,
+    "buildingLossPerYear": 131052892
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 3.0638612453e-05,
+    "buildingLossPerYear": 47152022
    }
   },
   "IA": {
@@ -484,6 +634,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 4.671810537e-06,
     "buildingLossPerYear": 3978022
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 7.07223765e-06,
+    "buildingLossPerYear": 6021974
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 6.4142635741e-05,
+    "buildingLossPerYear": 54617121
    }
   },
   "KS": {
@@ -514,6 +674,16 @@
     "rating": "Relatively Moderate",
     "buildingLossRate": 6.347291728e-05,
     "buildingLossPerYear": 47991862
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.056219567e-05,
+    "buildingLossPerYear": 7986074
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 9.9168186743e-05,
+    "buildingLossPerYear": 74981050
    }
   },
   "KY": {
@@ -544,6 +714,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 6.97892962e-06,
     "buildingLossPerYear": 5897175
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000157807025291,
+    "buildingLossPerYear": 149689248
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 6.4550837548e-05,
+    "buildingLossPerYear": 61230267
    }
   },
   "LA": {
@@ -574,6 +754,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 6.177372937e-06,
     "buildingLossPerYear": 5807735
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.8095323572e-05,
+    "buildingLossPerYear": 17012546
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.156457142e-05,
+    "buildingLossPerYear": 29675830
    }
   },
   "ME": {
@@ -604,6 +794,16 @@
     "rating": "Very Low",
     "buildingLossRate": 7.93298155e-07,
     "buildingLossPerYear": 224365
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.7882488755e-05,
+    "buildingLossPerYear": 12027259
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 9.248333706e-06,
+    "buildingLossPerYear": 2936241
    }
   },
   "MD": {
@@ -634,6 +834,16 @@
     "rating": "Very Low",
     "buildingLossRate": 1.895119607e-06,
     "buildingLossPerYear": 2201028
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.1266642371e-05,
+    "buildingLossPerYear": 36313667
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.0894382203e-05,
+    "buildingLossPerYear": 12652941
    }
   },
   "MA": {
@@ -664,6 +874,16 @@
     "rating": "Very Low",
     "buildingLossRate": 4.93144619e-07,
     "buildingLossPerYear": 705546
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.6075379733e-05,
+    "buildingLossPerYear": 65920399
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.0723117e-06,
+    "buildingLossPerYear": 1534165
    }
   },
   "MI": {
@@ -694,6 +914,16 @@
     "rating": "Very Low",
     "buildingLossRate": 9.22138686e-07,
     "buildingLossPerYear": 2126138
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.0433109802e-05,
+    "buildingLossPerYear": 24055196
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.3153470799e-05,
+    "buildingLossPerYear": 53384013
    }
   },
   "MN": {
@@ -724,6 +954,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 7.72340403e-06,
     "buildingLossPerYear": 11419776
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 7.10608529e-07,
+    "buildingLossPerYear": 1050701
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 6.5641285929e-05,
+    "buildingLossPerYear": 97056788
    }
   },
   "MS": {
@@ -754,6 +994,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 1.6692506288e-05,
     "buildingLossPerYear": 9948954
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000138490336016,
+    "buildingLossPerYear": 82542065
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 7.782203315e-05,
+    "buildingLossPerYear": 46382957
    }
   },
   "MO": {
@@ -784,6 +1034,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 4.585456256e-06,
     "buildingLossPerYear": 6773747
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000190117696695,
+    "buildingLossPerYear": 280846463
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 7.9320574532e-05,
+    "buildingLossPerYear": 117174272
    }
   },
   "MT": {
@@ -814,6 +1074,16 @@
     "rating": "Relatively Moderate",
     "buildingLossRate": 0.000257622146214,
     "buildingLossPerYear": 69403891
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000183701034973,
+    "buildingLossPerYear": 55555284
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.9634307935e-05,
+    "buildingLossPerYear": 5937852
    }
   },
   "NE": {
@@ -844,6 +1114,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 4.4181772271e-05,
     "buildingLossPerYear": 20355774
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.184348028e-06,
+    "buildingLossPerYear": 2388574
+   },
+   "hail": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000211559502239,
+    "buildingLossPerYear": 97471361
    }
   },
   "NV": {
@@ -874,6 +1154,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.000267387499338,
     "buildingLossPerYear": 149641168
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000389308859488,
+    "buildingLossPerYear": 244577347
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 7.487289852e-06,
+    "buildingLossPerYear": 4703776
    }
   },
   "NH": {
@@ -904,6 +1194,16 @@
     "rating": "Very Low",
     "buildingLossRate": 1.171437459e-06,
     "buildingLossPerYear": 341593
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.0078966322e-05,
+    "buildingLossPerYear": 14603087
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.4165808e-07,
+    "buildingLossPerYear": 99628
    }
   },
   "NJ": {
@@ -934,6 +1234,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 6.269635921e-06,
     "buildingLossPerYear": 12349299
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.4903459646e-05,
+    "buildingLossPerYear": 127840310
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.098177481e-06,
+    "buildingLossPerYear": 2163080
    }
   },
   "NM": {
@@ -964,6 +1274,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.000246277841041,
     "buildingLossPerYear": 108726605
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 8.8210228981e-05,
+    "buildingLossPerYear": 43716174
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.1345481025e-05,
+    "buildingLossPerYear": 10578623
    }
   },
   "NY": {
@@ -994,6 +1314,16 @@
     "rating": "Very Low",
     "buildingLossRate": 3.4906558e-07,
     "buildingLossPerYear": 1167689
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 4.5045458316e-05,
+    "buildingLossPerYear": 169153199
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.982115759e-06,
+    "buildingLossPerYear": 7443175
    }
   },
   "NC": {
@@ -1024,6 +1354,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 5.405826792e-06,
     "buildingLossPerYear": 12182113
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.404578469e-05,
+    "buildingLossPerYear": 76722692
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 1.5973763613e-05,
+    "buildingLossPerYear": 35997118
    }
   },
   "ND": {
@@ -1054,6 +1394,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 5.4908304155e-05,
     "buildingLossPerYear": 15138238
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.400890669e-06,
+    "buildingLossPerYear": 386226
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000163346581786,
+    "buildingLossPerYear": 45034708
    }
   },
   "OH": {
@@ -1084,6 +1434,16 @@
     "rating": "Very Low",
     "buildingLossRate": 4.76897177e-07,
     "buildingLossPerYear": 1274960
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.3602752197e-05,
+    "buildingLossPerYear": 63100734
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 3.5124253605e-05,
+    "buildingLossPerYear": 93902871
    }
   },
   "OK": {
@@ -1114,6 +1474,16 @@
     "rating": "Relatively Moderate",
     "buildingLossRate": 6.4253331612e-05,
     "buildingLossPerYear": 45888836
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.6081692464e-05,
+    "buildingLossPerYear": 25769043
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000156242935023,
+    "buildingLossPerYear": 111586532
    }
   },
   "OR": {
@@ -1144,6 +1514,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.000133987893283,
     "buildingLossPerYear": 120541716
+   },
+   "earthquake": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000721420296499,
+    "buildingLossPerYear": 728568615
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.720556252e-06,
+    "buildingLossPerYear": 2747513
    }
   },
   "PA": {
@@ -1174,6 +1554,16 @@
     "rating": "Very Low",
     "buildingLossRate": 4.62957395e-07,
     "buildingLossPerYear": 1255586
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.4657569348e-05,
+    "buildingLossPerYear": 105514621
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.468195455e-06,
+    "buildingLossPerYear": 10558886
    }
   },
   "RI": {
@@ -1204,6 +1594,16 @@
     "rating": "Very Low",
     "buildingLossRate": 1.78190392e-07,
     "buildingLossPerYear": 37961
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.8558345961e-05,
+    "buildingLossPerYear": 6084020
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.972766485e-06,
+    "buildingLossPerYear": 633313
    }
   },
   "SC": {
@@ -1234,6 +1634,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 1.1637144868e-05,
     "buildingLossPerYear": 13237600
+   },
+   "earthquake": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.00019772545939,
+    "buildingLossPerYear": 224918617
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.0099351653e-05,
+    "buildingLossPerYear": 11488314
    }
   },
   "SD": {
@@ -1264,6 +1674,16 @@
     "rating": "Relatively Moderate",
     "buildingLossRate": 0.000135457507925,
     "buildingLossPerYear": 40092116
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 6.602757717e-06,
+    "buildingLossPerYear": 1954255
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.3182419607e-05,
+    "buildingLossPerYear": 15740698
    }
   },
   "TN": {
@@ -1294,6 +1714,16 @@
     "rating": "Very Low",
     "buildingLossRate": 2.190032457e-06,
     "buildingLossPerYear": 2972803
+   },
+   "earthquake": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000314657422988,
+    "buildingLossPerYear": 427123527
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.1790286814e-05,
+    "buildingLossPerYear": 16004418
    }
   },
   "TX": {
@@ -1324,6 +1754,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 2.4120653227e-05,
     "buildingLossPerYear": 113749715
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.66065624e-06,
+    "buildingLossPerYear": 35260405
+   },
+   "hail": {
+    "rating": "Very High",
+    "buildingLossRate": 0.000142807176092,
+    "buildingLossPerYear": 755997415
    }
   },
   "UT": {
@@ -1354,6 +1794,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.000374342060676,
     "buildingLossPerYear": 187201464
+   },
+   "earthquake": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000732678088642,
+    "buildingLossPerYear": 411323746
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.869449635e-06,
+    "buildingLossPerYear": 1049505
    }
   },
   "VT": {
@@ -1384,6 +1834,16 @@
     "rating": "Very Low",
     "buildingLossRate": 6.965915e-07,
     "buildingLossPerYear": 108051
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.0483000226e-05,
+    "buildingLossPerYear": 5307859
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.51800648e-07,
+    "buildingLossPerYear": 61257
    }
   },
   "VA": {
@@ -1414,6 +1874,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 2.372231959e-06,
     "buildingLossPerYear": 3500193
+   },
+   "earthquake": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.5065768041e-05,
+    "buildingLossPerYear": 74643266
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 9.977462873e-06,
+    "buildingLossPerYear": 16525856
    }
   },
   "WA": {
@@ -1444,6 +1914,16 @@
     "rating": "Relatively High",
     "buildingLossRate": 0.000112536307823,
     "buildingLossPerYear": 164966000
+   },
+   "earthquake": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000968064265724,
+    "buildingLossPerYear": 1593057010
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.45062533e-07,
+    "buildingLossPerYear": 403278
    }
   },
   "WV": {
@@ -1474,6 +1954,16 @@
     "rating": "Very Low",
     "buildingLossRate": 4.715464407e-06,
     "buildingLossPerYear": 1897118
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.8161819705e-05,
+    "buildingLossPerYear": 7306832
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.8064751595e-05,
+    "buildingLossPerYear": 7267780
    }
   },
   "WI": {
@@ -1504,6 +1994,16 @@
     "rating": "Very Low",
     "buildingLossRate": 8.59397302e-07,
     "buildingLossPerYear": 1369582
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.656883314e-06,
+    "buildingLossPerYear": 5827806
+   },
+   "hail": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 7.3414510817e-05,
+    "buildingLossPerYear": 116997324
    }
   },
   "WY": {
@@ -1534,6 +2034,16 @@
     "rating": "Relatively Low",
     "buildingLossRate": 0.000174279789552,
     "buildingLossPerYear": 23221178
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.000131111031158,
+    "buildingLossPerYear": 19610364
+   },
+   "hail": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.5734207431e-05,
+    "buildingLossPerYear": 9831909
    }
   },
   "AS": {
@@ -1561,6 +2071,16 @@
     "buildingLossPerYear": 9100683
    },
    "wildfire": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.00047629492654,
+    "buildingLossPerYear": 3066687
+   },
+   "hail": {
     "rating": "Insufficient Data",
     "buildingLossRate": 0,
     "buildingLossPerYear": 0
@@ -1594,6 +2114,16 @@
     "rating": "Insufficient Data",
     "buildingLossRate": 0,
     "buildingLossPerYear": 0
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.000767573673,
+    "buildingLossPerYear": 20346681
+   },
+   "hail": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
    }
   },
   "MP": {
@@ -1621,6 +2151,16 @@
     "buildingLossPerYear": 0
    },
    "wildfire": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.000408408710531,
+    "buildingLossPerYear": 2934056
+   },
+   "hail": {
     "rating": "Insufficient Data",
     "buildingLossRate": 0,
     "buildingLossPerYear": 0
@@ -1654,6 +2194,16 @@
     "rating": "Insufficient Data",
     "buildingLossRate": 0,
     "buildingLossPerYear": 0
+   },
+   "earthquake": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000774847209736,
+    "buildingLossPerYear": 399608939
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.14839022e-07,
+    "buildingLossPerYear": 59225
    }
   },
   "VI": {
@@ -1684,6 +2234,16 @@
     "rating": "Insufficient Data",
     "buildingLossRate": 0,
     "buildingLossPerYear": 0
+   },
+   "earthquake": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.000624861668208,
+    "buildingLossPerYear": 14056456
+   },
+   "hail": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.9335426e-08,
+    "buildingLossPerYear": 660
    }
   }
  }

@@ -3,14 +3,14 @@ import { money } from '../../lib/format'
 import { ut } from '../../markets/us/copy'
 import { getState } from '../../markets/us/affordability'
 import { compareBuilds } from '../../markets/us/resilience/model'
-import { HAZARDS, abbrForFips, hurricaneLoss, mitigation, nriMeta, ratingLevel, stateRisk } from '../../markets/us/hazards/model'
+import { HAZARDS, abbrForFips, hazardLosses, mitigation, nriMeta, ratingLevel, stateRisk } from '../../markets/us/hazards/model'
 import { Indicative, InfoTip } from '../ui'
 import { track } from '../../lib/track'
 
 /**
  * "Climate risk" step (US): a state map shaded by FEMA's expected-annual-loss
  * rating for one hazard, the chosen state's ratings, and what a wind-resistant
- * build changes in expected hurricane loss. The map shapes load on demand.
+ * build changes in the expected loss from every hazard. The map shapes load on demand.
  */
 
 // Light → dark orange by rating; "not applicable" stays a pale neutral.
@@ -56,11 +56,12 @@ export default function ClimateRisk({ region, onRegionChange, build, onCompare }
     if (!r?.byId?.B || !r?.byId?.D) return null
     const valueOf = (c) => r.beyond?.byId?.[c.id]?.insuredValue || c.base.mid
     const resistant = r.byId.D.wall.hazard_fit?.hurricane === 'good'
-    const l = hurricaneLoss(picked, valueOf(r.byId.B), valueOf(r.byId.D), horizon, resistant)
-    return l && { ...l, horizon, premium: r.byId.D.upfront.mid - r.byId.B.upfront.mid, wall: r.byId.D.wall.short }
+    const l = hazardLosses(picked, valueOf(r.byId.B), valueOf(r.byId.D), horizon, resistant)
+    return l && l.rows.length > 0 && { ...l, strongForWind: resistant, horizon, premium: r.byId.D.upfront.mid - r.byId.B.upfront.mid, wall: r.byId.D.wall.short }
   }, [picked, supported, build.sqft, build.horizon, build.wallD])
 
   const pct = (x) => Math.round(x * 100)
+  const range = (v) => (v.low === v.high ? money(v.low) : `${money(v.low)}–${money(v.high)}`)
   const coastal = risk && ratingLevel(risk.coastalFlood.rating) != null
 
   return (
@@ -162,28 +163,41 @@ export default function ClimateRisk({ region, onRegionChange, build, onCompare }
           <h2 id="risk-loss-title" className="ds-section-title flex items-center gap-1.5">
             {ut('risk.loss.title', { state: risk.name })}
             <InfoTip label={ut('risk.loss.title', { state: risk.name })}>
-              {ut('risk.loss.method', { rate: (loss.rate * 100).toFixed(3), low: pct(loss.cut.low), high: pct(loss.cut.high) })}
+              {ut('risk.loss.method', { low: pct(loss.cut.low), high: pct(loss.cut.high) })}
             </InfoTip>
           </h2>
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[520px] text-sm">
+            <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-b border-line text-left text-xs text-muted">
-                  <th className="py-2 pr-3 font-medium" />
+                  <th className="py-2 pr-3 font-medium">{ut('risk.loss.perYear')}</th>
                   <th className="py-2 pr-3 font-medium">{ut('risk.loss.typical')}</th>
                   <th className="py-2 font-medium">{ut('risk.loss.resistant', { wall: loss.wall })}</th>
                 </tr>
               </thead>
               <tbody>
+                {loss.rows.filter((row) => row.typical >= 1).map((row) => (
+                  <tr key={row.hazard} className="border-b border-line">
+                    <th scope="row" className="py-2 pr-3 text-left font-normal text-body">
+                      {ut(`risk.hazard.${row.hazard}`)}
+                      <span className="block text-xs text-muted">{ut('risk.loss.ratingLine', { rating: ut(`risk.rating.${ratingLevel(row.rating) ?? 'na'}`) })}</span>
+                    </th>
+                    <td className="ds-figure py-2 pr-3 tabular-nums text-ink">{money(row.typical)}</td>
+                    <td className="py-2 text-ink">
+                      <span className="ds-figure tabular-nums">{row.reduced ? `${money(row.resistant.low)}–${money(row.resistant.high)}` : money(row.resistant.low)}</span>
+                      <span className="block text-xs text-muted">{row.reduced ? ut('risk.loss.reduced') : ut('risk.loss.notReduced')}</span>
+                    </td>
+                  </tr>
+                ))}
                 <tr className="border-b border-line">
-                  <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('risk.loss.perYear')}</th>
-                  <td className="ds-figure py-2 pr-3 tabular-nums text-ink">{money(loss.typical.perYear)}</td>
-                  <td className="ds-figure py-2 tabular-nums text-ink">{money(loss.resistant.perYear.low)}–{money(loss.resistant.perYear.high)}</td>
+                  <th scope="row" className="py-2 pr-3 text-left font-semibold text-ink">{ut('risk.loss.allPerYear')}</th>
+                  <td className="ds-figure py-2 pr-3 font-semibold tabular-nums text-ink">{money(loss.perYear.typical)}</td>
+                  <td className="ds-figure py-2 font-semibold tabular-nums text-ink">{range(loss.perYear.resistant)}</td>
                 </tr>
                 <tr className="border-b border-line">
-                  <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('risk.loss.overN', { n: loss.horizon })}</th>
-                  <td className="ds-figure py-2 pr-3 font-semibold tabular-nums text-ink">{money(loss.typical.total)}</td>
-                  <td className="ds-figure py-2 font-semibold tabular-nums text-ink">{money(loss.resistant.total.low)}–{money(loss.resistant.total.high)}</td>
+                  <th scope="row" className="py-2 pr-3 text-left font-semibold text-ink">{ut('risk.loss.overN', { n: loss.horizon })}</th>
+                  <td className="ds-figure py-2 pr-3 font-semibold tabular-nums text-ink">{money(loss.total.typical)}</td>
+                  <td className="ds-figure py-2 font-semibold tabular-nums text-ink">{range(loss.total.resistant)}</td>
                 </tr>
                 <tr>
                   <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('risk.loss.extra')}</th>
@@ -193,8 +207,8 @@ export default function ClimateRisk({ region, onRegionChange, build, onCompare }
               </tbody>
             </table>
           </div>
-          {!loss.resistantApplied && <p className="mt-2 text-sm text-body">{ut('risk.loss.pickStrongWall')}</p>}
-          <p className="mt-3 text-sm text-body">{ut('risk.loss.bcr', { ratio: mitigation.above_code_bcr.hurricane_wind })}</p>
+          {!loss.strongForWind && loss.rows.some((x) => x.hazard === 'hurricane' && ratingLevel(x.rating) >= 2) && <p className="mt-2 text-sm text-body">{ut('risk.loss.pickStrongWall')}</p>}
+          {loss.rows.some((x) => x.reduced) && <p className="mt-3 text-sm text-body">{ut('risk.loss.bcr', { ratio: mitigation.above_code_bcr.hurricane_wind })}</p>}
           <Indicative>{ut('risk.loss.note')}</Indicative>
           <p className="mt-1 text-xs text-muted">
             {ut('build.beyond.sources')}:{' '}
