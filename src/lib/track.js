@@ -37,6 +37,7 @@ import { track as vercelTrack } from '@vercel/analytics'
  * - build_explorer_opened     { step }  How to Build for Climate Change opened.
  * - build_step_viewed         { step: 'look' | 'risk' | 'options' | 'compare' | 'plan' }
  * - risk_state_picked         { state }  state picked on the climate risk map.
+ * - build_planned             { wall }  "Plan this build" on Compare builds.
  *                             once per step per load.
  * - compare_scenario_selected { scenario }  scenario id in Compare.
  * - learn_toast               { action: 'dismissed' | 'link' }

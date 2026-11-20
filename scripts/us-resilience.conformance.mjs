@@ -14,6 +14,8 @@ import home from '../src/markets/us/us-home-data.json' with { type: 'json' }
 import usData from '../src/markets/us/us-data.json' with { type: 'json' }
 import { HAZARDS, ratingLevel, stateRisk, abbrForFips, hurricaneLossCut, hurricaneLoss, hazardLosses } from '../src/markets/us/hazards/model.js'
 import nri from '../src/markets/us/hazards/nri-states.json' with { type: 'json' }
+import { swissBrief, swissBuildPath } from '../src/markets/us/buildPath.js'
+import bpData from '../src/markets/us/build-path.json' with { type: 'json' }
 import { encodeState, decodeState } from '../src/lib/share.js'
 
 let pass = 0
@@ -201,6 +203,23 @@ check('bad horizon → 30', compareBuilds({ stateCode: 'CO', mode: 'size', sqft:
   const beToday = today.payback.bToD.breakEven
   check('today\u2019s money needs a higher rise (or never)', beToday.verdict === 'never' || (beToday.verdict === 'at' && beToday.pct > be50.pct))
   check('today\u2019s money: reference saving matches the main comparison', near(today.payback.bToD.paths[1].saved, today.bVsD.energySaved, 2))
+}
+
+// ── 7f. Idea to keys: the Swiss-grade build brief and path ─────────────────────
+{
+  const brief = swissBrief({ state: 'FL', sqft: 2000, horizon: 30 })
+  check('FL brief: ICF wall, triple-pane, ERV + heat pump', brief.wall.id === 'icf' && brief.windows === 'triple' && brief.systems.includes('erv') && brief.systems.includes('heatpump'))
+  check('brief premium and energy saved match the comparison', (() => { const r = compareBuilds({ stateCode: 'FL', mode: 'size', sqft: 2000, horizon: 30 }); return brief.premium === r.bVsD.premium && brief.energySaved === r.bVsD.energySaved })())
+  check('FL brief plans for hurricane (rated relatively high or above)', brief.topRisks.some((x) => x.hazard === 'hurricane'))
+  const steps = swissBuildPath(brief)
+  check('seven steps, in order', steps.map((x) => x.id).join() === 'feasibility,land,team,design,materials,bids,verify')
+  check('every step links to at least one directory', steps.every((x) => x.links.length > 0 && x.links.every((l) => l && l.url.startsWith('https://'))))
+  check('FL: FORTIFIED in design, flood map + NOAA on land', steps.find((x) => x.id === 'design').links.some((l) => l.url.includes('fortified')) && steps.find((x) => x.id === 'land').links.length === 2)
+  check('ICF wall links its manufacturers association', steps.find((x) => x.id === 'materials').links.some((l) => l.url.includes('icf-ma')))
+  const co = swissBuildPath(swissBrief({ state: 'CO', sqft: 2000 }))
+  check('CO: FORTIFIED for hail (relatively high), no NOAA (inland)', co.flatMap((x) => x.links).some((l) => l.url.includes('fortified')) && !co.flatMap((x) => x.links).some((l) => l.url.includes('noaa')))
+  check('no firm named: every link is a directory or reference in build-path.json', steps.flatMap((x) => x.links).every((l) => Object.values(bpData.links).includes(l)))
+  check('unknown state → no brief, no steps', swissBrief({ state: 'ZZ' }) === null && swissBuildPath(null).length === 0)
 }
 
 // ── 8. Share-link round trip ────────────────────────────────────────────────

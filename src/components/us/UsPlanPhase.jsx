@@ -4,6 +4,7 @@ import { buildUsActionPlan } from '../../markets/us/plan'
 import { ut } from '../../markets/us/copy'
 import { selectedUsMeasures } from './UsOptionsPhase'
 import { track, trackOutbound } from '../../lib/track'
+import BuildPath from './BuildPath'
 
 /** US Phase 5 — personalised action plan. Steps come from src/markets/us/plan.js. */
 
@@ -14,7 +15,7 @@ const TONE = {
   default: 'border-slate-200 bg-white',
 }
 
-export default function UsPlanPhase({ result, explore, region, shareUrl }) {
+export default function UsPlanPhase({ result, explore, region, shareUrl, build }) {
   const [copied, setCopied] = useState(false)
   const budget = num(explore.budget) || result.maxPrice
   const steps = buildUsActionPlan({
@@ -54,6 +55,8 @@ export default function UsPlanPhase({ result, explore, region, shareUrl }) {
           </p>
         </div>
       </section>
+
+      {explore.chosenOption === 'build' && <BuildPath region={region} build={build} />}
 
       <ol className="space-y-4">
         {steps.map((s, i) => (

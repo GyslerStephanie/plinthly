@@ -303,7 +303,7 @@ function Payback({ payback, horizon, todayMoney, discountPct }) {
   )
 }
 
-export default function ResilienceExplore({ build, onChange, region, onRegionChange, shareUrl }) {
+export default function ResilienceExplore({ build, onChange, region, onRegionChange, shareUrl, onPlanBuild }) {
   const [copied, setCopied] = useState(false)
   const set = (patch) => onChange({ ...build, ...patch })
   const st = region ? getState(region) : null
@@ -360,6 +360,11 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
             </p>
             {result.energyGapAtoD != null && (
               <p className="mt-1 text-sm text-body">{ut('build.summary.gap', { amount: money(result.energyGapAtoD), n: horizon })}</p>
+            )}
+            {onPlanBuild && (
+              <button type="button" onClick={onPlanBuild} className="mt-3 rounded-full bg-teal-700 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800">
+                {ut('buildPath.planThis')}
+              </button>
             )}
           </section>
         )}
