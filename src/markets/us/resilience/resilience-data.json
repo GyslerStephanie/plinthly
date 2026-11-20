@@ -614,5 +614,36 @@
     "https://database.passivehouse.com/",
     "https://phius.org/find-professional",
     "https://research-hub.nrel.gov/en/publications/measure-guideline-incorporating-thick-layers-of-exterior-rigid-in/"
-  ]
+  ],
+  "beyond_energy": {
+    "notes": "Holistic comparison beyond energy (phase 2, first slice). Ratings are qualitative and come from fields already on each wall assembly (hazard_fit, noncombustible, vapour_open) plus the archetype's systems. Insurance uses the state's average rate from us-data.json (insurance_rate_pct of dwelling value), applied to each house's build or replacement cost and held flat over the horizon. No dollar figure is shown for a hardening discount: programmes and amounts vary by insurer and state, so the row only says whether the house may qualify.",
+    "moisture_rule": {
+      "description": "Rule of thumb: a wall that can dry outward (vapour-open) and a house with balanced mechanical ventilation (ERV) both lower moisture and mould risk. Two of two = low, one = moderate, none = higher.",
+      "levels": {
+        "2": "low",
+        "1": "moderate",
+        "0": "higher"
+      },
+      "sources": [
+        "https://www.buildingscience.com/documents/insights/bsi-001-the-perfect-wall"
+      ]
+    },
+    "insurer_discount": {
+      "qualifies_if_good": [
+        "hurricane",
+        "hail",
+        "wildfire"
+      ],
+      "sources": [
+        "https://fortifiedhome.org/"
+      ]
+    },
+    "hazard_sources": [
+      "https://fortifiedhome.org/",
+      "https://hazards.fema.gov/nri/"
+    ],
+    "insurance_sources": [
+      "https://www.nerdwallet.com/insurance/homeowners/learn/average-homeowners-insurance-cost"
+    ]
+  }
 }

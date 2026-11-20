@@ -6,10 +6,12 @@
 import {
   WALLS, ARCHETYPES, PRICE_PATHS, HORIZONS, getWall, defaultWallFor, geometry, escalationFor,
   energyPath, baseBuildCost, envelopePremium, archetypeColumn, sqftForBudget, compareBuilds,
+  breakEven, pathsSideBySide, beyondEnergy, moistureRisk,
 } from '../src/markets/us/resilience/model.js'
 import { annualEnergyCost } from '../src/markets/us/home.js'
 import rd from '../src/markets/us/resilience/resilience-data.json' with { type: 'json' }
 import home from '../src/markets/us/us-home-data.json' with { type: 'json' }
+import usData from '../src/markets/us/us-data.json' with { type: 'json' }
 import { encodeState, decodeState } from '../src/lib/share.js'
 
 let pass = 0
@@ -109,6 +111,46 @@ check('invalid wall override falls back to climate default', compareBuilds({ sta
 check('retrofit ordering puts A, C first', compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, retrofit: true }).columns[0].id === 'A')
 check('unknown state → null', compareBuilds({ stateCode: 'ZZ', mode: 'size', sqft: 2000 }) === null)
 check('bad horizon → 30', compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 17 }).horizon === 30)
+
+// ── 7b. Payback: break-even escalation and the three price paths ───────────
+{
+  const h = 30
+  const r = compareBuilds({ stateCode: 'NY', mode: 'size', sqft: 2000, horizon: h, pricePath: 'ref' })
+  const be = r.payback.bToD.breakEven
+  check('break-even found for NY Swiss-grade at 30 yrs', be.verdict === 'at' && be.pct > -10 && be.pct < 20, JSON.stringify(be))
+  // At the break-even rise, the energy saved over the horizon equals the premium.
+  const g = be.pct / 100
+  const factor = Math.abs(g) < 1e-9 ? h : (Math.pow(1 + g, h) - 1) / g
+  check('saving at break-even ≈ premium', near(be.annualSaving * factor, be.premium, be.premium * 0.01 + 50), `${be.annualSaving * factor} vs ${be.premium}`)
+  const paths = r.payback.bToD.paths
+  check('three price paths, low → high', paths.map((p) => p.id).join() === 'low,ref,high')
+  check('saving grows with the price path', paths[0].saved < paths[1].saved && paths[1].saved < paths[2].saved)
+  check('reference path matches the main comparison', near(paths[1].saved, r.bVsD.energySaved, 2))
+  check('paysBack agrees with break-even', paths.every((p) => p.paysBack === (p.escalationPct >= be.pct - 0.05)))
+  check('longer horizon lowers the break-even', compareBuilds({ stateCode: 'NY', mode: 'size', sqft: 2000, horizon: 20 }).payback.bToD.breakEven.pct > be.pct)
+  check('10 yrs in CO: never pays back on energy alone', compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 10 }).payback.bToD.breakEven.verdict === 'never')
+  check('same budget (no premium) → always', compareBuilds({ stateCode: 'CO', mode: 'budget', budget: 500000, horizon: 30 }).payback.bToD.breakEven.verdict === 'always')
+  check('retrofit pair present', r.payback.aToC && r.payback.aToC.breakEven && r.payback.aToC.paths.length === 3)
+  check('breakEven null-safe', breakEven(null, null, 30) === null && pathsSideBySide(null, null, 30) === null)
+}
+
+// ── 7c. Beyond energy: hazards, moisture, insurance ──────────────────────────
+{
+  const r = compareBuilds({ stateCode: 'FL', mode: 'size', sqft: 2000, horizon: 30, pricePath: 'ref' })
+  const b = r.beyond
+  check('beyond present for every column', b && r.columns.every((c) => b.byId[c.id]))
+  check('ICF Swiss-grade in FL: hurricane strong, fire-safe', b.byId.D.hazards.hurricane === 'good' && b.byId.D.fire === 'good')
+  check('older home: weak on every hazard', Object.values(b.byId.A.hazards).every((v) => v === 'poor'))
+  check('moisture rule: vapour-open + ERV = low', moistureRisk({ vapour_open: true }, ['erv']) === 'low')
+  check('moisture rule: one of two = moderate', moistureRisk({ vapour_open: false }, ['erv']) === 'moderate' && moistureRisk({ vapour_open: true }, []) === 'moderate')
+  check('moisture rule: none = higher', moistureRisk({ vapour_open: false }, []) === 'higher')
+  const rate = usData.states.FL.insurance_rate_pct
+  check('insurance = state rate × value × years', near(b.byId.B.insurance, Math.round((b.byId.B.insuredValue * rate) / 100) * 30, 1))
+  check('older home insured on base cost', b.byId.A.insuredValue === Math.round(r.byId.A.base.mid))
+  check('total with insurance = TCO + insurance', r.columns.every((c) => b.byId[c.id].totalWithInsurance === c.tco.mid + b.byId[c.id].insurance))
+  check('discount: ICF may qualify, code-built not', b.byId.D.mayQualifyDiscount && !b.byId.B.mayQualifyDiscount)
+  check('unknown state → beyondEnergy null', beyondEnergy(r.columns, 'ZZ', 30) === null)
+}
 
 // ── 8. Share-link round trip ────────────────────────────────────────────────
 const enc = encodeState({ market: 'us', canton: 'CO', buildOpen: '1', buildMode: 'budget', buildSqft: '2,000', buildBudget: '500,000', buildStoreys: '1', buildHorizon: '20', buildPath: 'high', buildWallD: 'icf', buildRetrofit: '1' })
