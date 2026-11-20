@@ -257,7 +257,10 @@ function LenderStretch({ r }) {
   const st = r.stretch
   return (
     <div className="mt-4 rounded-lg border border-line bg-surface px-4 py-3">
-      <p className="ds-eyebrow text-[11px] text-muted">{ut('result.stretch.title')}</p>
+      <p className="ds-eyebrow flex items-center gap-1.5 text-[11px] text-muted">
+        {ut('result.stretch.title')}
+        <InfoTip label={ut('result.stretch.title')}>{ut('result.stretch.caution')}</InfoTip>
+      </p>
       {st.moreThanComfortable ? (
         <>
           <p className="mt-1 text-sm font-semibold text-ink">
@@ -275,7 +278,6 @@ function LenderStretch({ r }) {
             })}
           </p>
           {st.cashLimited && <p className="mt-1 text-sm text-body">{ut('result.stretch.cashLimited')}</p>}
-          <p className="mt-2 text-xs text-muted">{ut('result.stretch.caution')}</p>
         </>
       ) : (
         <p className="mt-1 text-sm text-body">{ut('result.stretch.cashLimited')}</p>
@@ -361,18 +363,23 @@ function UsResult({ result: r }) {
           <Row label={ut('result.pi')} value={money(mc.principalAndInterest)} />
           <Row label={ut('result.tax')} value={money(mc.propertyTax)} />
           <Row label={ut('result.insurance')} value={money(mc.insurance)} />
-          {mc.pmi > 0 && <Row label={ut('result.pmi')} value={money(mc.pmi)} />}
+          {mc.pmi > 0 && (
+            <Row
+              label={
+                <span className="inline-flex items-center gap-1.5">
+                  {ut('result.pmi')}
+                  {r.flags.pmi && <InfoTip label={ut('result.pmi')}>{ut('result.pmiNote', { rate: r.flags.pmiRatePct })}</InfoTip>}
+                </span>
+              }
+              value={money(mc.pmi)}
+            />
+          )}
           {mc.hoa > 0 && <Row label={ut('result.hoa')} value={money(mc.hoa)} />}
           <Row label={ut('result.total')} value={`${money(mc.total)}/mo`} strong />
         </div>
         <p className="mt-3 text-sm text-body">
           {ut('result.ratios', { housing: pct1(r.ratios.housing), debt: pct1(r.ratios.debt) })}
         </p>
-        {r.flags.pmi && (
-          <p className="mt-3 rounded-lg bg-surface px-3 py-2 text-xs leading-relaxed text-body">
-            {ut('result.pmiNote', { rate: r.flags.pmiRatePct })}
-          </p>
-        )}
         {r.flags.jumbo && (
           <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
             {ut('result.jumbo', { limit: money(r.flags.conformingBaseline), high: money(r.flags.conformingHighCost) })}
