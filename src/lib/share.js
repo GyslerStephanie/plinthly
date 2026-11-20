@@ -41,10 +41,11 @@ const KEYS = [
   ['bs', 'buildSqft'],
   ['bb', 'buildBudget'],
   ['bz', 'buildStoreys'], // '1' | '2'
-  ['bh', 'buildHorizon'], // 10 | 20 | 30
+  ['bh', 'buildHorizon'], // 10 | 20 | 30 | 50
   ['bp', 'buildPath'], // 'ref' | 'high' | 'low' | a custom % number
   ['bw', 'buildWallD'], // wall id override for archetype D
   ['br', 'buildRetrofit'], // '1' = I own the house (retrofit framing)
+  ['bv', 'buildTodayMoney'], // '1' = totals in today's money (discounted)
 ]
 
 // Numeric inputs are displayed with thousands separators (e.g. "1,250,000").
