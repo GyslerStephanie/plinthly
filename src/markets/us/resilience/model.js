@@ -19,7 +19,8 @@ export const RESILIENCE_METHODOLOGY = 1
 export const WALLS = rd.wall_assemblies
 export const ARCHETYPES = rd.archetypes
 export const PRICE_PATHS = rd.price_paths
-export const HORIZONS = [10, 20, 30]
+export const HORIZONS = [10, 20, 30, 50]
+export const TODAY_MONEY_PCT = rd.today_money.discount_pct
 export const resilienceData = rd
 
 const R = market.mortgage_rules
@@ -61,18 +62,20 @@ export function escalationFor(pricePath) {
 }
 
 /** Energy per year over the horizon under a price path, plus the cumulative total. */
-export function energyPath(stateCode, sqft, hers, horizon, pricePath) {
+export function energyPath(stateCode, sqft, hers, horizon, pricePath, discountPct = 0) {
   const annual = annualEnergyCost(stateCode, sqft, hers)
   if (annual == null) return null
   const g = escalationFor(pricePath)
+  const d = discountPct / 100
   const years = []
   let cumulative = 0
   for (let y = 1; y <= horizon; y++) {
     const v = annual * Math.pow(1 + g, y - 1)
-    cumulative += v
+    // Year-by-year bills stay nominal; the total is in today's money when d > 0.
+    cumulative += v / Math.pow(1 + d, y - 1)
     years.push(Math.round(v))
   }
-  return { annualNow: Math.round(annual), annualExact: annual, years, cumulative: Math.round(cumulative), escalationPct: g * 100 }
+  return { annualNow: Math.round(annual), annualExact: annual, years, cumulative: Math.round(cumulative), escalationPct: g * 100, discountPct }
 }
 
 /** Base construction cost band for the state (existing data, land excluded). */
@@ -141,17 +144,17 @@ export function envelopePremium(stateCode, sqft, storeys, archetypeId, wallId) {
  * total cost of ownership. `sqft` is the house being compared; for a retrofit
  * (A, C) there is no build cost, only the premium for C.
  */
-export function archetypeColumn(stateCode, sqft, storeys, horizon, pricePath, archetypeId, wallId) {
+export function archetypeColumn(stateCode, sqft, storeys, horizon, pricePath, archetypeId, wallId, discountPct = 0) {
   const a = getArchetype(archetypeId)
   const prem = envelopePremium(stateCode, sqft, storeys, archetypeId, wallId)
   const base = baseBuildCost(stateCode, sqft)
-  const energy = a ? energyPath(stateCode, sqft, a.hers, horizon, pricePath) : null
+  const energy = a ? energyPath(stateCode, sqft, a.hers, horizon, pricePath, discountPct) : null
   if (!a || !prem || !base || !energy) return null
   const upfront = a.new_build ? add(base, prem.total) : prem.total
   // Maintenance on the home's value; build cost stands in for value (land excluded),
   // the same for every column so the comparison is driven by envelope and energy.
   const maintenanceAnnual = (base.mid * R.maintenance_pct_of_value) / 100
-  const maintenance = Math.round(maintenanceAnnual * horizon)
+  const maintenance = Math.round(maintenanceAnnual * growthFactor(0, horizon, discountPct / 100))
   const tco = { low: upfront.low + energy.cumulative + maintenance, mid: upfront.mid + energy.cumulative + maintenance, high: upfront.high + energy.cumulative + maintenance }
   const C = homeData.certified_homes
   return {
@@ -200,10 +203,14 @@ export function sqftForBudget(stateCode, budget, storeys, archetypeId, wallId) {
   return Math.round(lo)
 }
 
-/** Sum of (1+g)^k for k = 0..h-1: a first-year bill grown at g, over h years. */
-function growthFactor(g, h) {
-  if (Math.abs(g) < 1e-9) return h
-  return (Math.pow(1 + g, h) - 1) / g
+/**
+ * Sum of ((1+g)/(1+d))^k for k = 0..h-1: a first-year bill grown at g over h
+ * years, each year discounted at d (d = 0: plain dollars).
+ */
+function growthFactor(g, h, d = 0) {
+  const q = (1 + g) / (1 + d)
+  if (Math.abs(q - 1) < 1e-12) return h
+  return (Math.pow(q, h) - 1) / (q - 1)
 }
 
 /** First-year energy bill of a column, unrounded when available. */
@@ -221,7 +228,8 @@ const BREAKEVEN_MAX = 0.2
  *   'always' = pays back even if prices fall 10% a year; 'never' = not even at
  *   20% a year; 'none' = no extra cost or no saving to compare.
  */
-export function breakEven(cheaper, better, horizon) {
+export function breakEven(cheaper, better, horizon, discountPct = 0) {
+  const d = discountPct / 100
   if (!cheaper || !better || !cheaper.energy || !better.energy) return null
   const premium = better.upfront.mid - cheaper.upfront.mid
   const exactSaving = yearOne(cheaper) - yearOne(better)
@@ -229,13 +237,13 @@ export function breakEven(cheaper, better, horizon) {
   if (!(exactSaving > 0)) return { premium, annualSaving, pct: null, verdict: 'none' }
   if (premium <= 0) return { premium, annualSaving, pct: null, verdict: 'always' }
   const need = premium / exactSaving
-  if (growthFactor(BREAKEVEN_MIN, horizon) >= need) return { premium, annualSaving, pct: null, verdict: 'always' }
-  if (growthFactor(BREAKEVEN_MAX, horizon) < need) return { premium, annualSaving, pct: null, verdict: 'never' }
+  if (growthFactor(BREAKEVEN_MIN, horizon, d) >= need) return { premium, annualSaving, pct: null, verdict: 'always' }
+  if (growthFactor(BREAKEVEN_MAX, horizon, d) < need) return { premium, annualSaving, pct: null, verdict: 'never' }
   let lo = BREAKEVEN_MIN
   let hi = BREAKEVEN_MAX
   for (let i = 0; i < 60; i++) {
     const m = (lo + hi) / 2
-    if (growthFactor(m, horizon) >= need) hi = m
+    if (growthFactor(m, horizon, d) >= need) hi = m
     else lo = m
   }
   return { premium, annualSaving, pct: Math.round(hi * 1000) / 10, verdict: 'at' }
@@ -246,11 +254,11 @@ export function breakEven(cheaper, better, horizon) {
  * over the horizon for both houses, the saving, and whether it covers the
  * extra up-front cost.
  */
-export function pathsSideBySide(cheaper, better, horizon) {
+export function pathsSideBySide(cheaper, better, horizon, discountPct = 0) {
   if (!cheaper || !better || !cheaper.energy || !better.energy) return null
   const premium = better.upfront.mid - cheaper.upfront.mid
   return ['low', 'ref', 'high'].map((id) => {
-    const f = growthFactor(escalationFor(id), horizon)
+    const f = growthFactor(escalationFor(id), horizon, discountPct / 100)
     const a = Math.round(yearOne(cheaper) * f)
     const b = Math.round(yearOne(better) * f)
     return { id, label: rd.price_paths[id].label, escalationPct: rd.price_paths[id].escalation_pct, cheaperEnergy: a, betterEnergy: b, saved: a - b, premium, paysBack: a - b >= premium }
@@ -262,7 +270,7 @@ export function pathsSideBySide(cheaper, better, horizon) {
  * 'budget': new builds sized to the budget (the "same budget, smaller and
  * better" scenario); retrofit columns use the code-built house's size.
  */
-export function compareBuilds({ stateCode, mode = 'size', sqft, budget, storeys = 2, horizon = 30, pricePath = 'ref', wallD, retrofit = false }) {
+export function compareBuilds({ stateCode, mode = 'size', sqft, budget, storeys = 2, horizon = 30, pricePath = 'ref', wallD, retrofit = false, todayMoney = false }) {
   if (!stateHome(stateCode)) return null
   const h = HORIZONS.includes(Number(horizon)) ? Number(horizon) : 30
   const st = Number(storeys) === 1 ? 1 : 2
@@ -279,10 +287,12 @@ export function compareBuilds({ stateCode, mode = 'size', sqft, budget, storeys 
   }
   if (!(refSqft > 0)) return null
   const ids = retrofit ? ['A', 'C', 'B', 'D'] : ['B', 'D', 'A', 'C']
+  // 'In today's money': future energy and maintenance discounted (data: today_money).
+  const dPct = todayMoney ? TODAY_MONEY_PCT : 0
   const columns = ids
     .map((id) => {
       const s = sized && sized[id] ? sized[id] : refSqft
-      return archetypeColumn(stateCode, s, st, h, pricePath, id, id === 'D' ? wallForD : undefined)
+      return archetypeColumn(stateCode, s, st, h, pricePath, id, id === 'D' ? wallForD : undefined, dPct)
     })
     .filter(Boolean)
   const byId = Object.fromEntries(columns.map((c) => [c.id, c]))
@@ -295,6 +305,8 @@ export function compareBuilds({ stateCode, mode = 'size', sqft, budget, storeys 
     storeys: st,
     pricePath,
     escalationPct: escalationFor(pricePath) * 100,
+    todayMoney: !!todayMoney,
+    discountPct: dPct,
     refSqft,
     budget: mode === 'budget' ? budget : null,
     sized,
@@ -310,8 +322,8 @@ export function compareBuilds({ stateCode, mode = 'size', sqft, budget, storeys 
     } : null,
     // Does the extra cost pay back on energy alone, and how do the price paths compare?
     payback: {
-      bToD: byId.B && byId.D ? { breakEven: breakEven(byId.B, byId.D, h), paths: pathsSideBySide(byId.B, byId.D, h) } : null,
-      aToC: byId.A && byId.C ? { breakEven: breakEven(byId.A, byId.C, h), paths: pathsSideBySide(byId.A, byId.C, h) } : null,
+      bToD: byId.B && byId.D ? { breakEven: breakEven(byId.B, byId.D, h, dPct), paths: pathsSideBySide(byId.B, byId.D, h, dPct) } : null,
+      aToC: byId.A && byId.C ? { breakEven: breakEven(byId.A, byId.C, h, dPct), paths: pathsSideBySide(byId.A, byId.C, h, dPct) } : null,
     },
     // Beyond energy: hazards, fire, moisture, insurance and the total with insurance.
     beyond: beyondEnergy(columns, stateCode, h),

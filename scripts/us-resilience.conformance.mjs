@@ -6,7 +6,7 @@
 import {
   WALLS, ARCHETYPES, PRICE_PATHS, HORIZONS, getWall, defaultWallFor, geometry, escalationFor,
   energyPath, baseBuildCost, envelopePremium, archetypeColumn, sqftForBudget, compareBuilds,
-  breakEven, pathsSideBySide, beyondEnergy, moistureRisk,
+  breakEven, pathsSideBySide, beyondEnergy, moistureRisk, TODAY_MONEY_PCT,
 } from '../src/markets/us/resilience/model.js'
 import { annualEnergyCost } from '../src/markets/us/home.js'
 import rd from '../src/markets/us/resilience/resilience-data.json' with { type: 'json' }
@@ -44,7 +44,7 @@ check('HERS falls A → B → D', (() => { const h = Object.fromEntries(ARCHETYP
 check('A HERS = dataset typical existing', ARCHETYPES.find((a) => a.id === 'A').hers === home.hers.typical_existing)
 check('every state has a climate bucket', STATES.every((s) => ['cold', 'mixed', 'hot'].includes(rd.state_climate[s])))
 check('three price paths with sources', ['ref', 'high', 'low'].every((p) => typeof PRICE_PATHS[p].escalation_pct === 'number') && rd.price_paths.sources.length > 0)
-check('horizons 10/20/30', HORIZONS.join(',') === '10,20,30')
+check('horizons 10/20/30/50', HORIZONS.join(',') === '10,20,30,50')
 
 // ── 2. Geometry and defaults ────────────────────────────────────────────────
 eq('two-storey wall area = 0.9 × floor', geometry(2000, 2).wallSqft, 1800, 0)
@@ -184,10 +184,29 @@ check('bad horizon → 30', compareBuilds({ stateCode: 'CO', mode: 'size', sqft:
   check('unknown state → null', hazardLosses('ZZ', 1, 1, 30) === null)
 }
 
+// ── 7e. 50-year horizon and today's money ───────────────────────────────────
+{
+  check('50 years is a horizon', HORIZONS.includes(50) && compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 50 }).horizon === 50)
+  const plain = compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 50, pricePath: 'ref' })
+  const today = compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 50, pricePath: 'ref', todayMoney: true })
+  check('discount rate comes from data', TODAY_MONEY_PCT === rd.today_money.discount_pct && today.discountPct === TODAY_MONEY_PCT && plain.discountPct === 0)
+  check('today\u2019s money lowers energy and maintenance, not up-front', today.byId.B.energy.cumulative < plain.byId.B.energy.cumulative && today.byId.B.maintenance < plain.byId.B.maintenance && today.byId.B.upfront.mid === plain.byId.B.upfront.mid)
+  check('year-by-year bills stay nominal', today.byId.B.energy.years[49] === plain.byId.B.energy.years[49])
+  // Discounting at the same rate prices rise cancels out: each year counts as year one.
+  const flat = compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 30, pricePath: TODAY_MONEY_PCT, todayMoney: true })
+  check('growth = discount → horizon × first-year bill', near(flat.byId.B.energy.cumulative, flat.byId.B.energy.annualExact * 30, 2))
+  const be50 = plain.payback.bToD.breakEven
+  const be30 = compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 30 }).payback.bToD.breakEven
+  check('50 yrs needs a lower rise than 30 yrs', be50.verdict === 'at' && be30.verdict === 'at' && be50.pct < be30.pct)
+  const beToday = today.payback.bToD.breakEven
+  check('today\u2019s money needs a higher rise (or never)', beToday.verdict === 'never' || (beToday.verdict === 'at' && beToday.pct > be50.pct))
+  check('today\u2019s money: reference saving matches the main comparison', near(today.payback.bToD.paths[1].saved, today.bVsD.energySaved, 2))
+}
+
 // ── 8. Share-link round trip ────────────────────────────────────────────────
-const enc = encodeState({ market: 'us', canton: 'CO', buildOpen: '1', buildMode: 'budget', buildSqft: '2,000', buildBudget: '500,000', buildStoreys: '1', buildHorizon: '20', buildPath: 'high', buildWallD: 'icf', buildRetrofit: '1' })
+const enc = encodeState({ market: 'us', canton: 'CO', buildOpen: '1', buildMode: 'budget', buildSqft: '2,000', buildBudget: '500,000', buildStoreys: '1', buildHorizon: '20', buildPath: 'high', buildWallD: 'icf', buildRetrofit: '1', buildTodayMoney: '1' })
 const dec = decodeState(enc)
-check('build keys survive the hash', dec.buildOpen === '1' && dec.buildMode === 'budget' && dec.buildSqft === '2000' && dec.buildBudget === '500000' && dec.buildStoreys === '1' && dec.buildHorizon === '20' && dec.buildPath === 'high' && dec.buildWallD === 'icf' && dec.buildRetrofit === '1')
+check('build keys survive the hash', dec.buildOpen === '1' && dec.buildMode === 'budget' && dec.buildSqft === '2000' && dec.buildBudget === '500000' && dec.buildStoreys === '1' && dec.buildHorizon === '20' && dec.buildPath === 'high' && dec.buildWallD === 'icf' && dec.buildRetrofit === '1' && dec.buildTodayMoney === '1')
 check('mk still first in the hash', enc.startsWith('mk=us'))
 
 console.log(`us-resilience conformance: ${pass} passed, ${fail} failed`)
