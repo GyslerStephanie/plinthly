@@ -10,7 +10,7 @@ import {
 import { getCanton, eigenmietwert } from '../lib/cantons'
 import { useI18n } from '../i18n/I18nContext'
 import { T, renderRich } from './Trans'
-import Collapsible from './Collapsible'
+import Collapsible, { CollapsibleGroup } from './Collapsible'
 import MortgagePayoffPanel from './MortgagePayoffPanel'
 import PathToGoal from './PathToGoal'
 import Levers from './Levers'
@@ -412,6 +412,62 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         </Card>
       )}
 
+      {/* Mortgage over time — payoff timeline, interest, retirement re-test */}
+      {result.maxPrice > 0 && (
+        <MortgagePayoffPanel
+          price={result.maxPrice}
+          mortgage={dp.mortgage}
+          income={result.inputs.grossIncome}
+        />
+      )}
+
+      {/* What would change this (only when not viable) */}
+      {!result.viable && result.shortfall && (
+        <Card title={t('result.changeTitle')} tone="amber">
+          {result.shortfall.type === 'equity' ? (
+            <T
+              as="p"
+              className="text-sm leading-relaxed text-slate-700"
+              k="result.changeEquity"
+              vars={{
+                gap: money(roundK(result.shortfall.savingsGap)),
+                liquid: pct(result.rules.minLiquidPct / 100),
+              }}
+            />
+          ) : (
+            <T
+              as="p"
+              className="text-sm leading-relaxed text-slate-700"
+              k="result.changeIncome"
+              vars={{ gap: money(roundK(result.shortfall.incomeGap)) }}
+            />
+          )}
+        </Card>
+      )}
+
+      {/* Not viable → a path to the goal, the levers, and next steps */}
+      {!result.viable && result.shortfall && (
+        <>
+          <PathToGoal
+            targetPrice={result.shortfall.targetPrice}
+            currentMax={result.maxPrice}
+            equityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
+            incomeGapAnnual={result.shortfall.type === 'income' ? result.shortfall.incomeGap : 0}
+          />
+          <Levers
+            lever3a={result.pillar3aLever}
+            hardEquityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
+          />
+          <NextSteps
+            onExploreSustainable={() => onNavigate?.(3)}
+            onExploreRenovations={() => onNavigate?.(4)}
+            advisorContext="not_viable"
+          />
+        </>
+      )}
+
+      {/* How this is calculated: every breakdown in one disclosure, closed by default */}
+      <CollapsibleGroup title={t('result.howTitle')}>
       {/* Two ceilings chart */}
       <Collapsible title={t('result.ceilingsTitle')}>
         <T as="p" className="mb-4 text-sm leading-relaxed text-slate-600" k="result.ceilingsIntro" />
@@ -543,15 +599,6 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
         />
       )}
 
-      {/* Mortgage over time — payoff timeline, interest, retirement re-test */}
-      {result.maxPrice > 0 && (
-        <MortgagePayoffPanel
-          price={result.maxPrice}
-          mortgage={dp.mortgage}
-          income={result.inputs.grossIncome}
-        />
-      )}
-
       {/* Price ladder */}
       {result.maxPrice > 0 && (
         <Collapsible title={t('result.ladderTitle')}>
@@ -567,51 +614,6 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
             ltvPct={result.rules.ltvPct}
           />
         </Collapsible>
-      )}
-
-      {/* What would change this (only when not viable) */}
-      {!result.viable && result.shortfall && (
-        <Card title={t('result.changeTitle')} tone="amber">
-          {result.shortfall.type === 'equity' ? (
-            <T
-              as="p"
-              className="text-sm leading-relaxed text-slate-700"
-              k="result.changeEquity"
-              vars={{
-                gap: money(roundK(result.shortfall.savingsGap)),
-                liquid: pct(result.rules.minLiquidPct / 100),
-              }}
-            />
-          ) : (
-            <T
-              as="p"
-              className="text-sm leading-relaxed text-slate-700"
-              k="result.changeIncome"
-              vars={{ gap: money(roundK(result.shortfall.incomeGap)) }}
-            />
-          )}
-        </Card>
-      )}
-
-      {/* Not viable → a path to the goal, the levers, and next steps */}
-      {!result.viable && result.shortfall && (
-        <>
-          <PathToGoal
-            targetPrice={result.shortfall.targetPrice}
-            currentMax={result.maxPrice}
-            equityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
-            incomeGapAnnual={result.shortfall.type === 'income' ? result.shortfall.incomeGap : 0}
-          />
-          <Levers
-            lever3a={result.pillar3aLever}
-            hardEquityGap={result.shortfall.type === 'equity' ? result.shortfall.savingsGap : 0}
-          />
-          <NextSteps
-            onExploreSustainable={() => onNavigate?.(3)}
-            onExploreRenovations={() => onNavigate?.(4)}
-            advisorContext="not_viable"
-          />
-        </>
       )}
 
       {/* Eigenmietwert overview */}
@@ -646,6 +648,7 @@ export default function AffordabilityResult({ result, renovation, isPreview = fa
           <span>{t('result.taxVerify')}</span>
         </div>
       </Collapsible>
+      </CollapsibleGroup>
     </div>
   )
 }

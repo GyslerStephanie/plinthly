@@ -3,7 +3,7 @@ import { money, groupDigits } from '../../lib/format'
 import { dreamPlan, payoffMilestones } from '../../markets/us/dream'
 import { US_RULES } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
-import { MoneyInput, Row, usInput } from './UsPhase1'
+import { MoneyInput, Row, usInput, usResult } from './UsPhase1'
 import CompareCta from '../CompareCta'
 import { FieldLabel } from '../ui'
 
@@ -33,12 +33,7 @@ export default function UsDreamPhase({ values, dreamPrice, onDreamPriceChange, o
       ) : (
         <>
           <Verdict plan={plan} rules={rules} />
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Progress plan={plan} />
-            <Monthly plan={plan} />
-          </div>
-          {plan.savingsScenarios.length > 0 && <Savings plan={plan} />}
-          <Payoff plan={plan} extra={extra} onExtra={setExtra} />
+          <YourPath plan={plan} step1Monthly={usResult(values)?.monthlyCosts?.total} extra={extra} onExtra={setExtra} />
           {onCompare && <CompareCta onCompare={onCompare} />}
         </>
       )}
@@ -131,11 +126,52 @@ function Bar({ label, sub, frac }) {
   )
 }
 
+/**
+ * "Your path": progress, monthly cost, savings and payoff as tabs in one card,
+ * so the verdict and the ways to close the gap stay the only open sections.
+ */
+function YourPath({ plan, step1Monthly, extra, onExtra }) {
+  const tabs = [
+    ['progress', ut('dream.progressTitle')],
+    ['monthly', ut('dream.tab.monthly')],
+    ...(plan.savingsScenarios.length > 0 ? [['savings', ut('dream.savingsTitle')]] : []),
+    ...(plan.payoff ? [['payoff', ut('dream.payoffTitle')]] : []),
+  ]
+  const [tab, setTab] = useState('progress')
+  const diff = step1Monthly ? Math.round(plan.monthly.total - step1Monthly) : null
+  return (
+    <section className="ds-card" aria-labelledby="your-path-title">
+      <h2 id="your-path-title" className="ds-section-title">{ut('dream.pathTitle')}</h2>
+      <div role="tablist" aria-label={ut('dream.pathTitle')} className="mt-3 flex flex-wrap gap-1 border-b border-line">
+        {tabs.map(([id, label]) => (
+          <button
+            key={id}
+            id={`path-tab-${id}`}
+            type="button"
+            role="tab"
+            aria-selected={tab === id}
+            aria-controls={`path-panel-${id}`}
+            onClick={() => setTab(id)}
+            className={'-mb-px whitespace-nowrap border-b-2 px-3 py-2 text-sm transition ' + (tab === id ? 'border-teal-700 font-semibold text-ink' : 'border-transparent text-muted hover:text-ink')}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      <div id={`path-panel-${tab}`} role="tabpanel" aria-labelledby={`path-tab-${tab}`} className="pt-4">
+        {tab === 'progress' && <Progress plan={plan} />}
+        {tab === 'monthly' && <Monthly plan={plan} diff={diff} />}
+        {tab === 'savings' && <Savings plan={plan} />}
+        {tab === 'payoff' && <Payoff plan={plan} extra={extra} onExtra={onExtra} />}
+      </div>
+    </section>
+  )
+}
+
 function Progress({ plan }) {
   return (
-    <section className="ds-card">
-      <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.progressTitle')}</h3>
-      <div className="mt-4 space-y-5">
+    <div>
+      <div className="space-y-5">
         <Bar
           label={ut('dream.progressPrice')}
           sub={ut('dream.progressPriceSub', { max: money(plan.maxPriceToday), price: money(plan.price) })}
@@ -151,15 +187,21 @@ function Progress({ plan }) {
           frac={plan.progress.cash}
         />
       </div>
-    </section>
+    </div>
   )
 }
 
-function Monthly({ plan }) {
+function Monthly({ plan, diff }) {
   const m = plan.monthly
   return (
-    <section className="ds-card">
-      <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.monthlyTitle', { price: money(plan.price) })}</h3>
+    <div>
+      {diff != null && (
+        <p className="text-base text-ink">
+          {diff > 0 ? ut('dream.monthlyMore', { amount: money(diff), price: money(plan.price) }) : ut('dream.monthlyLess', { amount: money(-diff), price: money(plan.price) })}
+        </p>
+      )}
+      <details className="mt-2">
+        <summary className="cursor-pointer text-sm font-medium text-ink">{ut('dream.monthlyTitle', { price: money(plan.price) })}: {money(m.total)}/mo</summary>
       <div className="mt-2">
         <Row label={ut('result.pi')} value={money(m.principalAndInterest)} />
         <Row label={ut('result.tax')} value={money(m.propertyTax)} />
@@ -169,20 +211,20 @@ function Monthly({ plan }) {
         <Row label={ut('result.total')} value={`${money(m.total)}/mo`} strong />
       </div>
       <p className="mt-2 text-xs text-muted">{ut('result.maintenance', { amount: money(m.maintenance) })}</p>
+      </details>
       {plan.flags.jumbo && (
         <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
           {ut('result.jumbo', { limit: money(plan.flags.conformingBaseline), high: money(plan.flags.conformingHighCost) })}
         </p>
       )}
-    </section>
+    </div>
   )
 }
 
 function Savings({ plan }) {
   return (
-    <section className="ds-card">
-      <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.savingsTitle')}</h3>
-      <p className="mt-2 text-sm text-body">{ut('dream.savingsBody', { gap: money(plan.cash.gap) })}</p>
+    <div>
+      <p className="text-sm text-body">{ut('dream.savingsBody', { gap: money(plan.cash.gap) })}</p>
       <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
         {plan.savingsScenarios.map((s) => (
           <li key={s.perMonth} className="rounded-lg border border-line bg-surface px-4 py-3">
@@ -192,7 +234,7 @@ function Savings({ plan }) {
           </li>
         ))}
       </ul>
-    </section>
+    </div>
   )
 }
 
@@ -201,9 +243,8 @@ function Payoff({ plan, extra, onExtra }) {
   if (!p) return null
   const rows = payoffMilestones(p)
   return (
-    <section className="ds-card">
-      <h3 className="ds-eyebrow text-xs text-muted">{ut('dream.payoffTitle')}</h3>
-      <p className="mt-2 text-sm text-body">
+    <div>
+      <p className="text-sm text-body">
         {ut('dream.payoffBody', { loan: money(plan.monthly.loan), rate: Math.round(plan.monthly.rate * 10000) / 100 })}
       </p>
       <div className="mt-4 grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -252,6 +293,6 @@ function Payoff({ plan, extra, onExtra }) {
           </table>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

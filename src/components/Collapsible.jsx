@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 /**
  * Progressive-disclosure accordion. Drop-in sibling of `Card` (same `title` +
@@ -9,8 +9,34 @@ import { useState } from 'react'
  * @param {boolean} [defaultOpen] Start expanded (default false).
  * @param {string} [sub]          Optional one-line preview shown next to the title.
  */
+/** Inside a CollapsibleGroup, a Collapsible renders as a plain sub-section. */
+const InGroup = createContext(false)
+
+/**
+ * One disclosure that holds several Collapsibles: closed by default, and the
+ * Collapsibles inside it show as headed sub-sections instead of their own toggles.
+ */
+export function CollapsibleGroup({ title, children }) {
+  return (
+    <Collapsible title={title}>
+      <InGroup.Provider value={true}>
+        <div className="divide-y divide-line">{children}</div>
+      </InGroup.Provider>
+    </Collapsible>
+  )
+}
+
 export default function Collapsible({ title, sub, children, defaultOpen = false }) {
+  const grouped = useContext(InGroup)
   const [open, setOpen] = useState(defaultOpen)
+  if (grouped) {
+    return (
+      <section className="py-4 first:pt-1 last:pb-0">
+        <h3 className="mb-3 text-sm font-semibold text-ink">{title}</h3>
+        {children}
+      </section>
+    )
+  }
   return (
     <section className="overflow-hidden rounded-xl border border-line bg-white shadow-sm">
       <button

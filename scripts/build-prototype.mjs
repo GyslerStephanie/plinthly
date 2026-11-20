@@ -22,11 +22,17 @@ if (!out) {
 if (existsSync(out)) rmSync(out, { recursive: true })
 execSync(`npx vite build --base ./ --outDir "${out}" --emptyOutDir`, { stdio: 'inherit' })
 
-const assets = readdirSync(join(out, 'assets'))
-const js = assets.find((f) => f.endsWith('.js'))
-const css = assets.find((f) => f.endsWith('.css'))
-const jsPath = join(out, 'assets', js)
-writeFileSync(jsPath, readFileSync(jsPath, 'utf8').replaceAll('"/brand/', '"./brand/'))
+// The entry script and stylesheet are the ones Vite's own index.html loads.
+// (Lazy chunks such as the map library also sit in assets/, so never just pick the first .js.)
+const indexHtml = readFileSync(join(out, 'index.html'), 'utf8')
+const js = indexHtml.match(/<script[^>]+src="\.\/assets\/([^"]+\.js)"/)?.[1]
+const css = indexHtml.match(/<link[^>]+href="\.\/assets\/([^"]+\.css)"/)?.[1]
+if (!js || !css) throw new Error('could not find the entry script or stylesheet in the built index.html')
+// Brand images are absolute in the source; make them relative in every chunk.
+for (const f of readdirSync(join(out, 'assets')).filter((n) => n.endsWith('.js'))) {
+  const p = join(out, 'assets', f)
+  writeFileSync(p, readFileSync(p, 'utf8').replaceAll('"/brand/', '"./brand/'))
+}
 
 const fonts =
   'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap'
