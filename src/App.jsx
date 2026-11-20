@@ -61,6 +61,7 @@ function usBuildHash(b, open) {
     buildPath: b.path,
     buildWallD: b.wallD,
     buildRetrofit: b.retrofit,
+    buildTodayMoney: b.todayMoney,
   }
 }
 // The journey is Can I buy? → dream price, then a choice (NextChoice). What to
@@ -111,7 +112,7 @@ const US_PHASE_COPY = { 2: 'dream', 3: 'explore', 4: 'options', 5: 'plan' }
 
 const US_DEFAULT_EXPLORE = { budget: '', chosenOption: '', measures: undefined }
 // "Compare how to build" — the resilient-build explorer's inputs (hash keys b*).
-const US_DEFAULT_BUILD = { mode: 'size', sqft: '2,000', budget: '500,000', storeys: '2', horizon: '30', path: 'ref', wallD: '', retrofit: '' }
+const US_DEFAULT_BUILD = { mode: 'size', sqft: '2,000', budget: '500,000', storeys: '2', horizon: '30', path: 'ref', wallD: '', retrofit: '', todayMoney: '' }
 
 const DEFAULT_EXPLORE = {
   budget: '',
@@ -215,6 +216,7 @@ export default function App() {
         path: s.buildPath ?? US_DEFAULT_BUILD.path,
         wallD: s.buildWallD ?? '',
         retrofit: s.buildRetrofit === '1' ? '1' : '',
+        todayMoney: s.buildTodayMoney === '1' ? '1' : '',
       })
       const step = restoredBuildStep(s, true)
       if (step) {

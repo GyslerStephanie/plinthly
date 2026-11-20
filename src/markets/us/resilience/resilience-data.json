@@ -46,6 +46,10 @@
       "https://www.energysage.com/heat-pumps/costs-and-benefits-air-source-heat-pumps"
     ]
   },
+  "today_money": {
+    "discount_pct": 4,
+    "note": "Nominal discount rate for the 'in today's money' view: future energy and maintenance count for less the further away they are, roughly what the money could earn instead (about 2% real plus 2% inflation). Indicative; the UI states the rate."
+  },
   "price_paths": {
     "ref": {
       "label": "EIA reference",
