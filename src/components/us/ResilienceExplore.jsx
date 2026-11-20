@@ -159,6 +159,96 @@ function breakEvenLine(be, horizon) {
   return ut(`build.payback.${be.verdict}`, { n: horizon })
 }
 
+const RATING_TONE = {
+  good: 'bg-teal-50 text-teal-800',
+  low: 'bg-teal-50 text-teal-800',
+  neutral: 'bg-slate-100 text-slate-700',
+  moderate: 'bg-slate-100 text-slate-700',
+  poor: 'bg-amber-50 text-amber-800',
+  higher: 'bg-amber-50 text-amber-800',
+}
+
+function Chip({ tone, children }) {
+  return <span className={'inline-block whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ' + (RATING_TONE[tone] || RATING_TONE.neutral)}>{children}</span>
+}
+
+/** Beyond energy: hazards, fire, moisture and insurance for each house, side by side. */
+function BeyondEnergy({ result, horizon, stateName }) {
+  const b = result.beyond
+  if (!b) return null
+  const cols = result.columns
+  const cell = (fn) => cols.map((c) => <td key={c.id} className="py-2 pl-3 align-top">{fn(b.byId[c.id], c)}</td>)
+  const ratingRow = (key) => (
+    <tr key={key} className="border-b border-line">
+      <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut(`build.beyond.${key}`)}</th>
+      {cell((x) => <Chip tone={x.hazards[key]}>{ut(`build.beyond.rating.${x.hazards[key]}`)}</Chip>)}
+    </tr>
+  )
+  const sources = [...new Set([...resilienceData.beyond_energy.hazard_sources, ...resilienceData.beyond_energy.moisture_rule.sources, ...resilienceData.beyond_energy.insurance_sources])]
+  return (
+    <section className="ds-card mt-[var(--space-stack)]" aria-labelledby="beyond-title">
+      <h2 id="beyond-title" className="ds-section-title">{ut('build.beyond.title')}</h2>
+      <p className="mt-1 max-w-3xl text-sm text-body">{ut('build.beyond.intro')}</p>
+      <div className="mt-3 overflow-x-auto">
+        <table className="w-full min-w-[640px] text-sm">
+          <thead>
+            <tr className="border-b border-line text-left text-xs text-muted">
+              <th className="py-2 pr-3 font-medium">{ut('build.beyond.colFactor', { n: horizon })}</th>
+              {cols.map((c) => <th key={c.id} className="py-2 pl-3 font-medium">{c.id} · {c.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-line">
+              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.energy')}</th>
+              {cell((x, c) => <span className="ds-figure tabular-nums text-ink">{money(c.energy.cumulative)}</span>)}
+            </tr>
+            {['hurricane', 'wildfire', 'hail', 'flood'].map(ratingRow)}
+            <tr className="border-b border-line">
+              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.fire')}</th>
+              {cell((x) => <Chip tone={x.fire}>{ut(`build.beyond.fireVal.${x.fire}`)}</Chip>)}
+            </tr>
+            <tr className="border-b border-line">
+              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.moisture')}</th>
+              {cell((x) => <Chip tone={x.moisture}>{ut(`build.beyond.moistureVal.${x.moisture}`)}</Chip>)}
+            </tr>
+            <tr className="border-b border-line">
+              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.insurance')}</th>
+              {cell((x) => (
+                <>
+                  <span className="ds-figure tabular-nums text-ink">{money(x.insurance)}</span>
+                  <span className="block text-xs text-muted">{ut('build.beyond.insuranceSub', { amount: money(x.insuranceAnnual), state: stateName, pct: b.insuranceRatePct })}</span>
+                </>
+              ))}
+            </tr>
+            <tr className="border-b border-line">
+              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.discount')}</th>
+              {cell((x) => <Chip tone={x.mayQualifyDiscount ? 'good' : 'neutral'}>{ut(`build.beyond.discountVal.${x.mayQualifyDiscount ? 'yes' : 'no'}`)}</Chip>)}
+            </tr>
+            <tr>
+              <th scope="row" className="py-2 pr-3 text-left font-semibold text-ink">
+                {ut('build.beyond.total')}
+                <span className="block text-xs font-normal text-muted">{ut('build.beyond.totalSub')}</span>
+              </th>
+              {cell((x) => <span className="ds-figure font-semibold tabular-nums text-ink">{money(x.totalWithInsurance)}</span>)}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-sm text-body">{ut('build.beyond.energyOnly')}</p>
+      <p className="mt-2 text-xs leading-relaxed text-muted">{ut('build.beyond.note')}</p>
+      <p className="mt-2 text-xs text-muted">
+        {ut('build.beyond.sources')}:{' '}
+        {sources.map((u, i) => (
+          <span key={u}>
+            {i > 0 && ' · '}
+            <a href={u} target="_blank" rel="noreferrer" className="underline underline-offset-2 hover:text-ink">{new URL(u).hostname.replace(/^www\./, '')}</a>
+          </span>
+        ))}
+      </p>
+    </section>
+  )
+}
+
 /** "Does the extra cost pay back on energy alone?" — break-even plus the three price paths. */
 function Payback({ payback, horizon }) {
   if (!payback || !payback.bToD) return null
@@ -346,6 +436,7 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
             )}
 
             <Payback payback={result.payback} horizon={horizon} />
+            <BeyondEnergy result={result} horizon={horizon} stateName={st?.name || region} />
 
             <div className="mt-[var(--space-stack)] grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
               {result.columns.map((c) => (

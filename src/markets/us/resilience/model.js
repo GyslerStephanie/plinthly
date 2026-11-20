@@ -313,5 +313,47 @@ export function compareBuilds({ stateCode, mode = 'size', sqft, budget, storeys 
       bToD: byId.B && byId.D ? { breakEven: breakEven(byId.B, byId.D, h), paths: pathsSideBySide(byId.B, byId.D, h) } : null,
       aToC: byId.A && byId.C ? { breakEven: breakEven(byId.A, byId.C, h), paths: pathsSideBySide(byId.A, byId.C, h) } : null,
     },
+    // Beyond energy: hazards, fire, moisture, insurance and the total with insurance.
+    beyond: beyondEnergy(columns, stateCode, h),
+  }
+}
+
+const HAZARDS = ['hurricane', 'wildfire', 'hail', 'flood']
+
+/** Moisture and mould risk from the wall (dries outward?) and ventilation (ERV?). */
+export function moistureRisk(wall, systems = []) {
+  const score = (wall?.vapour_open ? 1 : 0) + (systems.includes('erv') ? 1 : 0)
+  return rd.beyond_energy.moisture_rule.levels[String(score)]
+}
+
+/**
+ * Holistic rows for each column, beyond energy. Ratings come from the wall
+ * record; insurance is the state's average rate on the house's value (build
+ * cost incl. envelope for new builds and the retrofit, base cost for the older
+ * home), held flat over the horizon. Returns null when the state is unknown.
+ */
+export function beyondEnergy(columns, stateCode, horizon) {
+  const rate = market.states?.[stateCode]?.insurance_rate_pct
+  if (!columns?.length || !(rate > 0)) return null
+  const B = rd.beyond_energy
+  return {
+    horizon,
+    insuranceRatePct: rate,
+    byId: Object.fromEntries(columns.map((c) => {
+      const value = c.base.mid + (c.newBuild || c.retrofitOf ? c.premium.total.mid : 0)
+      const insuranceAnnual = Math.round((value * rate) / 100)
+      const insurance = insuranceAnnual * horizon
+      const hazards = Object.fromEntries(HAZARDS.map((k) => [k, c.wall.hazard_fit?.[k] || 'neutral']))
+      return [c.id, {
+        hazards,
+        fire: c.wall.noncombustible ? 'good' : 'poor',
+        moisture: moistureRisk(c.wall, c.systems),
+        mayQualifyDiscount: B.insurer_discount.qualifies_if_good.some((k) => hazards[k] === 'good'),
+        insuredValue: Math.round(value),
+        insuranceAnnual,
+        insurance,
+        totalWithInsurance: c.tco.mid + insurance,
+      }]
+    })),
   }
 }
