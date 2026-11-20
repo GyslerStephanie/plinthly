@@ -152,6 +152,73 @@ function Column({ c, horizon, onPickWall }) {
   )
 }
 
+/** Break-even sentence for one pair (see model.breakEven). */
+function breakEvenLine(be, horizon) {
+  if (!be) return null
+  if (be.verdict === 'at') return ut('build.payback.at', { n: horizon, pct: be.pct, amount: money(be.premium), saving: money(be.annualSaving) })
+  return ut(`build.payback.${be.verdict}`, { n: horizon })
+}
+
+/** "Does the extra cost pay back on energy alone?" — break-even plus the three price paths. */
+function Payback({ payback, horizon }) {
+  if (!payback || !payback.bToD) return null
+  const bd = payback.bToD
+  const rows = bd.paths || []
+  const premium = rows.length ? rows[0].premium : bd.breakEven?.premium
+  return (
+    <section className="ds-card mt-[var(--space-stack)]">
+      <h2 className="ds-section-title">{ut('build.payback.title')}</h2>
+      <p className="mt-1 text-sm text-body">{ut('build.payback.intro', { n: horizon })}</p>
+      <dl className="mt-3 space-y-2 text-sm">
+        <div>
+          <dt className="font-semibold text-ink">{ut('build.payback.pairBD')}</dt>
+          <dd className="text-body">{breakEvenLine(bd.breakEven, horizon)}</dd>
+        </div>
+        {payback.aToC && (
+          <div>
+            <dt className="font-semibold text-ink">{ut('build.payback.pairAC')}</dt>
+            <dd className="text-body">{breakEvenLine(payback.aToC.breakEven, horizon)}</dd>
+          </div>
+        )}
+      </dl>
+      {rows.length > 0 && premium > 0 && (
+        <>
+          <h3 className="mt-4 text-sm font-semibold text-ink">{ut('build.payback.tableTitle')}</h3>
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-line text-left text-xs text-muted">
+                  <th className="py-2 pr-3 font-medium">{ut('build.payback.colPath')}</th>
+                  <th className="py-2 pr-3 text-right font-medium">{ut('build.payback.colRise')}</th>
+                  <th className="py-2 pr-3 text-right font-medium">{ut('build.payback.colCheaper')}</th>
+                  <th className="py-2 pr-3 text-right font-medium">{ut('build.payback.colBetter')}</th>
+                  <th className="py-2 pr-3 text-right font-medium">{ut('build.payback.colSaved')}</th>
+                  <th className="py-2 text-right font-medium">{ut('build.payback.colCovers', { amount: money(premium) })}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.id} className="border-b border-line last:border-b-0">
+                    <td className="py-2 pr-3 text-ink">{r.label}</td>
+                    <td className="py-2 pr-3 text-right tabular-nums">{r.escalationPct}%</td>
+                    <td className="py-2 pr-3 text-right tabular-nums">{money(r.cheaperEnergy)}</td>
+                    <td className="py-2 pr-3 text-right tabular-nums">{money(r.betterEnergy)}</td>
+                    <td className="py-2 pr-3 text-right tabular-nums text-ink">{money(r.saved)}</td>
+                    <td className={'py-2 text-right font-semibold ' + (r.paysBack ? 'text-teal-700' : 'text-muted')}>
+                      {r.paysBack ? ut('build.payback.yes') : ut('build.payback.no')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+      <p className="mt-3 text-xs text-faint">{ut('build.payback.note')}</p>
+    </section>
+  )
+}
+
 export default function ResilienceExplore({ build, onChange, region, onRegionChange, shareUrl }) {
   const [copied, setCopied] = useState(false)
   const set = (patch) => onChange({ ...build, ...patch })
@@ -277,6 +344,8 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
                 )}
               </section>
             )}
+
+            <Payback payback={result.payback} horizon={horizon} />
 
             <div className="mt-[var(--space-stack)] grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
               {result.columns.map((c) => (
