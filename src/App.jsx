@@ -832,6 +832,11 @@ export default function App() {
                       region={usValues.region}
                       onRegionChange={(region) => setUsValues((v) => ({ ...v, region }))}
                       shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, true), buildStep: 'compare' })}
+                      onPlanBuild={() => {
+                        setUsExplore((e) => ({ ...e, chosenOption: 'build' }))
+                        track('build_planned', { wall: usBuild.wallD || 'default' })
+                        openBuildStep('plan')
+                      }}
                     />
                   )}
                   {step === 'plan' && (
@@ -839,7 +844,8 @@ export default function App() {
                       result={usRes}
                       explore={usExplore}
                       region={usValues.region}
-                      shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore, buildOpen: '1', buildStep: 'plan' })}
+                      shareUrl={shareableUrl({ ...usValues, canton: usValues.region, phase, dreamPrice, market: marketId, ...usExplore, ...usBuildHash(usBuild, true), buildStep: 'plan' })}
+                      build={usBuild}
                     />
                   )}
                 </>

@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "notes": "Official directories and references for the Swiss / Passive-grade build path. Links only: no firm is recommended by name. Checked 2026-11-20; every URL returned 200.",
+    "last_checked": "2026-11-20"
+  },
+  "links": {
+    "fema_flood_map": { "label": "FEMA flood map for the lot", "url": "https://msc.fema.gov/portal/home", "kind": "guide" },
+    "noaa_slr": { "label": "NOAA sea-level rise viewer", "url": "https://coast.noaa.gov/slr/", "kind": "guide" },
+    "phius_find_pro": { "label": "Find a Phius certified consultant or builder", "url": "https://www.phius.org/find-professional", "kind": "other" },
+    "phius": { "label": "Phius passive building certification", "url": "https://www.phius.org/", "kind": "guide" },
+    "phi_buildings": { "label": "Passive House project database (see who built what near you)", "url": "https://passivehouse-database.org/", "kind": "guide" },
+    "ph_accelerator": { "label": "Passive House Accelerator (case studies, events)", "url": "https://passivehouseaccelerator.com/", "kind": "guide" },
+    "resnet_rater": { "label": "Find a HERS rater", "url": "https://www.resnet.us/resources/find-a-hers-rater/", "kind": "other" },
+    "energy_star_new": { "label": "ENERGY STAR new homes", "url": "https://www.energystar.gov/newhomes", "kind": "guide" },
+    "doe_efficient_new": { "label": "DOE Efficient New Homes (Zero Energy Ready)", "url": "https://www.energy.gov/cmei/buildings/doe-efficient-new-homes-program", "kind": "guide" },
+    "phi_components": { "label": "Certified Passive House components (windows, ERVs, systems)", "url": "https://database.passivehouse.com/en/components/", "kind": "other" },
+    "phius_products": { "label": "Phius certified products", "url": "https://www.phius.org/phius-certification-for-buildings-products/product-certification", "kind": "other" },
+    "icf_ma": { "label": "ICF Manufacturers Association", "url": "https://icf-ma.org/", "kind": "other" },
+    "fortified": { "label": "IBHS FORTIFIED Home standard", "url": "https://fortifiedhome.org/", "kind": "guide" },
+    "dsire": { "label": "Incentives for your ZIP code (DSIRE)", "url": "https://www.dsireusa.org/", "kind": "rebate" },
+    "cfpb_home": { "label": "CFPB: owning a home", "url": "https://www.consumerfinance.gov/owning-a-home/", "kind": "guide" }
+  },
+  "wall_links": {
+    "icf": ["icf_ma"]
+  }
+}
