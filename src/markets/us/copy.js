@@ -190,7 +190,7 @@ const COPY = {
     mockDream: 'Preview: your maximum today is {max} against a {price} goal. Connect an API key for a tailored roadmap.',
   },
   explore: {
-    title: 'What should I look for?',
+    title: 'What should I look for in climate-resilient real estate?',
     blurb: 'See what your budget buys in your state, what a home’s energy rating really costs over 10 years, and which incentives apply.',
     budget: 'Budget to explore',
     budgetHint: 'Starts at your maximum price from step 1. Try lower or higher.',

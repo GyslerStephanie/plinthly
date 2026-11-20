@@ -71,10 +71,7 @@ export default function LocaleMenu({ onSwitch, languages }) {
           (open ? 'border-teal-600' : 'border-slate-300')
         }
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-teal-700">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" />
-        </svg>
+        <Flag market={market.id} />
         <span className="ds-figure tracking-wide text-ink">
           {market.countryCode}
           <span className="mx-1 text-slate-300">·</span>
@@ -183,5 +180,28 @@ export default function LocaleMenu({ onSwitch, languages }) {
         </div>
       )}
     </div>
+  )
+}
+
+/** The active country's flag in the header button. Drawn as SVG, not emoji:
+ *  Windows browsers show flag emoji as the letters "CH" / "US". */
+function Flag({ market }) {
+  if (market === 'us') {
+    return (
+      <svg width="20" height="14" viewBox="0 0 19 13" aria-hidden="true" className="flex-none overflow-hidden rounded-[2px] ring-1 ring-black/10">
+        <rect width="19" height="13" fill="#fff" />
+        {[0, 2, 4, 6, 8, 10, 12].map((y) => <rect key={y} y={y} width="19" height="1" fill="#b22234" />)}
+        <rect width="8" height="7" fill="#3c3b6e" />
+        {[[1.5, 1.5], [4, 1.5], [6.5, 1.5], [2.75, 3.5], [5.25, 3.5], [1.5, 5.5], [4, 5.5], [6.5, 5.5]].map(([x, y]) => (
+          <circle key={`${x}-${y}`} cx={x} cy={y} r="0.55" fill="#fff" />
+        ))}
+      </svg>
+    )
+  }
+  return (
+    <svg width="15" height="15" viewBox="0 0 32 32" aria-hidden="true" className="flex-none overflow-hidden rounded-[2px] ring-1 ring-black/10">
+      <rect width="32" height="32" fill="#da291c" />
+      <path d="M13 6h6v7h7v6h-7v7h-6v-7H6v-6h7z" fill="#fff" />
+    </svg>
   )
 }
