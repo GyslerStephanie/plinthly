@@ -12,7 +12,7 @@ import { annualEnergyCost } from '../src/markets/us/home.js'
 import rd from '../src/markets/us/resilience/resilience-data.json' with { type: 'json' }
 import home from '../src/markets/us/us-home-data.json' with { type: 'json' }
 import usData from '../src/markets/us/us-data.json' with { type: 'json' }
-import { HAZARDS, ratingLevel, stateRisk, abbrForFips, hurricaneLossCut, hurricaneLoss } from '../src/markets/us/hazards/model.js'
+import { HAZARDS, ratingLevel, stateRisk, abbrForFips, hurricaneLossCut, hurricaneLoss, hazardLosses } from '../src/markets/us/hazards/model.js'
 import nri from '../src/markets/us/hazards/nri-states.json' with { type: 'json' }
 import { encodeState, decodeState } from '../src/lib/share.js'
 
@@ -171,6 +171,17 @@ check('bad horizon → 30', compareBuilds({ stateCode: 'CO', mode: 'size', sqft:
   const noCut = hurricaneLoss('FL', 330000, 386600, 30, false)
   check('wall not strong → no cut', noCut.resistant.perYear.low === noCut.resistant.perYear.high && noCut.resistant.perYear.low === Math.round(386600 * stateRisk('FL').hurricane.buildingLossRate))
   check('no hurricane exposure → null', hurricaneLoss('CO', 330000, 386600, 30) === null)
+  // All hazards
+  const ca = hazardLosses('CA', 400000, 450000, 30, false)
+  check('CA: earthquake and inland flood present, sorted largest first', ca.rows[0].typical >= ca.rows[ca.rows.length - 1].typical && ca.rows.some((x) => x.hazard === 'earthquake'))
+  check('CA: nothing reduced without a strong wall', ca.rows.every((x) => !x.reduced))
+  check('per-year total = sum of rows', ca.perYear.typical === ca.rows.reduce((t, x) => t + x.typical, 0))
+  check('horizon total = per year × 30', ca.total.typical === ca.perYear.typical * 30)
+  const fl = hazardLosses('FL', 330000, 386600, 30, true)
+  check('FL: only hurricane reduced', fl.rows.filter((x) => x.reduced).map((x) => x.hazard).join() === 'hurricane')
+  check('FL: unreduced hazards scale with value', fl.rows.filter((x) => !x.reduced).every((x) => x.resistant.low === Math.round(386600 * x.rate)))
+  check('FL: resistant all-hazard total below typical + premium effect sane', fl.perYear.resistant.low < fl.perYear.typical)
+  check('unknown state → null', hazardLosses('ZZ', 1, 1, 30) === null)
 }
 
 // ── 8. Share-link round trip ────────────────────────────────────────────────
