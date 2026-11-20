@@ -14,7 +14,7 @@ import { money, groupDigits, currencySymbol } from '../../lib/format'
 import { useI18n } from '../../i18n/I18nContext'
 import { useDialogFocus } from '../../lib/useDialogFocus'
 import HowItWorks from '../HowItWorks'
-import { Indicative, PageHeader } from '../ui'
+import { Indicative, InfoTip, PageHeader } from '../ui'
 import { compareCourse } from '../../lib/learn'
 import { track } from '../../lib/track'
 
@@ -126,14 +126,17 @@ const numFrom = (v) => Number(String(v).replace(/[^0-9.]/g, '')) || 0
  * string while editing so decimals ("1.5") and a leading "−" type cleanly,
  * and re-syncs when the numeric value changes externally (e.g. a preset click).
  */
-function PctField({ label, sub, value, onChange }) {
+function PctField({ label, sub, tip, value, onChange }) {
   const [txt, setTxt] = useState(String(value))
   useEffect(() => {
     setTxt((prev) => (parseFloat(prev) === value ? prev : String(value)))
   }, [value])
   return (
+    <div className="relative">
+    {/* The (i) sits beside the label, outside it, so it stays its own control. */}
+    {tip && <span className="absolute right-0 top-0">{tip}</span>}
     <label className="block text-xs text-muted">
-      <span>
+      <span className={tip ? 'pr-6' : undefined}>
         {label}
         {sub && <span className="ml-1 text-faint">· {sub}</span>}
       </span>
@@ -153,6 +156,7 @@ function PctField({ label, sub, value, onChange }) {
         <span className="select-none px-3 text-sm text-faint">%</span>
       </div>
     </label>
+    </div>
   )
 }
 
@@ -255,8 +259,8 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
       </div>
     </label>
   )
-  const pct = (key, label, sub) => (
-    <PctField label={label} sub={sub} value={inputs[key]} onChange={(n) => setVal(key, n)} />
+  const pct = (key, label, sub, hint) => (
+    <PctField label={label} sub={sub} tip={hint ? <InfoTip label={label} align="right">{hint}</InfoTip> : null} value={inputs[key]} onChange={(n) => setVal(key, n)} />
   )
 
   return (
@@ -354,7 +358,7 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
                     </button>
                   ))}
                 </div>
-                {trueCost && <p className="mt-1.5 text-xs text-faint">{t('compare.lensHint')}</p>}
+                <span className="ml-2 inline-block align-middle"><InfoTip label={t('compare.lensTrue')}>{t('compare.lensHint')}</InfoTip></span>
               </div>
             )}
 
@@ -407,8 +411,9 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
               <p className="ds-eyebrow mt-5 text-xs text-muted">
                 {t('compare.grpFuture')} <span className="ml-1 font-normal normal-case tracking-normal text-faint">{t('compare.grpFutureTag')}</span>
               </p>
-              <div className={'mt-3 rounded-lg bg-surface p-3 ' + (investActive ? '' : 'opacity-50')}>
-                {pct('investReturnPct', t('compare.sInvest'), t('compare.sInvestSub'))}
+              {investActive && (
+              <div className="mt-3 rounded-lg bg-surface p-3">
+                {pct('investReturnPct', t('compare.sInvest'), t('compare.sInvestSub'), t('compare.investHint'))}
                 {investActive ? (
                   <>
                     <div className="mt-2 flex flex-wrap gap-1.5">
@@ -424,15 +429,13 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
                         </button>
                       ))}
                     </div>
-                    <p className="mt-2 text-xs text-faint">{t('compare.investHint')}</p>
                   </>
-                ) : (
-                  <p className="mt-2 text-xs italic text-faint">{t('compare.investOff')}</p>
-                )}
+                ) : null}
               </div>
+              )}
               <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {pct('mortgageRatePct', t('compare.sRate'))}
-                <div>{pct('appreciationPct', t('compare.sAppr'))}<p className="mt-0.5 text-xs text-faint">{t('compare.apprHint')}</p></div>
+                {pct('appreciationPct', t('compare.sAppr'), undefined, t('compare.apprHint'))}
                 {pct('rentInflationPct', t('compare.sInfl'))}
                 {pct('incomeGrowthPct', t('compare.sIncg'))}
               </div>
@@ -465,12 +468,11 @@ export default function CompareView({ onClose, seed = {}, seedYear, region, usAd
               </>
               )}
 
-              <p className="ds-eyebrow mt-5 text-xs text-muted">{t('compare.grpStructure')}</p>
+              <p className="ds-eyebrow mt-5 flex items-center gap-1.5 text-xs text-muted">{t('compare.grpStructure')}<InfoTip label={t('compare.grpStructure')}>{t('compare.structureHint')}</InfoTip></p>
               <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {pct('downPaymentPct', t('compare.fDown'))}
                 {pct('maintenancePct', t('compare.fMaint'))}
               </div>
-              <p className="mt-2 text-xs text-faint">{t('compare.structureHint')}</p>
             </details>
           </div>
         </div>

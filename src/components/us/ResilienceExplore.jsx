@@ -3,7 +3,7 @@ import { money, int } from '../../lib/format'
 import { compareBuilds, getWall, HORIZONS, PRICE_PATHS, resilienceData } from '../../markets/us/resilience/model'
 import { getState, stateOptions } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
-import { Indicative, SELECT_CHEVRON } from '../ui'
+import { Indicative, InfoTip, SELECT_CHEVRON } from '../ui'
 import { track } from '../../lib/track'
 
 /**
@@ -184,6 +184,13 @@ function BeyondEnergy({ result, horizon, stateName }) {
       {cell((x) => <Chip tone={x.hazards[key]}>{ut(`build.beyond.rating.${x.hazards[key]}`)}</Chip>)}
     </tr>
   )
+  const fig = (v, strong) => <span className={'ds-figure tabular-nums text-ink' + (strong ? ' font-semibold' : '')}>{v}</span>
+  const row = (label, fn, strong) => (
+    <tr key={label} className="border-b border-line">
+      <th scope="row" className={'py-2 pr-3 text-left ' + (strong ? 'font-semibold text-ink' : 'font-normal text-body')}>{label}</th>
+      {cell(fn)}
+    </tr>
+  )
   const sources = [...new Set([...resilienceData.beyond_energy.hazard_sources, ...resilienceData.beyond_energy.moisture_rule.sources, ...resilienceData.beyond_energy.insurance_sources])]
   return (
     <section className="ds-card mt-[var(--space-stack)]" aria-labelledby="beyond-title">
@@ -198,39 +205,23 @@ function BeyondEnergy({ result, horizon, stateName }) {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-line">
-              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.energy')}</th>
-              {cell((x, c) => <span className="ds-figure tabular-nums text-ink">{money(c.energy.cumulative)}</span>)}
-            </tr>
+            {row(ut('build.col.sqft'), (x, c) => fig(`${int(c.sqft)} sq ft`))}
+            {row(ut('build.col.upfront'), (x, c) => fig(c.upfront.mid > 0 ? money(c.upfront.mid) : '—'))}
+            {row(ut('build.beyond.energy'), (x, c) => fig(money(c.energy.cumulative)))}
+            {row(ut('build.col.maintenance', { n: horizon }), (x, c) => fig(money(c.maintenance)))}
+            {row(ut('build.col.tco', { n: horizon }), (x, c) => fig(money(c.tco.mid), true))}
+            {row(ut('build.beyond.insurance'), (x) => (
+              <>
+                {fig(money(x.insurance))}
+                <span className="block text-xs text-muted">{ut('build.beyond.insuranceSub', { amount: money(x.insuranceAnnual), state: stateName, pct: b.insuranceRatePct })}</span>
+              </>
+            ))}
+            {row(ut('build.beyond.total'), (x) => fig(money(x.totalWithInsurance), true), true)}
+            <tr><th colSpan={cols.length + 1} scope="colgroup" className="pb-1 pt-4 text-left text-xs font-semibold uppercase tracking-wide text-muted">{ut('build.beyond.ratings')}</th></tr>
             {['hurricane', 'wildfire', 'hail', 'flood'].map(ratingRow)}
-            <tr className="border-b border-line">
-              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.fire')}</th>
-              {cell((x) => <Chip tone={x.fire}>{ut(`build.beyond.fireVal.${x.fire}`)}</Chip>)}
-            </tr>
-            <tr className="border-b border-line">
-              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.moisture')}</th>
-              {cell((x) => <Chip tone={x.moisture}>{ut(`build.beyond.moistureVal.${x.moisture}`)}</Chip>)}
-            </tr>
-            <tr className="border-b border-line">
-              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.insurance')}</th>
-              {cell((x) => (
-                <>
-                  <span className="ds-figure tabular-nums text-ink">{money(x.insurance)}</span>
-                  <span className="block text-xs text-muted">{ut('build.beyond.insuranceSub', { amount: money(x.insuranceAnnual), state: stateName, pct: b.insuranceRatePct })}</span>
-                </>
-              ))}
-            </tr>
-            <tr className="border-b border-line">
-              <th scope="row" className="py-2 pr-3 text-left font-normal text-body">{ut('build.beyond.discount')}</th>
-              {cell((x) => <Chip tone={x.mayQualifyDiscount ? 'good' : 'neutral'}>{ut(`build.beyond.discountVal.${x.mayQualifyDiscount ? 'yes' : 'no'}`)}</Chip>)}
-            </tr>
-            <tr>
-              <th scope="row" className="py-2 pr-3 text-left font-semibold text-ink">
-                {ut('build.beyond.total')}
-                <span className="block text-xs font-normal text-muted">{ut('build.beyond.totalSub')}</span>
-              </th>
-              {cell((x) => <span className="ds-figure font-semibold tabular-nums text-ink">{money(x.totalWithInsurance)}</span>)}
-            </tr>
+            {row(ut('build.beyond.fire'), (x) => <Chip tone={x.fire}>{ut(`build.beyond.fireVal.${x.fire}`)}</Chip>)}
+            {row(ut('build.beyond.moisture'), (x) => <Chip tone={x.moisture}>{ut(`build.beyond.moistureVal.${x.moisture}`)}</Chip>)}
+            {row(ut('build.beyond.discount'), (x) => <Chip tone={x.mayQualifyDiscount ? 'good' : 'neutral'}>{ut(`build.beyond.discountVal.${x.mayQualifyDiscount ? 'yes' : 'no'}`)}</Chip>)}
           </tbody>
         </table>
       </div>
@@ -272,8 +263,8 @@ function Payback({ payback, horizon }) {
         )}
       </dl>
       {rows.length > 0 && premium > 0 && (
-        <>
-          <h3 className="mt-4 text-sm font-semibold text-ink">{ut('build.payback.tableTitle')}</h3>
+        <details className="mt-3">
+          <summary className="cursor-pointer text-sm font-semibold text-ink">{ut('build.payback.tableTitle')}</summary>
           <div className="mt-2 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -302,7 +293,7 @@ function Payback({ payback, horizon }) {
               </tbody>
             </table>
           </div>
-        </>
+        </details>
       )}
       <p className="mt-3 text-xs text-muted">{ut('build.payback.note')}</p>
     </section>
@@ -348,6 +339,30 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
     <div>
       <div>
 
+        {/* The answer first: what the better house costs and saves */}
+        {result && (
+          <>
+        {/* Headline: code box vs Swiss-grade */}
+        {result.bVsD && (
+          <section className="ds-callout mb-[var(--space-stack)]">
+            <p className="ds-eyebrow text-xs text-teal-700">{ut('build.summary.title')}</p>
+            <p className="mt-2 text-base leading-relaxed text-ink">
+              {result.mode === 'budget'
+                ? ut('build.summary.budgetLead', { sqft: int(Math.abs(result.bVsD.sqftDelta)), amount: money(result.bVsD.energySaved), n: horizon })
+                : `${ut('build.summary.premium', { amount: money(result.bVsD.premium) })} ${ut('build.summary.energy', { amount: money(result.bVsD.energySaved), n: horizon })}.`}{' '}
+              {result.bVsD.tcoDelta <= 0
+                ? ut('build.summary.tcoLess', { n: horizon, amount: money(-result.bVsD.tcoDelta) })
+                : ut('build.summary.tcoMore', { n: horizon, amount: money(result.bVsD.tcoDelta) })}
+            </p>
+            {result.energyGapAtoD != null && (
+              <p className="mt-1 text-sm text-body">{ut('build.summary.gap', { amount: money(result.energyGapAtoD), n: horizon })}</p>
+            )}
+          </section>
+        )}
+
+          </>
+        )}
+
         {/* Inputs */}
         <div className="ds-card grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
           <label className="block">
@@ -360,11 +375,10 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
             </select>
           </label>
           <div>
-            <span className="text-sm text-body">{ut('build.mode.size')} / {ut('build.mode.budget')}</span>
+            <span className="flex items-center gap-1.5 text-sm text-body">{ut('build.mode.size')} / {ut('build.mode.budget')}<InfoTip label={ut('build.mode.size')}>{ut(`build.modeHint.${build.mode === 'budget' ? 'budget' : 'size'}`)}</InfoTip></span>
             <div className="mt-1">
               <Pills name="build-mode" label="Mode" value={build.mode === 'budget' ? 'budget' : 'size'} onChange={(v) => set({ mode: v })} options={[{ value: 'size', label: ut('build.mode.size') }, { value: 'budget', label: ut('build.mode.budget') }]} />
             </div>
-            <p className="mt-1 text-xs text-muted">{ut(`build.modeHint.${build.mode === 'budget' ? 'budget' : 'size'}`)}</p>
           </div>
           {build.mode === 'budget' ? (
             <label className="block">
@@ -409,7 +423,7 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
           </div>
           <label className="flex items-start gap-2 text-sm text-body md:col-span-2">
             <input id="build-retrofit" type="checkbox" checked={build.retrofit === '1'} onChange={(e) => set({ retrofit: e.target.checked ? '1' : '' })} className="mt-0.5 h-4 w-4" style={{ accentColor: 'var(--color-primary)' }} />
-            <span>{ut('build.retrofit')}<span className="block text-xs text-muted">{ut('build.retrofitHint')}</span></span>
+            <span className="inline-flex items-center gap-1.5">{ut('build.retrofit')}<InfoTip label={ut('build.retrofit')}>{ut('build.retrofitHint')}</InfoTip></span>
           </label>
         </div>
 
@@ -417,32 +431,18 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
 
         {result && (
           <>
-            {/* Headline: code box vs Swiss-grade */}
-            {result.bVsD && (
-              <section className="ds-callout mt-[var(--space-stack)]">
-                <p className="ds-eyebrow text-xs text-teal-700">{ut('build.summary.title')}</p>
-                <p className="mt-2 text-base leading-relaxed text-ink">
-                  {result.mode === 'budget'
-                    ? ut('build.summary.budgetLead', { sqft: int(Math.abs(result.bVsD.sqftDelta)), amount: money(result.bVsD.energySaved), n: horizon })
-                    : `${ut('build.summary.premium', { amount: money(result.bVsD.premium) })} ${ut('build.summary.energy', { amount: money(result.bVsD.energySaved), n: horizon })}.`}{' '}
-                  {result.bVsD.tcoDelta <= 0
-                    ? ut('build.summary.tcoLess', { n: horizon, amount: money(-result.bVsD.tcoDelta) })
-                    : ut('build.summary.tcoMore', { n: horizon, amount: money(result.bVsD.tcoDelta) })}
-                </p>
-                {result.energyGapAtoD != null && (
-                  <p className="mt-1 text-sm text-body">{ut('build.summary.gap', { amount: money(result.energyGapAtoD), n: horizon })}</p>
-                )}
-              </section>
-            )}
-
-            <Payback payback={result.payback} horizon={horizon} />
             <BeyondEnergy result={result} horizon={horizon} stateName={st?.name || region} />
+            <Payback payback={result.payback} horizon={horizon} />
 
-            <div className="mt-[var(--space-stack)] grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {result.columns.map((c) => (
-                <Column key={c.id} c={c} horizon={horizon} onPickWall={(id) => set({ wallD: id })} />
-              ))}
-            </div>
+            {/* Per-house detail (wall layers, R-values, cost lines), closed by default */}
+            <details className="ds-card mt-[var(--space-stack)]">
+              <summary className="cursor-pointer text-sm font-semibold text-ink">{ut('build.details')}</summary>
+              <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+                {result.columns.map((c) => (
+                  <Column key={c.id} c={c} horizon={horizon} onPickWall={(id) => set({ wallD: id })} />
+                ))}
+              </div>
+            </details>
 
             <Indicative>{ut('build.indicative')} {resilienceData.meta.last_updated}.</Indicative>
 

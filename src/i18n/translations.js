@@ -550,6 +550,7 @@ export const translations = {
         'Held by your **equity ceiling**, not your income. You could carry a larger mortgage, but Swiss rules require at least {down} down, and at least {liquid} of the price in real cash savings.',
       notViableTitle: "The numbers don't work yet, and that's worth knowing now.",
       ceilingsTitle: 'What sets your limit',
+      howTitle: 'How this is calculated',
       ceilingsIntro:
         "Swiss rules cap you two independent ways. Your price is the **lower** of the two: everything past it is headroom you can't use yet.",
       equityCeiling: 'Equity ceiling',
@@ -1259,6 +1260,7 @@ export const translations = {
         'Begrenzt durch Ihre **Eigenkapitalgrenze**, nicht durch Ihr Einkommen. Sie könnten eine grössere Hypothek tragen, doch Schweizer Regeln verlangen mindestens {down} Eigenkapital – und mindestens {liquid} des Preises als echte Barersparnisse.',
       notViableTitle: 'Die Zahlen gehen noch nicht auf – und das sollten Sie jetzt wissen.',
       ceilingsTitle: 'Was Ihr Limit bestimmt',
+      howTitle: 'So wird gerechnet',
       ceilingsIntro:
         'Schweizer Regeln begrenzen Sie auf zwei unabhängige Arten. Ihr Preis ist der **tiefere** der beiden – alles darüber ist Spielraum, den Sie noch nicht nutzen können.',
       equityCeiling: 'Eigenkapitalgrenze',
@@ -1967,6 +1969,7 @@ export const translations = {
         "Limité par votre **plafond de fonds propres**, pas par votre revenu. Vous pourriez porter une hypothèque plus grande, mais les règles suisses exigent au moins {down} d'apport, et au moins {liquid} du prix en épargne réelle.",
       notViableTitle: "Les chiffres ne fonctionnent pas encore, et il vaut mieux le savoir maintenant.",
       ceilingsTitle: 'Ce qui fixe votre limite',
+      howTitle: 'Comment c’est calculé',
       ceilingsIntro:
         "Les règles suisses vous plafonnent de deux manières indépendantes. Votre prix est le **plus bas** des deux, tout ce qui dépasse est une marge que vous ne pouvez pas encore utiliser.",
       equityCeiling: 'Plafond de fonds propres',
@@ -2675,6 +2678,7 @@ export const translations = {
         'Limitato dal tuo **tetto di capitale proprio**, non dal reddito. Potresti sostenere un’ipoteca maggiore, ma le regole svizzere richiedono almeno {down} di anticipo, e almeno {liquid} del prezzo in risparmio reale.',
       notViableTitle: 'I conti non tornano ancora, ed è bene saperlo ora.',
       ceilingsTitle: 'Cosa determina il tuo limite',
+      howTitle: 'Come viene calcolato',
       ceilingsIntro:
         'Le regole svizzere ti limitano in due modi indipendenti. Il tuo prezzo è il **più basso** dei due, tutto ciò che lo supera è margine che non puoi ancora usare.',
       equityCeiling: 'Tetto di capitale proprio',
