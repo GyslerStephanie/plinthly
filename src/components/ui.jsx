@@ -117,12 +117,14 @@ export function Pill({ children, tone = 'slate' }) {
   )
 }
 
-/** "Indicative — not a quote" disclaimer line. */
+/** "Estimates, not quotes": one short line; the detail and sources sit behind (i). */
 export function Indicative({ children }) {
+  const { t } = useI18n()
+  const label = t('indicative.short')
   return (
-    <p className="mt-3 flex items-start gap-1.5 text-xs leading-relaxed text-slate-400">
-      <span aria-hidden>ⓘ</span>
-      <span>{children || 'Indicative ranges only, not live listings or a quote.'}</span>
+    <p className="mt-3 flex items-center gap-1.5 text-xs text-muted">
+      <span>{label}</span>
+      {children && <InfoTip label={label}>{children}</InfoTip>}
     </p>
   )
 }

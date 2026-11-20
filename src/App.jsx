@@ -767,18 +767,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Other tracks — only on the entry phase */}
-        {phase === 1 && !isUs && (
-          <div className="mt-12 border-t border-slate-200 pt-8 no-print">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-              {t('tracks.heading')}
-            </h2>
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <TrackCard title={t('tracks.ownTitle')} desc={t('tracks.ownDesc')} badge={t('tracks.comingSoon')} />
-              <TrackCard title={t('tracks.landTitle')} desc={t('tracks.landDesc')} badge={t('tracks.comingSoon')} />
-            </div>
-          </div>
-        )}
         </>
         )}
 
@@ -1076,18 +1064,6 @@ function EmptyResult({ hasIncome = false, onShowWithoutEquity }) {
           <p className="mt-1 max-w-xs text-sm text-slate-500">{t('empty.body')}</p>
         </>
       )}
-    </div>
-  )
-}
-
-function TrackCard({ title, desc, badge }) {
-  return (
-    <div className="relative rounded-xl border border-slate-200 bg-white p-5 opacity-90">
-      <span className="absolute right-4 top-4 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
-        {badge}
-      </span>
-      <h3 className="pr-24 text-base font-semibold text-slate-800">{title}</h3>
-      <p className="mt-1 text-sm text-slate-500">{desc}</p>
     </div>
   )
 }
