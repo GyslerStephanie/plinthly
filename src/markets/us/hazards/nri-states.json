@@ -1,0 +1,1690 @@
+{
+ "meta": {
+  "source": "FEMA National Risk Index, state table (Expected Annual Loss), v1.20",
+  "version": "December 2025",
+  "url": "https://www.fema.gov/about/openfema/data-sets/national-risk-index-data",
+  "notes": "rating = Expected Annual Loss Rating; buildingLossRate = expected annual loss to buildings as a share of exposed building value (ALRB); buildingLossPerYear = expected annual building loss in USD (EALB); ealTotal = composite expected annual loss, all hazards (EAL_VALT). Extracted by scripts from data/raw/fema-nri-v120 (not committed)."
+ },
+ "states": {
+  "AL": {
+   "name": "Alabama",
+   "fips": "01",
+   "ealTotal": 2505515599,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000407630755542,
+    "buildingLossPerYear": 426143129
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000181381531414,
+    "buildingLossPerYear": 189618895
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 8.516524286e-06,
+    "buildingLossPerYear": 8903299
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.001013022283847,
+    "buildingLossPerYear": 1059028249
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.521608719e-06,
+    "buildingLossPerYear": 6817785
+   }
+  },
+  "AK": {
+   "name": "Alaska",
+   "fips": "02",
+   "ealTotal": 895808064,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.383681e-09,
+    "buildingLossPerYear": 479
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.72956359e-07,
+    "buildingLossPerYear": 34766
+   },
+   "inlandFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.000149794674025,
+    "buildingLossPerYear": 30110568
+   },
+   "wildfire": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.00017130822957,
+    "buildingLossPerYear": 30674020
+   }
+  },
+  "AZ": {
+   "name": "Arizona",
+   "fips": "04",
+   "ealTotal": 3600033951,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.1835759e-08,
+    "buildingLossPerYear": 29678
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.062535901e-06,
+    "buildingLossPerYear": 4162397
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.001393063822577,
+    "buildingLossPerYear": 1893360487
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000178952293751,
+    "buildingLossPerYear": 216665477
+   }
+  },
+  "AR": {
+   "name": "Arkansas",
+   "fips": "05",
+   "ealTotal": 1769473890,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 6.241946488e-06,
+    "buildingLossPerYear": 3725185
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000151735011347,
+    "buildingLossPerYear": 90555255
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000954486914285,
+    "buildingLossPerYear": 569636537
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.871927949e-05,
+    "buildingLossPerYear": 11171641
+   }
+  },
+  "CA": {
+   "name": "California",
+   "fips": "06",
+   "ealTotal": 30194921299,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.10461e-10,
+    "buildingLossPerYear": 2404
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 5.022705591e-06,
+    "buildingLossPerYear": 38894866
+   },
+   "coastalFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 8.671103805e-06,
+    "buildingLossPerYear": 67147361
+   },
+   "inlandFlood": {
+    "rating": "Very High",
+    "buildingLossRate": 0.001492485511071,
+    "buildingLossPerYear": 11557520845
+   },
+   "wildfire": {
+    "rating": "Very High",
+    "buildingLossRate": 0.000247386511574,
+    "buildingLossPerYear": 1706431467
+   }
+  },
+  "CO": {
+   "name": "Colorado",
+   "fips": "08",
+   "ealTotal": 2080908844,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000101735834419,
+    "buildingLossPerYear": 118214500
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000795532401262,
+    "buildingLossPerYear": 924388791
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000194486268171,
+    "buildingLossPerYear": 201314527
+   }
+  },
+  "CT": {
+   "name": "Connecticut",
+   "fips": "09",
+   "ealTotal": 1212876233,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000218883013844,
+    "buildingLossPerYear": 173529693
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.2369963244e-05,
+    "buildingLossPerYear": 17734829
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 3.8075898701e-05,
+    "buildingLossPerYear": 30186440
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.001079042310872,
+    "buildingLossPerYear": 855460994
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.3206276e-07,
+    "buildingLossPerYear": 263258
+   }
+  },
+  "DE": {
+   "name": "Delaware",
+   "fips": "10",
+   "ealTotal": 377267132,
+   "hurricane": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000155887485086,
+    "buildingLossPerYear": 38713298
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.1460977134e-05,
+    "buildingLossPerYear": 5329647
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 7.6348319086e-05,
+    "buildingLossPerYear": 18960439
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000824758577108,
+    "buildingLossPerYear": 204821603
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.64714524e-06,
+    "buildingLossPerYear": 657395
+   }
+  },
+  "DC": {
+   "name": "District of Columbia",
+   "fips": "11",
+   "ealTotal": 292473701,
+   "hurricane": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.5443648004e-05,
+    "buildingLossPerYear": 28297035
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.5058624587e-05,
+    "buildingLossPerYear": 6511165
+   },
+   "coastalFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.284601276e-06,
+    "buildingLossPerYear": 1420222
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000299198889096,
+    "buildingLossPerYear": 129369948
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.560918e-08,
+    "buildingLossPerYear": 11073
+   }
+  },
+  "FL": {
+   "name": "Florida",
+   "fips": "12",
+   "ealTotal": 8785878974,
+   "hurricane": {
+    "rating": "Very High",
+    "buildingLossRate": 0.001069646134997,
+    "buildingLossPerYear": 3906636011
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 5.2228694158e-05,
+    "buildingLossPerYear": 190753269
+   },
+   "coastalFlood": {
+    "rating": "Very High",
+    "buildingLossRate": 4.761527253e-05,
+    "buildingLossPerYear": 173903810
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.00072970030421,
+    "buildingLossPerYear": 2665062204
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 2.6863336704e-05,
+    "buildingLossPerYear": 98112147
+   }
+  },
+  "GA": {
+   "name": "Georgia",
+   "fips": "13",
+   "ealTotal": 3345218573,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000203618941211,
+    "buildingLossPerYear": 455725108
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 9.2623758974e-05,
+    "buildingLossPerYear": 207303762
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 7.890408898e-06,
+    "buildingLossPerYear": 17659739
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000698533359723,
+    "buildingLossPerYear": 1563406572
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.705149044e-06,
+    "buildingLossPerYear": 12768850
+   }
+  },
+  "HI": {
+   "name": "Hawaii",
+   "fips": "15",
+   "ealTotal": 1075536231,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 7.918524849e-06,
+    "buildingLossPerYear": 2025463
+   },
+   "tornado": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.955656408e-06,
+    "buildingLossPerYear": 500233
+   },
+   "coastalFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 9.147314482e-06,
+    "buildingLossPerYear": 2339773
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.002295963943787,
+    "buildingLossPerYear": 587279958
+   },
+   "wildfire": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000173285870544,
+    "buildingLossPerYear": 44324441
+   }
+  },
+  "ID": {
+   "name": "Idaho",
+   "fips": "16",
+   "ealTotal": 736343195,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 3.719159929e-06,
+    "buildingLossPerYear": 1524341
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000932384570115,
+    "buildingLossPerYear": 382148769
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.00037397493059,
+    "buildingLossPerYear": 136542556
+   }
+  },
+  "IL": {
+   "name": "Illinois",
+   "fips": "17",
+   "ealTotal": 6410338020,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.81664843e-07,
+    "buildingLossPerYear": 848798
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000122549052456,
+    "buildingLossPerYear": 369301817
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.3264029e-08,
+    "buildingLossPerYear": 39971
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000957162489796,
+    "buildingLossPerYear": 2884411099
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.49069192e-07,
+    "buildingLossPerYear": 449220
+   }
+  },
+  "IN": {
+   "name": "Indiana",
+   "fips": "18",
+   "ealTotal": 2372659440,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 4.27667978e-07,
+    "buildingLossPerYear": 658170
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000139668579939,
+    "buildingLossPerYear": 214946284
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.7714649e-08,
+    "buildingLossPerYear": 27262
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000766204809098,
+    "buildingLossPerYear": 1179169121
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.95081524e-07,
+    "buildingLossPerYear": 608020
+   }
+  },
+  "IA": {
+   "name": "Iowa",
+   "fips": "19",
+   "ealTotal": 1834453443,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.02035958e-07,
+    "buildingLossPerYear": 86883
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000225552164311,
+    "buildingLossPerYear": 192056495
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000808166578181,
+    "buildingLossPerYear": 688149640
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.671810537e-06,
+    "buildingLossPerYear": 3978022
+   }
+  },
+  "KS": {
+   "name": "Kansas",
+   "fips": "20",
+   "ealTotal": 1781432063,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.53383154e-07,
+    "buildingLossPerYear": 115973
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000178945169802,
+    "buildingLossPerYear": 135300414
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000790404158578,
+    "buildingLossPerYear": 597624456
+   },
+   "wildfire": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 6.347291728e-05,
+    "buildingLossPerYear": 47991862
+   }
+  },
+  "KY": {
+   "name": "Kentucky",
+   "fips": "21",
+   "ealTotal": 2364406419,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.030222045e-06,
+    "buildingLossPerYear": 1925785
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000125291174541,
+    "buildingLossPerYear": 118846050
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.00126810278598,
+    "buildingLossPerYear": 1202870099
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.97892962e-06,
+    "buildingLossPerYear": 5897175
+   }
+  },
+  "LA": {
+   "name": "Louisiana",
+   "fips": "22",
+   "ealTotal": 3348143510,
+   "hurricane": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.001544397890555,
+    "buildingLossPerYear": 1451985139
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 7.7310588237e-05,
+    "buildingLossPerYear": 72684524
+   },
+   "coastalFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 6.8626898825e-05,
+    "buildingLossPerYear": 64520444
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000931302097333,
+    "buildingLossPerYear": 875575403
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.177372937e-06,
+    "buildingLossPerYear": 5807735
+   }
+  },
+  "ME": {
+   "name": "Maine",
+   "fips": "23",
+   "ealTotal": 415881829,
+   "hurricane": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000232758002871,
+    "buildingLossPerYear": 73898017
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.109851325e-06,
+    "buildingLossPerYear": 1304831
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 5.3801644661e-05,
+    "buildingLossPerYear": 17081410
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.00055975869435,
+    "buildingLossPerYear": 177717016
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 7.93298155e-07,
+    "buildingLossPerYear": 224365
+   }
+  },
+  "MD": {
+   "name": "Maryland",
+   "fips": "24",
+   "ealTotal": 1062512495,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 9.2902403688e-05,
+    "buildingLossPerYear": 107898601
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 1.982579381e-05,
+    "buildingLossPerYear": 23026050
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.3414896417e-05,
+    "buildingLossPerYear": 27194502
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000401396237377,
+    "buildingLossPerYear": 466189148
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.895119607e-06,
+    "buildingLossPerYear": 2201028
+   }
+  },
+  "MA": {
+   "name": "Massachusetts",
+   "fips": "25",
+   "ealTotal": 1478044953,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000127973323347,
+    "buildingLossPerYear": 183092414
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.0440242522e-05,
+    "buildingLossPerYear": 29244012
+   },
+   "coastalFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 4.1808674866e-05,
+    "buildingLossPerYear": 59815991
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000655327563046,
+    "buildingLossPerYear": 937582165
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 4.93144619e-07,
+    "buildingLossPerYear": 705546
+   }
+  },
+  "MI": {
+   "name": "Michigan",
+   "fips": "26",
+   "ealTotal": 2851016055,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.2070623e-07,
+    "buildingLossPerYear": 1200571
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000100201219338,
+    "buildingLossPerYear": 231029864
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.21767965e-07,
+    "buildingLossPerYear": 511321
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000656383595506,
+    "buildingLossPerYear": 1513396882
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 9.22138686e-07,
+    "buildingLossPerYear": 2126138
+   }
+  },
+  "MN": {
+   "name": "Minnesota",
+   "fips": "27",
+   "ealTotal": 2581628065,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.38088e-10,
+    "buildingLossPerYear": 352
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000124196063178,
+    "buildingLossPerYear": 183635509
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.410872e-09,
+    "buildingLossPerYear": 8000
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000852714551832,
+    "buildingLossPerYear": 1260818315
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 7.72340403e-06,
+    "buildingLossPerYear": 11419776
+   }
+  },
+  "MS": {
+   "name": "Mississippi",
+   "fips": "28",
+   "ealTotal": 1637869008,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000436433743818,
+    "buildingLossPerYear": 260120261
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000192145991707,
+    "buildingLossPerYear": 114521542
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 1.8680457974e-05,
+    "buildingLossPerYear": 11133799
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000816602719267,
+    "buildingLossPerYear": 486705978
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.6692506288e-05,
+    "buildingLossPerYear": 9948954
+   }
+  },
+  "MO": {
+   "name": "Missouri",
+   "fips": "29",
+   "ealTotal": 3937739989,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.63794443e-07,
+    "buildingLossPerYear": 832851
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.00012662499851,
+    "buildingLossPerYear": 187053512
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000985010940184,
+    "buildingLossPerYear": 1455082000
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.585456256e-06,
+    "buildingLossPerYear": 6773747
+   }
+  },
+  "MT": {
+   "name": "Montana",
+   "fips": "30",
+   "ealTotal": 753801508,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 8.99680779e-06,
+    "buildingLossPerYear": 2720835
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000899263242575,
+    "buildingLossPerYear": 271957232
+   },
+   "wildfire": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000257622146214,
+    "buildingLossPerYear": 69403891
+   }
+  },
+  "NE": {
+   "name": "Nebraska",
+   "fips": "31",
+   "ealTotal": 1336726339,
+   "hurricane": {
+    "rating": "No Expected Annual Losses",
+    "buildingLossRate": 0.0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000273571769505,
+    "buildingLossPerYear": 126042141
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000833737368346,
+    "buildingLossPerYear": 384126049
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.4181772271e-05,
+    "buildingLossPerYear": 20355774
+   }
+  },
+  "NV": {
+   "name": "Nevada",
+   "fips": "32",
+   "ealTotal": 1371295581,
+   "hurricane": {
+    "rating": "No Expected Annual Losses",
+    "buildingLossRate": 0.0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.16854778e-07,
+    "buildingLossPerYear": 199059
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000808995301564,
+    "buildingLossPerYear": 508238947
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000267387499338,
+    "buildingLossPerYear": 149641168
+   }
+  },
+  "NH": {
+   "name": "New Hampshire",
+   "fips": "33",
+   "ealTotal": 462485903,
+   "hurricane": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000132807089556,
+    "buildingLossPerYear": 38726708
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.9383949011e-05,
+    "buildingLossPerYear": 5652383
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 4.1594676385e-05,
+    "buildingLossPerYear": 12129058
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.001062929332957,
+    "buildingLossPerYear": 309951482
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.171437459e-06,
+    "buildingLossPerYear": 341593
+   }
+  },
+  "NJ": {
+   "name": "New Jersey",
+   "fips": "34",
+   "ealTotal": 3215449865,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 8.7486709189e-05,
+    "buildingLossPerYear": 172322524
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.0847560851e-05,
+    "buildingLossPerYear": 41063429
+   },
+   "coastalFlood": {
+    "rating": "Very High",
+    "buildingLossRate": 7.299963948e-05,
+    "buildingLossPerYear": 143787351
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000975071861793,
+    "buildingLossPerYear": 1920598524
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 6.269635921e-06,
+    "buildingLossPerYear": 12349299
+   }
+  },
+  "NM": {
+   "name": "New Mexico",
+   "fips": "35",
+   "ealTotal": 972283002,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.06785058e-07,
+    "buildingLossPerYear": 52922
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.0715779298e-05,
+    "buildingLossPerYear": 5310641
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.001231886795625,
+    "buildingLossPerYear": 610511711
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000246277841041,
+    "buildingLossPerYear": 108726605
+   }
+  },
+  "NY": {
+   "name": "New York",
+   "fips": "36",
+   "ealTotal": 4272807885,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 6.0331968359e-05,
+    "buildingLossPerYear": 226556591
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 1.2593608937e-05,
+    "buildingLossPerYear": 47291099
+   },
+   "coastalFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 1.7536427983e-05,
+    "buildingLossPerYear": 65852208
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000725307500681,
+    "buildingLossPerYear": 2723650482
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.4906558e-07,
+    "buildingLossPerYear": 1167689
+   }
+  },
+  "NC": {
+   "name": "North Carolina",
+   "fips": "37",
+   "ealTotal": 4429515350,
+   "hurricane": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000498655695716,
+    "buildingLossPerYear": 1123728170
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 6.7305605871e-05,
+    "buildingLossPerYear": 151674203
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 1.3161399527e-05,
+    "buildingLossPerYear": 29659413
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000884398172317,
+    "buildingLossPerYear": 1993004689
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.405826792e-06,
+    "buildingLossPerYear": 12182113
+   }
+  },
+  "ND": {
+   "name": "North Dakota",
+   "fips": "38",
+   "ealTotal": 565396603,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000115493102708,
+    "buildingLossPerYear": 31841488
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000570169016599,
+    "buildingLossPerYear": 157195793
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.4908304155e-05,
+    "buildingLossPerYear": 15138238
+   }
+  },
+  "OH": {
+   "name": "Ohio",
+   "fips": "39",
+   "ealTotal": 3059869667,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.600802434e-06,
+    "buildingLossPerYear": 4279662
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 8.3741362072e-05,
+    "buildingLossPerYear": 223878189
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 7.5088279e-08,
+    "buildingLossPerYear": 200745
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000712573173321,
+    "buildingLossPerYear": 1905027426
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 4.76897177e-07,
+    "buildingLossPerYear": 1274960
+   }
+  },
+  "OK": {
+   "name": "Oklahoma",
+   "fips": "40",
+   "ealTotal": 2120925529,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.075145784e-06,
+    "buildingLossPerYear": 767854
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.00018360878839,
+    "buildingLossPerYear": 131130844
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000922984357404,
+    "buildingLossPerYear": 659182597
+   },
+   "wildfire": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 6.4253331612e-05,
+    "buildingLossPerYear": 45888836
+   }
+  },
+  "OR": {
+   "name": "Oregon",
+   "fips": "41",
+   "ealTotal": 2524177651,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.18603952e-06,
+    "buildingLossPerYear": 2207700
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 1.7551370566e-05,
+    "buildingLossPerYear": 17725281
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000835674848267,
+    "buildingLossPerYear": 843955278
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000133987893283,
+    "buildingLossPerYear": 120541716
+   }
+  },
+  "PA": {
+   "name": "Pennsylvania",
+   "fips": "42",
+   "ealTotal": 4069174295,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 4.697227849e-05,
+    "buildingLossPerYear": 143006629
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.7630442916e-05,
+    "buildingLossPerYear": 84120605
+   },
+   "coastalFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.397371855e-06,
+    "buildingLossPerYear": 4254285
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000864297630042,
+    "buildingLossPerYear": 2631345431
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 4.62957395e-07,
+    "buildingLossPerYear": 1255586
+   }
+  },
+  "RI": {
+   "name": "Rhode Island",
+   "fips": "44",
+   "ealTotal": 216763372,
+   "hurricane": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 8.5804893036e-05,
+    "buildingLossPerYear": 18279724
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.9709959592e-05,
+    "buildingLossPerYear": 4198975
+   },
+   "coastalFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.3440891311e-05,
+    "buildingLossPerYear": 4993806
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000717558200183,
+    "buildingLossPerYear": 152867338
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.78190392e-07,
+    "buildingLossPerYear": 37961
+   }
+  },
+  "SC": {
+   "name": "South Carolina",
+   "fips": "45",
+   "ealTotal": 2986664052,
+   "hurricane": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000971630905089,
+    "buildingLossPerYear": 1105259182
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 6.7014416678e-05,
+    "buildingLossPerYear": 76230901
+   },
+   "coastalFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 4.4988531083e-05,
+    "buildingLossPerYear": 51175798
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000669157643636,
+    "buildingLossPerYear": 761186810
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.1637144868e-05,
+    "buildingLossPerYear": 13237600
+   }
+  },
+  "SD": {
+   "name": "South Dakota",
+   "fips": "46",
+   "ealTotal": 768341198,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000176209305978,
+    "buildingLossPerYear": 52153653
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000869441719043,
+    "buildingLossPerYear": 257333525
+   },
+   "wildfire": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000135457507925,
+    "buildingLossPerYear": 40092116
+   }
+  },
+  "TN": {
+   "name": "Tennessee",
+   "fips": "47",
+   "ealTotal": 3004306362,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.4319105e-06,
+    "buildingLossPerYear": 4658558
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000127104893041,
+    "buildingLossPerYear": 172535228
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000837684931082,
+    "buildingLossPerYear": 1137093601
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.190032457e-06,
+    "buildingLossPerYear": 2972803
+   }
+  },
+  "TX": {
+   "name": "Texas",
+   "fips": "48",
+   "ealTotal": 12347225288,
+   "hurricane": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000219227641822,
+    "buildingLossPerYear": 1160554637
+   },
+   "tornado": {
+    "rating": "Very High",
+    "buildingLossRate": 0.000104797448092,
+    "buildingLossPerYear": 554780243
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.94102382e-06,
+    "buildingLossPerYear": 15569290
+   },
+   "inlandFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000810185294146,
+    "buildingLossPerYear": 4288986061
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 2.4120653227e-05,
+    "buildingLossPerYear": 113749715
+   }
+  },
+  "UT": {
+   "name": "Utah",
+   "fips": "49",
+   "ealTotal": 1536394607,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 5.042563758e-06,
+    "buildingLossPerYear": 2830883
+   },
+   "coastalFlood": {
+    "rating": "No Expected Annual Losses",
+    "buildingLossRate": 0.0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000521554449838,
+    "buildingLossPerYear": 292799435
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000374342060676,
+    "buildingLossPerYear": 187201464
+   }
+  },
+  "VT": {
+   "name": "Vermont",
+   "fips": "50",
+   "ealTotal": 221180601,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 3.8545149369e-05,
+    "buildingLossPerYear": 6711683
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.0122564775e-05,
+    "buildingLossPerYear": 1762594
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000914285744519,
+    "buildingLossPerYear": 159200208
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 6.965915e-07,
+    "buildingLossPerYear": 108051
+   }
+  },
+  "VA": {
+   "name": "Virginia",
+   "fips": "51",
+   "ealTotal": 1978483785,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000114496762158,
+    "buildingLossPerYear": 189643106
+   },
+   "tornado": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 2.5358865539e-05,
+    "buildingLossPerYear": 42002358
+   },
+   "coastalFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 1.8349858536e-05,
+    "buildingLossPerYear": 30393210
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000669232999293,
+    "buildingLossPerYear": 1108463001
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.372231959e-06,
+    "buildingLossPerYear": 3500193
+   }
+  },
+  "WA": {
+   "name": "Washington",
+   "fips": "53",
+   "ealTotal": 4688943879,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.834041424e-06,
+    "buildingLossPerYear": 3018118
+   },
+   "coastalFlood": {
+    "rating": "Relatively High",
+    "buildingLossRate": 2.5391794022e-05,
+    "buildingLossPerYear": 41785010
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000826372517581,
+    "buildingLossPerYear": 1359887539
+   },
+   "wildfire": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.000112536307823,
+    "buildingLossPerYear": 164966000
+   }
+  },
+  "WV": {
+   "name": "West Virginia",
+   "fips": "54",
+   "ealTotal": 999272824,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.8762601428e-05,
+    "buildingLossPerYear": 7548537
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 1.5989537122e-05,
+    "buildingLossPerYear": 6432883
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.002061642596185,
+    "buildingLossPerYear": 829436491
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 4.715464407e-06,
+    "buildingLossPerYear": 1897118
+   }
+  },
+  "WI": {
+   "name": "Wisconsin",
+   "fips": "55",
+   "ealTotal": 2588280427,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.6319149e-08,
+    "buildingLossPerYear": 89753
+   },
+   "tornado": {
+    "rating": "Relatively High",
+    "buildingLossRate": 9.4874652694e-05,
+    "buildingLossPerYear": 151197364
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 8.7068376e-08,
+    "buildingLossPerYear": 138757
+   },
+   "inlandFlood": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.000688523457699,
+    "buildingLossPerYear": 1097268119
+   },
+   "wildfire": {
+    "rating": "Very Low",
+    "buildingLossRate": 8.59397302e-07,
+    "buildingLossPerYear": 1369582
+   }
+  },
+  "WY": {
+   "name": "Wyoming",
+   "fips": "56",
+   "ealTotal": 329471981,
+   "hurricane": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "tornado": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 2.9790883879e-05,
+    "buildingLossPerYear": 4455842
+   },
+   "coastalFlood": {
+    "rating": "Not Applicable",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000962117793199,
+    "buildingLossPerYear": 143904599
+   },
+   "wildfire": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.000174279789552,
+    "buildingLossPerYear": 23221178
+   }
+  },
+  "AS": {
+   "name": "American Samoa",
+   "fips": "60",
+   "ealTotal": 64991005,
+   "hurricane": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.001112960255618,
+    "buildingLossPerYear": 7165941
+   },
+   "tornado": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.5646248634e-05,
+    "buildingLossPerYear": 100740
+   },
+   "inlandFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.001413449916238,
+    "buildingLossPerYear": 9100683
+   },
+   "wildfire": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   }
+  },
+  "GU": {
+   "name": "Guam",
+   "fips": "66",
+   "ealTotal": 215554667,
+   "hurricane": {
+    "rating": "Relatively Moderate",
+    "buildingLossRate": 0.005291483604315,
+    "buildingLossPerYear": 140265531
+   },
+   "tornado": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.591238271e-06,
+    "buildingLossPerYear": 148211
+   },
+   "inlandFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.0,
+    "buildingLossPerYear": 0
+   },
+   "wildfire": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   }
+  },
+  "MP": {
+   "name": "Northern Mariana Islands",
+   "fips": "69",
+   "ealTotal": 60650260,
+   "hurricane": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.003106302662835,
+    "buildingLossPerYear": 22316042
+   },
+   "tornado": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 7.328662899e-06,
+    "buildingLossPerYear": 52650
+   },
+   "inlandFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.0,
+    "buildingLossPerYear": 0
+   },
+   "wildfire": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   }
+  },
+  "PR": {
+   "name": "Puerto Rico",
+   "fips": "72",
+   "ealTotal": 3189183308,
+   "hurricane": {
+    "rating": "Relatively High",
+    "buildingLossRate": 0.002688015410359,
+    "buildingLossPerYear": 1386279736
+   },
+   "tornado": {
+    "rating": "Very Low",
+    "buildingLossRate": 1.757886544e-06,
+    "buildingLossPerYear": 906588
+   },
+   "coastalFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 4.154341219e-06,
+    "buildingLossPerYear": 2142502
+   },
+   "inlandFlood": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.00056815132161,
+    "buildingLossPerYear": 293010472
+   },
+   "wildfire": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   }
+  },
+  "VI": {
+   "name": "Virgin Islands",
+   "fips": "78",
+   "ealTotal": 310239356,
+   "hurricane": {
+    "rating": "Relatively Low",
+    "buildingLossRate": 0.003757636729547,
+    "buildingLossPerYear": 84529197
+   },
+   "tornado": {
+    "rating": "Very Low",
+    "buildingLossRate": 2.56559576e-07,
+    "buildingLossPerYear": 5771
+   },
+   "coastalFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 5.519677242e-06,
+    "buildingLossPerYear": 124167
+   },
+   "inlandFlood": {
+    "rating": "Very Low",
+    "buildingLossRate": 0.00028607348506,
+    "buildingLossPerYear": 6435311
+   },
+   "wildfire": {
+    "rating": "Insufficient Data",
+    "buildingLossRate": 0,
+    "buildingLossPerYear": 0
+   }
+  }
+ }
+}

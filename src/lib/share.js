@@ -36,7 +36,7 @@ const KEYS = [
   ['ho', 'hoaMonthly'],
   // How to Build for Climate Change (both markets) and the US build explorer
   ['bx', 'buildOpen'], // '1' while the How to build tab is open
-  ['bt', 'buildStep'], // 'look' | 'options' | 'compare' (US) | 'plan'
+  ['bt', 'buildStep'], // 'look' | 'risk' (US) | 'options' | 'compare' (US) | 'plan'
   ['bm', 'buildMode'], // 'size' | 'budget'
   ['bs', 'buildSqft'],
   ['bb', 'buildBudget'],

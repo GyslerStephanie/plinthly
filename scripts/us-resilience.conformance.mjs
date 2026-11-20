@@ -12,6 +12,8 @@ import { annualEnergyCost } from '../src/markets/us/home.js'
 import rd from '../src/markets/us/resilience/resilience-data.json' with { type: 'json' }
 import home from '../src/markets/us/us-home-data.json' with { type: 'json' }
 import usData from '../src/markets/us/us-data.json' with { type: 'json' }
+import { HAZARDS, ratingLevel, stateRisk, abbrForFips, hurricaneLossCut, hurricaneLoss } from '../src/markets/us/hazards/model.js'
+import nri from '../src/markets/us/hazards/nri-states.json' with { type: 'json' }
 import { encodeState, decodeState } from '../src/lib/share.js'
 
 let pass = 0
@@ -150,6 +152,25 @@ check('bad horizon → 30', compareBuilds({ stateCode: 'CO', mode: 'size', sqft:
   check('total with insurance = TCO + insurance', r.columns.every((c) => b.byId[c.id].totalWithInsurance === c.tco.mid + b.byId[c.id].insurance))
   check('discount: ICF may qualify, code-built not', b.byId.D.mayQualifyDiscount && !b.byId.B.mayQualifyDiscount)
   check('unknown state → beyondEnergy null', beyondEnergy(r.columns, 'ZZ', 30) === null)
+}
+
+// ── 7d. Climate risk: FEMA NRI state table and the hurricane loss cut ─────────
+{
+  check('NRI: 50 states + DC present', ['AL','AK','AZ','CA','CO','FL','NY','TX','WY','DC'].every((s) => stateRisk(s)) && Object.keys(nri.states).length >= 51)
+  check('NRI: every state has the five hazards', Object.values(nri.states).every((s) => HAZARDS.every((h) => s[h] && typeof s[h].rating === 'string')))
+  check('NRI: Florida hurricane is Very High', stateRisk('FL').hurricane.rating === 'Very High' && ratingLevel('Very High') === 4)
+  check('NRI: Colorado hurricane not applicable', ratingLevel(stateRisk('CO').hurricane.rating) === null)
+  check('NRI: loss rates are fractions', Object.values(nri.states).every((s) => HAZARDS.every((h) => s[h].buildingLossRate >= 0 && s[h].buildingLossRate < 0.05)))
+  check('FIPS 12 is Florida, 08 Colorado', abbrForFips('12') === 'FL' && abbrForFips(8) === 'CO')
+  const cut = hurricaneLossCut()
+  check('loss cut = 1 − (1−freq)(1−sev), 62–84%', near(cut.low, 0.6175, 1e-9) && near(cut.high, 0.844, 1e-9))
+  const l = hurricaneLoss('FL', 330000, 386600, 30, true)
+  check('FL typical loss = value × rate', l.typical.perYear === Math.round(330000 * stateRisk('FL').hurricane.buildingLossRate))
+  check('FL resistant loss below typical', l.resistant.perYear.high < l.typical.perYear && l.resistant.perYear.low < l.resistant.perYear.high)
+  check('30-year total = yearly × 30 (rounding)', Math.abs(l.typical.total - l.typical.perYear * 30) <= 30)
+  const noCut = hurricaneLoss('FL', 330000, 386600, 30, false)
+  check('wall not strong → no cut', noCut.resistant.perYear.low === noCut.resistant.perYear.high && noCut.resistant.perYear.low === Math.round(386600 * stateRisk('FL').hurricane.buildingLossRate))
+  check('no hurricane exposure → null', hurricaneLoss('CO', 330000, 386600, 30) === null)
 }
 
 // ── 8. Share-link round trip ────────────────────────────────────────────────

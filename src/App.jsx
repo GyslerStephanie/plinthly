@@ -38,6 +38,7 @@ import AdvisorFab from './components/AdvisorFab'
 import CompareView from './components/Compare/CompareView'
 import { PageHeader } from './components/ui'
 import ResilienceExplore from './components/us/ResilienceExplore'
+import ClimateRisk from './components/us/ClimateRisk'
 import NextChoice from './components/NextChoice'
 import BuildSteps from './components/BuildSteps'
 import Onboarding from './components/Onboarding/Onboarding'
@@ -67,11 +68,12 @@ function usBuildHash(b, open) {
 // Climate Change (build steps below); old links with ph=3–5 open them there.
 const LAST_PHASE = 2
 const PHASE_TO_STEP = { 3: 'look', 4: 'options', 5: 'plan' }
-const BUILD_STEP_IDS = ['look', 'options', 'compare', 'plan']
+const BUILD_STEP_IDS = ['look', 'risk', 'options', 'compare', 'plan']
+const US_ONLY_STEPS = ['risk', 'compare']
 
 /** Which build step a restored link opens, or null for none. */
 function restoredBuildStep(s, isUs) {
-  const ids = isUs ? BUILD_STEP_IDS : BUILD_STEP_IDS.filter((id) => id !== 'compare')
+  const ids = isUs ? BUILD_STEP_IDS : BUILD_STEP_IDS.filter((id) => !US_ONLY_STEPS.includes(id))
   if (ids.includes(s.buildStep)) return s.buildStep
   const fromPhase = PHASE_TO_STEP[Number(s.phase)]
   if (fromPhase) return fromPhase
@@ -472,6 +474,7 @@ export default function App() {
   // (US) Compare builds → Action plan.
   const buildSteps = [
     { id: 'look', label: t('nav.3') },
+    ...(isUs ? [{ id: 'risk', label: ut('risk.step') }] : []),
     { id: 'options', label: t('nav.4') },
     ...(isUs ? [{ id: 'compare', label: ut('build.step') }] : []),
     { id: 'plan', label: t('nav.5') },
@@ -481,7 +484,7 @@ export default function App() {
    *  from the step 1 result the first time, as entering phase 3 used to. */
   const openBuildStep = (step) => {
     const id = buildSteps.some((s) => s.id === step) ? step : 'look'
-    if (id !== 'compare') {
+    if (!US_ONLY_STEPS.includes(id)) {
       if (isUs && usRes) {
         setUsExplore((e) => ({ ...e, budget: e.budget || groupDigits(usRes.maxPrice || '') }))
       }
@@ -780,10 +783,11 @@ export default function App() {
           const head = {
             look: isUs ? [ut('explore.title'), ut('explore.blurb')] : [t('heading.3.title'), t('heading.3.blurb')],
             options: isUs ? [ut('options.title'), ut('options.blurb')] : [t('heading.4.title'), t('heading.4.blurb')],
+            risk: [ut('risk.title'), ut('risk.blurb')],
             compare: [ut('build.title'), ut('build.intro')],
             plan: isUs ? [ut('plan.title'), ut('plan.blurb')] : [t('heading.5.title'), t('heading.5.blurb')],
           }[step]
-          const needsResult = step !== 'compare' && !hasResultNow
+          const needsResult = !US_ONLY_STEPS.includes(step) && !hasResultNow
           return (
             <>
               <PageHeader title={t('nav.build')} intro={t('hub.intro')} />
@@ -817,6 +821,9 @@ export default function App() {
                       onRegionChange={handleUsRegionChange}
                       onBuild={() => openBuildStep('compare')}
                     />
+                  )}
+                  {step === 'risk' && (
+                    <ClimateRisk region={usValues.region} onRegionChange={handleUsRegionChange} build={usBuild} onCompare={() => openBuildStep('compare')} />
                   )}
                   {step === 'compare' && (
                     <ResilienceExplore
@@ -880,7 +887,7 @@ export default function App() {
                     onClick={() => openBuildStep(next.id)}
                     className="rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
                   >
-                    {isUs && step === 'look' ? ut('btn.seeOptions') : `${next.label} →`}
+                    {isUs && next.id === 'options' ? ut('btn.seeOptions') : `${next.label} →`}
                   </button>
                 )}
               </div>
