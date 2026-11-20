@@ -362,6 +362,8 @@ const COPY = {
     years: '{n} years',
     path: 'Energy prices',
     pathCustom: 'Custom',
+    todayMoney: 'Show in today\u2019s money ({pct}% a year)',
+    todayMoneyHint: 'Future energy and maintenance count for less the further away they are, roughly what the money could earn instead. Up-front costs stay as they are.',
     pathCustomHint: '{pct}% a year',
     retrofit: 'I already own the house',
     retrofitHint: 'Puts the house you have (A) and its retrofit (C) first.',
@@ -408,6 +410,8 @@ const COPY = {
     },
     payback: {
       title: 'Does the extra cost pay back on energy alone?',
+      inPlainDollars: 'Counted in plain dollars: a dollar saved in year 40 counts the same as one saved today.',
+      inTodayMoney: 'Counted in today\u2019s money: savings further away count for less ({pct}% a year).',
       intro: 'Energy prices over {n} years are a guess. Here is how far they would have to rise for the better house to earn back its extra cost in lower bills, and what the three price paths give.',
       pairBD: 'Swiss-grade vs code-built',
       pairAC: 'Deep retrofit vs older home',

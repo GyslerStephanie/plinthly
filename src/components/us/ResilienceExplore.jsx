@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { money, int } from '../../lib/format'
-import { compareBuilds, getWall, HORIZONS, PRICE_PATHS, resilienceData } from '../../markets/us/resilience/model'
+import { compareBuilds, getWall, HORIZONS, PRICE_PATHS, TODAY_MONEY_PCT, resilienceData } from '../../markets/us/resilience/model'
 import { getState, stateOptions } from '../../markets/us/affordability'
 import { ut } from '../../markets/us/copy'
 import { Indicative, SELECT_CHEVRON } from '../ui'
@@ -160,7 +160,7 @@ function breakEvenLine(be, horizon) {
 }
 
 /** "Does the extra cost pay back on energy alone?" — break-even plus the three price paths. */
-function Payback({ payback, horizon }) {
+function Payback({ payback, horizon, todayMoney, discountPct }) {
   if (!payback || !payback.bToD) return null
   const bd = payback.bToD
   const rows = bd.paths || []
@@ -169,6 +169,9 @@ function Payback({ payback, horizon }) {
     <section className="ds-card mt-[var(--space-stack)]">
       <h2 className="ds-section-title">{ut('build.payback.title')}</h2>
       <p className="mt-1 text-sm text-body">{ut('build.payback.intro', { n: horizon })}</p>
+      <p className="mt-1 text-sm font-medium text-ink">
+        {todayMoney ? ut('build.payback.inTodayMoney', { pct: discountPct }) : ut('build.payback.inPlainDollars')}
+      </p>
       <dl className="mt-3 space-y-2 text-sm">
         <div>
           <dt className="font-semibold text-ink">{ut('build.payback.pairBD')}</dt>
@@ -238,9 +241,10 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
             pricePath,
             wallD: build.wallD || undefined,
             retrofit: build.retrofit === '1',
+            todayMoney: build.todayMoney === '1',
           })
         : null,
-    [region, build.mode, build.sqft, build.budget, build.storeys, build.horizon, pricePath, build.wallD, build.retrofit],
+    [region, build.mode, build.sqft, build.budget, build.storeys, build.horizon, pricePath, build.wallD, build.retrofit, build.todayMoney],
   )
   const horizon = result ? result.horizon : Number(build.horizon) || 30
   const copy = async () => {
@@ -321,6 +325,10 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
             <input id="build-retrofit" type="checkbox" checked={build.retrofit === '1'} onChange={(e) => set({ retrofit: e.target.checked ? '1' : '' })} className="mt-0.5 h-4 w-4" style={{ accentColor: 'var(--color-primary)' }} />
             <span>{ut('build.retrofit')}<span className="block text-xs text-muted">{ut('build.retrofitHint')}</span></span>
           </label>
+          <label className="flex items-start gap-2 text-sm text-body md:col-span-2">
+            <input id="build-today-money" type="checkbox" checked={build.todayMoney === '1'} onChange={(e) => set({ todayMoney: e.target.checked ? '1' : '' })} className="mt-0.5 h-4 w-4" style={{ accentColor: 'var(--color-primary)' }} />
+            <span>{ut('build.todayMoney', { pct: TODAY_MONEY_PCT })}<span className="block text-xs text-muted">{ut('build.todayMoneyHint', { pct: TODAY_MONEY_PCT })}</span></span>
+          </label>
         </div>
 
         {!st && <p className="mt-[var(--space-stack)] text-sm text-muted">{ut('build.pickState')}</p>}
@@ -345,7 +353,7 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
               </section>
             )}
 
-            <Payback payback={result.payback} horizon={horizon} />
+            <Payback payback={result.payback} horizon={horizon} todayMoney={result.todayMoney} discountPct={result.discountPct} />
 
             <div className="mt-[var(--space-stack)] grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
               {result.columns.map((c) => (
