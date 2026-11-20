@@ -72,7 +72,7 @@ export function energyPath(stateCode, sqft, hers, horizon, pricePath) {
     cumulative += v
     years.push(Math.round(v))
   }
-  return { annualNow: Math.round(annual), years, cumulative: Math.round(cumulative), escalationPct: g * 100 }
+  return { annualNow: Math.round(annual), annualExact: annual, years, cumulative: Math.round(cumulative), escalationPct: g * 100 }
 }
 
 /** Base construction cost band for the state (existing data, land excluded). */
@@ -200,6 +200,63 @@ export function sqftForBudget(stateCode, budget, storeys, archetypeId, wallId) {
   return Math.round(lo)
 }
 
+/** Sum of (1+g)^k for k = 0..h-1: a first-year bill grown at g, over h years. */
+function growthFactor(g, h) {
+  if (Math.abs(g) < 1e-9) return h
+  return (Math.pow(1 + g, h) - 1) / g
+}
+
+/** First-year energy bill of a column, unrounded when available. */
+const yearOne = (col) => col.energy.annualExact ?? col.energy.annualNow
+
+const BREAKEVEN_MIN = -0.1
+const BREAKEVEN_MAX = 0.2
+
+/**
+ * Break-even energy-price rise: the yearly escalation at which the energy one
+ * house saves over another, across the horizon, equals its extra up-front cost.
+ * Pure energy: insurance, outages, comfort and resale are not in it.
+ *
+ * @returns {{ premium, annualSaving, pct: number|null, verdict: 'always'|'at'|'never'|'none' }}
+ *   'always' = pays back even if prices fall 10% a year; 'never' = not even at
+ *   20% a year; 'none' = no extra cost or no saving to compare.
+ */
+export function breakEven(cheaper, better, horizon) {
+  if (!cheaper || !better || !cheaper.energy || !better.energy) return null
+  const premium = better.upfront.mid - cheaper.upfront.mid
+  const exactSaving = yearOne(cheaper) - yearOne(better)
+  const annualSaving = Math.round(exactSaving)
+  if (!(exactSaving > 0)) return { premium, annualSaving, pct: null, verdict: 'none' }
+  if (premium <= 0) return { premium, annualSaving, pct: null, verdict: 'always' }
+  const need = premium / exactSaving
+  if (growthFactor(BREAKEVEN_MIN, horizon) >= need) return { premium, annualSaving, pct: null, verdict: 'always' }
+  if (growthFactor(BREAKEVEN_MAX, horizon) < need) return { premium, annualSaving, pct: null, verdict: 'never' }
+  let lo = BREAKEVEN_MIN
+  let hi = BREAKEVEN_MAX
+  for (let i = 0; i < 60; i++) {
+    const m = (lo + hi) / 2
+    if (growthFactor(m, horizon) >= need) hi = m
+    else lo = m
+  }
+  return { premium, annualSaving, pct: Math.round(hi * 1000) / 10, verdict: 'at' }
+}
+
+/**
+ * The same pair under each named price path (low / reference / high): energy
+ * over the horizon for both houses, the saving, and whether it covers the
+ * extra up-front cost.
+ */
+export function pathsSideBySide(cheaper, better, horizon) {
+  if (!cheaper || !better || !cheaper.energy || !better.energy) return null
+  const premium = better.upfront.mid - cheaper.upfront.mid
+  return ['low', 'ref', 'high'].map((id) => {
+    const f = growthFactor(escalationFor(id), horizon)
+    const a = Math.round(yearOne(cheaper) * f)
+    const b = Math.round(yearOne(better) * f)
+    return { id, label: rd.price_paths[id].label, escalationPct: rd.price_paths[id].escalation_pct, cheaperEnergy: a, betterEnergy: b, saved: a - b, premium, paysBack: a - b >= premium }
+  })
+}
+
 /**
  * The comparison. Mode 'size': every column at the same floor area. Mode
  * 'budget': new builds sized to the budget (the "same budget, smaller and
@@ -251,5 +308,10 @@ export function compareBuilds({ stateCode, mode = 'size', sqft, budget, storeys 
       tcoDelta: byId.D.tco.mid - byId.B.tco.mid,
       sqftDelta: byId.D.sqft - byId.B.sqft,
     } : null,
+    // Does the extra cost pay back on energy alone, and how do the price paths compare?
+    payback: {
+      bToD: byId.B && byId.D ? { breakEven: breakEven(byId.B, byId.D, h), paths: pathsSideBySide(byId.B, byId.D, h) } : null,
+      aToC: byId.A && byId.C ? { breakEven: breakEven(byId.A, byId.C, h), paths: pathsSideBySide(byId.A, byId.C, h) } : null,
+    },
   }
 }
