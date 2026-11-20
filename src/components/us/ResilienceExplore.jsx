@@ -143,7 +143,7 @@ function Column({ c, horizon, onPickWall }) {
         <Line label={ut('build.col.energyNow')} value={money(c.energy.annualNow)} />
         <Line label={ut('build.col.energyCum', { n: horizon })} value={money(c.energy.cumulative)} />
         <Line label={ut('build.col.maintenance', { n: horizon })} value={money(c.maintenance)} />
-        <Line label={ut('build.col.tco', { n: horizon })} value={money(c.tco.mid)} strong />
+        <Line label={ut('build.col.tco', { n: horizon })} value={money(c.tco.mid)} sub={ut('build.col.tcoHint', { n: horizon })} strong />
         {c.resalePremiumPct && (
           <p className="mt-2 text-xs text-muted">{ut('build.col.resale', { low: c.resalePremiumPct.low, high: c.resalePremiumPct.high })}</p>
         )}

@@ -892,7 +892,7 @@ export default function App() {
                     onClick={() => openBuildStep(next.id)}
                     className="rounded-full bg-teal-700 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-800"
                   >
-                    {next.label} →
+                    {isUs && step === 'look' ? ut('btn.seeOptions') : `${next.label} →`}
                   </button>
                 )}
               </div>

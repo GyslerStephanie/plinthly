@@ -223,7 +223,7 @@ export const translations = {
       steps: 'Steps',
       needResult: 'These steps use your budget. Start with Can I buy? and they fill in with your numbers.',
       needResultCta: 'Go to Can I buy?',
-      toJourney: 'Your journey',
+      toJourney: 'Sustainable home journey',
     },
     next: {
       title: 'Choose your next step',
@@ -336,7 +336,7 @@ export const translations = {
       badge: 'No selling · No sign-up · Just honest numbers',
     },
     lang: { label: 'Language' },
-    nav: { label: 'Your progress', journey: 'Your journey', stepOf: 'Step {n} of {total}', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan', tools: 'Tools', compare: 'Compare Scenarios', build: 'How to Build for Climate Change' },
+    nav: { label: 'Your progress', journey: 'Sustainable home journey', stepOf: 'Step {n} of {total}', 1: 'Can I buy?', 2: 'Calculate dream price', 3: 'What to look for', 4: 'My real options', 5: 'Action plan', tools: 'Tools', compare: 'Investment Scenarios', build: 'Building for Climate Resiliency' },
     heading: {
       1: {
         title: 'Can I buy?',
@@ -349,7 +349,7 @@ export const translations = {
           'Check a specific property against your situation, and see, with charts and a timeline, exactly what it would take to get there.',
       },
       3: {
-        title: 'What should I look for?',
+        title: 'What should I look for in climate-resilient real estate?',
         blurb:
           'See what your budget buys in your target canton, what an energy rating really costs over 10 years, and which subsidies apply.',
       },
@@ -932,7 +932,7 @@ export const translations = {
       steps: 'Schritte',
       needResult: 'Diese Schritte nutzen Ihr Budget. Beginnen Sie mit «Kann ich kaufen?», dann erscheinen hier Ihre Zahlen.',
       needResultCta: 'Zu «Kann ich kaufen?»',
-      toJourney: 'Ihr Weg',
+      toJourney: 'Weg zum nachhaltigen Zuhause',
     },
     next: {
       title: 'Wählen Sie Ihren nächsten Schritt',
@@ -1044,7 +1044,7 @@ export const translations = {
       badge: 'Kein Verkauf · Keine Anmeldung · Nur ehrliche Zahlen',
     },
     lang: { label: 'Sprache' },
-    nav: { label: 'Ihr Fortschritt', journey: 'Ihr Weg', stepOf: 'Schritt {n} von {total}', 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan', tools: 'Werkzeuge', compare: 'Vergleich', build: 'Bauweisen' },
+    nav: { label: 'Ihr Fortschritt', journey: 'Weg zum nachhaltigen Zuhause', stepOf: 'Schritt {n} von {total}', 1: 'Kann ich kaufen?', 2: 'Wunschpreis berechnen', 3: 'Worauf achten', 4: 'Meine echten Optionen', 5: 'Aktionsplan', tools: 'Werkzeuge', compare: 'Investitionsszenarien', build: 'Klimaresilient bauen' },
     heading: {
       1: {
         title: 'Kann ich kaufen?',
@@ -1057,7 +1057,7 @@ export const translations = {
           'Prüfen Sie eine konkrete Immobilie gegen Ihre Situation und sehen Sie – mit Diagrammen und einer Zeitleiste – genau, was es bräuchte, um dorthin zu gelangen.',
       },
       3: {
-        title: 'Worauf sollte ich achten?',
+        title: 'Worauf sollte ich bei klimaresilienten Immobilien achten?',
         blurb:
           'Sehen Sie, was Ihr Budget im Wunschkanton kauft, was eine Energieklasse über 10 Jahre wirklich kostet und welche Förderungen gelten.',
       },
@@ -1641,7 +1641,7 @@ export const translations = {
       steps: 'Étapes',
       needResult: 'Ces étapes utilisent votre budget. Commencez par « Puis-je acheter ? » et vos chiffres s’afficheront ici.',
       needResultCta: 'Aller à « Puis-je acheter ? »',
-      toJourney: 'Votre parcours',
+      toJourney: 'Parcours vers un logement durable',
     },
     next: {
       title: 'Choisissez votre prochaine étape',
@@ -1753,7 +1753,7 @@ export const translations = {
       badge: 'Aucune vente · Aucune inscription · Que des chiffres honnêtes',
     },
     lang: { label: 'Langue' },
-    nav: { label: 'Votre progression', journey: 'Votre parcours', stepOf: 'Étape {n} sur {total}', 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action", tools: 'Outils', compare: 'Comparer', build: 'Construction' },
+    nav: { label: 'Votre progression', journey: 'Parcours vers un logement durable', stepOf: 'Étape {n} sur {total}', 1: 'Puis-je acheter ?', 2: 'Prix de rêve', 3: 'Quoi regarder', 4: 'Mes vraies options', 5: "Plan d'action", tools: 'Outils', compare: 'Scénarios d’investissement', build: 'Construire pour la résilience climatique' },
     heading: {
       1: {
         title: 'Puis-je acheter ?',
@@ -1766,7 +1766,7 @@ export const translations = {
           "Confrontez un bien précis à votre situation et voyez, avec des graphiques et une chronologie, exactement ce qu'il faudrait pour y arriver.",
       },
       3: {
-        title: 'Que dois-je rechercher ?',
+        title: 'Que rechercher dans un bien immobilier résilient au climat ?',
         blurb:
           'Découvrez ce que votre budget achète dans le canton visé, ce qu’une classe énergétique coûte vraiment sur 10 ans, et quelles subventions s’appliquent.',
       },
@@ -2349,7 +2349,7 @@ export const translations = {
       steps: 'Passi',
       needResult: 'Questi passi usano il tuo budget. Inizia da «Posso comprare?» e qui compariranno i tuoi numeri.',
       needResultCta: 'Vai a «Posso comprare?»',
-      toJourney: 'Il tuo percorso',
+      toJourney: 'Percorso verso una casa sostenibile',
     },
     next: {
       title: 'Scegli il prossimo passo',
@@ -2461,7 +2461,7 @@ export const translations = {
       badge: 'Nessuna vendita · Nessuna registrazione · Solo numeri onesti',
     },
     lang: { label: 'Lingua' },
-    nav: { label: 'I tuoi progressi', journey: 'Il tuo percorso', stepOf: 'Passo {n} di {total}', 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione', tools: 'Strumenti', compare: 'Confronta', build: 'Costruzione' },
+    nav: { label: 'I tuoi progressi', journey: 'Percorso verso una casa sostenibile', stepOf: 'Passo {n} di {total}', 1: 'Posso comprare?', 2: 'Prezzo dei sogni', 3: 'Cosa cercare', 4: 'Le mie opzioni reali', 5: 'Piano d’azione', tools: 'Strumenti', compare: 'Scenari di investimento', build: 'Costruire per la resilienza climatica' },
     heading: {
       1: {
         title: 'Posso comprare?',
@@ -2474,7 +2474,7 @@ export const translations = {
           'Verifica un immobile specifico rispetto alla tua situazione e scopri, con grafici e una cronologia, esattamente cosa servirebbe per arrivarci.',
       },
       3: {
-        title: 'Cosa dovrei cercare?',
+        title: 'Cosa dovrei cercare in un immobile resiliente al clima?',
         blurb:
           'Scopri cosa compra il tuo budget nel cantone scelto, quanto costa davvero una classe energetica su 10 anni e quali incentivi si applicano.',
       },
