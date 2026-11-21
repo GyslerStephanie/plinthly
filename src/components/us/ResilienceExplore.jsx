@@ -14,7 +14,13 @@ import { track } from '../../lib/track'
  */
 
 const num = (v) => Number(String(v ?? '').replace(/[^0-9.]/g, '')) || 0
-const PATH_IDS = ['ref', 'high', 'low']
+const PATH_IDS = ['ref', 'high', 'low', 'crisis']
+
+/** Label for a named price path: its yearly rise, or the shock for the crisis stress test. */
+const pathLabel = (p) =>
+  p.shock
+    ? `${p.label} · ${ut('build.pathShock', { m: p.shock.multiplier, years: p.shock.ramp_years, pct: p.escalation_pct })}`
+    : `${p.label} · ${p.escalation_pct}%`
 const SEL = 'appearance-none rounded-lg border border-line bg-white py-2 pl-3 pr-10 text-sm text-ink focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100'
 const INPUT = 'w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink tabular-nums focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100'
 
@@ -284,7 +290,9 @@ function Payback({ payback, horizon, todayMoney, discountPct }) {
                 {rows.map((r) => (
                   <tr key={r.id} className="border-b border-line last:border-b-0">
                     <td className="py-2 pr-3 text-ink">{r.label}</td>
-                    <td className="py-2 pr-3 text-right tabular-nums">{r.escalationPct}%</td>
+                    <td className="py-2 pr-3 text-right tabular-nums">
+                      {r.shock ? ut('build.pathShock', { m: r.shock.multiplier, years: r.shock.ramp_years, pct: r.escalationPct }) : `${r.escalationPct}%`}
+                    </td>
                     <td className="py-2 pr-3 text-right tabular-nums">{money(r.cheaperEnergy)}</td>
                     <td className="py-2 pr-3 text-right tabular-nums">{money(r.betterEnergy)}</td>
                     <td className="py-2 pr-3 text-right tabular-nums text-ink">{money(r.saved)}</td>
@@ -296,6 +304,7 @@ function Payback({ payback, horizon, todayMoney, discountPct }) {
               </tbody>
             </table>
           </div>
+          {rows.some((r) => r.shock) && <p className="mt-2 text-xs text-muted">{ut('build.payback.crisisNote')}</p>}
         </details>
       )}
       <p className="mt-3 text-xs text-muted">{ut('build.payback.note')}</p>
@@ -420,7 +429,7 @@ export default function ResilienceExplore({ build, onChange, region, onRegionCha
                 label={ut('build.path')}
                 value={customOn ? 'custom' : build.path}
                 onChange={(v) => set({ path: v === 'custom' ? '3' : v })}
-                options={[...PATH_IDS.map((p) => ({ value: p, label: `${PRICE_PATHS[p].label} · ${PRICE_PATHS[p].escalation_pct}%` })), { value: 'custom', label: ut('build.pathCustom') }]}
+                options={[...PATH_IDS.map((p) => ({ value: p, label: pathLabel(PRICE_PATHS[p]) })), { value: 'custom', label: ut('build.pathCustom') }]}
               />
               {customOn && (
                 <label className="flex items-center gap-2 text-xs text-muted">

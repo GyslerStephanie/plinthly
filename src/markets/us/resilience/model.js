@@ -61,6 +61,26 @@ export function escalationFor(pricePath) {
   return p.escalation_pct / 100
 }
 
+/**
+ * Price multiplier for year index y (0 = the first year) under a path: yearly
+ * escalation, times an optional shock that ramps in linearly over `ramp_years`
+ * (the 'crisis' stress test: prices double over three years).
+ */
+export function priceMultiplier(pricePath, y) {
+  const g = escalationFor(pricePath)
+  const p = typeof pricePath === 'number' ? null : rd.price_paths[pricePath]
+  const s = p && p.shock
+  const shock = s ? 1 + ((s.multiplier - 1) * Math.min(y, s.ramp_years)) / s.ramp_years : 1
+  return Math.pow(1 + g, y) * shock
+}
+
+/** Sum of a path's price multipliers over h years, each discounted at d. */
+function pathFactor(pricePath, h, d = 0) {
+  let f = 0
+  for (let y = 0; y < h; y++) f += priceMultiplier(pricePath, y) / Math.pow(1 + d, y)
+  return f
+}
+
 /** Energy per year over the horizon under a price path, plus the cumulative total. */
 export function energyPath(stateCode, sqft, hers, horizon, pricePath, discountPct = 0) {
   const annual = annualEnergyCost(stateCode, sqft, hers)
@@ -70,7 +90,7 @@ export function energyPath(stateCode, sqft, hers, horizon, pricePath, discountPc
   const years = []
   let cumulative = 0
   for (let y = 1; y <= horizon; y++) {
-    const v = annual * Math.pow(1 + g, y - 1)
+    const v = annual * priceMultiplier(pricePath, y - 1)
     // Year-by-year bills stay nominal; the total is in today's money when d > 0.
     cumulative += v / Math.pow(1 + d, y - 1)
     years.push(Math.round(v))
@@ -250,18 +270,18 @@ export function breakEven(cheaper, better, horizon, discountPct = 0) {
 }
 
 /**
- * The same pair under each named price path (low / reference / high): energy
+ * The same pair under each named price path (low / reference / high / crisis): energy
  * over the horizon for both houses, the saving, and whether it covers the
  * extra up-front cost.
  */
 export function pathsSideBySide(cheaper, better, horizon, discountPct = 0) {
   if (!cheaper || !better || !cheaper.energy || !better.energy) return null
   const premium = better.upfront.mid - cheaper.upfront.mid
-  return ['low', 'ref', 'high'].map((id) => {
-    const f = growthFactor(escalationFor(id), horizon, discountPct / 100)
+  return ['low', 'ref', 'high', 'crisis'].map((id) => {
+    const f = pathFactor(id, horizon, discountPct / 100)
     const a = Math.round(yearOne(cheaper) * f)
     const b = Math.round(yearOne(better) * f)
-    return { id, label: rd.price_paths[id].label, escalationPct: rd.price_paths[id].escalation_pct, cheaperEnergy: a, betterEnergy: b, saved: a - b, premium, paysBack: a - b >= premium }
+    return { id, label: rd.price_paths[id].label, escalationPct: rd.price_paths[id].escalation_pct, shock: rd.price_paths[id].shock || null, cheaperEnergy: a, betterEnergy: b, saved: a - b, premium, paysBack: a - b >= premium }
   })
 }
 

@@ -5,7 +5,7 @@
  */
 import {
   WALLS, ARCHETYPES, PRICE_PATHS, HORIZONS, getWall, defaultWallFor, geometry, escalationFor,
-  energyPath, baseBuildCost, envelopePremium, archetypeColumn, sqftForBudget, compareBuilds,
+  energyPath, baseBuildCost, envelopePremium, archetypeColumn, sqftForBudget, compareBuilds, priceMultiplier,
   breakEven, pathsSideBySide, beyondEnergy, moistureRisk, TODAY_MONEY_PCT,
 } from '../src/markets/us/resilience/model.js'
 import { annualEnergyCost } from '../src/markets/us/home.js'
@@ -127,14 +127,14 @@ check('bad horizon → 30', compareBuilds({ stateCode: 'CO', mode: 'size', sqft:
   const factor = Math.abs(g) < 1e-9 ? h : (Math.pow(1 + g, h) - 1) / g
   check('saving at break-even ≈ premium', near(be.annualSaving * factor, be.premium, be.premium * 0.01 + 50), `${be.annualSaving * factor} vs ${be.premium}`)
   const paths = r.payback.bToD.paths
-  check('three price paths, low → high', paths.map((p) => p.id).join() === 'low,ref,high')
+  check('four price paths, low → crisis', paths.map((p) => p.id).join() === 'low,ref,high,crisis')
   check('saving grows with the price path', paths[0].saved < paths[1].saved && paths[1].saved < paths[2].saved)
   check('reference path matches the main comparison', near(paths[1].saved, r.bVsD.energySaved, 2))
-  check('paysBack agrees with break-even', paths.every((p) => p.paysBack === (p.escalationPct >= be.pct - 0.05)))
+  check('paysBack agrees with break-even (smooth paths)', paths.filter((p) => !p.shock).every((p) => p.paysBack === (p.escalationPct >= be.pct - 0.05)))
   check('longer horizon lowers the break-even', compareBuilds({ stateCode: 'NY', mode: 'size', sqft: 2000, horizon: 20 }).payback.bToD.breakEven.pct > be.pct)
   check('10 yrs in CO: never pays back on energy alone', compareBuilds({ stateCode: 'CO', mode: 'size', sqft: 2000, horizon: 10 }).payback.bToD.breakEven.verdict === 'never')
   check('same budget (no premium) → always', compareBuilds({ stateCode: 'CO', mode: 'budget', budget: 500000, horizon: 30 }).payback.bToD.breakEven.verdict === 'always')
-  check('retrofit pair present', r.payback.aToC && r.payback.aToC.breakEven && r.payback.aToC.paths.length === 3)
+  check('retrofit pair present', r.payback.aToC && r.payback.aToC.breakEven && r.payback.aToC.paths.length === 4)
   check('breakEven null-safe', breakEven(null, null, 30) === null && pathsSideBySide(null, null, 30) === null)
 }
 
@@ -220,6 +220,21 @@ check('bad horizon → 30', compareBuilds({ stateCode: 'CO', mode: 'size', sqft:
   check('CO: FORTIFIED for hail (relatively high), no NOAA (inland)', co.flatMap((x) => x.links).some((l) => l.url.includes('fortified')) && !co.flatMap((x) => x.links).some((l) => l.url.includes('noaa')))
   check('no firm named: every link is a directory or reference in build-path.json', steps.flatMap((x) => x.links).every((l) => Object.values(bpData.links).includes(l)))
   check('unknown state → no brief, no steps', swissBrief({ state: 'ZZ' }) === null && swissBuildPath(null).length === 0)
+}
+
+// ── 7f. Energy crisis stress test ───────────────────────────────────────────
+{
+  const c = PRICE_PATHS.crisis
+  check('crisis path in data: ×2 over 3 yrs then high-path rise', c && c.shock.multiplier === 2 && c.shock.ramp_years === 3 && c.escalation_pct === PRICE_PATHS.high.escalation_pct)
+  check('crisis multiplier: 1× in year 1, 2×(1+g)^3 by year 4', near(priceMultiplier('crisis', 0), 1, 1e-12) && near(priceMultiplier('crisis', 3), 2 * Math.pow(1.035, 3), 1e-9))
+  check('crisis ramps in linearly', near(priceMultiplier('crisis', 1), (1 + 1 / 3) * 1.035, 1e-9))
+  check('smooth paths unchanged by the shock code', near(priceMultiplier('ref', 10), Math.pow(1.02, 10), 1e-12) && near(priceMultiplier(5, 2), 1.1025, 1e-12))
+  const r = compareBuilds({ stateCode: 'NY', mode: 'size', sqft: 2000, horizon: 30 })
+  const rows = r.payback.bToD.paths
+  check('crisis saves the most of the four', rows[3].saved > rows[2].saved)
+  const rc = compareBuilds({ stateCode: 'NY', mode: 'size', sqft: 2000, horizon: 30, pricePath: 'crisis' })
+  check('crisis as the selected path matches its table row', near(rc.bVsD.energySaved, rows[3].saved, 2))
+  check('crisis year-4 bill is twice the high path’s', near(rc.byId.B.energy.years[3], 2 * compareBuilds({ stateCode: 'NY', mode: 'size', sqft: 2000, horizon: 30, pricePath: 'high' }).byId.B.energy.years[3], 2))
 }
 
 // ── 8. Share-link round trip ────────────────────────────────────────────────
