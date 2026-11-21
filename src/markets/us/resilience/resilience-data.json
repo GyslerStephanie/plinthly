@@ -66,6 +66,12 @@
       "escalation_pct": 1.0,
       "note": "AEO low price case."
     },
+    "crisis": {
+      "label": "Energy crisis",
+      "escalation_pct": 3.5,
+      "shock": { "multiplier": 2, "ramp_years": 3 },
+      "note": "Stress test, not a forecast: energy prices double over three years, as European household gas and electricity bills did in 2021\u20132022, then keep rising at the high-price rate. Real shocks often ease back partly; this assumes they don't."
+    },
     "notes": "Annual nominal escalation applied to the whole energy bill. Placeholder values read off the EIA Annual Energy Outlook 2025 residential price trajectories; replace with per-fuel paths when the fuel input ships.",
     "sources": [
       "https://www.eia.gov/outlooks/aeo/"
